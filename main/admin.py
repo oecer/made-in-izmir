@@ -75,6 +75,73 @@ class SignupRequestAdmin(admin.ModelAdmin):
                 'buyer_interested_sectors_ids', 'buyer_quarterly_volume',
                 'producer_sectors_ids', 'producer_quarterly_sales', 'producer_product_count')
     
+    def save_model(self, request, obj, form, change):
+        """Handle status changes from the admin change form"""
+        # If status is changing to approved, run approval logic
+        if change and 'status' in form.changed_data and obj.status == 'approved':
+            try:
+                # Check previous status from DB
+                old_instance = SignupRequest.objects.get(pk=obj.pk)
+                if old_instance.status == 'pending':
+                    self._process_approval(request, obj)
+            except Exception as e:
+                # Revert status if failed
+                obj.status = 'pending'
+                obj.reviewed_by = None
+                obj.reviewed_at = None
+                messages.error(request, f"Onay işlemi başarısız oldu: {str(e)}")
+        
+        super().save_model(request, obj, form, change)
+
+    def _process_approval(self, request, signup_request):
+        """Helper to create User and Profile - NO SAVE"""
+        from django.db import transaction
+        
+        # Check uniqueness
+        if User.objects.filter(username=signup_request.username).exists():
+            raise ValueError(f"Username '{signup_request.username}' already exists")
+        
+        if User.objects.filter(email=signup_request.email).exists():
+            raise ValueError(f"Email '{signup_request.email}' already exists")
+            
+        # Create user
+        user = User.objects.create(
+            username=signup_request.username,
+            email=signup_request.email,
+            first_name=signup_request.first_name,
+            last_name=signup_request.last_name,
+            password=signup_request.password_hash
+        )
+        
+        # Create user profile
+        profile = UserProfile.objects.create(
+            user=user,
+            company_name=signup_request.company_name,
+            phone_number=signup_request.phone_number,
+            country=signup_request.country,
+            city=signup_request.city,
+            is_buyer=signup_request.is_buyer,
+            is_producer=signup_request.is_producer,
+            buyer_quarterly_volume=signup_request.buyer_quarterly_volume,
+            producer_quarterly_sales=signup_request.producer_quarterly_sales,
+            producer_product_count=signup_request.producer_product_count
+        )
+        
+        # Add sectors
+        if signup_request.buyer_interested_sectors_ids:
+            buyer_sectors = signup_request.get_buyer_sectors()
+            if buyer_sectors.exists():
+                profile.buyer_interested_sectors.set(buyer_sectors)
+        
+        if signup_request.producer_sectors_ids:
+            producer_sectors = signup_request.get_producer_sectors()
+            if producer_sectors.exists():
+                profile.producer_sectors.set(producer_sectors)
+        
+        # Update request fields
+        signup_request.reviewed_by = request.user
+        signup_request.reviewed_at = timezone.now()
+
     def approve_signups(self, request, queryset):
         """Approve selected signup requests and create user accounts"""
         from django.db import transaction
@@ -85,72 +152,20 @@ class SignupRequestAdmin(admin.ModelAdmin):
         for signup_request in queryset.filter(status='pending'):
             try:
                 with transaction.atomic():
-                    # Check if username already exists
-                    if User.objects.filter(username=signup_request.username).exists():
-                        raise ValueError(f"Username '{signup_request.username}' already exists")
-                    
-                    # Check if email already exists
-                    if User.objects.filter(email=signup_request.email).exists():
-                        raise ValueError(f"Email '{signup_request.email}' already exists")
-                    
-                    # Create user
-                    user = User.objects.create(
-                        username=signup_request.username,
-                        email=signup_request.email,
-                        first_name=signup_request.first_name,
-                        last_name=signup_request.last_name,
-                        password=signup_request.password_hash  # Already hashed
-                    )
-                    
-                    # Create user profile
-                    profile = UserProfile.objects.create(
-                        user=user,
-                        company_name=signup_request.company_name,
-                        phone_number=signup_request.phone_number,
-                        country=signup_request.country,
-                        city=signup_request.city,
-                        is_buyer=signup_request.is_buyer,
-                        is_producer=signup_request.is_producer,
-                        buyer_quarterly_volume=signup_request.buyer_quarterly_volume,
-                        producer_quarterly_sales=signup_request.producer_quarterly_sales,
-                        producer_product_count=signup_request.producer_product_count
-                    )
-                    
-                    # Add buyer sectors
-                    if signup_request.buyer_interested_sectors_ids:
-                        buyer_sectors = signup_request.get_buyer_sectors()
-                        if buyer_sectors.exists():
-                            profile.buyer_interested_sectors.set(buyer_sectors)
-                    
-                    # Add producer sectors
-                    if signup_request.producer_sectors_ids:
-                        producer_sectors = signup_request.get_producer_sectors()
-                        if producer_sectors.exists():
-                            profile.producer_sectors.set(producer_sectors)
-                    
-                    # Update signup request status (only if everything succeeded)
+                    self._process_approval(request, signup_request)
                     signup_request.status = 'approved'
-                    signup_request.reviewed_by = request.user
-                    signup_request.reviewed_at = timezone.now()
                     signup_request.save()
-                    
                     approved_count += 1
                     
             except Exception as e:
                 error_count += 1
-                error_msg = f"Error approving '{signup_request.username}': {str(e)}"
-                messages.error(request, error_msg)
-                # Log the full error for debugging
-                import traceback
-                print(f"Approval error for {signup_request.username}:")
-                print(traceback.format_exc())
+                messages.error(request, f"Error ({signup_request.username}): {str(e)}")
         
         if approved_count > 0:
             messages.success(request, f"✓ {approved_count} signup request(s) approved successfully!")
         if error_count > 0:
-            messages.warning(request, f"⚠ {error_count} signup request(s) failed to approve. Check error messages above.")
+            messages.warning(request, f"⚠ {error_count} request(s) failed.")
 
-    
     approve_signups.short_description = "Approve selected signup requests"
     
     def reject_signups(self, request, queryset):
