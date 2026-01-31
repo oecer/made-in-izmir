@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from .models import UserProfile, Sector
+from django.contrib.auth.hashers import make_password
+from .models import UserProfile, Sector, SignupRequest
+
 
 
 class SignUpForm(UserCreationForm):
@@ -200,35 +202,43 @@ class SignUpForm(UserCreationForm):
         return cleaned_data
     
     def save(self, commit=True):
-        user = super().save(commit=False)
-        user.email = self.cleaned_data['email']
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
+        """Create a signup request instead of creating user directly"""
+        # Don't create the user yet - just create a signup request
+        
+        # Get sector IDs as comma-separated strings
+        buyer_sector_ids = ','.join(
+            str(s.id) for s in self.cleaned_data.get('buyer_interested_sectors', [])
+        ) if self.cleaned_data.get('buyer_interested_sectors') else ''
+        
+        producer_sector_ids = ','.join(
+            str(s.id) for s in self.cleaned_data.get('producer_sectors', [])
+        ) if self.cleaned_data.get('producer_sectors') else ''
         
         if commit:
-            user.save()
-            
-            # Create user profile
-            profile = UserProfile.objects.create(
-                user=user,
+            # Create signup request
+            signup_request = SignupRequest.objects.create(
+                username=self.cleaned_data['username'],
+                email=self.cleaned_data['email'],
+                first_name=self.cleaned_data['first_name'],
+                last_name=self.cleaned_data['last_name'],
+                password_hash=make_password(self.cleaned_data['password1']),
                 company_name=self.cleaned_data['company_name'],
                 phone_number=self.cleaned_data['phone_number'],
                 country=self.cleaned_data['country'],
                 city=self.cleaned_data['city'],
                 is_buyer=self.cleaned_data['is_buyer'],
                 is_producer=self.cleaned_data['is_producer'],
+                buyer_interested_sectors_ids=buyer_sector_ids,
                 buyer_quarterly_volume=self.cleaned_data.get('buyer_quarterly_volume'),
+                producer_sectors_ids=producer_sector_ids,
                 producer_quarterly_sales=self.cleaned_data.get('producer_quarterly_sales'),
-                producer_product_count=self.cleaned_data.get('producer_product_count')
+                producer_product_count=self.cleaned_data.get('producer_product_count'),
+                status='pending'
             )
-            
-            # Add ManyToMany fields
-            if self.cleaned_data.get('buyer_interested_sectors'):
-                profile.buyer_interested_sectors.set(self.cleaned_data['buyer_interested_sectors'])
-            if self.cleaned_data.get('producer_sectors'):
-                profile.producer_sectors.set(self.cleaned_data['producer_sectors'])
+            return signup_request
         
-        return user
+        return None
+
 
 
 class CustomLoginForm(AuthenticationForm):

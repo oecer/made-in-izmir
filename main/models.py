@@ -1,5 +1,92 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+
+
+class SignupRequest(models.Model):
+    """Pending signup requests awaiting admin approval"""
+    
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+    
+    # User account information
+    username = models.CharField(max_length=150, unique=True)
+    email = models.EmailField()
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    password_hash = models.CharField(max_length=255)  # Hashed password
+    
+    # Company information
+    company_name = models.CharField(max_length=200)
+    phone_number = models.CharField(max_length=20)
+    country = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    
+    # User type
+    is_buyer = models.BooleanField(default=False)
+    is_producer = models.BooleanField(default=False)
+    
+    # Buyer-specific fields (stored as JSON-like text for sectors)
+    buyer_interested_sectors_ids = models.TextField(blank=True, null=True)  # Comma-separated sector IDs
+    buyer_quarterly_volume = models.DecimalField(
+        max_digits=15, 
+        decimal_places=2, 
+        blank=True, 
+        null=True
+    )
+    
+    # Producer-specific fields
+    producer_sectors_ids = models.TextField(blank=True, null=True)  # Comma-separated sector IDs
+    producer_quarterly_sales = models.DecimalField(
+        max_digits=15, 
+        decimal_places=2, 
+        blank=True, 
+        null=True
+    )
+    producer_product_count = models.IntegerField(blank=True, null=True)
+    
+    # Request status
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    
+    # Admin actions
+    reviewed_by = models.ForeignKey(
+        User, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        related_name='reviewed_signups'
+    )
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    rejection_reason = models.TextField(blank=True, null=True)
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = "Kayıt Talebi"
+        verbose_name_plural = "Kayıt Talepleri"
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.username} - {self.company_name} ({self.get_status_display()})"
+    
+    def get_buyer_sectors(self):
+        """Get buyer interested sectors as queryset"""
+        if self.buyer_interested_sectors_ids:
+            ids = [int(id.strip()) for id in self.buyer_interested_sectors_ids.split(',') if id.strip()]
+            return Sector.objects.filter(id__in=ids)
+        return Sector.objects.none()
+    
+    def get_producer_sectors(self):
+        """Get producer sectors as queryset"""
+        if self.producer_sectors_ids:
+            ids = [int(id.strip()) for id in self.producer_sectors_ids.split(',') if id.strip()]
+            return Sector.objects.filter(id__in=ids)
+        return Sector.objects.none()
 
 
 class Sector(models.Model):

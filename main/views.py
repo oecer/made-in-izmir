@@ -36,16 +36,19 @@ def contact(request):
 
 
 def signup_view(request):
-    """User registration view"""
+    """User registration view - creates signup request for admin approval"""
     if request.user.is_authenticated:
         return redirect('main:index')
     
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, 'Hesabınız başarıyla oluşturuldu! Hoş geldiniz.')
+            signup_request = form.save()
+            messages.success(
+                request, 
+                'Kayıt talebiniz alındı! Hesabınız yönetici onayından sonra aktif hale gelecektir. '
+                'E-posta adresinize onay durumu hakkında bilgi gönderilecektir.'
+            )
             return redirect('main:index')
         else:
             messages.error(request, 'Lütfen formdaki hataları düzeltin.')
@@ -53,6 +56,7 @@ def signup_view(request):
         form = SignUpForm()
     
     return render(request, 'auth/signup.html', {'form': form})
+
 
 
 def login_view(request):
