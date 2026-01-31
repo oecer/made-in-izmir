@@ -153,17 +153,17 @@
                     En az bir seçenek seçmelisiniz. Her iki seçeneği de seçebilirsiniz.
                 </p>
 
-                <div class="form-check">
+                <div class="form-check user-type-box">
                     {{ form.is_buyer }}
                     <label class="form-check-label" for="{{ form.is_buyer.id_for_label }}">
-                        <span data-i18n="signup.buyer">Alıcı</span>
+                        <strong data-i18n="signup.buyer">Alıcı</strong>
                     </label>
                 </div>
 
-                <div class="form-check">
+                <div class="form-check user-type-box">
                     {{ form.is_producer }}
                     <label class="form-check-label" for="{{ form.is_producer.id_for_label }}">
-                        <span data-i18n="signup.producer">Üretici</span>
+                        <strong data-i18n="signup.producer">Üretici</strong>
                     </label>
                 </div>
 
@@ -254,6 +254,16 @@
         height: auto;
         min-height: 45px;
     }
+
+    .user-type-box {
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .user-type-box.selected-box {
+        background: rgba(204, 164, 59, 0.1);
+        border-color: var(--accent-color);
+    }
 </style>
 {% endblock %}
 
@@ -289,18 +299,37 @@
         }
 
         function toggleFields() {
+            const boxes = document.querySelectorAll('.user-type-box');
+
             if (buyerCheckbox.checked) {
                 buyerFields.classList.add('active');
+                buyerCheckbox.parentElement.classList.add('selected-box');
             } else {
                 buyerFields.classList.remove('active');
+                buyerCheckbox.parentElement.classList.remove('selected-box');
             }
 
             if (producerCheckbox.checked) {
                 producerFields.classList.add('active');
+                producerCheckbox.parentElement.classList.add('selected-box');
             } else {
                 producerFields.classList.remove('active');
+                producerCheckbox.parentElement.classList.remove('selected-box');
             }
         }
+
+        // Make whole boxes clickable
+        document.querySelectorAll('.user-type-box').forEach(box => {
+            box.addEventListener('click', function (e) {
+                // Don't trigger if clicking the actual checkbox or label (browser handles those)
+                if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL' && e.target.tagName !== 'STRONG') {
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                    // Manually trigger change event to run toggleFields
+                    checkbox.dispatchEvent(new Event('change'));
+                }
+            });
+        });
 
         // Initial check
         toggleFields();
