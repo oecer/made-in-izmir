@@ -1,0 +1,431 @@
+{% extends 'base.html' %}
+
+{% block title %}Kayıt Ol - Made in Izmir{% endblock %}
+
+{% block extra_css %}
+<style>
+    .signup-container {
+        max-width: 800px;
+        margin: 4rem auto;
+        padding: 2rem;
+    }
+
+    .signup-card {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 3rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+    }
+
+    .form-section h3 {
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--primary-color);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--text-color);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s;
+        background: var(--bg-color);
+        color: var(--text-color);
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+    }
+
+    .form-check {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background: var(--bg-color);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .form-check:hover {
+        background: rgba(255, 107, 107, 0.05);
+    }
+
+    .form-check-input {
+        width: 20px;
+        height: 20px;
+        margin-right: 1rem;
+        cursor: pointer;
+    }
+
+    .form-check-label {
+        cursor: pointer;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .conditional-fields {
+        display: none;
+        margin-top: 1rem;
+        padding: 1.5rem;
+        background: rgba(255, 107, 107, 0.05);
+        border-radius: 8px;
+        border-left: 4px solid var(--primary-color);
+    }
+
+    .conditional-fields.active {
+        display: block;
+        animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .btn-signup {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-signup:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(255, 107, 107, 0.3);
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .alert-danger {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: var(--text-color);
+    }
+
+    .login-link a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+
+    .required {
+        color: var(--primary-color);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="signup-container">
+    <div class="signup-card">
+        <h2 style="text-align: center; margin-bottom: 2rem;" data-i18n="signup.title">Kayıt Ol</h2>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="post" id="signupForm">
+            {% csrf_token %}
+
+            <!-- Personal Information -->
+            <div class="form-section">
+                <h3 data-i18n="signup.personal_info">Kişisel Bilgiler</h3>
+
+                <div class="form-group">
+                    <label for="{{ form.first_name.id_for_label }}">
+                        <span data-i18n="signup.first_name">Ad</span> <span class="required">*</span>
+                    </label>
+                    {{ form.first_name }}
+                    {% if form.first_name.errors %}
+                    <div class="error-message">{{ form.first_name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.last_name.id_for_label }}">
+                        <span data-i18n="signup.last_name">Soyad</span> <span class="required">*</span>
+                    </label>
+                    {{ form.last_name }}
+                    {% if form.last_name.errors %}
+                    <div class="error-message">{{ form.last_name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">
+                        <span data-i18n="signup.email">E-posta</span> <span class="required">*</span>
+                    </label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <div class="error-message">{{ form.email.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">
+                        <span data-i18n="signup.username">Kullanıcı Adı</span> <span class="required">*</span>
+                    </label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                    <div class="error-message">{{ form.username.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}">
+                        <span data-i18n="signup.password">Şifre</span> <span class="required">*</span>
+                    </label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                    <div class="error-message">{{ form.password1.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}">
+                        <span data-i18n="signup.password_confirm">Şifre Tekrar</span> <span class="required">*</span>
+                    </label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                    <div class="error-message">{{ form.password2.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Company Information -->
+            <div class="form-section">
+                <h3 data-i18n="signup.company_info">Firma Bilgileri</h3>
+
+                <div class="form-group">
+                    <label for="{{ form.company_name.id_for_label }}">
+                        <span data-i18n="signup.company_name">Firma Adı</span> <span class="required">*</span>
+                    </label>
+                    {{ form.company_name }}
+                    {% if form.company_name.errors %}
+                    <div class="error-message">{{ form.company_name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.phone_number.id_for_label }}">
+                        <span data-i18n="signup.phone_number">Telefon Numarası</span> <span class="required">*</span>
+                    </label>
+                    {{ form.phone_number }}
+                    {% if form.phone_number.errors %}
+                    <div class="error-message">{{ form.phone_number.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.country.id_for_label }}">
+                        <span data-i18n="signup.country">Ülke</span> <span class="required">*</span>
+                    </label>
+                    {{ form.country }}
+                    {% if form.country.errors %}
+                    <div class="error-message">{{ form.country.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.city.id_for_label }}">
+                        <span data-i18n="signup.city">Şehir</span> <span class="required">*</span>
+                    </label>
+                    {{ form.city }}
+                    {% if form.city.errors %}
+                    <div class="error-message">{{ form.city.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- User Type -->
+            <div class="form-section">
+                <h3 data-i18n="signup.user_type">Kullanıcı Tipi</h3>
+                <p style="margin-bottom: 1rem; color: #666;" data-i18n="signup.user_type_desc">
+                    En az bir seçenek seçmelisiniz. Her iki seçeneği de seçebilirsiniz.
+                </p>
+
+                <div class="form-check">
+                    {{ form.is_buyer }}
+                    <label class="form-check-label" for="{{ form.is_buyer.id_for_label }}">
+                        <span data-i18n="signup.buyer">Alıcı</span>
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    {{ form.is_producer }}
+                    <label class="form-check-label" for="{{ form.is_producer.id_for_label }}">
+                        <span data-i18n="signup.producer">Üretici</span>
+                    </label>
+                </div>
+
+                {% if form.non_field_errors %}
+                <div class="error-message">{{ form.non_field_errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Buyer-specific fields -->
+            <div id="buyerFields" class="conditional-fields">
+                <h4 style="margin-bottom: 1rem;" data-i18n="signup.buyer_info">Alıcı Bilgileri</h4>
+
+                <div class="form-group">
+                    <label for="{{ form.buyer_interested_sectors.id_for_label }}">
+                        <span data-i18n="signup.buyer_sectors">İlgilenilen Sektörler</span> <span
+                            class="required">*</span>
+                    </label>
+                    {{ form.buyer_interested_sectors }}
+                    <small style="color: #666;" data-i18n="signup.buyer_sectors_help">Virgülle ayırarak yazın (örn:
+                        Tekstil, Gıda, Mermer)</small>
+                    {% if form.buyer_interested_sectors.errors %}
+                    <div class="error-message">{{ form.buyer_interested_sectors.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.buyer_quarterly_volume.id_for_label }}">
+                        <span data-i18n="signup.buyer_volume">Çeyreklik Alım Hacmi (USD)</span> <span
+                            class="required">*</span>
+                    </label>
+                    {{ form.buyer_quarterly_volume }}
+                    {% if form.buyer_quarterly_volume.errors %}
+                    <div class="error-message">{{ form.buyer_quarterly_volume.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Producer-specific fields -->
+            <div id="producerFields" class="conditional-fields">
+                <h4 style="margin-bottom: 1rem;" data-i18n="signup.producer_info">Üretici Bilgileri</h4>
+
+                <div class="form-group">
+                    <label for="{{ form.producer_sector.id_for_label }}">
+                        <span data-i18n="signup.producer_sector">Sektör</span> <span class="required">*</span>
+                    </label>
+                    {{ form.producer_sector }}
+                    {% if form.producer_sector.errors %}
+                    <div class="error-message">{{ form.producer_sector.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.producer_quarterly_sales.id_for_label }}">
+                        <span data-i18n="signup.producer_sales">Çeyreklik Satış Hacmi (USD)</span> <span
+                            class="required">*</span>
+                    </label>
+                    {{ form.producer_quarterly_sales }}
+                    {% if form.producer_quarterly_sales.errors %}
+                    <div class="error-message">{{ form.producer_quarterly_sales.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.producer_product_count.id_for_label }}">
+                        <span data-i18n="signup.producer_products">Yaklaşık Ürün Sayısı</span> <span
+                            class="required">*</span>
+                    </label>
+                    {{ form.producer_product_count }}
+                    {% if form.producer_product_count.errors %}
+                    <div class="error-message">{{ form.producer_product_count.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <button type="submit" class="btn-signup" data-i18n="signup.submit">Kayıt Ol</button>
+        </form>
+
+        <div class="login-link">
+            <span data-i18n="signup.have_account">Zaten hesabınız var mı?</span>
+            <a href="{% url 'main:login' %}" data-i18n="signup.login_link">Giriş Yapın</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Show/hide conditional fields based on user type selection
+    document.addEventListener('DOMContentLoaded', function () {
+        const buyerCheckbox = document.getElementById('is_buyer');
+        const producerCheckbox = document.getElementById('is_producer');
+        const buyerFields = document.getElementById('buyerFields');
+        const producerFields = document.getElementById('producerFields');
+
+        function toggleFields() {
+            if (buyerCheckbox.checked) {
+                buyerFields.classList.add('active');
+            } else {
+                buyerFields.classList.remove('active');
+            }
+
+            if (producerCheckbox.checked) {
+                producerFields.classList.add('active');
+            } else {
+                producerFields.classList.remove('active');
+            }
+        }
+
+        // Initial check
+        toggleFields();
+
+        // Add event listeners
+        buyerCheckbox.addEventListener('change', toggleFields);
+        producerCheckbox.addEventListener('change', toggleFields);
+    });
+</script>
+{% endblock %}

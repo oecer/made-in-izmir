@@ -10,4 +10,10 @@ urlpatterns = [
     path('buyers/', views.buyers, name='buyers'),
     path('calendar/', views.calendar, name='calendar'),
     path('contact/', views.contact, name='contact'),
+    
+    # Authentication URLs
+    path('signup/', views.signup_view, name='signup'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('profile/', views.profile_view, name='profile'),
 ]
