@@ -2,30 +2,14 @@
 
 {% block title %}Profilim - Made in Izmir{% endblock %}
 
+{% block body_class %}auth-page{% endblock %}
 {% block extra_css %}
 <style>
-    .profile-container {
-        max-width: 900px;
-        margin: 4rem auto;
-        padding: 2rem;
-    }
-
-    .profile-card {
-        background: var(--card-bg);
-        border-radius: 15px;
-        padding: 3rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-
     .profile-header {
         text-align: center;
         margin-bottom: 3rem;
         padding-bottom: 2rem;
-        border-bottom: 2px solid var(--primary-color);
-    }
-
-    .profile-header h2 {
-        margin-bottom: 0.5rem;
+        border-bottom: 2px solid var(--accent-color);
     }
 
     .user-type-badges {
@@ -56,68 +40,69 @@
         margin-bottom: 2.5rem;
     }
 
-    .profile-section h3 {
-        color: var(--primary-color);
-        margin-bottom: 1.5rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid #ddd;
-    }
-
     .info-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
     }
 
     .info-item {
-        padding: 1rem;
-        background: var(--bg-color);
-        border-radius: 8px;
+        padding: 0.35rem 1.25rem;
+        background: rgba(15, 23, 42, 0.02);
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(15, 23, 42, 0.05);
+        transition: var(--transition);
+    }
+
+    .info-item:hover {
+        background: rgba(15, 23, 42, 0.04);
+        border-color: rgba(204, 164, 59, 0.2);
     }
 
     .info-label {
-        font-weight: 600;
-        color: #666;
-        font-size: 0.875rem;
-        margin-bottom: 0.5rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        font-size: 0.65rem;
+        margin-bottom: 0.25rem;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.8px;
     }
 
     .info-value {
-        color: var(--text-color);
-        font-size: 1.1rem;
+        color: var(--primary-color);
+        font-size: 1rem;
+        font-weight: 600;
     }
 
     .btn-logout {
         display: block;
         width: 100%;
         max-width: 300px;
-        margin: 2rem auto 0;
+        margin: 3rem auto 0;
         padding: 1rem;
-        background: #dc3545;
+        background: #ef4444;
         color: white;
         border: none;
-        border-radius: 8px;
+        border-radius: var(--radius-md);
         font-size: 1rem;
-        font-weight: 600;
+        font-weight: 700;
         cursor: pointer;
-        transition: all 0.3s;
+        transition: var(--transition);
         text-align: center;
         text-decoration: none;
     }
 
     .btn-logout:hover {
-        background: #c82333;
+        background: #dc2626;
         transform: translateY(-2px);
-        box-shadow: 0 5px 20px rgba(220, 53, 69, 0.3);
+        box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.3);
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="profile-container">
-    <div class="profile-card">
+    <div class="auth-card" style="max-width: 900px;">
         <div class="profile-header">
             <h2 data-i18n="profile.title">Profilim</h2>
             <p style="color: #666;">{{ user.email }}</p>

@@ -653,7 +653,8 @@ footer p {
 }
 
 .auth-page .login-container,
-.auth-page .signup-container {
+.auth-page .signup-container,
+.auth-page .profile-container {
     flex: 1;
     display: flex;
     align-items: center;
