@@ -1,0 +1,25 @@
+<!-- Header / Navigation -->
+<header id="header">
+    <div class="container">
+        <nav>
+            <div class="logo">
+                Made in Izmir
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'main:index' %}" data-i18n="nav.home">Ana Sayfa</a></li>
+                <li><a href="{% url 'main:producers' %}" data-i18n="nav.producers">Üreticiler İçin</a></li>
+                <li><a href="{% url 'main:buyers' %}" data-i18n="nav.buyers">Alıcılar İçin</a></li>
+                <li><a href="{% url 'main:calendar' %}" data-i18n="nav.calendar">Fuar Takvimi</a></li>
+                <li><a href="{% url 'main:about' %}" data-i18n="nav.about">Hakkımızda</a></li>
+                <li><a href="{% url 'main:contact' %}" data-i18n="nav.contact">İletişim</a></li>
+            </ul>
+            <div class="lang-switch">
+                <button class="lang-btn active" data-lang="tr">TR</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+            <div class="menu-toggle" id="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </div>
+</header>
