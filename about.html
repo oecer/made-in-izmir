@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Made in Izmir - About Us</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Header / Navigation -->
+    <header id="header">
+        <div class="container">
+            <nav>
+                <div class="logo">Made in Izmir</div>
+                <ul class="nav-links">
+                    <li><a href="index.html" data-i18n="nav.home">Ana Sayfa</a></li>
+                    <li><a href="producers.html" data-i18n="nav.producers">Üreticiler İçin</a></li>
+                    <li><a href="buyers.html" data-i18n="nav.buyers">Alıcılar İçin</a></li>
+                    <li><a href="calendar.html" data-i18n="nav.calendar">Fuar Takvimi</a></li>
+                    <li><a href="about.html" data-i18n="nav.about" class="active">Hakkımızda</a></li>
+                    <li><a href="contact.html" data-i18n="nav.contact">İletişim</a></li>
+                </ul>
+                <div class="lang-switch">
+                    <button class="lang-btn" data-lang="tr">TR</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <div class="page-header header-about">
+        <div class="container">
+            <h1 data-i18n="about.title">Hakkımızda</h1>
+        </div>
+    </div>
+
+    <!-- Bio Section -->
+    <section class="section">
+        <div class="container about-content animate-fade-up">
+            <div class="about-img">
+                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Founder">
+            </div>
+            <div class="about-text">
+                <h2 data-i18n="about.bio_title">Kurucu & Vizyon</h2>
+                <p data-i18n="about.bio_text" style="font-size: 1.1rem; margin-bottom: 2rem;">Yılların getirdiği ihracat
+                    tecrübesi ile İzmir'in potansiyelini dünyaya taşıyoruz.</p>
+                <p>Made in Izmir, yerel üreticileri global pazarlara entegre etmek ve uluslararası alıcıların
+                    Türkiye'deki en güvenilir tedarik partneri olmak amacıyla kurulmuştur.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Izmir -->
+    <section class="section" style="background-color: var(--bg-color);">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 2rem;" data-i18n="about.why_izmir_title">Neden İzmir?</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <i class="fas fa-ship fa-2x" style="color: var(--primary-color);"></i>
+                    <h3>Stratejik Liman</h3>
+                    <p>Avrupa, Asya ve Afrika'nın kesişim noktasında güçlü lojistik ağı.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-industry fa-2x" style="color: var(--primary-color);"></i>
+                    <h3>Üretim Gücü</h3>
+                    <p>Tekstilden gıdaya, otomotivden mermere geniş üretim yelpazesi.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-history fa-2x" style="color: var(--primary-color);"></i>
+                    <h3>Ticaret Kültürü</h3>
+                    <p>8500 yıllık ticaret geçmişi ile güvenilir iş ortaklığı.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <h3 class="logo">Made in Izmir</h3>
+            <p data-i18n="footer.desc">Made in İzmir: Küresel Ticaret Merkeziniz.</p>
+            <p style="margin-top: 2rem; font-size: 0.8rem; color: #aaa;" data-i18n="footer.copyright">© 2024 Made in
+                İzmir. Tüm Hakları Saklıdır.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/translations.js"></script>
+</body>
+
+</html>

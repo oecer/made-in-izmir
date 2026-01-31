@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Made in Izmir - Expo Calendar</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Header / Navigation -->
+    <header id="header">
+        <div class="container">
+            <nav>
+                <div class="logo">Made in Izmir</div>
+                <ul class="nav-links">
+                    <li><a href="index.html" data-i18n="nav.home">Ana Sayfa</a></li>
+                    <li><a href="producers.html" data-i18n="nav.producers">Üreticiler İçin</a></li>
+                    <li><a href="buyers.html" data-i18n="nav.buyers">Alıcılar İçin</a></li>
+                    <li><a href="calendar.html" data-i18n="nav.calendar" class="active">Fuar Takvimi</a></li>
+                    <li><a href="about.html" data-i18n="nav.about">Hakkımızda</a></li>
+                    <li><a href="contact.html" data-i18n="nav.contact">İletişim</a></li>
+                </ul>
+                <div class="lang-switch">
+                    <button class="lang-btn" data-lang="tr">TR</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <div class="page-header header-calendar">
+        <div class="container">
+            <h1 data-i18n="calendar.title">Fuar Takvimi</h1>
+            <p data-i18n="calendar.subtitle">Katılacağımız uluslararası fuarlar.</p>
+        </div>
+    </div>
+
+    <!-- Calendar Section -->
+    <section class="section">
+        <div class="container animate-fade-up">
+            <div style="overflow-x: auto;">
+                <table class="calendar-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="calendar.col_event">Etkinlik</th>
+                            <th data-i18n="calendar.col_date">Tarih</th>
+                            <th data-i18n="calendar.col_location">Konum</th>
+                            <th data-i18n="calendar.col_action">Aksiyon</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Gulfood 2024</strong> <br><small>World's Largest Food Expo</small></td>
+                            <td>Feb 19-23, 2024</td>
+                            <td>Dubai, UAE</td>
+                            <td><a href="contact.html" class="btn btn-sm btn-secondary"
+                                    data-i18n="calendar.hire_btn">Bizi Kiralayın</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hannover Messe</strong> <br><small>Industrial Technology</small></td>
+                            <td>Apr 22-26, 2024</td>
+                            <td>Hannover, Germany</td>
+                            <td><a href="contact.html" class="btn btn-sm btn-secondary"
+                                    data-i18n="calendar.hire_btn">Bizi Kiralayın</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Anuga</strong> <br><small>Food & Beverage</small></td>
+                            <td>Oct 07-11, 2025</td>
+                            <td>Cologne, Germany</td>
+                            <td><a href="contact.html" class="btn btn-sm btn-secondary"
+                                    data-i18n="calendar.hire_btn">Bizi Kiralayın</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <h3 class="logo">Made in Izmir</h3>
+            <p data-i18n="footer.desc">Made in İzmir: Küresel Ticaret Merkeziniz.</p>
+            <p style="margin-top: 2rem; font-size: 0.8rem; color: #aaa;" data-i18n="footer.copyright">© 2024 Made in
+                İzmir. Tüm Hakları Saklıdır.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/translations.js"></script>
+</body>
+
+</html>

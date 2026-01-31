@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Made in Izmir - For Producers</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Header / Navigation -->
+    <header id="header">
+        <div class="container">
+            <nav>
+                <div class="logo">Made in Izmir</div>
+                <ul class="nav-links">
+                    <li><a href="index.html" data-i18n="nav.home">Ana Sayfa</a></li>
+                    <li><a href="producers.html" data-i18n="nav.producers" class="active">Üreticiler İçin</a></li>
+                    <li><a href="buyers.html" data-i18n="nav.buyers">Alıcılar İçin</a></li>
+                    <li><a href="calendar.html" data-i18n="nav.calendar">Fuar Takvimi</a></li>
+                    <li><a href="about.html" data-i18n="nav.about">Hakkımızda</a></li>
+                    <li><a href="contact.html" data-i18n="nav.contact">İletişim</a></li>
+                </ul>
+                <div class="lang-switch">
+                    <button class="lang-btn" data-lang="tr">TR</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <div class="page-header header-producers">
+        <div class="container">
+            <h1 data-i18n="producers.title">Üreticiler İçin Hizmetlerimiz</h1>
+            <p data-i18n="producers.subtitle">Global pazarlara açılmanız için gereken tüm desteği sağlıyoruz.</p>
+        </div>
+    </div>
+
+    <!-- Services -->
+    <section class="section">
+        <div class="container">
+            <div class="card-grid animate-fade-up">
+                <div class="card">
+                    <i class="fas fa-chart-line fa-2x" style="color: var(--secondary-color); margin-bottom: 1rem;"></i>
+                    <h3 data-i18n="producers.service1_title">Pazar Araştırması</h3>
+                    <p data-i18n="producers.service1_desc">Hedef pazarınızdaki fırsatları ve rakipleri analiz ediyoruz.
+                    </p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-shipping-fast fa-2x"
+                        style="color: var(--secondary-color); margin-bottom: 1rem;"></i>
+                    <h3 data-i18n="producers.service2_title">Lojistik Danışmanlığı</h3>
+                    <p data-i18n="producers.service2_desc">Ürünlerinizin en uygun maliyetle ve güvenle ulaşmasını
+                        sağlıyoruz.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-user-tie fa-2x" style="color: var(--secondary-color); margin-bottom: 1rem;"></i>
+                    <h3 data-i18n="producers.service3_title">Fuar Temsilciliği</h3>
+                    <p data-i18n="producers.service3_desc">Biz gidiyoruz, siz kazanıyorsunuz. Stand kurulumundan müşteri
+                        görüşmelerine kadar her şey bizde.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Form -->
+    <section class="section" style="background-color: var(--bg-color);">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 2rem;" data-i18n="producers.form_title">Made in İzmir Ağına
+                Katılın</h2>
+            <div class="form-box">
+                <form>
+                    <div class="form-group">
+                        <label data-i18n="producers.name">Ad Soyad</label>
+                        <input type="text" class="form-control" data-i18n="producers.name" placeholder="Ad Soyad">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="producers.company">Firma Adı</label>
+                        <input type="text" class="form-control" data-i18n="producers.company" placeholder="Firma Adı">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="producers.sector">Sektör</label>
+                        <select class="form-control">
+                            <option>Textiles</option>
+                            <option>Food</option>
+                            <option>Marble</option>
+                            <option>Automotive</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="producers.message">Mesajınız</label>
+                        <textarea class="form-control" rows="4" data-i18n="producers.message"
+                            placeholder="Mesajınız"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;"
+                        data-i18n="producers.submit">Başvuruyu Gönder</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <h3 class="logo">Made in Izmir</h3>
+            <p data-i18n="footer.desc">Made in İzmir: Küresel Ticaret Merkeziniz.</p>
+            <p style="margin-top: 2rem; font-size: 0.8rem; color: #aaa;" data-i18n="footer.copyright">© 2024 Made in
+                İzmir. Tüm Hakları Saklıdır.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/translations.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Made in Izmir - Contact</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Header / Navigation -->
+    <header id="header">
+        <div class="container">
+            <nav>
+                <div class="logo">Made in Izmir</div>
+                <ul class="nav-links">
+                    <li><a href="index.html" data-i18n="nav.home">Ana Sayfa</a></li>
+                    <li><a href="producers.html" data-i18n="nav.producers">Üreticiler İçin</a></li>
+                    <li><a href="buyers.html" data-i18n="nav.buyers">Alıcılar İçin</a></li>
+                    <li><a href="calendar.html" data-i18n="nav.calendar">Fuar Takvimi</a></li>
+                    <li><a href="about.html" data-i18n="nav.about">Hakkımızda</a></li>
+                    <li><a href="contact.html" data-i18n="nav.contact" class="active">İletişim</a></li>
+                </ul>
+                <div class="lang-switch">
+                    <button class="lang-btn" data-lang="tr">TR</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <div class="page-header header-contact">
+        <div class="container">
+            <h1 data-i18n="contact.title">İletişim</h1>
+            <p data-i18n="contact.subtitle">Sorularınız için bizimle iletişime geçin.</p>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <section class="section">
+        <div class="container contact-container animate-fade-up" style="animation-delay: 0.2s;">
+            <!-- Info Side -->
+            <div class="contact-info">
+                <h3 data-i18n="contact.title">İletişim</h3>
+                <p class="text-muted" style="margin-bottom: 2rem;">Izmir, Turkey</p>
+
+                <div class="contact-item" style="margin-bottom: 1.5rem;">
+                    <i class="fas fa-envelope" style="color: var(--accent-color); margin-right: 10px;"></i>
+                    info@madeinizmir.com
+                </div>
+                <div class="contact-item" style="margin-bottom: 1.5rem;">
+                    <i class="fas fa-phone" style="color: var(--accent-color); margin-right: 10px;"></i>
+                    +90 555 123 4567
+                </div>
+
+                <a href="https://wa.me/905551234567" class="whatsapp-btn" target="_blank">
+                    <i class="fab fa-whatsapp fa-2x"></i>
+                    <span data-i18n="contact.whatsapp">WhatsApp Hattı</span>
+                </a>
+            </div>
+
+            <!-- Form Side -->
+            <div class="contact-form">
+                <h3 style="margin-bottom: 1.5rem;" data-i18n="contact.form_title">Bize Ulaşın</h3>
+                <form>
+                    <div class="form-group">
+                        <label data-i18n="contact.name">Adınız</label>
+                        <input type="text" class="form-control" data-i18n="contact.name" placeholder="Adınız">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="contact.email">E-posta</label>
+                        <input type="email" class="form-control" data-i18n="contact.email" placeholder="E-posta">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="contact.subject">Konu</label>
+                        <select class="form-control">
+                            <option value="producer">Producer Inquiry (I want to export)</option>
+                            <option value="buyer">Buyer Inquiry (I want to import)</option>
+                            <option value="general">General Inquiry</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="contact.message">Mesaj</label>
+                        <textarea class="form-control" rows="5" data-i18n="contact.message"
+                            placeholder="Mesaj"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" data-i18n="contact.send"
+                        style="width: 100%;">Gönder</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <h3 class="logo">Made in Izmir</h3>
+            <p data-i18n="footer.desc">Made in İzmir: Küresel Ticaret Merkeziniz.</p>
+            <p style="margin-top: 2rem; font-size: 0.8rem; color: #aaa;" data-i18n="footer.copyright">© 2024 Made in
+                İzmir. Tüm Hakları Saklıdır.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/translations.js"></script>
+</body>
+
+</html>
