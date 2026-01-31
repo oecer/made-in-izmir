@@ -629,3 +629,196 @@ footer p {
         height: 50vh;
     }
 }
+
+/* Auth Pages (Login & Signup) */
+.auth-page {
+    background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.6)),
+        url('../images/izmir_port.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-page header:not(.scrolled) {
+    background: transparent;
+}
+
+.auth-page header:not(.scrolled) .logo,
+.auth-page header:not(.scrolled) .nav-links li a,
+.auth-page header:not(.scrolled) .menu-toggle {
+    color: var(--text-light);
+}
+
+.auth-page .login-container,
+.auth-page .signup-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 1rem 60px;
+}
+
+.auth-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-lg);
+    padding: 3rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: fadeUp 0.6s ease-out;
+}
+
+.signup-container .auth-card {
+    max-width: 800px;
+}
+
+.auth-card h2 {
+    margin-bottom: 2.5rem;
+    text-align: center;
+    font-size: 2.5rem;
+    background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    border-bottom: none !important;
+}
+
+.auth-card .form-group label {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.auth-card .form-control {
+    background: rgba(248, 250, 252, 0.8);
+    border: 1px solid #e2e8f0;
+}
+
+.auth-card .form-control:focus {
+    background: #fff;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 4px rgba(204, 164, 59, 0.15);
+}
+
+.auth-card .btn-auth {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 1.25rem;
+    font-size: 1.1rem;
+    background: var(--primary-color);
+    color: var(--text-light);
+    border-radius: var(--radius-md) !important;
+    font-weight: 700;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+}
+
+.auth-card .btn-auth:hover {
+    background: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.auth-card .link-text {
+    text-align: center;
+    margin-top: 2rem;
+    color: var(--text-muted);
+}
+
+.auth-card .link-text a {
+    color: var(--accent-color);
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .auth-card {
+        padding: 2rem;
+    }
+
+    .auth-card h2 {
+        font-size: 1.75rem;
+    }
+}
+
+/* Conditional Fields for Signup */
+.conditional-fields {
+    display: none;
+    margin-top: 1.5rem;
+    padding: 2rem;
+    background: rgba(15, 23, 42, 0.03);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--accent-color);
+    animation: fadeIn 0.4s ease;
+}
+
+.conditional-fields.active {
+    display: block;
+    animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.form-section {
+    margin-bottom: 3rem;
+}
+
+.form-section h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(204, 164, 59, 0.2);
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(15, 23, 42, 0.05);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+    margin-bottom: 1rem;
+}
+
+.form-check:hover {
+    background: rgba(15, 23, 42, 0.08);
+}
+
+.form-check-input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.form-check-label {
+    cursor: pointer;
+    font-weight: 500;
+    margin-bottom: 0;
+}

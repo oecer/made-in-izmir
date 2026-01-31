@@ -2,129 +2,11 @@
 
 {% block title %}Giriş Yap - Made in Izmir{% endblock %}
 
-{% block extra_css %}
-<style>
-    .login-container {
-        max-width: 500px;
-        margin: 6rem auto;
-        padding: 2rem;
-    }
-
-    .login-card {
-        background: var(--card-bg);
-        border-radius: 15px;
-        padding: 3rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .login-card h2 {
-        text-align: center;
-        margin-bottom: 2rem;
-        color: var(--text-color);
-    }
-
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-        color: var(--text-color);
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 0.75rem 1rem;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        font-size: 1rem;
-        transition: all 0.3s;
-        background: var(--bg-color);
-        color: var(--text-color);
-    }
-
-    .form-control:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
-    }
-
-    .btn-login {
-        width: 100%;
-        padding: 1rem;
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        margin-top: 1rem;
-    }
-
-    .btn-login:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 20px rgba(255, 107, 107, 0.3);
-    }
-
-    .alert {
-        padding: 1rem;
-        border-radius: 8px;
-        margin-bottom: 1.5rem;
-    }
-
-    .alert-danger {
-        background: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
-
-    .alert-success {
-        background: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
-
-    .alert-info {
-        background: #d1ecf1;
-        color: #0c5460;
-        border: 1px solid #bee5eb;
-    }
-
-    .signup-link {
-        text-align: center;
-        margin-top: 1.5rem;
-        color: var(--text-color);
-    }
-
-    .signup-link a {
-        color: var(--primary-color);
-        text-decoration: none;
-        font-weight: 600;
-    }
-
-    .signup-link a:hover {
-        text-decoration: underline;
-    }
-
-    .error-message {
-        color: #dc3545;
-        font-size: 0.875rem;
-        margin-top: 0.25rem;
-    }
-
-    .required {
-        color: var(--primary-color);
-    }
-</style>
-{% endblock %}
+{% block body_class %}auth-page{% endblock %}
 
 {% block content %}
 <div class="login-container">
-    <div class="login-card">
+    <div class="auth-card">
         <h2 data-i18n="login.title">Giriş Yap</h2>
 
         {% if messages %}
@@ -162,10 +44,10 @@
             <div class="error-message">{{ form.non_field_errors.0 }}</div>
             {% endif %}
 
-            <button type="submit" class="btn-login" data-i18n="login.submit">Giriş Yap</button>
+            <button type="submit" class="btn-auth" data-i18n="login.submit">Giriş Yap</button>
         </form>
 
-        <div class="signup-link">
+        <div class="link-text">
             <span data-i18n="login.no_account">Hesabınız yok mu?</span>
             <a href="{% url 'main:signup' %}" data-i18n="login.signup_link">Kayıt Olun</a>
         </div>
