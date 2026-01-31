@@ -2,6 +2,20 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class Sector(models.Model):
+    """Sectors list for categorizing buyers and producers"""
+    name_tr = models.CharField(max_length=200, verbose_name="Sektör Adı (TR)")
+    name_en = models.CharField(max_length=200, verbose_name="Sektör Adı (EN)")
+
+    class Meta:
+        verbose_name = "Sektör"
+        verbose_name_plural = "Sektörler"
+        ordering = ['name_tr']
+
+    def __str__(self):
+        return self.name_tr
+
+
 class UserProfile(models.Model):
     """Extended user profile for buyers and producers"""
     
@@ -18,11 +32,11 @@ class UserProfile(models.Model):
     is_producer = models.BooleanField(default=False, verbose_name="Üretici")
     
     # Buyer-specific fields
-    buyer_interested_sectors = models.TextField(
-        blank=True, 
-        null=True,
-        verbose_name="İlgilenilen Sektörler",
-        help_text="Virgülle ayrılmış sektörler"
+    buyer_interested_sectors = models.ManyToManyField(
+        Sector,
+        blank=True,
+        related_name='interested_buyers',
+        verbose_name="İlgilenilen Sektörler"
     )
     buyer_quarterly_volume = models.DecimalField(
         max_digits=15, 
@@ -33,11 +47,11 @@ class UserProfile(models.Model):
     )
     
     # Producer-specific fields
-    producer_sector = models.CharField(
-        max_length=200, 
-        blank=True, 
-        null=True,
-        verbose_name="Sektör"
+    producer_sectors = models.ManyToManyField(
+        Sector,
+        blank=True,
+        related_name='producers',
+        verbose_name="Sektörler"
     )
     producer_quarterly_sales = models.DecimalField(
         max_digits=15, 

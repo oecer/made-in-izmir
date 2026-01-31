@@ -3,6 +3,22 @@
 {% block title %}Kayıt Ol - Made in Izmir{% endblock %}
 
 {% block body_class %}auth-page{% endblock %}
+{% block extra_css %}
+<link href="https://unpkg.com/slim-select@2.8.2/dist/slimselect.css" rel="stylesheet">
+<style>
+    .ss-main {
+        padding: 0.5rem;
+        border-radius: var(--radius-md);
+        border-color: #cbd5e1;
+        background-color: #f8fafc;
+    }
+
+    .ss-main:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="signup-container">
@@ -190,12 +206,12 @@
                 <h4 style="margin-bottom: 1rem;" data-i18n="signup.producer_info">Üretici Bilgileri</h4>
 
                 <div class="form-group">
-                    <label for="{{ form.producer_sector.id_for_label }}">
-                        <span data-i18n="signup.producer_sector">Sektör</span> <span class="required">*</span>
+                    <label for="{{ form.producer_sectors.id_for_label }}">
+                        <span data-i18n="signup.producer_sector">Sektörler</span> <span class="required">*</span>
                     </label>
-                    {{ form.producer_sector }}
-                    {% if form.producer_sector.errors %}
-                    <div class="error-message">{{ form.producer_sector.errors.0 }}</div>
+                    {{ form.producer_sectors }}
+                    {% if form.producer_sectors.errors %}
+                    <div class="error-message">{{ form.producer_sectors.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -231,9 +247,18 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* Styling for the sector dropdowns */
+    .sector-select {
+        height: auto;
+        min-height: 45px;
+    }
+</style>
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://unpkg.com/slim-select@2.8.2/dist/slimselect.min.js"></script>
 <script>
     // Show/hide conditional fields based on user type selection
     document.addEventListener('DOMContentLoaded', function () {
@@ -241,6 +266,27 @@
         const producerCheckbox = document.getElementById('is_producer');
         const buyerFields = document.getElementById('buyerFields');
         const producerFields = document.getElementById('producerFields');
+
+        // Initialize SlimSelect
+        let buyerSlim, producerSlim;
+
+        if (document.getElementById('id_buyer_interested_sectors')) {
+            buyerSlim = new SlimSelect({
+                select: '#id_buyer_interested_sectors',
+                settings: {
+                    placeholderText: 'Sektör Seçiniz',
+                }
+            });
+        }
+
+        if (document.getElementById('id_producer_sectors')) {
+            producerSlim = new SlimSelect({
+                select: '#id_producer_sectors',
+                settings: {
+                    placeholderText: 'Sektör Seçiniz',
+                }
+            });
+        }
 
         function toggleFields() {
             if (buyerCheckbox.checked) {
@@ -262,6 +308,52 @@
         // Add event listeners
         buyerCheckbox.addEventListener('change', toggleFields);
         producerCheckbox.addEventListener('change', toggleFields);
+
+        // --- Sector Translation Logic ---
+        function updateSectorLabels() {
+            const currentLang = localStorage.getItem('madeInIzmirLang') || 'tr';
+            const sectorOptions = document.querySelectorAll('.sector-select option');
+
+            sectorOptions.forEach(opt => {
+                const fullText = opt.getAttribute('data-full-text') || opt.textContent;
+                if (!opt.getAttribute('data-full-text')) {
+                    opt.setAttribute('data-full-text', fullText);
+                }
+
+                if (fullText.includes(' | ')) {
+                    const parts = fullText.split(' | ');
+                    opt.textContent = currentLang === 'tr' ? parts[0] : parts[1];
+                }
+            });
+
+            // Update SlimSelect placeholders and re-render
+            const placeholder = currentLang === 'tr' ? 'Sektör Seçiniz' : 'Select Sectors';
+            if (buyerSlim) {
+                buyerSlim.setData(Array.from(document.querySelectorAll('#id_buyer_interested_sectors option')).map(opt => ({
+                    text: opt.textContent,
+                    value: opt.value,
+                    selected: opt.selected
+                })));
+            }
+            if (producerSlim) {
+                producerSlim.setData(Array.from(document.querySelectorAll('#id_producer_sectors option')).map(opt => ({
+                    text: opt.textContent,
+                    value: opt.value,
+                    selected: opt.selected
+                })));
+            }
+        }
+
+        // Initial update
+        updateSectorLabels();
+
+        // Listen for language changes (we'll hook into the lang buttons)
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Wait a tiny bit for localStorage to update
+                setTimeout(updateSectorLabels, 50);
+            });
+        });
     });
 </script>
 {% endblock %}

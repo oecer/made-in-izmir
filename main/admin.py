@@ -8,6 +8,7 @@ class UserProfileAdmin(admin.ModelAdmin):
     list_filter = ('is_buyer', 'is_producer', 'country', 'created_at')
     search_fields = ('user__username', 'user__email', 'company_name', 'phone_number')
     readonly_fields = ('created_at', 'updated_at')
+    filter_horizontal = ('buyer_interested_sectors', 'producer_sectors')
     
     fieldsets = (
         ('User', {
@@ -24,7 +25,7 @@ class UserProfileAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
         ('Producer Information', {
-            'fields': ('producer_sector', 'producer_quarterly_sales', 'producer_product_count'),
+            'fields': ('producer_sectors', 'producer_quarterly_sales', 'producer_product_count'),
             'classes': ('collapse',)
         }),
         ('Timestamps', {

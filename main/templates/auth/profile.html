@@ -161,7 +161,15 @@
             <div class="info-grid">
                 <div class="info-item">
                     <div class="info-label" data-i18n="profile.interested_sectors">İlgilenilen Sektörler</div>
-                    <div class="info-value">{{ user.profile.buyer_interested_sectors }}</div>
+                    <div class="info-value">
+                        <ul style="list-style: none; padding: 0;">
+                            {% for sector in user.profile.buyer_interested_sectors.all %}
+                            <li class="sector-text" data-tr="{{ sector.name_tr }}" data-en="{{ sector.name_en }}">
+                                {{ sector.name_tr }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
                 <div class="info-item">
                     <div class="info-label" data-i18n="profile.quarterly_volume">Çeyreklik Alım Hacmi</div>
@@ -177,8 +185,16 @@
             <h3 data-i18n="profile.producer_info">Üretici Bilgileri</h3>
             <div class="info-grid">
                 <div class="info-item">
-                    <div class="info-label" data-i18n="profile.sector">Sektör</div>
-                    <div class="info-value">{{ user.profile.producer_sector }}</div>
+                    <div class="info-label" data-i18n="profile.sector">Sektörler</div>
+                    <div class="info-value">
+                        <ul style="list-style: none; padding: 0;">
+                            {% for sector in user.profile.producer_sectors.all %}
+                            <li class="sector-text" data-tr="{{ sector.name_tr }}" data-en="{{ sector.name_en }}">
+                                {{ sector.name_tr }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
                 <div class="info-item">
                     <div class="info-label" data-i18n="profile.quarterly_sales">Çeyreklik Satış Hacmi</div>
@@ -195,4 +211,33 @@
         <a href="{% url 'main:logout' %}" class="btn-logout" data-i18n="profile.logout">Çıkış Yap</a>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function updateProfileSectors() {
+            const currentLang = localStorage.getItem('madeInIzmirLang') || 'tr';
+            document.querySelectorAll('.sector-text').forEach(el => {
+                const nameTr = el.getAttribute('data-tr');
+                const nameEn = el.getAttribute('data-en');
+                if (currentLang === 'tr') {
+                    el.textContent = nameTr;
+                } else {
+                    el.textContent = nameEn;
+                }
+            });
+        }
+
+        // Initial update
+        updateProfileSectors();
+
+        // Listen for language changes
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                setTimeout(updateProfileSectors, 10);
+            });
+        });
+    });
+</script>
 {% endblock %}

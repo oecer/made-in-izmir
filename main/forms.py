@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from .models import UserProfile
+from .models import UserProfile, Sector
 
 
 class SignUpForm(UserCreationForm):
@@ -99,12 +99,11 @@ class SignUpForm(UserCreationForm):
     )
     
     # Buyer-specific fields
-    buyer_interested_sectors = forms.CharField(
+    buyer_interested_sectors = forms.ModelMultipleChoiceField(
+        queryset=Sector.objects.all(),
         required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control buyer-field',
-            'placeholder': 'Tekstil, Gıda, Mermer...',
-            'data-i18n-placeholder': 'signup.buyer_sectors'
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-control sector-select',
         }),
         label='İlgilenilen Sektörler'
     )
@@ -119,14 +118,13 @@ class SignUpForm(UserCreationForm):
     )
     
     # Producer-specific fields
-    producer_sector = forms.CharField(
+    producer_sectors = forms.ModelMultipleChoiceField(
+        queryset=Sector.objects.all(),
         required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control producer-field',
-            'placeholder': 'Tekstil',
-            'data-i18n-placeholder': 'signup.producer_sector'
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-control sector-select',
         }),
-        label='Sektör'
+        label='Sektörler'
     )
     producer_quarterly_sales = forms.DecimalField(
         required=False,
@@ -170,6 +168,9 @@ class SignUpForm(UserCreationForm):
             'placeholder': 'Şifre Tekrar',
             'data-i18n-placeholder': 'signup.password_confirm'
         })
+        # Set individual sector choice labels (will be dynamic via JS later)
+        self.fields['buyer_interested_sectors'].label_from_instance = lambda obj: f"{obj.name_tr} | {obj.name_en}"
+        self.fields['producer_sectors'].label_from_instance = lambda obj: f"{obj.name_tr} | {obj.name_en}"
     
     def clean(self):
         cleaned_data = super().clean()
@@ -189,8 +190,8 @@ class SignUpForm(UserCreationForm):
         
         # Validate producer fields if producer is selected
         if is_producer:
-            if not cleaned_data.get('producer_sector'):
-                self.add_error('producer_sector', 'Üretici olarak kayıt oluyorsanız bu alan zorunludur.')
+            if not cleaned_data.get('producer_sectors'):
+                self.add_error('producer_sectors', 'Üretici olarak kayıt oluyorsanız bu alan zorunludur.')
             if not cleaned_data.get('producer_quarterly_sales'):
                 self.add_error('producer_quarterly_sales', 'Üretici olarak kayıt oluyorsanız bu alan zorunludur.')
             if not cleaned_data.get('producer_product_count'):
@@ -208,7 +209,7 @@ class SignUpForm(UserCreationForm):
             user.save()
             
             # Create user profile
-            UserProfile.objects.create(
+            profile = UserProfile.objects.create(
                 user=user,
                 company_name=self.cleaned_data['company_name'],
                 phone_number=self.cleaned_data['phone_number'],
@@ -216,12 +217,16 @@ class SignUpForm(UserCreationForm):
                 city=self.cleaned_data['city'],
                 is_buyer=self.cleaned_data['is_buyer'],
                 is_producer=self.cleaned_data['is_producer'],
-                buyer_interested_sectors=self.cleaned_data.get('buyer_interested_sectors', ''),
                 buyer_quarterly_volume=self.cleaned_data.get('buyer_quarterly_volume'),
-                producer_sector=self.cleaned_data.get('producer_sector', ''),
                 producer_quarterly_sales=self.cleaned_data.get('producer_quarterly_sales'),
                 producer_product_count=self.cleaned_data.get('producer_product_count')
             )
+            
+            # Add ManyToMany fields
+            if self.cleaned_data.get('buyer_interested_sectors'):
+                profile.buyer_interested_sectors.set(self.cleaned_data['buyer_interested_sectors'])
+            if self.cleaned_data.get('producer_sectors'):
+                profile.producer_sectors.set(self.cleaned_data['producer_sectors'])
         
         return user
 
