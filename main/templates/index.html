@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="tr">
 
@@ -5,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Made in Izmir - Global Trade Hub</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
@@ -19,12 +20,12 @@
                     Made in Izmir
                 </div>
                 <ul class="nav-links">
-                    <li><a href="index.html" data-i18n="nav.home">Ana Sayfa</a></li>
-                    <li><a href="producers.html" data-i18n="nav.producers">Üreticiler İçin</a></li>
-                    <li><a href="buyers.html" data-i18n="nav.buyers">Alıcılar İçin</a></li>
-                    <li><a href="calendar.html" data-i18n="nav.calendar">Fuar Takvimi</a></li>
-                    <li><a href="about.html" data-i18n="nav.about">Hakkımızda</a></li>
-                    <li><a href="contact.html" data-i18n="nav.contact">İletişim</a></li>
+                    <li><a href="{% url 'main:index' %}" data-i18n="nav.home">Ana Sayfa</a></li>
+                    <li><a href="{% url 'main:producers' %}" data-i18n="nav.producers">Üreticiler İçin</a></li>
+                    <li><a href="{% url 'main:buyers' %}" data-i18n="nav.buyers">Alıcılar İçin</a></li>
+                    <li><a href="{% url 'main:calendar' %}" data-i18n="nav.calendar">Fuar Takvimi</a></li>
+                    <li><a href="{% url 'main:about' %}" data-i18n="nav.about">Hakkımızda</a></li>
+                    <li><a href="{% url 'main:contact' %}" data-i18n="nav.contact">İletişim</a></li>
                 </ul>
                 <div class="lang-switch">
                     <button class="lang-btn active" data-lang="tr">TR</button>
@@ -42,7 +43,7 @@
         <div class="container hero-content">
             <h1 data-i18n="hero.title">İzmir'in En Seçkin Üreticilerini Dünyayla Buluşturuyoruz</h1>
             <p data-i18n="hero.subtitle">Siz işinize odaklanın, fuarları ve ihracatı bize bırakın.</p>
-            <a href="services.html" class="btn btn-secondary" data-i18n="hero.cta">Hizmetlerimizi Keşfedin</a>
+            <a href="{% url 'main:index' %}" class="btn btn-secondary" data-i18n="hero.cta">Hizmetlerimizi Keşfedin</a>
         </div>
     </section>
 
@@ -86,7 +87,7 @@
         </div>
     </footer>
 
-    <script src="assets/js/translations.js"></script>
+    <script src="{% static 'js/translations.js' %}"></script>
 </body>
 
 </html>

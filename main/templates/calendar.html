@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="tr">
 
@@ -5,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Made in Izmir - Expo Calendar</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
@@ -17,12 +18,12 @@
             <nav>
                 <div class="logo">Made in Izmir</div>
                 <ul class="nav-links">
-                    <li><a href="index.html" data-i18n="nav.home">Ana Sayfa</a></li>
-                    <li><a href="producers.html" data-i18n="nav.producers">Üreticiler İçin</a></li>
-                    <li><a href="buyers.html" data-i18n="nav.buyers">Alıcılar İçin</a></li>
-                    <li><a href="calendar.html" data-i18n="nav.calendar" class="active">Fuar Takvimi</a></li>
-                    <li><a href="about.html" data-i18n="nav.about">Hakkımızda</a></li>
-                    <li><a href="contact.html" data-i18n="nav.contact">İletişim</a></li>
+                    <li><a href="{% url 'main:index' %}" data-i18n="nav.home">Ana Sayfa</a></li>
+                    <li><a href="{% url 'main:producers' %}" data-i18n="nav.producers">Üreticiler İçin</a></li>
+                    <li><a href="{% url 'main:buyers' %}" data-i18n="nav.buyers">Alıcılar İçin</a></li>
+                    <li><a href="{% url 'main:calendar' %}" data-i18n="nav.calendar" class="active">Fuar Takvimi</a></li>
+                    <li><a href="{% url 'main:about' %}" data-i18n="nav.about">Hakkımızda</a></li>
+                    <li><a href="{% url 'main:contact' %}" data-i18n="nav.contact">İletişim</a></li>
                 </ul>
                 <div class="lang-switch">
                     <button class="lang-btn" data-lang="tr">TR</button>
@@ -61,21 +62,21 @@
                             <td><strong>Gulfood 2024</strong> <br><small>World's Largest Food Expo</small></td>
                             <td>Feb 19-23, 2024</td>
                             <td>Dubai, UAE</td>
-                            <td><a href="contact.html" class="btn btn-sm btn-secondary"
+                            <td><a href="{% url 'main:contact' %}" class="btn btn-sm btn-secondary"
                                     data-i18n="calendar.hire_btn">Bizi Kiralayın</a></td>
                         </tr>
                         <tr>
                             <td><strong>Hannover Messe</strong> <br><small>Industrial Technology</small></td>
                             <td>Apr 22-26, 2024</td>
                             <td>Hannover, Germany</td>
-                            <td><a href="contact.html" class="btn btn-sm btn-secondary"
+                            <td><a href="{% url 'main:contact' %}" class="btn btn-sm btn-secondary"
                                     data-i18n="calendar.hire_btn">Bizi Kiralayın</a></td>
                         </tr>
                         <tr>
                             <td><strong>Anuga</strong> <br><small>Food & Beverage</small></td>
                             <td>Oct 07-11, 2025</td>
                             <td>Cologne, Germany</td>
-                            <td><a href="contact.html" class="btn btn-sm btn-secondary"
+                            <td><a href="{% url 'main:contact' %}" class="btn btn-sm btn-secondary"
                                     data-i18n="calendar.hire_btn">Bizi Kiralayın</a></td>
                         </tr>
                     </tbody>
@@ -94,7 +95,7 @@
         </div>
     </footer>
 
-    <script src="assets/js/translations.js"></script>
+    <script src="{% static 'js/translations.js' %}"></script>
 </body>
 
 </html>

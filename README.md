@@ -1,27 +1,110 @@
-# Made in Izmir Website
+# Made in Izmir - Django Project
 
-This is the static frontend for the Made in Izmir project.
+A Django-based web application for connecting Izmir's premium producers with global buyers through trade fairs and export services.
 
-## Structure
-- `index.html`: Home page
-- `producers.html`: Services and forms for producers
-- `buyers.html`: Sourcing and industry info for buyers
-- `calendar.html`: Expo calendar
-- `about.html`: Company info
-- `contact.html`: Contact forms
-- `assets/`: CSS, JS, and eventual images
+## Project Structure
 
-## Features
-- **Bilingual Support**: Text is dynamically loaded via `assets/js/translations.js`. To add new translations, update the JSON object in that file.
-- **Responsive Design**: Works on mobile and desktop.
-- **Glassmorphism UI**: Modern aesthetic using CSS classes.
+```
+made-in-izmir/
+├── config/                 # Django project settings
+│   ├── settings.py        # Main settings file
+│   ├── urls.py           # Root URL configuration
+│   └── wsgi.py           # WSGI configuration
+├── main/                  # Main application
+│   ├── static/           # Static files (CSS, JS, images)
+│   │   ├── css/
+│   │   ├── js/
+│   │   └── images/
+│   ├── templates/        # HTML templates
+│   ├── views.py          # View functions
+│   ├── urls.py           # App URL patterns
+│   └── models.py         # Database models
+├── assets/               # Original assets (legacy)
+├── manage.py             # Django management script
+└── db.sqlite3           # SQLite database
+```
 
-## How to Run
-Simply open `index.html` in your web browser.
+## Static Files Organization
 
-## Future Django Integration
-To port this to Django later:
-1. Move the HTML files to your Django `templates` directory.
-2. Move the `assets` folder to your Django `static` directory.
-3. Replace the `<link>` and `<script>` paths with static template tags (e.g., `{% static 'css/style.css' %}`).
-4. Replace the hardcoded navigation links with Django URL tags (e.g., `{% url 'home' %}`).
+The project uses Django's static files system:
+
+- **Development**: Static files are served from `main/static/`
+- **Production**: Run `python manage.py collectstatic` to gather all static files into `staticfiles/`
+
+### Static Files Structure:
+```
+main/static/
+├── css/
+│   └── style.css
+├── js/
+│   └── translations.js
+└── images/
+    └── (your images here)
+```
+
+## Setup Instructions
+
+1. **Install Dependencies** (if needed):
+   ```bash
+   pip install django
+   ```
+
+2. **Run Migrations**:
+   ```bash
+   python manage.py migrate
+   ```
+
+3. **Create Superuser** (optional, for admin access):
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+4. **Run Development Server**:
+   ```bash
+   python manage.py runserver
+   ```
+
+5. **Access the Application**:
+   - Homepage: http://127.0.0.1:8000/
+   - Admin Panel: http://127.0.0.1:8000/admin/
+
+## Available Pages
+
+- `/` - Home page
+- `/about/` - About page
+- `/producers/` - For Producers
+- `/buyers/` - For Buyers
+- `/calendar/` - Trade Fair Calendar
+- `/contact/` - Contact page
+
+## Static Files in Templates
+
+All templates use Django's `{% static %}` template tag:
+
+```html
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<script src="{% static 'js/translations.js' %}"></script>
+```
+
+## Production Deployment
+
+Before deploying to production:
+
+1. Set `DEBUG = False` in `config/settings.py`
+2. Configure `ALLOWED_HOSTS` with your domain
+3. Set a secure `SECRET_KEY`
+4. Run `python manage.py collectstatic` to collect all static files
+5. Use a production-ready web server (e.g., Gunicorn, uWSGI)
+6. Serve static files with Nginx or a CDN
+
+## Development Notes
+
+- The project uses SQLite for development
+- All HTML templates are in `main/templates/`
+- Static files are organized in `main/static/`
+- The original `assets/` folder is kept for reference but not used by Django
+
+## License
+
+© 2024 Made in İzmir. All Rights Reserved.
