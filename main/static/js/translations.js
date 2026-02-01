@@ -194,7 +194,8 @@ const translations = {
             new_photo_note: "Yeni fotoğraf yüklemek için seçin",
             multiselect_help: "Birden fazla seçmek için Ctrl (Windows) veya Command (Mac) tuşuna basılı tutun.",
             tag_help: "Ürününüzü en iyi tanımlayan etiketleri seçin.",
-            product_status: "Ürün Durumu"
+            product_status: "Ürün Durumu",
+            product_request_pending: "Ürün talebiniz alındı! Ürününüz yönetici onayından sonra aktif hale gelecektir."
         }
     },
     en: {
@@ -392,7 +393,8 @@ const translations = {
             new_photo_note: "Select to upload a new photo",
             multiselect_help: "Hold down Ctrl (Windows) or Command (Mac) to select multiple.",
             tag_help: "Choose the tags that best describe your product.",
-            product_status: "Product Status"
+            product_status: "Product Status",
+            product_request_pending: "Your product request has been received! Your product will become active after admin approval."
         }
     }
 };

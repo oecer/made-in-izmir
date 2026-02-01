@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import SignUpForm, CustomLoginForm, ProductForm
-from .models import Product, ProductTag
+from .models import Product, ProductTag, ProductRequest
 
 
 def index(request):
@@ -171,7 +171,7 @@ def buyer_dashboard_view(request):
 
 @login_required
 def add_product_view(request):
-    """Add new product view (producers only)"""
+    """Add new product view (producers only) - creates product request for admin approval"""
     try:
         profile = request.user.profile
         if not profile.is_producer:
@@ -184,11 +184,29 @@ def add_product_view(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
-            product = form.save(commit=False)
-            product.producer = request.user
-            product.save()
-            form.save_m2m()  # Save many-to-many relationships (tags)
-            messages.success(request, 'Ürün başarıyla eklendi!')
+            # Get tag IDs as comma-separated string
+            tags = form.cleaned_data.get('tags', [])
+            tag_ids = ','.join(str(tag.id) for tag in tags) if tags else ''
+            
+            # Create product request instead of product
+            product_request = ProductRequest.objects.create(
+                producer=request.user,
+                title_tr=form.cleaned_data.get('title_tr', ''),
+                title_en=form.cleaned_data.get('title_en', ''),
+                description_tr=form.cleaned_data.get('description_tr', ''),
+                description_en=form.cleaned_data.get('description_en', ''),
+                photo1=form.cleaned_data.get('photo1'),
+                photo2=form.cleaned_data.get('photo2'),
+                photo3=form.cleaned_data.get('photo3'),
+                tags_ids=tag_ids,
+                is_active=form.cleaned_data.get('is_active', True),
+                status='pending'
+            )
+            
+            messages.success(
+                request, 
+                'Ürün talebiniz alındı! Ürününüz yönetici onayından sonra aktif hale gelecektir.'
+            )
             return redirect('main:producer_dashboard')
         else:
             messages.error(request, 'Lütfen formdaki hataları düzeltin.')

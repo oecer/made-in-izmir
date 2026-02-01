@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib import messages
-from .models import UserProfile, SignupRequest, Sector, ProductTag, Product
+from .models import UserProfile, SignupRequest, Sector, ProductTag, Product, ProductRequest
 
 
 @admin.register(SignupRequest)
@@ -219,6 +219,178 @@ class UserProfileAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+
+@admin.register(ProductRequest)
+class ProductRequestAdmin(admin.ModelAdmin):
+    list_display = (
+        'get_title', 'producer', 'get_producer_company', 'status', 'created_at'
+    )
+    list_filter = ('status', 'created_at', 'is_active')
+    search_fields = ('title_tr', 'title_en', 'description_tr', 'description_en', 'producer__username', 'producer__profile__company_name')
+    readonly_fields = (
+        'created_at', 'updated_at', 'reviewed_by', 'reviewed_at', 'tags_display',
+        'photo1_preview', 'photo2_preview', 'photo3_preview'
+    )
+    
+    fieldsets = (
+        ('Request Status', {
+            'fields': ('status', 'reviewed_by', 'reviewed_at', 'rejection_reason')
+        }),
+        ('Producer', {
+            'fields': ('producer',)
+        }),
+        ('Product Information (Turkish)', {
+            'fields': ('title_tr', 'description_tr')
+        }),
+        ('Product Information (English)', {
+            'fields': ('title_en', 'description_en')
+        }),
+        ('Photos', {
+            'fields': ('photo1', 'photo1_preview', 'photo2', 'photo2_preview', 'photo3', 'photo3_preview')
+        }),
+        ('Tags & Status', {
+            'fields': ('tags_ids', 'tags_display', 'is_active')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+        }),
+    )
+    
+    actions = ['approve_products', 'reject_products']
+    
+    def get_title(self, obj):
+        """Display product title"""
+        return obj.title_tr or obj.title_en or f"Product Request #{obj.id}"
+    get_title.short_description = 'Ürün'
+    
+    def get_producer_company(self, obj):
+        """Display producer company name"""
+        if hasattr(obj.producer, 'profile'):
+            return obj.producer.profile.company_name
+        return '-'
+    get_producer_company.short_description = 'Firma'
+    
+    def tags_display(self, obj):
+        """Display tags"""
+        tags = obj.get_tags()
+        if tags.exists():
+            return ', '.join([f"{t.name_tr} | {t.name_en}" for t in tags])
+        return '-'
+    tags_display.short_description = 'Etiketler'
+    
+    def photo1_preview(self, obj):
+        if obj.photo1:
+            return f'<img src="{obj.photo1.url}" style="max-width: 200px; max-height: 200px;" />'
+        return '-'
+    photo1_preview.short_description = 'Fotoğraf 1 Önizleme'
+    photo1_preview.allow_tags = True
+    
+    def photo2_preview(self, obj):
+        if obj.photo2:
+            return f'<img src="{obj.photo2.url}" style="max-width: 200px; max-height: 200px;" />'
+        return '-'
+    photo2_preview.short_description = 'Fotoğraf 2 Önizleme'
+    photo2_preview.allow_tags = True
+    
+    def photo3_preview(self, obj):
+        if obj.photo3:
+            return f'<img src="{obj.photo3.url}" style="max-width: 200px; max-height: 200px;" />'
+        return '-'
+    photo3_preview.short_description = 'Fotoğraf 3 Önizleme'
+    photo3_preview.allow_tags = True
+    
+    def get_readonly_fields(self, request, obj=None):
+        """Make all fields readonly except status and rejection_reason for pending requests"""
+        if obj and obj.status == 'pending':
+            return ('created_at', 'updated_at', 'reviewed_by', 'reviewed_at', 'tags_display',
+                    'photo1_preview', 'photo2_preview', 'photo3_preview',
+                    'producer', 'title_tr', 'title_en', 'description_tr', 'description_en',
+                    'photo1', 'photo2', 'photo3', 'tags_ids', 'is_active')
+        return ('created_at', 'updated_at', 'reviewed_by', 'reviewed_at', 'tags_display',
+                'photo1_preview', 'photo2_preview', 'photo3_preview',
+                'producer', 'title_tr', 'title_en', 'description_tr', 'description_en',
+                'photo1', 'photo2', 'photo3', 'tags_ids', 'is_active')
+    
+    def save_model(self, request, obj, form, change):
+        """Handle status changes from the admin change form"""
+        if change and 'status' in form.changed_data and obj.status == 'approved':
+            try:
+                old_instance = ProductRequest.objects.get(pk=obj.pk)
+                if old_instance.status == 'pending':
+                    self._process_approval(request, obj)
+            except Exception as e:
+                obj.status = 'pending'
+                obj.reviewed_by = None
+                obj.reviewed_at = None
+                messages.error(request, f"Onay işlemi başarısız oldu: {str(e)}")
+        
+        super().save_model(request, obj, form, change)
+    
+    def _process_approval(self, request, product_request):
+        """Helper to create Product from ProductRequest"""
+        from django.db import transaction
+        
+        # Create product
+        product = Product.objects.create(
+            producer=product_request.producer,
+            title_tr=product_request.title_tr,
+            title_en=product_request.title_en,
+            description_tr=product_request.description_tr,
+            description_en=product_request.description_en,
+            photo1=product_request.photo1,
+            photo2=product_request.photo2,
+            photo3=product_request.photo3,
+            is_active=product_request.is_active
+        )
+        
+        # Add tags
+        if product_request.tags_ids:
+            tags = product_request.get_tags()
+            if tags.exists():
+                product.tags.set(tags)
+        
+        # Update request fields
+        product_request.reviewed_by = request.user
+        product_request.reviewed_at = timezone.now()
+    
+    def approve_products(self, request, queryset):
+        """Approve selected product requests and create products"""
+        from django.db import transaction
+        
+        approved_count = 0
+        error_count = 0
+        
+        for product_request in queryset.filter(status='pending'):
+            try:
+                with transaction.atomic():
+                    self._process_approval(request, product_request)
+                    product_request.status = 'approved'
+                    product_request.save()
+                    approved_count += 1
+            except Exception as e:
+                error_count += 1
+                messages.error(request, f"Error ({product_request.get_title(product_request)}): {str(e)}")
+        
+        if approved_count > 0:
+            messages.success(request, f"✓ {approved_count} product request(s) approved successfully!")
+        if error_count > 0:
+            messages.warning(request, f"⚠ {error_count} request(s) failed.")
+    
+    approve_products.short_description = "Approve selected product requests"
+    
+    def reject_products(self, request, queryset):
+        """Reject selected product requests"""
+        rejected_count = queryset.filter(status='pending').update(
+            status='rejected',
+            reviewed_by=request.user,
+            reviewed_at=timezone.now()
+        )
+        
+        if rejected_count > 0:
+            messages.success(request, f"{rejected_count} product request(s) rejected.")
+    
+    reject_products.short_description = "Reject selected product requests"
 
 
 @admin.register(ProductTag)

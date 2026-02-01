@@ -187,6 +187,74 @@ class ProductTag(models.Model):
         return self.name_tr
 
 
+class ProductRequest(models.Model):
+    """Pending product requests awaiting admin approval"""
+    
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+    
+    # Producer
+    producer = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='product_requests',
+        verbose_name="Üretici"
+    )
+    
+    # Multilingual fields
+    title_tr = models.CharField(max_length=200, blank=True, verbose_name="Ürün Başlığı (TR)")
+    title_en = models.CharField(max_length=200, blank=True, verbose_name="Ürün Başlığı (EN)")
+    description_tr = models.TextField(blank=True, verbose_name="Ürün Açıklaması (TR)")
+    description_en = models.TextField(blank=True, verbose_name="Ürün Açıklaması (EN)")
+    
+    # Photos (max 3)
+    photo1 = models.ImageField(upload_to='product_requests/', blank=True, null=True, verbose_name="Fotoğraf 1")
+    photo2 = models.ImageField(upload_to='product_requests/', blank=True, null=True, verbose_name="Fotoğraf 2")
+    photo3 = models.ImageField(upload_to='product_requests/', blank=True, null=True, verbose_name="Fotoğraf 3")
+    
+    # Tags (stored as comma-separated IDs)
+    tags_ids = models.TextField(blank=True, null=True, verbose_name="Etiket ID'leri")
+    
+    # Status
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name="Durum")
+    is_active = models.BooleanField(default=True, verbose_name="Aktif")
+    
+    # Admin actions
+    reviewed_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='reviewed_products',
+        verbose_name="İnceleyen"
+    )
+    reviewed_at = models.DateTimeField(null=True, blank=True, verbose_name="İnceleme Tarihi")
+    rejection_reason = models.TextField(blank=True, null=True, verbose_name="Red Nedeni")
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = "Ürün Talebi"
+        verbose_name_plural = "Ürün Talepleri"
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        title = self.title_tr or self.title_en or f"Product Request #{self.id}"
+        return f"{title} - {self.producer.username} ({self.get_status_display()})"
+    
+    def get_tags(self):
+        """Get tags as queryset"""
+        if self.tags_ids:
+            ids = [int(id.strip()) for id in self.tags_ids.split(',') if id.strip()]
+            return ProductTag.objects.filter(id__in=ids)
+        return ProductTag.objects.none()
+
+
 class Product(models.Model):
     """Products created by producers"""
     producer = models.ForeignKey(
