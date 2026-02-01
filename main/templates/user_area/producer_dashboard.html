@@ -73,33 +73,42 @@
                         </div>
                         {% endif %}
                         {% if not product.is_active %}
-                        <span class="status-badge inactive" data-i18n="product.inactive">Pasif</span>
+                        <span class="status-badge inactive" data-i18n="dashboard.passive">Pasif</span>
                         {% else %}
-                        <span class="status-badge active" data-i18n="product.active">Aktif</span>
+                        <span class="status-badge active" data-i18n="dashboard.active">Aktif</span>
                         {% endif %}
                     </div>
                     <div class="product-info">
                         <h3>{{ product.title_tr|default:product.title_en }}</h3>
-                        <p class="product-description">{{
-                            product.description_tr|default:product.description_en|truncatewords:20 }}</p>
+                        {% if product.sector %}
+                        <div class="product-sector">
+                            <i class="fas fa-industry"></i>
+                            <span class="sector-name" data-tr="{{ product.sector.name_tr }}"
+                                data-en="{{ product.sector.name_en }}">
+                                {{ product.sector.name_tr }}
+                            </span>
+                        </div>
+                        {% endif %}
 
                         {% if product.tags.all %}
                         <div class="product-tags">
                             {% for tag in product.tags.all %}
-                            <span class="tag">{{ tag.name_tr }}</span>
+                            <span class="tag" data-tr="{{ tag.name_tr }}" data-en="{{ tag.name_en }}">
+                                {{ tag.name_tr }}
+                            </span>
                             {% endfor %}
                         </div>
                         {% endif %}
 
                         <div class="product-actions">
                             <a href="{% url 'main:product_detail' product.id %}" class="btn btn-sm btn-info">
-                                <i class="fas fa-eye"></i> <span data-i18n="product.view">Görüntüle</span>
+                                <i class="fas fa-eye"></i> <span data-i18n="dashboard.details">Görüntüle</span>
                             </a>
                             <a href="{% url 'main:edit_product' product.id %}" class="btn btn-sm btn-warning">
-                                <i class="fas fa-edit"></i> <span data-i18n="product.edit">Düzenle</span>
+                                <i class="fas fa-edit"></i> <span data-i18n="dashboard.edit">Düzenle</span>
                             </a>
                             <a href="{% url 'main:delete_product' product.id %}" class="btn btn-sm btn-danger">
-                                <i class="fas fa-trash"></i> <span data-i18n="product.delete">Sil</span>
+                                <i class="fas fa-trash"></i> <span data-i18n="dashboard.delete">Sil</span>
                             </a>
                         </div>
                     </div>
@@ -302,10 +311,18 @@
         font-size: 1.2rem;
     }
 
-    .product-description {
-        color: #666;
-        margin-bottom: 15px;
-        line-height: 1.6;
+    .product-sector {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .product-sector i {
+        color: #cca43b;
+        font-size: 0.8rem;
     }
 
     .product-tags {

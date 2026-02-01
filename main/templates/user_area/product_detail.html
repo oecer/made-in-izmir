@@ -71,18 +71,35 @@
                     <div class="producer-info">
                         <i class="fas fa-industry"></i>
                         <div>
-                            <strong data-i18n="dashboard.producer">Üretici:</strong> {{
-                            product.producer.profile.company_name }}<br>
-                            <small>{{ product.producer.profile.city }}, {{ product.producer.profile.country }}</small>
+                            <p class="info-item">
+                                <strong data-i18n="dashboard.producer">Üretici</strong>:
+                                {{ product.producer.profile.company_name }}
+                            </p>
+                            {% if product.sector %}
+                            <p class="info-item">
+                                <strong data-i18n="dashboard.sector">Sektör</strong>:
+                                <span class="sector-name" data-tr="{{ product.sector.name_tr }}"
+                                    data-en="{{ product.sector.name_en }}">
+                                    {{ product.sector.name_tr }}
+                                </span>
+                            </p>
+                            {% endif %}
+                            <small class="location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                {{ product.producer.profile.city }}, {{ product.producer.profile.country }}
+                            </small>
                         </div>
                     </div>
 
                     {% if product.tags.all %}
                     <div class="product-tags">
-                        <strong><i class="fas fa-tags"></i> Etiketler:</strong>
+                        <strong class="info-item"><i class="fas fa-tags"></i> <span
+                                data-i18n="dashboard.tags">Etiketler</span>:</strong>
                         <div class="tags-list">
                             {% for tag in product.tags.all %}
-                            <span class="tag">{{ tag.name_tr }} | {{ tag.name_en }}</span>
+                            <span class="tag" data-tr="{{ tag.name_tr }}" data-en="{{ tag.name_en }}">
+                                {{ tag.name_tr }}
+                            </span>
                             {% endfor %}
                         </div>
                     </div>
@@ -287,6 +304,25 @@
     .producer-info i {
         font-size: 24px;
         color: #cca43b;
+        margin-top: 5px;
+    }
+
+    .info-item {
+        margin: 0 0 5px;
+        font-size: 1.1rem;
+    }
+
+    .location {
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 8px;
+    }
+
+    .sector-name {
+        color: #0f172a;
+        font-weight: 500;
     }
 
     .product-tags {

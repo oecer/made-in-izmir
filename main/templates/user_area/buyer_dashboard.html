@@ -72,16 +72,25 @@
                     <div class="product-info">
                         <h3>{{ product.title_tr|default:product.title_en }}</h3>
                         <p class="product-producer">
-                            <i class="fas fa-industry"></i> <span data-i18n="dashboard.producer">Üretici</span>: {{
-                            product.producer.profile.company_name }}
+                            <i class="fas fa-industry"></i> <span data-i18n="dashboard.producer">Üretici</span>:
+                            {{ product.producer.profile.company_name }}
                         </p>
-                        <p class="product-description">{{
-                            product.description_tr|default:product.description_en|truncatewords:20 }}</p>
+                        {% if product.sector %}
+                        <div class="product-sector">
+                            <i class="fas fa-industry"></i>
+                            <span class="sector-name" data-tr="{{ product.sector.name_tr }}"
+                                data-en="{{ product.sector.name_en }}">
+                                {{ product.sector.name_tr }}
+                            </span>
+                        </div>
+                        {% endif %}
 
                         {% if product.tags.all %}
                         <div class="product-tags">
                             {% for tag in product.tags.all %}
-                            <span class="tag">{{ tag.name_tr }}</span>
+                            <span class="tag" data-tr="{{ tag.name_tr }}" data-en="{{ tag.name_en }}">
+                                {{ tag.name_tr }}
+                            </span>
                             {% endfor %}
                         </div>
                         {% endif %}
@@ -273,10 +282,18 @@
         gap: 5px;
     }
 
-    .product-description {
-        color: #666;
-        margin-bottom: 15px;
-        line-height: 1.6;
+    .product-sector {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .product-sector i {
+        color: #cca43b;
+        font-size: 0.8rem;
     }
 
     .product-tags {

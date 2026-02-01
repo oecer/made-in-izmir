@@ -427,6 +427,15 @@ function setLanguage(lang) {
         }
     });
 
+    // Update all elements with data-tr/data-en attributes
+    const dynamicElements = document.querySelectorAll('[data-tr][data-en]');
+    dynamicElements.forEach(el => {
+        const text = el.getAttribute(`data-${lang}`);
+        if (text) {
+            el.textContent = text;
+        }
+    });
+
     // Toggle active class on language buttons if they exist
     document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.lang === lang);
