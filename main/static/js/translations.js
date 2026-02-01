@@ -9,7 +9,12 @@ const translations = {
             contact: "İletişim",
             login: "Giriş",
             signup: "Kayıt Ol",
-            profile: "Profilim"
+            profile: "Profilim",
+            main_dashboard: "Ana Panel",
+            producer_dashboard: "Üretici Paneli",
+            buyer_dashboard: "Alıcı Paneli",
+            dashboard_calendar: "Fuar Takvimi",
+            logout: "Çıkış"
         },
         hero: {
             title: "İzmir'in En Seçkin Üreticilerini Dünyayla Buluşturuyoruz",
@@ -197,7 +202,15 @@ const translations = {
             product_status: "Ürün Durumu",
             product_request_pending: "Ürün talebiniz alındı! Ürününüz yönetici onayından sonra aktif hale gelecektir.",
             sector: "Sektör",
-            sector_help: "Ürününüzün ait olduğu sektörü seçin."
+            sector_help: "Ürününüzün ait olduğu sektörü seçin.",
+            main_title: "Ana Panel",
+            choose_action: "Ne yapmak istersiniz?",
+            main_desc: "İlgili paneli seçerek işlemlerinize devam edebilirsiniz.",
+            go_to_producer: "Üretici Paneline Git",
+            go_to_buyer: "Alıcı Paneline Git",
+            go_to_calendar: "Takvime Git",
+            go_to_profile: "Profilimi Düzenle",
+            expo_calendar: "Fuar Takvimi"
         }
     },
     en: {
@@ -210,7 +223,12 @@ const translations = {
             contact: "Contact",
             login: "Login",
             signup: "Sign Up",
-            profile: "My Profile"
+            profile: "My Profile",
+            main_dashboard: "Main Dashboard",
+            producer_dashboard: "Producer Dashboard",
+            buyer_dashboard: "Buyer Dashboard",
+            dashboard_calendar: "Expo Calendar",
+            logout: "Logout"
         },
         hero: {
             title: "Connecting Izmir’s Finest Producers with the World",
@@ -398,7 +416,15 @@ const translations = {
             product_status: "Product Status",
             product_request_pending: "Your product request has been received! Your product will become active after admin approval.",
             sector: "Sector",
-            sector_help: "Select the sector your product belongs to."
+            sector_help: "Select the sector your product belongs to.",
+            main_title: "Main Dashboard",
+            choose_action: "What would you like to do?",
+            main_desc: "You can continue by selecting the relevant dashboard.",
+            go_to_producer: "Go to Producer Dashboard",
+            go_to_buyer: "Go to Buyer Dashboard",
+            go_to_calendar: "Go to Calendar",
+            go_to_profile: "Edit My Profile",
+            expo_calendar: "Expo Calendar"
         }
     }
 };

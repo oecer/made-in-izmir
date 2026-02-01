@@ -3,22 +3,49 @@
     <div class="container">
         <nav>
             <div class="logo">
-                Made in Izmir
+                <a href="{% url 'main:index' %}" style="text-decoration: none; color: inherit;">Made in Izmir</a>
             </div>
+
             <ul class="nav-links">
+                {% if user.is_authenticated %}
+                {% if '/dashboard' in request.path or '/profile' in request.path or '/products' in request.path or '/expo' in request.path %}
+                <!-- Dashboard Specific Navbar Items -->
+                <li><a href="{% url 'main:dashboard' %}" data-i18n="nav.main_dashboard">Ana Panel</a></li>
+                {% if user.profile.is_producer %}
+                <li><a href="{% url 'main:producer_dashboard' %}" data-i18n="nav.producer_dashboard">Üretici Paneli</a>
+                </li>
+                {% endif %}
+                {% if user.profile.is_buyer %}
+                <li><a href="{% url 'main:buyer_dashboard' %}" data-i18n="nav.buyer_dashboard">Alıcı Paneli</a></li>
+                {% endif %}
+                <li><a href="{% url 'main:dashboard_calendar' %}" data-i18n="nav.dashboard_calendar">Fuar Takvimi</a>
+                </li>
+                <li><a href="{% url 'main:profile' %}" data-i18n="nav.profile">Profilim</a></li>
+                <li><a href="{% url 'main:logout' %}" data-i18n="nav.logout" class="btn-logout-nav">Çıkış</a></li>
+                {% else %}
+                <!-- Main Site Navbar Items (Authenticated) -->
                 <li><a href="{% url 'main:index' %}" data-i18n="nav.home">Ana Sayfa</a></li>
                 <li><a href="{% url 'main:producers' %}" data-i18n="nav.producers">Üreticiler İçin</a></li>
                 <li><a href="{% url 'main:buyers' %}" data-i18n="nav.buyers">Alıcılar İçin</a></li>
                 <li><a href="{% url 'main:calendar' %}" data-i18n="nav.calendar">Fuar Takvimi</a></li>
                 <li><a href="{% url 'main:about' %}" data-i18n="nav.about">Hakkımızda</a></li>
                 <li><a href="{% url 'main:contact' %}" data-i18n="nav.contact">İletişim</a></li>
-                {% if user.is_authenticated %}
-                <li><a href="{% url 'main:dashboard' %}" data-i18n="nav.dashboard">Panel</a></li>
+                <li><a href="{% url 'main:dashboard' %}" data-i18n="nav.dashboard" class="btn-dashboard-nav">Panel</a>
+                </li>
+                {% endif %}
                 {% else %}
+                <!-- Main Site Navbar Items (Anonymous) -->
+                <li><a href="{% url 'main:index' %}" data-i18n="nav.home">Ana Sayfa</a></li>
+                <li><a href="{% url 'main:producers' %}" data-i18n="nav.producers">Üreticiler İçin</a></li>
+                <li><a href="{% url 'main:buyers' %}" data-i18n="nav.buyers">Alıcılar İçin</a></li>
+                <li><a href="{% url 'main:calendar' %}" data-i18n="nav.calendar">Fuar Takvimi</a></li>
+                <li><a href="{% url 'main:about' %}" data-i18n="nav.about">Hakkımızda</a></li>
+                <li><a href="{% url 'main:contact' %}" data-i18n="nav.contact">İletişim</a></li>
                 <li><a href="{% url 'main:login' %}" data-i18n="nav.login">Giriş</a></li>
                 <li><a href="{% url 'main:signup' %}" data-i18n="nav.signup" class="btn-signup-nav">Kayıt Ol</a></li>
                 {% endif %}
             </ul>
+
             <div class="lang-switch">
                 <button class="lang-btn active" data-lang="tr">TR</button>
                 <button class="lang-btn" data-lang="en">EN</button>

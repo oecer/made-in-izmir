@@ -241,6 +241,45 @@ header.scrolled .nav-links li a {
     color: var(--primary-color);
 }
 
+.btn-dashboard-nav,
+.btn-logout-nav {
+    padding: 0.5rem 1.25rem !important;
+    border-radius: 50px !important;
+    font-weight: 600 !important;
+    transition: var(--transition) !important;
+}
+
+.btn-dashboard-nav {
+    background: var(--accent-color);
+    color: var(--primary-color) !important;
+}
+
+.btn-dashboard-nav:hover {
+    background: var(--accent-hover);
+    box-shadow: var(--shadow-glow);
+}
+
+.btn-logout-nav {
+    background: rgba(220, 38, 38, 0.1);
+    color: #dc2626 !important;
+    border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+.btn-logout-nav:hover {
+    background: #dc2626;
+    color: white !important;
+    border-color: #dc2626;
+}
+
+header.scrolled .btn-logout-nav {
+    background: rgba(220, 38, 38, 0.05);
+}
+
+header.scrolled .btn-logout-nav:hover {
+    background: #dc2626;
+    color: white !important;
+}
+
 /* Language Switcher */
 .lang-switch {
     display: flex;

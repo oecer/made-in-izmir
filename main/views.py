@@ -115,21 +115,10 @@ def profile_view(request):
 
 @login_required
 def dashboard_view(request):
-    """Main dashboard view - redirects to appropriate dashboard based on user type"""
+    """Main dashboard landing page"""
     try:
         profile = request.user.profile
-        
-        # If user is both producer and buyer, show a combined view or let them choose
-        if profile.is_producer and profile.is_buyer:
-            # For now, default to producer dashboard
-            return redirect('main:producer_dashboard')
-        elif profile.is_producer:
-            return redirect('main:producer_dashboard')
-        elif profile.is_buyer:
-            return redirect('main:buyer_dashboard')
-        else:
-            messages.warning(request, 'Profiliniz henüz tamamlanmamış.')
-            return redirect('main:profile')
+        return render(request, 'user_area/dashboard.html', {'profile': profile})
     except:
         messages.error(request, 'Profil bilgileriniz bulunamadı.')
         return redirect('main:index')
