@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib import messages
-from .models import UserProfile, SignupRequest, Sector
+from .models import UserProfile, SignupRequest, Sector, ProductTag, Product
 
 
 @admin.register(SignupRequest)
@@ -220,3 +220,47 @@ class UserProfileAdmin(admin.ModelAdmin):
         }),
     )
 
+
+@admin.register(ProductTag)
+class ProductTagAdmin(admin.ModelAdmin):
+    list_display = ('name_tr', 'name_en')
+    search_fields = ('name_tr', 'name_en')
+
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('title_tr', 'title_en', 'producer', 'is_active', 'created_at')
+    list_filter = ('is_active', 'created_at', 'tags')
+    search_fields = ('title_tr', 'title_en', 'description_tr', 'description_en', 'producer__username')
+    readonly_fields = ('created_at', 'updated_at')
+    filter_horizontal = ('tags',)
+    
+    fieldsets = (
+        ('Producer', {
+            'fields': ('producer',)
+        }),
+        ('Product Information (Turkish)', {
+            'fields': ('title_tr', 'description_tr')
+        }),
+        ('Product Information (English)', {
+            'fields': ('title_en', 'description_en')
+        }),
+        ('Photos', {
+            'fields': ('photo1', 'photo2', 'photo3')
+        }),
+        ('Tags & Status', {
+            'fields': ('tags', 'is_active')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def get_queryset(self, request):
+        """Limit products to those created by producers"""
+        qs = super().get_queryset(request)
+        if not request.user.is_superuser:
+            # If user is not superuser, only show their products
+            return qs.filter(producer=request.user)
+        return qs

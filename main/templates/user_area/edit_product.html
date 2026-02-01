@@ -1,0 +1,156 @@
+{% extends 'user_area/add_product.html' %}
+
+{% block title %}Ürün Düzenle - Made in Izmir{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="container">
+        <div class="form-wrapper">
+            <div class="form-header">
+                <h1><i class="fas fa-edit"></i> Ürün Düzenle</h1>
+                <p>Ürün bilgilerini güncelleyin.</p>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" class="product-form">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+
+                <div class="form-section">
+                    <h3><i class="fas fa-language"></i> Türkçe Bilgiler</h3>
+                    <div class="form-group">
+                        <label for="{{ form.title_tr.id_for_label }}">{{ form.title_tr.label }}</label>
+                        {{ form.title_tr }}
+                        {% if form.title_tr.errors %}
+                        <div class="error">{{ form.title_tr.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.description_tr.id_for_label }}">{{ form.description_tr.label }}</label>
+                        {{ form.description_tr }}
+                        {% if form.description_tr.errors %}
+                        <div class="error">{{ form.description_tr.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-language"></i> English Information</h3>
+                    <div class="form-group">
+                        <label for="{{ form.title_en.id_for_label }}">{{ form.title_en.label }}</label>
+                        {{ form.title_en }}
+                        {% if form.title_en.errors %}
+                        <div class="error">{{ form.title_en.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.description_en.id_for_label }}">{{ form.description_en.label }}</label>
+                        {{ form.description_en }}
+                        {% if form.description_en.errors %}
+                        <div class="error">{{ form.description_en.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-camera"></i> Fotoğraflar (Maksimum 3)</h3>
+                    <div class="photos-grid">
+                        <div class="form-group">
+                            <label for="{{ form.photo1.id_for_label }}">{{ form.photo1.label }}</label>
+                            {% if product.photo1 %}
+                            <div class="current-photo">
+                                <img src="{{ product.photo1.url }}" alt="Current photo 1">
+                                <p class="photo-note">Yeni fotoğraf yüklemek için seçin</p>
+                            </div>
+                            {% endif %}
+                            {{ form.photo1 }}
+                            {% if form.photo1.errors %}
+                            <div class="error">{{ form.photo1.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.photo2.id_for_label }}">{{ form.photo2.label }}</label>
+                            {% if product.photo2 %}
+                            <div class="current-photo">
+                                <img src="{{ product.photo2.url }}" alt="Current photo 2">
+                                <p class="photo-note">Yeni fotoğraf yüklemek için seçin</p>
+                            </div>
+                            {% endif %}
+                            {{ form.photo2 }}
+                            {% if form.photo2.errors %}
+                            <div class="error">{{ form.photo2.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.photo3.id_for_label }}">{{ form.photo3.label }}</label>
+                            {% if product.photo3 %}
+                            <div class="current-photo">
+                                <img src="{{ product.photo3.url }}" alt="Current photo 3">
+                                <p class="photo-note">Yeni fotoğraf yüklemek için seçin</p>
+                            </div>
+                            {% endif %}
+                            {{ form.photo3 }}
+                            {% if form.photo3.errors %}
+                            <div class="error">{{ form.photo3.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-tags"></i> {{ form.tags.label }}</h3>
+                    <div class="tags-container">
+                        {{ form.tags }}
+                        {% if form.tags.errors %}
+                        <div class="error">{{ form.tags.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-group checkbox-group">
+                        {{ form.is_active }}
+                        <label for="{{ form.is_active.id_for_label }}">{{ form.is_active.label }}</label>
+                        {% if form.is_active.errors %}
+                        <div class="error">{{ form.is_active.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Değişiklikleri Kaydet
+                    </button>
+                    <a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> İptal
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .current-photo {
+        margin-bottom: 10px;
+    }
+
+    .current-photo img {
+        max-width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 2px solid #e9ecef;
+    }
+
+    .photo-note {
+        font-size: 12px;
+        color: #666;
+        margin-top: 5px;
+    }
+</style>
+{% endblock %}

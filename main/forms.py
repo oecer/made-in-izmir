@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from .models import UserProfile, Sector, SignupRequest
+from .models import UserProfile, Sector, SignupRequest, Product, ProductTag
 
 
 
@@ -260,3 +260,89 @@ class CustomLoginForm(AuthenticationForm):
         }),
         label='Şifre'
     )
+
+
+class ProductForm(forms.ModelForm):
+    """Form for producers to add/edit products"""
+    
+    tags = forms.ModelMultipleChoiceField(
+        queryset=ProductTag.objects.all(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'class': 'form-check-input'
+        }),
+        label='Etiketler (Maksimum 3)'
+    )
+    
+    class Meta:
+        model = Product
+        fields = ['title_tr', 'title_en', 'description_tr', 'description_en', 
+                  'photo1', 'photo2', 'photo3', 'tags', 'is_active']
+        widgets = {
+            'title_tr': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ürün Başlığı (Türkçe)',
+            }),
+            'title_en': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Product Title (English)',
+            }),
+            'description_tr': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ürün Açıklaması (Türkçe)',
+                'rows': 4
+            }),
+            'description_en': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Product Description (English)',
+                'rows': 4
+            }),
+            'photo1': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*'
+            }),
+            'photo2': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*'
+            }),
+            'photo3': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*'
+            }),
+            'is_active': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            })
+        }
+        labels = {
+            'title_tr': 'Ürün Başlığı (Türkçe)',
+            'title_en': 'Ürün Başlığı (İngilizce)',
+            'description_tr': 'Ürün Açıklaması (Türkçe)',
+            'description_en': 'Ürün Açıklaması (İngilizce)',
+            'photo1': 'Fotoğraf 1',
+            'photo2': 'Fotoğraf 2',
+            'photo3': 'Fotoğraf 3',
+            'is_active': 'Aktif'
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set tag labels
+        self.fields['tags'].label_from_instance = lambda obj: f"{obj.name_tr} | {obj.name_en}"
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        # Validate that at least one title is provided
+        if not cleaned_data.get('title_tr') and not cleaned_data.get('title_en'):
+            raise forms.ValidationError("En az bir dilde başlık girilmelidir (Türkçe veya İngilizce)")
+        
+        # Validate that at least one description is provided
+        if not cleaned_data.get('description_tr') and not cleaned_data.get('description_en'):
+            raise forms.ValidationError("En az bir dilde açıklama girilmelidir (Türkçe veya İngilizce)")
+        
+        # Validate max 3 tags
+        tags = cleaned_data.get('tags')
+        if tags and tags.count() > 3:
+            raise forms.ValidationError("Maksimum 3 etiket seçebilirsiniz")
+        
+        return cleaned_data

@@ -13,7 +13,7 @@
                 <li><a href="{% url 'main:about' %}" data-i18n="nav.about">Hakkımızda</a></li>
                 <li><a href="{% url 'main:contact' %}" data-i18n="nav.contact">İletişim</a></li>
                 {% if user.is_authenticated %}
-                <li><a href="{% url 'main:profile' %}" data-i18n="nav.profile">Profilim</a></li>
+                <li><a href="{% url 'main:dashboard' %}" data-i18n="nav.dashboard">Panel</a></li>
                 {% else %}
                 <li><a href="{% url 'main:login' %}" data-i18n="nav.login">Giriş</a></li>
                 <li><a href="{% url 'main:signup' %}" data-i18n="nav.signup" class="btn-signup-nav">Kayıt Ol</a></li>

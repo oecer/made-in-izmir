@@ -1,0 +1,409 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Üretici Paneli - Made in Izmir{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div class="container">
+            <h1>Üretici Paneli</h1>
+            <p>Hoş geldiniz, {{ user.get_full_name }}!</p>
+        </div>
+    </div>
+
+    <div class="container dashboard-content">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ total_products }}</h3>
+                    <p>Toplam Ürün</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ active_products }}</h3>
+                    <p>Aktif Ürün</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ profile.company_name }}</h3>
+                    <p>Firma</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="dashboard-actions">
+            <a href="{% url 'main:add_product' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Yeni Ürün Ekle
+            </a>
+            <a href="{% url 'main:profile' %}" class="btn btn-secondary">
+                <i class="fas fa-user"></i> Profili Görüntüle
+            </a>
+        </div>
+
+        <!-- Products List -->
+        <div class="products-section">
+            <h2>Ürünlerim</h2>
+
+            {% if products %}
+            <div class="products-grid">
+                {% for product in products %}
+                <div class="product-card {% if not product.is_active %}inactive{% endif %}">
+                    <div class="product-image">
+                        {% if product.photo1 %}
+                        <img src="{{ product.photo1.url }}" alt="{{ product.title_tr|default:product.title_en }}">
+                        {% else %}
+                        <div class="no-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        {% endif %}
+                        {% if not product.is_active %}
+                        <span class="status-badge inactive">Pasif</span>
+                        {% else %}
+                        <span class="status-badge active">Aktif</span>
+                        {% endif %}
+                    </div>
+                    <div class="product-info">
+                        <h3>{{ product.title_tr|default:product.title_en }}</h3>
+                        <p class="product-description">{{
+                            product.description_tr|default:product.description_en|truncatewords:20 }}</p>
+
+                        {% if product.tags.all %}
+                        <div class="product-tags">
+                            {% for tag in product.tags.all %}
+                            <span class="tag">{{ tag.name_tr }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <div class="product-actions">
+                            <a href="{% url 'main:product_detail' product.id %}" class="btn btn-sm btn-info">
+                                <i class="fas fa-eye"></i> Görüntüle
+                            </a>
+                            <a href="{% url 'main:edit_product' product.id %}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i> Düzenle
+                            </a>
+                            <a href="{% url 'main:delete_product' product.id %}" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i> Sil
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-box-open"></i>
+                <h3>Henüz ürün eklemediniz</h3>
+                <p>İlk ürününüzü ekleyerek başlayın!</p>
+                <a href="{% url 'main:add_product' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> İlk Ürünü Ekle
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .dashboard-container {
+        min-height: 100vh;
+        background: #f8fafc;
+        padding-top: 100px;
+        padding-bottom: 60px;
+    }
+
+    .dashboard-header {
+        background: white;
+        padding: 40px 0;
+        color: #0f172a;
+        text-align: center;
+        margin-bottom: 40px;
+        border-bottom: 1px solid #e2e8f0;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .dashboard-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    .dashboard-header p {
+        color: #64748b;
+    }
+
+    .dashboard-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #0f172a 0%, #cca43b 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+    }
+
+    .stat-info h3 {
+        font-size: 2rem;
+        margin: 0;
+        color: #333;
+    }
+
+    .stat-info p {
+        margin: 5px 0 0;
+        color: #666;
+    }
+
+    .dashboard-actions {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+    }
+
+    .products-section {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .products-section h2 {
+        margin-bottom: 30px;
+        color: #333;
+    }
+
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+    }
+
+    .product-card {
+        background: #f8f9fa;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 2px solid #e9ecef;
+    }
+
+    .product-card.inactive {
+        opacity: 0.7;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-image {
+        position: relative;
+        height: 200px;
+        background: #e9ecef;
+        overflow: hidden;
+    }
+
+    .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .no-image {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        color: #adb5bd;
+    }
+
+    .status-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .status-badge.active {
+        background: #28a745;
+        color: white;
+    }
+
+    .status-badge.inactive {
+        background: #6c757d;
+        color: white;
+    }
+
+    .product-info {
+        padding: 20px;
+    }
+
+    .product-info h3 {
+        margin: 0 0 10px;
+        color: #333;
+        font-size: 1.2rem;
+    }
+
+    .product-description {
+        color: #666;
+        margin-bottom: 15px;
+        line-height: 1.6;
+    }
+
+    .product-tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+    }
+
+    .tag {
+        background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 12px;
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #5a6268;
+    }
+
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+
+    .btn-info {
+        background: #17a2b8;
+        color: white;
+    }
+
+    .btn-info:hover {
+        background: #138496;
+    }
+
+    .btn-warning {
+        background: #ffc107;
+        color: #333;
+    }
+
+    .btn-warning:hover {
+        background: #e0a800;
+    }
+
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #c82333;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+
+    .empty-state i {
+        font-size: 80px;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+
+    .empty-state h3 {
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .empty-state p {
+        margin-bottom: 30px;
+    }
+</style>
+{% endblock %}

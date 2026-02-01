@@ -1,0 +1,377 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.title_tr|default:product.title_en }} - Made in Izmir{% endblock %}
+
+{% block content %}
+<div class="product-detail-container">
+    <div class="container">
+        <div class="product-detail-wrapper">
+            <!-- Back Button -->
+            <div class="back-button">
+                {% if is_owner %}
+                <a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Panele Dön
+                </a>
+                {% else %}
+                <a href="{% url 'main:buyer_dashboard' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Ürünlere Dön
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="product-detail-content">
+                <!-- Product Images -->
+                <div class="product-images">
+                    <div class="main-image">
+                        {% if product.photo1 %}
+                        <img id="mainImage" src="{{ product.photo1.url }}"
+                            alt="{{ product.title_tr|default:product.title_en }}">
+                        {% else %}
+                        <div class="no-image-large">
+                            <i class="fas fa-image"></i>
+                            <p>Fotoğraf yok</p>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if product.photo1 or product.photo2 or product.photo3 %}
+                    <div class="thumbnail-images">
+                        {% if product.photo1 %}
+                        <img src="{{ product.photo1.url }}" alt="Photo 1"
+                            onclick="changeMainImage('{{ product.photo1.url }}')" class="active">
+                        {% endif %}
+                        {% if product.photo2 %}
+                        <img src="{{ product.photo2.url }}" alt="Photo 2"
+                            onclick="changeMainImage('{{ product.photo2.url }}')">
+                        {% endif %}
+                        {% if product.photo3 %}
+                        <img src="{{ product.photo3.url }}" alt="Photo 3"
+                            onclick="changeMainImage('{{ product.photo3.url }}')">
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Product Info -->
+                <div class="product-info-section">
+                    <div class="product-header">
+                        <h1>{{ product.title_tr|default:product.title_en }}</h1>
+                        {% if product.title_en and product.title_tr %}
+                        <h2 class="subtitle">{{ product.title_en }}</h2>
+                        {% endif %}
+
+                        {% if product.is_active %}
+                        <span class="status-badge active">Aktif</span>
+                        {% else %}
+                        <span class="status-badge inactive">Pasif</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="producer-info">
+                        <i class="fas fa-industry"></i>
+                        <div>
+                            <strong>Üretici:</strong> {{ product.producer.profile.company_name }}<br>
+                            <small>{{ product.producer.profile.city }}, {{ product.producer.profile.country }}</small>
+                        </div>
+                    </div>
+
+                    {% if product.tags.all %}
+                    <div class="product-tags">
+                        <strong><i class="fas fa-tags"></i> Etiketler:</strong>
+                        <div class="tags-list">
+                            {% for tag in product.tags.all %}
+                            <span class="tag">{{ tag.name_tr }} | {{ tag.name_en }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="product-description">
+                        <h3><i class="fas fa-align-left"></i> Açıklama (Türkçe)</h3>
+                        <p>{{ product.description_tr|default:"Türkçe açıklama bulunmuyor." }}</p>
+                    </div>
+
+                    {% if product.description_en %}
+                    <div class="product-description">
+                        <h3><i class="fas fa-align-left"></i> Description (English)</h3>
+                        <p>{{ product.description_en }}</p>
+                    </div>
+                    {% endif %}
+
+                    <div class="product-meta">
+                        <p><i class="fas fa-calendar"></i> Eklenme Tarihi: {{ product.created_at|date:"d.m.Y H:i" }}</p>
+                        <p><i class="fas fa-clock"></i> Son Güncelleme: {{ product.updated_at|date:"d.m.Y H:i" }}</p>
+                    </div>
+
+                    {% if is_owner %}
+                    <div class="owner-actions">
+                        <a href="{% url 'main:edit_product' product.id %}" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Düzenle
+                        </a>
+                        <a href="{% url 'main:delete_product' product.id %}" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Sil
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function changeMainImage(url) {
+        document.getElementById('mainImage').src = url;
+
+        // Update active thumbnail
+        const thumbnails = document.querySelectorAll('.thumbnail-images img');
+        thumbnails.forEach(thumb => {
+            thumb.classList.remove('active');
+            if (thumb.src.includes(url.split('/').pop())) {
+                thumb.classList.add('active');
+            }
+        });
+    }
+</script>
+
+<style>
+    .product-detail-container {
+        min-height: 100vh;
+        background: #f8fafc;
+        padding: 120px 20px 60px;
+    }
+
+    .product-detail-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .back-button {
+        margin-bottom: 20px;
+    }
+
+    .product-detail-content {
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+    }
+
+    @media (max-width: 768px) {
+        .product-detail-content {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .product-images {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .main-image {
+        width: 100%;
+        height: 400px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #f8f9fa;
+    }
+
+    .main-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .no-image-large {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #adb5bd;
+    }
+
+    .no-image-large i {
+        font-size: 80px;
+        margin-bottom: 10px;
+    }
+
+    .thumbnail-images {
+        display: flex;
+        gap: 10px;
+    }
+
+    .thumbnail-images img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        border: 3px solid transparent;
+        transition: border-color 0.3s ease;
+    }
+
+    .thumbnail-images img:hover,
+    .thumbnail-images img.active {
+        border-color: #667eea;
+    }
+
+    .product-info-section {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .product-header h1 {
+        color: #333;
+        margin: 0 0 10px;
+        font-size: 2rem;
+    }
+
+    .subtitle {
+        color: #666;
+        font-size: 1.3rem;
+        margin: 0 0 15px;
+        font-weight: normal;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .status-badge.active {
+        background: #28a745;
+        color: white;
+    }
+
+    .status-badge.inactive {
+        background: #6c757d;
+        color: white;
+    }
+
+    .producer-info {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    .producer-info i {
+        font-size: 24px;
+        color: #667eea;
+    }
+
+    .product-tags {
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    .product-tags strong {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .tags-list {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .tag {
+        background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+        color: white;
+        padding: 6px 15px;
+        border-radius: 15px;
+        font-size: 14px;
+    }
+
+    .product-description h3 {
+        color: #cca43b;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .product-description p {
+        color: #666;
+        line-height: 1.8;
+        white-space: pre-wrap;
+    }
+
+    .product-meta {
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    .product-meta p {
+        margin: 5px 0;
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .owner-actions {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 12px 25px;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #5a6268;
+    }
+
+    .btn-warning {
+        background: #ffc107;
+        color: #333;
+    }
+
+    .btn-warning:hover {
+        background: #e0a800;
+    }
+
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #c82333;
+    }
+</style>
+{% endblock %}

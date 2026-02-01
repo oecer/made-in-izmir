@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ürün Sil - Made in Izmir{% endblock %}
+
+{% block content %}
+<div class="delete-container">
+    <div class="container">
+        <div class="delete-wrapper">
+            <div class="delete-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h1>Ürünü Sil</h1>
+                <p>Bu işlem geri alınamaz!</p>
+            </div>
+
+            <div class="product-preview">
+                <div class="product-image">
+                    {% if product.photo1 %}
+                    <img src="{{ product.photo1.url }}" alt="{{ product.title_tr|default:product.title_en }}">
+                    {% else %}
+                    <div class="no-image">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <h2>{{ product.title_tr|default:product.title_en }}</h2>
+                    {% if product.title_en and product.title_tr %}
+                    <p class="subtitle">{{ product.title_en }}</p>
+                    {% endif %}
+                    <p class="description">{{ product.description_tr|default:product.description_en|truncatewords:30 }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="warning-message">
+                <i class="fas fa-info-circle"></i>
+                <p>Bu ürünü silmek istediğinizden emin misiniz? Bu işlem geri alınamaz ve ürünle ilgili tüm bilgiler
+                    kalıcı olarak silinecektir.</p>
+            </div>
+
+            <form method="post" class="delete-form">
+                {% csrf_token %}
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Evet, Ürünü Sil
+                    </button>
+                    <a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> İptal
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .delete-container {
+        min-height: 100vh;
+        background: #fdf2f2;
+        /* Light red wash */
+        padding: 120px 20px 60px;
+        display: flex;
+        align-items: center;
+    }
+
+
+    .delete-wrapper {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: var(--shadow-md);
+        border: 1px solid #fee2e2;
+    }
+
+    .delete-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .delete-header i {
+        font-size: 60px;
+        color: #dc3545;
+        margin-bottom: 15px;
+    }
+
+    .delete-header h1 {
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .delete-header p {
+        color: #dc3545;
+        font-weight: bold;
+    }
+
+    .product-preview {
+        display: flex;
+        gap: 20px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        margin-bottom: 25px;
+    }
+
+    .product-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #e9ecef;
+        flex-shrink: 0;
+    }
+
+    .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .no-image {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        color: #adb5bd;
+    }
+
+    .product-info {
+        flex: 1;
+    }
+
+    .product-info h2 {
+        color: #333;
+        margin: 0 0 5px;
+        font-size: 1.3rem;
+    }
+
+    .subtitle {
+        color: #666;
+        font-size: 1rem;
+        margin: 0 0 10px;
+    }
+
+    .description {
+        color: #666;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .warning-message {
+        display: flex;
+        gap: 15px;
+        padding: 20px;
+        background: #fff3cd;
+        border: 2px solid #ffc107;
+        border-radius: 10px;
+        margin-bottom: 30px;
+    }
+
+    .warning-message i {
+        font-size: 24px;
+        color: #856404;
+        flex-shrink: 0;
+    }
+
+    .warning-message p {
+        color: #856404;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 12px 30px;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #c82333;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+    }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #5a6268;
+    }
+</style>
+{% endblock %}

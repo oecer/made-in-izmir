@@ -171,3 +171,80 @@ class UserProfile(models.Model):
         if self.is_producer:
             types.append("Üretici")
         return ", ".join(types) if types else "Belirtilmemiş"
+
+
+class ProductTag(models.Model):
+    """Tags for categorizing products"""
+    name_tr = models.CharField(max_length=100, verbose_name="Etiket Adı (TR)")
+    name_en = models.CharField(max_length=100, verbose_name="Etiket Adı (EN)")
+    
+    class Meta:
+        verbose_name = "Ürün Etiketi"
+        verbose_name_plural = "Ürün Etiketleri"
+        ordering = ['name_tr']
+    
+    def __str__(self):
+        return self.name_tr
+
+
+class Product(models.Model):
+    """Products created by producers"""
+    producer = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='products',
+        verbose_name="Üretici"
+    )
+    
+    # Multilingual fields
+    title_tr = models.CharField(max_length=200, blank=True, verbose_name="Ürün Başlığı (TR)")
+    title_en = models.CharField(max_length=200, blank=True, verbose_name="Ürün Başlığı (EN)")
+    description_tr = models.TextField(blank=True, verbose_name="Ürün Açıklaması (TR)")
+    description_en = models.TextField(blank=True, verbose_name="Ürün Açıklaması (EN)")
+    
+    # Photos (max 3)
+    photo1 = models.ImageField(upload_to='products/', blank=True, null=True, verbose_name="Fotoğraf 1")
+    photo2 = models.ImageField(upload_to='products/', blank=True, null=True, verbose_name="Fotoğraf 2")
+    photo3 = models.ImageField(upload_to='products/', blank=True, null=True, verbose_name="Fotoğraf 3")
+    
+    # Tags (max 3)
+    tags = models.ManyToManyField(
+        ProductTag,
+        blank=True,
+        related_name='products',
+        verbose_name="Etiketler"
+    )
+    
+    # Status
+    is_active = models.BooleanField(default=True, verbose_name="Aktif")
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = "Ürün"
+        verbose_name_plural = "Ürünler"
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return self.title_tr or self.title_en or f"Product #{self.id}"
+    
+    def clean(self):
+        """Validate that at least one title is provided"""
+        from django.core.exceptions import ValidationError
+        if not self.title_tr and not self.title_en:
+            raise ValidationError("En az bir dilde başlık girilmelidir (TR veya EN)")
+        if not self.description_tr and not self.description_en:
+            raise ValidationError("En az bir dilde açıklama girilmelidir (TR veya EN)")
+    
+    def get_photos(self):
+        """Return list of available photos"""
+        photos = []
+        if self.photo1:
+            photos.append(self.photo1)
+        if self.photo2:
+            photos.append(self.photo2)
+        if self.photo3:
+            photos.append(self.photo3)
+        return photos
