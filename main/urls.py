@@ -21,6 +21,10 @@ urlpatterns = [
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('dashboard/producer/', views.producer_dashboard_view, name='producer_dashboard'),
     path('dashboard/buyer/', views.buyer_dashboard_view, name='buyer_dashboard'),
+    path('dashboard/calendar/', views.dashboard_calendar_view, name='dashboard_calendar'),
+    
+    # Expo URLs
+    path('expo/<int:expo_id>/signup/', views.expo_signup_view, name='expo_signup'),
     
     # Product management URLs (producers only)
     path('products/add/', views.add_product_view, name='add_product'),

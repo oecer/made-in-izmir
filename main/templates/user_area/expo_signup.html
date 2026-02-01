@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}Fuar Kaydı - {{ expo.title_tr }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Fuar Kaydı</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Expo Information -->
+                    <div class="mb-4 p-3 bg-light rounded">
+                        <h4>{{ expo.title_tr }}</h4>
+                        {% if expo.image %}
+                        <img src="{{ expo.image.url }}" class="img-fluid mb-3 rounded" alt="{{ expo.title_tr }}"
+                            style="max-height: 300px; object-fit: cover; width: 100%;">
+                        {% endif %}
+                        <p>{{ expo.description_tr }}</p>
+                        <ul class="list-unstyled">
+                            <li><strong>Tarih:</strong> {{ expo.start_date|date:"d M Y" }} - {{ expo.end_date|date:"d M
+                                Y" }}</li>
+                            <li><strong>Konum:</strong> {{ expo.location_tr }}</li>
+                            <li><strong>Kayıt Son Tarihi:</strong> {{ expo.registration_deadline|date:"d M Y" }}</li>
+                        </ul>
+                    </div>
+
+                    <!-- Signup Form -->
+                    <form method="post" id="expo-signup-form">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="{{ form.product_count.id_for_label }}" class="form-label">{{
+                                form.product_count.label }}</label>
+                            {{ form.product_count }}
+                            {% if form.product_count.errors %}
+                            <div class="text-danger">{{ form.product_count.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.uses_listed_products }}
+                                <label class="form-check-label" for="{{ form.uses_listed_products.id_for_label }}">
+                                    {{ form.uses_listed_products.label }}
+                                </label>
+                            </div>
+                            {% if form.uses_listed_products.errors %}
+                            <div class="text-danger">{{ form.uses_listed_products.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Selected Products (shown when checkbox is checked) -->
+                        <div class="mb-3" id="selected-products-container" style="display: none;">
+                            <label for="{{ form.selected_products.id_for_label }}" class="form-label">{{
+                                form.selected_products.label }}</label>
+                            {{ form.selected_products }}
+                            <small class="form-text text-muted">Ctrl tuşuna basılı tutarak birden fazla ürün
+                                seçebilirsiniz.</small>
+                            {% if form.selected_products.errors %}
+                            <div class="text-danger">{{ form.selected_products.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Product Description (shown when checkbox is not checked) -->
+                        <div class="mb-3" id="product-description-container">
+                            <label for="{{ form.product_description.id_for_label }}" class="form-label">{{
+                                form.product_description.label }}</label>
+                            {{ form.product_description }}
+                            {% if form.product_description.errors %}
+                            <div class="text-danger">{{ form.product_description.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.notes.id_for_label }}" class="form-label">{{ form.notes.label }}</label>
+                            {{ form.notes }}
+                            {% if form.notes.errors %}
+                            <div class="text-danger">{{ form.notes.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                        {% endif %}
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Kayıt Ol</button>
+                            <a href="{% url 'main:dashboard_calendar' %}" class="btn btn-secondary">İptal</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const usesListedCheckbox = document.getElementById('uses_listed_products');
+        const selectedProductsContainer = document.getElementById('selected-products-container');
+        const productDescriptionContainer = document.getElementById('product-description-container');
+
+        function toggleProductFields() {
+            if (usesListedCheckbox.checked) {
+                selectedProductsContainer.style.display = 'block';
+                productDescriptionContainer.style.display = 'none';
+            } else {
+                selectedProductsContainer.style.display = 'none';
+                productDescriptionContainer.style.display = 'block';
+            }
+        }
+
+        // Initial state
+        toggleProductFields();
+
+        // Listen for changes
+        usesListedCheckbox.addEventListener('change', toggleProductFields);
+    });
+</script>
+{% endblock %}

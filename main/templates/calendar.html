@@ -1,54 +1,89 @@
-{%extends 'base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Made in Izmir - Expo Calendar{% endblock %}
 
 {% block content %}
 <!-- Page Header -->
-    <div class="page-header header-calendar">
-        <div class="container">
-            <h1 data-i18n="calendar.title">Fuar Takvimi</h1>
-            <p data-i18n="calendar.subtitle">Katılacağımız uluslararası fuarlar.</p>
-        </div>
+<div class="page-header header-calendar">
+    <div class="container">
+        <h1 data-i18n="calendar.title">Fuar Takvimi</h1>
+        <p data-i18n="calendar.subtitle">Katılacağımız uluslararası fuarlar.</p>
     </div>
+</div>
 
-    <!-- Calendar Section -->
-    <section class="section">
-        <div class="container animate-fade-up">
-            <div style="overflow-x: auto;">
-                <table class="calendar-table">
-                    <thead>
-                        <tr>
-                            <th data-i18n="calendar.col_event">Etkinlik</th>
-                            <th data-i18n="calendar.col_date">Tarih</th>
-                            <th data-i18n="calendar.col_location">Konum</th>
-                            <th data-i18n="calendar.col_action">Aksiyon</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Gulfood 2024</strong> <br><small>World's Largest Food Expo</small></td>
-                            <td>Feb 19-23, 2024</td>
-                            <td>Dubai, UAE</td>
-                            <td><a href="{% url 'main:contact' %}" class="btn btn-sm btn-secondary"
-                                    data-i18n="calendar.hire_btn">Bizi Kiralayın</a></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Hannover Messe</strong> <br><small>Industrial Technology</small></td>
-                            <td>Apr 22-26, 2024</td>
-                            <td>Hannover, Germany</td>
-                            <td><a href="{% url 'main:contact' %}" class="btn btn-sm btn-secondary"
-                                    data-i18n="calendar.hire_btn">Bizi Kiralayın</a></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Anuga</strong> <br><small>Food & Beverage</small></td>
-                            <td>Oct 07-11, 2025</td>
-                            <td>Cologne, Germany</td>
-                            <td><a href="{% url 'main:contact' %}" class="btn btn-sm btn-secondary"
-                                    data-i18n="calendar.hire_btn">Bizi Kiralayın</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+<!-- Calendar Section -->
+<section class="section">
+    <div class="container animate-fade-up">
+        {% if user.is_authenticated %}
+        <div class="alert alert-info mb-4">
+            <p>Fuarlara kayıt olmak için <a href="{% url 'main:dashboard_calendar' %}" class="alert-link">Dashboard
+                    Takvim</a> sayfasını ziyaret edin.</p>
         </div>
-    </section>
+        {% endif %}
+
+        <h2 class="mb-4">Yaklaşan Fuarlar</h2>
+        {% if upcoming_expos %}
+        <div style="overflow-x: auto;">
+            <table class="calendar-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="calendar.col_event">Etkinlik</th>
+                        <th data-i18n="calendar.col_date">Tarih</th>
+                        <th data-i18n="calendar.col_location">Konum</th>
+                        <th data-i18n="calendar.col_registration">Kayıt Son Tarihi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expo in upcoming_expos %}
+                    <tr>
+                        <td>
+                            <strong>{{ expo.title_tr }}</strong>
+                            {% if expo.image %}
+                            <br><img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}"
+                                style="max-width: 100px; margin-top: 5px;">
+                            {% endif %}
+                        </td>
+                        <td>{{ expo.start_date|date:"d M Y" }} - {{ expo.end_date|date:"d M Y" }}</td>
+                        <td>{{ expo.location_tr }}</td>
+                        <td>{{ expo.registration_deadline|date:"d M Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">Şu anda yaklaşan fuar bulunmamaktadır.</p>
+        {% endif %}
+
+        {% if past_expos %}
+        <h2 class="mt-5 mb-4">Geçmiş Fuarlar</h2>
+        <div style="overflow-x: auto;">
+            <table class="calendar-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="calendar.col_event">Etkinlik</th>
+                        <th data-i18n="calendar.col_date">Tarih</th>
+                        <th data-i18n="calendar.col_location">Konum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expo in past_expos %}
+                    <tr>
+                        <td>
+                            <strong>{{ expo.title_tr }}</strong>
+                            {% if expo.image %}
+                            <br><img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}"
+                                style="max-width: 100px; margin-top: 5px;">
+                            {% endif %}
+                        </td>
+                        <td>{{ expo.start_date|date:"d M Y" }} - {{ expo.end_date|date:"d M Y" }}</td>
+                        <td>{{ expo.location_tr }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</section>
 {% endblock %}

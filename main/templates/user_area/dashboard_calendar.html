@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block title %}Fuar Takvimi - Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">Fuar Takvimi</h1>
+
+            <!-- User's Signups -->
+            {% if user_signups %}
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Kayıt Olduğunuz Fuarlar</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Fuar</th>
+                                    <th>Tarih</th>
+                                    <th>Konum</th>
+                                    <th>Ürün Sayısı</th>
+                                    <th>Durum</th>
+                                    <th>Kayıt Tarihi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for signup in user_signups %}
+                                <tr>
+                                    <td><strong>{{ signup.expo.title_tr }}</strong></td>
+                                    <td>{{ signup.expo.start_date|date:"d M Y" }} - {{ signup.expo.end_date|date:"d M Y"
+                                        }}</td>
+                                    <td>{{ signup.expo.location_tr }}</td>
+                                    <td>{{ signup.product_count }}</td>
+                                    <td>
+                                        {% if signup.status == 'pending' %}
+                                        <span class="badge bg-warning">Beklemede</span>
+                                        {% elif signup.status == 'confirmed' %}
+                                        <span class="badge bg-success">Onaylandı</span>
+                                        {% else %}
+                                        <span class="badge bg-danger">İptal Edildi</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ signup.created_at|date:"d M Y" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Upcoming Expos -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Yaklaşan Fuarlar</h5>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_expos %}
+                    <div class="row">
+                        {% for expo in upcoming_expos %}
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                {% if expo.image %}
+                                <img src="{{ expo.image.url }}" class="card-img-top" alt="{{ expo.title_tr }}"
+                                    style="height: 200px; object-fit: cover;">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ expo.title_tr }}</h5>
+                                    <p class="card-text">{{ expo.description_tr|truncatewords:20 }}</p>
+                                    <ul class="list-unstyled">
+                                        <li><strong>Tarih:</strong> {{ expo.start_date|date:"d M Y" }} - {{
+                                            expo.end_date|date:"d M Y" }}</li>
+                                        <li><strong>Konum:</strong> {{ expo.location_tr }}</li>
+                                        <li><strong>Kayıt Son Tarihi:</strong> {{ expo.registration_deadline|date:"d M
+                                            Y" }}</li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    {% if expo.id in user_signup_expo_ids %}
+                                    <button class="btn btn-secondary w-100" disabled>Kayıt Oldunuz</button>
+                                    {% elif expo.is_registration_open %}
+                                    <a href="{% url 'main:expo_signup' expo.id %}" class="btn btn-primary w-100">Kayıt
+                                        Ol / Bizi Kiralayın</a>
+                                    {% else %}
+                                    <button class="btn btn-warning w-100" disabled>Kayıt Süresi Doldu</button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">Şu anda yaklaşan fuar bulunmamaktadır.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Past Expos -->
+            {% if past_expos %}
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Geçmiş Fuarlar</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Fuar</th>
+                                    <th>Tarih</th>
+                                    <th>Konum</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for expo in past_expos %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ expo.title_tr }}</strong>
+                                        {% if expo.image %}
+                                        <br><img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}"
+                                            style="max-width: 80px; margin-top: 5px;">
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ expo.start_date|date:"d M Y" }} - {{ expo.end_date|date:"d M Y" }}</td>
+                                    <td>{{ expo.location_tr }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
