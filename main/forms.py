@@ -268,8 +268,8 @@ class ProductForm(forms.ModelForm):
     tags = forms.ModelMultipleChoiceField(
         queryset=ProductTag.objects.all(),
         required=False,
-        widget=forms.CheckboxSelectMultiple(attrs={
-            'class': 'form-check-input'
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-control'
         }),
         label='Etiketler (Maksimum 3)'
     )
@@ -282,20 +282,24 @@ class ProductForm(forms.ModelForm):
             'title_tr': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Ürün Başlığı (Türkçe)',
+                'data-i18n': 'dashboard.title_tr'
             }),
             'title_en': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Product Title (English)',
+                'data-i18n': 'dashboard.title_en'
             }),
             'description_tr': forms.Textarea(attrs={
                 'class': 'form-control',
                 'placeholder': 'Ürün Açıklaması (Türkçe)',
-                'rows': 4
+                'rows': 4,
+                'data-i18n': 'dashboard.desc_tr'
             }),
             'description_en': forms.Textarea(attrs={
                 'class': 'form-control',
                 'placeholder': 'Product Description (English)',
-                'rows': 4
+                'rows': 4,
+                'data-i18n': 'dashboard.desc_en'
             }),
             'photo1': forms.FileInput(attrs={
                 'class': 'form-control',

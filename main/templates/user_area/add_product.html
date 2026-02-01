@@ -3,6 +3,93 @@
 
 {% block title %}Yeni Ürün Ekle - Made in Izmir{% endblock %}
 
+{% block extra_css %}
+<link href="https://unpkg.com/slim-select@2.8.2/dist/slimselect.css" rel="stylesheet">
+<style>
+    .ss-main {
+        padding: 0.5rem;
+        border-radius: 8px;
+        border-color: #cbd5e1;
+        background-color: #f8fafc;
+        margin-bottom: 10px;
+    }
+
+    .ss-main:focus {
+        border-color: #0f172a;
+        box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
+    }
+
+    .tags-container {
+        display: block;
+        margin-top: 10px;
+    }
+
+    .field-help {
+        font-size: 12px;
+        color: #666;
+        margin-top: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/slim-select@2.8.2/dist/slimselect.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let tagSlim;
+        const tagSelect = document.getElementById('id_tags');
+
+        if (tagSelect) {
+            tagSlim = new SlimSelect({
+                select: '#id_tags',
+                settings: {
+                    placeholderText: 'Etiket Seçiniz / Select Tags',
+                    maxSelections: 3,
+                    closeOnSelect: false,
+                }
+            });
+        }
+
+        function updateTagLabels() {
+            const currentLang = localStorage.getItem('madeInIzmirLang') || 'tr';
+            const options = document.querySelectorAll('#id_tags option');
+
+            options.forEach(opt => {
+                const fullText = opt.getAttribute('data-full-text') || opt.textContent;
+                if (!opt.getAttribute('data-full-text')) {
+                    opt.setAttribute('data-full-text', fullText);
+                }
+
+                if (fullText.includes(' | ')) {
+                    const parts = fullText.split(' | ');
+                    // Display both languages in the dropdown
+                    opt.textContent = `${parts[0].trim()} / ${parts[1].trim()}`;
+                }
+            });
+
+            // Refresh SlimSelect
+            if (tagSlim) {
+                tagSlim.setData(Array.from(tagSelect.options).map(opt => ({
+                    text: opt.textContent,
+                    value: opt.value,
+                    selected: opt.selected
+                })));
+            }
+        }
+
+        // Initial call
+        updateTagLabels();
+
+        // Listen for language changes
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                setTimeout(updateTagLabels, 100);
+            });
+        });
+    });
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="form-container">
     <div class="container">
@@ -23,16 +110,18 @@
                 {% endif %}
 
                 <div class="form-section">
-                    <h3><i class="fas fa-language"></i> Türkçe Bilgiler</h3>
+                    <h3><i class="fas fa-language"></i> <span data-i18n="dashboard.tr_info">Türkçe Bilgiler</span></h3>
                     <div class="form-group">
-                        <label for="{{ form.title_tr.id_for_label }}">{{ form.title_tr.label }}</label>
+                        <label data-i18n="dashboard.title_tr" for="{{ form.title_tr.id_for_label }}">{{
+                            form.title_tr.label }}</label>
                         {{ form.title_tr }}
                         {% if form.title_tr.errors %}
                         <div class="error">{{ form.title_tr.errors }}</div>
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.description_tr.id_for_label }}">{{ form.description_tr.label }}</label>
+                        <label data-i18n="dashboard.desc_tr" for="{{ form.description_tr.id_for_label }}">{{
+                            form.description_tr.label }}</label>
                         {{ form.description_tr }}
                         {% if form.description_tr.errors %}
                         <div class="error">{{ form.description_tr.errors }}</div>
@@ -41,16 +130,19 @@
                 </div>
 
                 <div class="form-section">
-                    <h3><i class="fas fa-language"></i> English Information</h3>
+                    <h3><i class="fas fa-language"></i> <span data-i18n="dashboard.en_info">English Information</span>
+                    </h3>
                     <div class="form-group">
-                        <label for="{{ form.title_en.id_for_label }}">{{ form.title_en.label }}</label>
+                        <label data-i18n="dashboard.title_en" for="{{ form.title_en.id_for_label }}">{{
+                            form.title_en.label }}</label>
                         {{ form.title_en }}
                         {% if form.title_en.errors %}
                         <div class="error">{{ form.title_en.errors }}</div>
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.description_en.id_for_label }}">{{ form.description_en.label }}</label>
+                        <label data-i18n="dashboard.desc_en" for="{{ form.description_en.id_for_label }}">{{
+                            form.description_en.label }}</label>
                         {{ form.description_en }}
                         {% if form.description_en.errors %}
                         <div class="error">{{ form.description_en.errors }}</div>
@@ -59,24 +151,28 @@
                 </div>
 
                 <div class="form-section">
-                    <h3 data-i18n="dashboard.photos"><i class="fas fa-camera"></i> Fotoğraflar (Maksimum 3)</h3>
+                    <h3><i class="fas fa-camera"></i> <span data-i18n="dashboard.photos">Fotoğraflar (Maksimum 3)</span>
+                    </h3>
                     <div class="photos-grid">
                         <div class="form-group">
-                            <label for="{{ form.photo1.id_for_label }}">{{ form.photo1.label }}</label>
+                            <label data-i18n="dashboard.photo1" for="{{ form.photo1.id_for_label }}">{{
+                                form.photo1.label }}</label>
                             {{ form.photo1 }}
                             {% if form.photo1.errors %}
                             <div class="error">{{ form.photo1.errors }}</div>
                             {% endif %}
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.photo2.id_for_label }}">{{ form.photo2.label }}</label>
+                            <label data-i18n="dashboard.photo2" for="{{ form.photo2.id_for_label }}">{{
+                                form.photo2.label }}</label>
                             {{ form.photo2 }}
                             {% if form.photo2.errors %}
                             <div class="error">{{ form.photo2.errors }}</div>
                             {% endif %}
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.photo3.id_for_label }}">{{ form.photo3.label }}</label>
+                            <label data-i18n="dashboard.photo3" for="{{ form.photo3.id_for_label }}">{{
+                                form.photo3.label }}</label>
                             {{ form.photo3 }}
                             {% if form.photo3.errors %}
                             <div class="error">{{ form.photo3.errors }}</div>
@@ -86,9 +182,11 @@
                 </div>
 
                 <div class="form-section">
-                    <h3><i class="fas fa-tags"></i> {{ form.tags.label }}</h3>
+                    <h3><i class="fas fa-tags"></i> <span data-i18n="dashboard.tags">Etiketler (Maksimum 3)</span></h3>
                     <div class="tags-container">
                         {{ form.tags }}
+                        <p class="field-help" data-i18n="dashboard.tag_help">Ürününüzü en iyi tanımlayan etiketleri
+                            seçin.</p>
                         {% if form.tags.errors %}
                         <div class="error">{{ form.tags.errors }}</div>
                         {% endif %}
@@ -96,9 +194,11 @@
                 </div>
 
                 <div class="form-section">
+                    <h3><i class="fas fa-info-circle"></i> <span data-i18n="dashboard.product_status">Ürün Durumu</span>
+                    </h3>
                     <div class="form-group checkbox-group">
                         {{ form.is_active }}
-                        <label for="{{ form.is_active.id_for_label }}">{{ form.is_active.label }}</label>
+                        <label for="{{ form.is_active.id_for_label }}" data-i18n="dashboard.active">Aktif</label>
                         {% if form.is_active.errors %}
                         <div class="error">{{ form.is_active.errors }}</div>
                         {% endif %}
@@ -223,9 +323,7 @@
     }
 
     .tags-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 15px;
+        display: block;
     }
 
     .tags-container label {

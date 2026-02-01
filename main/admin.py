@@ -227,15 +227,145 @@ class ProductTagAdmin(admin.ModelAdmin):
     search_fields = ('name_tr', 'name_en')
 
 
+# Proxy model for pending product approvals
+class ProductApprovalRequest(Product):
+    """Proxy model to show only pending products in a separate admin view"""
+    class Meta:
+        proxy = True
+        verbose_name = "Ürün Onay Talebi"
+        verbose_name_plural = "Ürün Onay Talepleri"
+
+
+@admin.register(ProductApprovalRequest)
+class ProductApprovalRequestAdmin(admin.ModelAdmin):
+    list_display = ('title_tr', 'title_en', 'producer', 'approval_status', 'created_at')
+    list_filter = ('approval_status', 'created_at', 'tags')
+    search_fields = ('title_tr', 'title_en', 'description_tr', 'description_en', 'producer__username')
+    readonly_fields = (
+        'created_at', 'updated_at', 'reviewed_by', 'reviewed_at',
+        'producer', 'title_tr', 'title_en', 'description_tr', 'description_en',
+        'photo1', 'photo2', 'photo3', 'tags', 'is_active',
+        'photo1_preview', 'photo2_preview', 'photo3_preview'
+    )
+    filter_horizontal = ()
+    
+    fieldsets = (
+        ('Approval Status', {
+            'fields': ('approval_status', 'reviewed_by', 'reviewed_at', 'rejection_reason')
+        }),
+        ('Producer', {
+            'fields': ('producer',)
+        }),
+        ('Product Information (Turkish)', {
+            'fields': ('title_tr', 'description_tr')
+        }),
+        ('Product Information (English)', {
+            'fields': ('title_en', 'description_en')
+        }),
+        ('Photos', {
+            'fields': ('photo1_preview', 'photo2_preview', 'photo3_preview')
+        }),
+        ('Tags & Status', {
+            'fields': ('tags', 'is_active')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    actions = ['approve_products', 'reject_products']
+    
+    def get_queryset(self, request):
+        """Only show pending products"""
+        qs = super().get_queryset(request)
+        return qs.filter(approval_status='pending')
+    
+    def photo1_preview(self, obj):
+        """Display photo1 preview"""
+        if obj.photo1:
+            return f'<img src="{obj.photo1.url}" style="max-width: 200px; max-height: 200px;" />'
+        return '-'
+    photo1_preview.short_description = 'Fotoğraf 1 Önizleme'
+    photo1_preview.allow_tags = True
+    
+    def photo2_preview(self, obj):
+        """Display photo2 preview"""
+        if obj.photo2:
+            return f'<img src="{obj.photo2.url}" style="max-width: 200px; max-height: 200px;" />'
+        return '-'
+    photo2_preview.short_description = 'Fotoğraf 2 Önizleme'
+    photo2_preview.allow_tags = True
+    
+    def photo3_preview(self, obj):
+        """Display photo3 preview"""
+        if obj.photo3:
+            return f'<img src="{obj.photo3.url}" style="max-width: 200px; max-height: 200px;" />'
+        return '-'
+    photo3_preview.short_description = 'Fotoğraf 3 Önizleme'
+    photo3_preview.allow_tags = True
+    
+    def has_add_permission(self, request):
+        """Disable add button for this view"""
+        return False
+    
+    def has_delete_permission(self, request, obj=None):
+        """Disable delete for pending products"""
+        return False
+    
+    def save_model(self, request, obj, form, change):
+        """Handle status changes from the admin change form"""
+        if change and 'approval_status' in form.changed_data:
+            if obj.approval_status == 'approved':
+                obj.reviewed_by = request.user
+                obj.reviewed_at = timezone.now()
+                messages.success(request, f"Product '{obj}' has been approved.")
+            elif obj.approval_status == 'rejected':
+                obj.reviewed_by = request.user
+                obj.reviewed_at = timezone.now()
+                messages.warning(request, f"Product '{obj}' has been rejected.")
+        
+        super().save_model(request, obj, form, change)
+    
+    def approve_products(self, request, queryset):
+        """Approve selected products"""
+        approved_count = queryset.filter(approval_status='pending').update(
+            approval_status='approved',
+            reviewed_by=request.user,
+            reviewed_at=timezone.now()
+        )
+        
+        if approved_count > 0:
+            messages.success(request, f"✓ {approved_count} product(s) approved successfully!")
+    
+    approve_products.short_description = "Approve selected products"
+    
+    def reject_products(self, request, queryset):
+        """Reject selected products"""
+        rejected_count = queryset.filter(approval_status='pending').update(
+            approval_status='rejected',
+            reviewed_by=request.user,
+            reviewed_at=timezone.now()
+        )
+        
+        if rejected_count > 0:
+            messages.success(request, f"{rejected_count} product(s) rejected.")
+    
+    reject_products.short_description = "Reject selected products"
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title_tr', 'title_en', 'producer', 'is_active', 'created_at')
-    list_filter = ('is_active', 'created_at', 'tags')
+    list_display = ('title_tr', 'title_en', 'producer', 'approval_status', 'is_active', 'created_at')
+    list_filter = ('approval_status', 'is_active', 'created_at', 'tags')
     search_fields = ('title_tr', 'title_en', 'description_tr', 'description_en', 'producer__username')
-    readonly_fields = ('created_at', 'updated_at')
+    readonly_fields = ('created_at', 'updated_at', 'reviewed_by', 'reviewed_at')
     filter_horizontal = ('tags',)
     
     fieldsets = (
+        ('Approval Status', {
+            'fields': ('approval_status', 'reviewed_by', 'reviewed_at', 'rejection_reason')
+        }),
         ('Producer', {
             'fields': ('producer',)
         }),
@@ -256,6 +386,58 @@ class ProductAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+    
+    actions = ['approve_products', 'reject_products']
+    
+    def get_readonly_fields(self, request, obj=None):
+        """Make approval fields readonly except for pending products"""
+        if obj and obj.approval_status == 'pending':
+            return ('created_at', 'updated_at', 'reviewed_by', 'reviewed_at', 
+                    'producer', 'title_tr', 'title_en', 'description_tr', 'description_en',
+                    'photo1', 'photo2', 'photo3', 'tags', 'is_active')
+        return ('created_at', 'updated_at', 'reviewed_by', 'reviewed_at',
+                'producer', 'title_tr', 'title_en', 'description_tr', 'description_en',
+                'photo1', 'photo2', 'photo3', 'tags', 'is_active', 'approval_status')
+    
+    def save_model(self, request, obj, form, change):
+        """Handle status changes from the admin change form"""
+        if change and 'approval_status' in form.changed_data:
+            if obj.approval_status == 'approved':
+                obj.reviewed_by = request.user
+                obj.reviewed_at = timezone.now()
+                messages.success(request, f"Product '{obj}' has been approved.")
+            elif obj.approval_status == 'rejected':
+                obj.reviewed_by = request.user
+                obj.reviewed_at = timezone.now()
+                messages.warning(request, f"Product '{obj}' has been rejected.")
+        
+        super().save_model(request, obj, form, change)
+    
+    def approve_products(self, request, queryset):
+        """Approve selected products"""
+        approved_count = queryset.filter(approval_status='pending').update(
+            approval_status='approved',
+            reviewed_by=request.user,
+            reviewed_at=timezone.now()
+        )
+        
+        if approved_count > 0:
+            messages.success(request, f"✓ {approved_count} product(s) approved successfully!")
+    
+    approve_products.short_description = "Approve selected products"
+    
+    def reject_products(self, request, queryset):
+        """Reject selected products"""
+        rejected_count = queryset.filter(approval_status='pending').update(
+            approval_status='rejected',
+            reviewed_by=request.user,
+            reviewed_at=timezone.now()
+        )
+        
+        if rejected_count > 0:
+            messages.success(request, f"{rejected_count} product(s) rejected.")
+    
+    reject_products.short_description = "Reject selected products"
     
     def get_queryset(self, request):
         """Limit products to those created by producers"""

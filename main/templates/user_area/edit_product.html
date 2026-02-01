@@ -21,16 +21,18 @@
                 {% endif %}
 
                 <div class="form-section">
-                    <h3><i class="fas fa-language"></i> Türkçe Bilgiler</h3>
+                    <h3><i class="fas fa-language"></i> <span data-i18n="dashboard.tr_info">Türkçe Bilgiler</span></h3>
                     <div class="form-group">
-                        <label for="{{ form.title_tr.id_for_label }}">{{ form.title_tr.label }}</label>
+                        <label data-i18n="dashboard.title_tr" for="{{ form.title_tr.id_for_label }}">{{
+                            form.title_tr.label }}</label>
                         {{ form.title_tr }}
                         {% if form.title_tr.errors %}
                         <div class="error">{{ form.title_tr.errors }}</div>
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.description_tr.id_for_label }}">{{ form.description_tr.label }}</label>
+                        <label data-i18n="dashboard.desc_tr" for="{{ form.description_tr.id_for_label }}">{{
+                            form.description_tr.label }}</label>
                         {{ form.description_tr }}
                         {% if form.description_tr.errors %}
                         <div class="error">{{ form.description_tr.errors }}</div>
@@ -39,16 +41,19 @@
                 </div>
 
                 <div class="form-section">
-                    <h3><i class="fas fa-language"></i> English Information</h3>
+                    <h3><i class="fas fa-language"></i> <span data-i18n="dashboard.en_info">English Information</span>
+                    </h3>
                     <div class="form-group">
-                        <label for="{{ form.title_en.id_for_label }}">{{ form.title_en.label }}</label>
+                        <label data-i18n="dashboard.title_en" for="{{ form.title_en.id_for_label }}">{{
+                            form.title_en.label }}</label>
                         {{ form.title_en }}
                         {% if form.title_en.errors %}
                         <div class="error">{{ form.title_en.errors }}</div>
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.description_en.id_for_label }}">{{ form.description_en.label }}</label>
+                        <label data-i18n="dashboard.desc_en" for="{{ form.description_en.id_for_label }}">{{
+                            form.description_en.label }}</label>
                         {{ form.description_en }}
                         {% if form.description_en.errors %}
                         <div class="error">{{ form.description_en.errors }}</div>
@@ -57,14 +62,17 @@
                 </div>
 
                 <div class="form-section">
-                    <h3 data-i18n="dashboard.photos"><i class="fas fa-camera"></i> Fotoğraflar (Maksimum 3)</h3>
+                    <h3><i class="fas fa-camera"></i> <span data-i18n="dashboard.photos">Fotoğraflar (Maksimum 3)</span>
+                    </h3>
                     <div class="photos-grid">
                         <div class="form-group">
-                            <label for="{{ form.photo1.id_for_label }}">{{ form.photo1.label }}</label>
+                            <label data-i18n="dashboard.photo1" for="{{ form.photo1.id_for_label }}">{{
+                                form.photo1.label }}</label>
                             {% if product.photo1 %}
                             <div class="current-photo">
                                 <img src="{{ product.photo1.url }}" alt="Current photo 1">
-                                <p class="photo-note">Yeni fotoğraf yüklemek için seçin</p>
+                                <p class="photo-note" data-i18n="dashboard.new_photo_note">Yeni fotoğraf yüklemek için
+                                    seçin</p>
                             </div>
                             {% endif %}
                             {{ form.photo1 }}
@@ -73,11 +81,13 @@
                             {% endif %}
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.photo2.id_for_label }}">{{ form.photo2.label }}</label>
+                            <label data-i18n="dashboard.photo2" for="{{ form.photo2.id_for_label }}">{{
+                                form.photo2.label }}</label>
                             {% if product.photo2 %}
                             <div class="current-photo">
                                 <img src="{{ product.photo2.url }}" alt="Current photo 2">
-                                <p class="photo-note">Yeni fotoğraf yüklemek için seçin</p>
+                                <p class="photo-note" data-i18n="dashboard.new_photo_note">Yeni fotoğraf yüklemek için
+                                    seçin</p>
                             </div>
                             {% endif %}
                             {{ form.photo2 }}
@@ -86,11 +96,13 @@
                             {% endif %}
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.photo3.id_for_label }}">{{ form.photo3.label }}</label>
+                            <label data-i18n="dashboard.photo3" for="{{ form.photo3.id_for_label }}">{{
+                                form.photo3.label }}</label>
                             {% if product.photo3 %}
                             <div class="current-photo">
                                 <img src="{{ product.photo3.url }}" alt="Current photo 3">
-                                <p class="photo-note">Yeni fotoğraf yüklemek için seçin</p>
+                                <p class="photo-note" data-i18n="dashboard.new_photo_note">Yeni fotoğraf yüklemek için
+                                    seçin</p>
                             </div>
                             {% endif %}
                             {{ form.photo3 }}
@@ -102,9 +114,11 @@
                 </div>
 
                 <div class="form-section">
-                    <h3><i class="fas fa-tags"></i> {{ form.tags.label }}</h3>
+                    <h3><i class="fas fa-tags"></i> <span data-i18n="dashboard.tags">Etiketler (Maksimum 3)</span></h3>
                     <div class="tags-container">
                         {{ form.tags }}
+                        <p class="field-help" data-i18n="dashboard.tag_help">Ürününüzü en iyi tanımlayan etiketleri
+                            seçin.</p>
                         {% if form.tags.errors %}
                         <div class="error">{{ form.tags.errors }}</div>
                         {% endif %}
@@ -112,9 +126,11 @@
                 </div>
 
                 <div class="form-section">
+                    <h3><i class="fas fa-info-circle"></i> <span data-i18n="dashboard.product_status">Ürün Durumu</span>
+                    </h3>
                     <div class="form-group checkbox-group">
                         {{ form.is_active }}
-                        <label for="{{ form.is_active.id_for_label }}">{{ form.is_active.label }}</label>
+                        <label for="{{ form.is_active.id_for_label }}" data-i18n="dashboard.active">Aktif</label>
                         {% if form.is_active.errors %}
                         <div class="error">{{ form.is_active.errors }}</div>
                         {% endif %}

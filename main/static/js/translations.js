@@ -178,9 +178,26 @@ const translations = {
             delete_confirm_text: "Bu ürünü silmek istediğinizden emin misiniz?",
             yes_delete: "Evet, Ürünü Sil",
             cancel: "İptal",
+            photo1: "Fotoğraf 1",
+            photo2: "Fotoğraf 2",
+            photo3: "Fotoğraf 3",
             stats: "İstatistikler",
             explore: "Keşfet",
-            all_sectors: "Tüm Sektörler"
+            all_sectors: "Tüm Sektörler",
+            add_new_product: "Yeni Ürün Ekle",
+            view_profile: "Profili Görüntüle",
+            company: "Firma",
+            country: "Ülke",
+            tr_info: "Türkçe Ürün Bilgileri",
+            en_info: "İngilizce Ürün Bilgileri",
+            add_product_instructions: "Ürün bilgilerini girin. En az bir dilde başlık ve açıklama zorunludur.",
+            new_photo_note: "Yeni fotoğraf yüklemek için seçin",
+            multiselect_help: "Birden fazla seçmek için Ctrl (Windows) veya Command (Mac) tuşuna basılı tutun.",
+            tag_help: "Ürününüzü en iyi tanımlayan etiketleri seçin.",
+            product_status: "Ürün Durumu",
+            approval_pending: "Onay Bekliyor",
+            approval_approved: "Onaylandı",
+            approval_rejected: "Reddedildi"
         }
     },
     en: {
@@ -362,9 +379,26 @@ const translations = {
             delete_confirm_text: "Are you sure you want to delete this product?",
             yes_delete: "Yes, Delete Product",
             cancel: "Cancel",
+            photo1: "Photo 1",
+            photo2: "Photo 2",
+            photo3: "Photo 3",
             stats: "Statistics",
             explore: "Explore",
-            all_sectors: "All Sectors"
+            all_sectors: "All Sectors",
+            add_new_product: "Add New Product",
+            view_profile: "View Profile",
+            company: "Company",
+            country: "Country",
+            tr_info: "Turkish Product Information",
+            en_info: "English Product Information",
+            add_product_instructions: "Enter product details. Title and description in at least one language is mandatory.",
+            new_photo_note: "Select to upload a new photo",
+            multiselect_help: "Hold down Ctrl (Windows) or Command (Mac) to select multiple.",
+            tag_help: "Choose the tags that best describe your product.",
+            product_status: "Product Status",
+            approval_pending: "Pending Approval",
+            approval_approved: "Approved",
+            approval_rejected: "Rejected"
         }
     }
 };
