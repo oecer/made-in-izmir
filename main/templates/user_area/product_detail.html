@@ -11,11 +11,11 @@
             <div class="back-button">
                 {% if is_owner %}
                 <a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Panele Dön
+                    <i class="fas fa-arrow-left"></i> <span data-i18n="dashboard.back">Panele Dön</span>
                 </a>
                 {% else %}
                 <a href="{% url 'main:buyer_dashboard' %}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Ürünlere Dön
+                    <i class="fas fa-arrow-left"></i> <span data-i18n="dashboard.back">Ürünlere Dön</span>
                 </a>
                 {% endif %}
             </div>
@@ -30,7 +30,7 @@
                         {% else %}
                         <div class="no-image-large">
                             <i class="fas fa-image"></i>
-                            <p>Fotoğraf yok</p>
+                            <p data-i18n="dashboard.no_photos">Fotoğraf yok</p>
                         </div>
                         {% endif %}
                     </div>
@@ -62,16 +62,17 @@
                         {% endif %}
 
                         {% if product.is_active %}
-                        <span class="status-badge active">Aktif</span>
+                        <span class="status-badge active" data-i18n="dashboard.active">Aktif</span>
                         {% else %}
-                        <span class="status-badge inactive">Pasif</span>
+                        <span class="status-badge inactive" data-i18n="dashboard.passive">Pasif</span>
                         {% endif %}
                     </div>
 
                     <div class="producer-info">
                         <i class="fas fa-industry"></i>
                         <div>
-                            <strong>Üretici:</strong> {{ product.producer.profile.company_name }}<br>
+                            <strong data-i18n="dashboard.producer">Üretici:</strong> {{
+                            product.producer.profile.company_name }}<br>
                             <small>{{ product.producer.profile.city }}, {{ product.producer.profile.country }}</small>
                         </div>
                     </div>
@@ -107,10 +108,10 @@
                     {% if is_owner %}
                     <div class="owner-actions">
                         <a href="{% url 'main:edit_product' product.id %}" class="btn btn-warning">
-                            <i class="fas fa-edit"></i> Düzenle
+                            <i class="fas fa-edit"></i> <span data-i18n="dashboard.edit">Düzenle</span>
                         </a>
                         <a href="{% url 'main:delete_product' product.id %}" class="btn btn-danger">
-                            <i class="fas fa-trash"></i> Sil
+                            <i class="fas fa-trash"></i> <span data-i18n="dashboard.delete">Sil</span>
                         </a>
                     </div>
                     {% endif %}
@@ -234,7 +235,7 @@
 
     .thumbnail-images img:hover,
     .thumbnail-images img.active {
-        border-color: #667eea;
+        border-color: #cca43b;
     }
 
     .product-info-section {
@@ -285,7 +286,7 @@
 
     .producer-info i {
         font-size: 24px;
-        color: #667eea;
+        color: #cca43b;
     }
 
     .product-tags {

@@ -9,8 +9,8 @@
         <div class="delete-wrapper">
             <div class="delete-header">
                 <i class="fas fa-exclamation-triangle"></i>
-                <h1>Ürünü Sil</h1>
-                <p>Bu işlem geri alınamaz!</p>
+                <h1 data-i18n="dashboard.delete_warning_title">Ürünü Sil</h1>
+                <p data-i18n="dashboard.delete_warning_desc">Bu işlem geri alınamaz!</p>
             </div>
 
             <div class="product-preview">
@@ -35,18 +35,18 @@
 
             <div class="warning-message">
                 <i class="fas fa-info-circle"></i>
-                <p>Bu ürünü silmek istediğinizden emin misiniz? Bu işlem geri alınamaz ve ürünle ilgili tüm bilgiler
-                    kalıcı olarak silinecektir.</p>
+                <p data-i18n="dashboard.delete_confirm_text">Bu ürünü silmek istediğinizden emin misiniz? Bu işlem geri
+                    alınamaz ve ürünle ilgili tüm bilgiler kalıcı olarak silinecektir.</p>
             </div>
 
             <form method="post" class="delete-form">
                 {% csrf_token %}
                 <div class="form-actions">
                     <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash"></i> Evet, Ürünü Sil
+                        <i class="fas fa-trash"></i> <span data-i18n="dashboard.yes_delete">Evet, Ürünü Sil</span>
                     </button>
                     <a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> İptal
+                        <i class="fas fa-times"></i> <span data-i18n="dashboard.cancel">İptal</span>
                     </a>
                 </div>
             </form>

@@ -7,8 +7,8 @@
 <div class="dashboard-container">
     <div class="dashboard-header">
         <div class="container">
-            <h1>Alıcı Paneli</h1>
-            <p>Hoş geldiniz, {{ user.get_full_name }}!</p>
+            <h1 data-i18n="dashboard.buyer_title">Alıcı Paneli</h1>
+            <p><span data-i18n="dashboard.welcome">Hoş geldiniz</span>, {{ user.get_full_name }}!</p>
         </div>
     </div>
 
@@ -20,8 +20,8 @@
                     <i class="fas fa-box"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>{{ total_products }}</h3>
-                    <p>Mevcut Ürün</p>
+                    <h3 data-label="total_products">{{ total_products }}</h3>
+                    <p data-i18n="dashboard.total_products">Mevcut Ürün</p>
                 </div>
             </div>
             <div class="stat-card">
@@ -29,8 +29,8 @@
                     <i class="fas fa-building"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>{{ profile.company_name }}</h3>
-                    <p>Firma</p>
+                    <h3 data-label="company_name">{{ profile.company_name }}</h3>
+                    <p data-i18n="dashboard.company">Firma</p>
                 </div>
             </div>
             <div class="stat-card">
@@ -38,8 +38,8 @@
                     <i class="fas fa-globe"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>{{ profile.country }}</h3>
-                    <p>Ülke</p>
+                    <h3 data-label="country">{{ profile.country }}</h3>
+                    <p data-i18n="dashboard.country">Ülke</p>
                 </div>
             </div>
         </div>
@@ -47,14 +47,14 @@
         <!-- Actions -->
         <div class="dashboard-actions">
             <a href="{% url 'main:profile' %}" class="btn btn-primary">
-                <i class="fas fa-user"></i> Profili Görüntüle
+                <i class="fas fa-user"></i> <span data-i18n="profile.title">Profili Görüntüle</span>
             </a>
         </div>
 
         <!-- Products Browse -->
         <div class="products-section">
-            <h2>Mevcut Ürünler</h2>
-            <p class="section-description">Üreticilerin sunduğu ürünlere göz atın</p>
+            <h2 data-i18n="dashboard.available_products">Mevcut Ürünler</h2>
+            <p class="section-description" data-i18n="dashboard.explore">Üreticilerin sunduğu ürünlere göz atın</p>
 
             {% if products %}
             <div class="products-grid">
@@ -72,7 +72,8 @@
                     <div class="product-info">
                         <h3>{{ product.title_tr|default:product.title_en }}</h3>
                         <p class="product-producer">
-                            <i class="fas fa-industry"></i> {{ product.producer.profile.company_name }}
+                            <i class="fas fa-industry"></i> <span data-i18n="dashboard.producer">Üretici</span>: {{
+                            product.producer.profile.company_name }}
                         </p>
                         <p class="product-description">{{
                             product.description_tr|default:product.description_en|truncatewords:20 }}</p>
@@ -87,7 +88,8 @@
 
                         <div class="product-actions">
                             <a href="{% url 'main:product_detail' product.id %}" class="btn btn-sm btn-primary">
-                                <i class="fas fa-eye"></i> Detayları Görüntüle
+                                <i class="fas fa-eye"></i> <span data-i18n="dashboard.view_details">Detayları
+                                    Görüntüle</span>
                             </a>
                         </div>
                     </div>
@@ -97,8 +99,8 @@
             {% else %}
             <div class="empty-state">
                 <i class="fas fa-box-open"></i>
-                <h3>Henüz ürün bulunmuyor</h3>
-                <p>Üreticiler ürün ekledikçe burada görünecektir.</p>
+                <h3 data-i18n="dashboard.no_products">Henüz ürün bulunmuyor</h3>
+                <p data-i18n="dashboard.no_products_desc">Üreticiler ürün ekledikçe burada görünecektir.</p>
             </div>
             {% endif %}
         </div>
@@ -312,13 +314,13 @@
     }
 
     .btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
         color: white;
     }
 
     .btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 5px 15px rgba(15, 23, 42, 0.4);
     }
 
     .btn-sm {

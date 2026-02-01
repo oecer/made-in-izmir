@@ -8,8 +8,9 @@
     <div class="container">
         <div class="form-wrapper">
             <div class="form-header">
-                <h1><i class="fas fa-plus-circle"></i> Yeni Ürün Ekle</h1>
-                <p>Ürün bilgilerini girin. En az bir dilde başlık ve açıklama zorunludur.</p>
+                <h1 data-i18n="dashboard.add_new"><i class="fas fa-plus-circle"></i> Yeni Ürün Ekle</h1>
+                <p data-i18n="dashboard.add_product_instructions">Ürün bilgilerini girin. En az bir dilde başlık ve
+                    açıklama zorunludur.</p>
             </div>
 
             <form method="post" enctype="multipart/form-data" class="product-form">
@@ -58,7 +59,7 @@
                 </div>
 
                 <div class="form-section">
-                    <h3><i class="fas fa-camera"></i> Fotoğraflar (Maksimum 3)</h3>
+                    <h3 data-i18n="dashboard.photos"><i class="fas fa-camera"></i> Fotoğraflar (Maksimum 3)</h3>
                     <div class="photos-grid">
                         <div class="form-group">
                             <label for="{{ form.photo1.id_for_label }}">{{ form.photo1.label }}</label>
@@ -106,10 +107,10 @@
 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Ürünü Kaydet
+                        <i class="fas fa-save"></i> <span data-i18n="dashboard.save_product">Ürünü Kaydet</span>
                     </button>
                     <a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> İptal
+                        <i class="fas fa-times"></i> <span data-i18n="dashboard.cancel">İptal</span>
                     </a>
                 </div>
             </form>
@@ -286,7 +287,7 @@
 
     .btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 5px 15px rgba(15, 23, 42, 0.4);
     }
 
     .btn-secondary {

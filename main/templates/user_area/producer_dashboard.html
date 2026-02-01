@@ -7,21 +7,22 @@
 <div class="dashboard-container">
     <div class="dashboard-header">
         <div class="container">
-            <h1>Üretici Paneli</h1>
-            <p>Hoş geldiniz, {{ user.get_full_name }}!</p>
+            <h1 data-i18n="dashboard.producer_title">Üretici Paneli</h1>
+            <p><span data-i18n="dashboard.welcome">Hoş Geldiniz</span>, {{ user.first_name }} {{ user.last_name }}</p>
         </div>
     </div>
 
     <div class="container dashboard-content">
+        <h2 data-i18n="dashboard.overview">Genel Bakış</h2>
         <!-- Stats Cards -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-icon">
-                    <i class="fas fa-box"></i>
+                    <i class="fas fa-boxes"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>{{ total_products }}</h3>
-                    <p>Toplam Ürün</p>
+                    <h3 data-label="total_products">{{ products.count }}</h3>
+                    <p data-i18n="dashboard.total_products">Toplam Ürün</p>
                 </div>
             </div>
             <div class="stat-card">
@@ -29,8 +30,8 @@
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>{{ active_products }}</h3>
-                    <p>Aktif Ürün</p>
+                    <h3 data-label="active_products">{{ active_products }}</h3>
+                    <p data-i18n="dashboard.active_products">Aktif Ürünler</p>
                 </div>
             </div>
             <div class="stat-card">
@@ -39,24 +40,25 @@
                 </div>
                 <div class="stat-info">
                     <h3>{{ profile.company_name }}</h3>
-                    <p>Firma</p>
+                    <p data-i18n="dashboard.company">Firma</p>
                 </div>
             </div>
         </div>
 
         <!-- Actions -->
+        <h2 data-i18n="dashboard.quick_actions">Hızlı İşlemler</h2>
         <div class="dashboard-actions">
             <a href="{% url 'main:add_product' %}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Yeni Ürün Ekle
+                <i class="fas fa-plus"></i> <span data-i18n="dashboard.add_new_product">Yeni Ürün Ekle</span>
             </a>
             <a href="{% url 'main:profile' %}" class="btn btn-secondary">
-                <i class="fas fa-user"></i> Profili Görüntüle
+                <i class="fas fa-user"></i> <span data-i18n="dashboard.view_profile">Profili Görüntüle</span>
             </a>
         </div>
 
         <!-- Products List -->
         <div class="products-section">
-            <h2>Ürünlerim</h2>
+            <h2 data-i18n="dashboard.my_products">Ürünlerim</h2>
 
             {% if products %}
             <div class="products-grid">
@@ -71,9 +73,9 @@
                         </div>
                         {% endif %}
                         {% if not product.is_active %}
-                        <span class="status-badge inactive">Pasif</span>
+                        <span class="status-badge inactive" data-i18n="product.inactive">Pasif</span>
                         {% else %}
-                        <span class="status-badge active">Aktif</span>
+                        <span class="status-badge active" data-i18n="product.active">Aktif</span>
                         {% endif %}
                     </div>
                     <div class="product-info">
@@ -91,13 +93,13 @@
 
                         <div class="product-actions">
                             <a href="{% url 'main:product_detail' product.id %}" class="btn btn-sm btn-info">
-                                <i class="fas fa-eye"></i> Görüntüle
+                                <i class="fas fa-eye"></i> <span data-i18n="product.view">Görüntüle</span>
                             </a>
                             <a href="{% url 'main:edit_product' product.id %}" class="btn btn-sm btn-warning">
-                                <i class="fas fa-edit"></i> Düzenle
+                                <i class="fas fa-edit"></i> <span data-i18n="product.edit">Düzenle</span>
                             </a>
                             <a href="{% url 'main:delete_product' product.id %}" class="btn btn-sm btn-danger">
-                                <i class="fas fa-trash"></i> Sil
+                                <i class="fas fa-trash"></i> <span data-i18n="product.delete">Sil</span>
                             </a>
                         </div>
                     </div>
@@ -107,10 +109,10 @@
             {% else %}
             <div class="empty-state">
                 <i class="fas fa-box-open"></i>
-                <h3>Henüz ürün eklemediniz</h3>
-                <p>İlk ürününüzü ekleyerek başlayın!</p>
+                <h3 data-i18n="dashboard.no_products_yet">Henüz ürün eklemediniz</h3>
+                <p data-i18n="dashboard.add_first_product_prompt">İlk ürününüzü ekleyerek başlayın!</p>
                 <a href="{% url 'main:add_product' %}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> İlk Ürünü Ekle
+                    <i class="fas fa-plus"></i> <span data-i18n="dashboard.add_first_product">İlk Ürünü Ekle</span>
                 </a>
             </div>
             {% endif %}
@@ -341,13 +343,13 @@
     }
 
     .btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
         color: white;
     }
 
     .btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 5px 15px rgba(15, 23, 42, 0.4);
     }
 
     .btn-secondary {
