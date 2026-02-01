@@ -182,7 +182,7 @@ def add_product_view(request):
         return redirect('main:index')
     
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
+        form = ProductForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             # Get tag IDs as comma-separated string
             tags = form.cleaned_data.get('tags', [])
@@ -191,6 +191,7 @@ def add_product_view(request):
             # Create product request instead of product
             product_request = ProductRequest.objects.create(
                 producer=request.user,
+                sector=form.cleaned_data.get('sector'),
                 title_tr=form.cleaned_data.get('title_tr', ''),
                 title_en=form.cleaned_data.get('title_en', ''),
                 description_tr=form.cleaned_data.get('description_tr', ''),
@@ -211,7 +212,7 @@ def add_product_view(request):
         else:
             messages.error(request, 'Lütfen formdaki hataları düzeltin.')
     else:
-        form = ProductForm()
+        form = ProductForm(user=request.user)
     
     return render(request, 'user_area/add_product.html', {'form': form})
 
@@ -222,7 +223,7 @@ def edit_product_view(request, product_id):
     product = get_object_or_404(Product, id=product_id, producer=request.user)
     
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES, instance=product)
+        form = ProductForm(request.POST, request.FILES, instance=product, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, 'Ürün başarıyla güncellendi!')
@@ -230,7 +231,7 @@ def edit_product_view(request, product_id):
         else:
             messages.error(request, 'Lütfen formdaki hataları düzeltin.')
     else:
-        form = ProductForm(instance=product)
+        form = ProductForm(instance=product, user=request.user)
     
     return render(request, 'user_area/edit_product.html', {'form': form, 'product': product})
 

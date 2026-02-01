@@ -21,6 +21,18 @@
                 {% endif %}
 
                 <div class="form-section">
+                    <h3><i class="fas fa-industry"></i> <span data-i18n="dashboard.sector">Sektör</span></h3>
+                    <div class="form-group">
+                        <label for="{{ form.sector.id_for_label }}">{{ form.sector.label }}</label>
+                        {{ form.sector }}
+                        {% if form.sector.errors %}
+                        <div class="error">{{ form.sector.errors }}</div>
+                        {% endif %}
+                        <p class="field-help" data-i18n="dashboard.sector_help">Ürününüzün ait olduğu sektörü seçin.</p>
+                    </div>
+                </div>
+
+                <div class="form-section">
                     <h3><i class="fas fa-language"></i> <span data-i18n="dashboard.tr_info">Türkçe Bilgiler</span></h3>
                     <div class="form-group">
                         <label data-i18n="dashboard.title_tr" for="{{ form.title_tr.id_for_label }}">{{

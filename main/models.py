@@ -218,6 +218,16 @@ class ProductRequest(models.Model):
     # Tags (stored as comma-separated IDs)
     tags_ids = models.TextField(blank=True, null=True, verbose_name="Etiket ID'leri")
     
+    # Sector
+    sector = models.ForeignKey(
+        Sector,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='product_requests',
+        verbose_name="Sektör"
+    )
+    
     # Status
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name="Durum")
     is_active = models.BooleanField(default=True, verbose_name="Aktif")
@@ -281,6 +291,16 @@ class Product(models.Model):
         blank=True,
         related_name='products',
         verbose_name="Etiketler"
+    )
+    
+    # Sector
+    sector = models.ForeignKey(
+        Sector,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='products',
+        verbose_name="Sektör"
     )
     
     # Status

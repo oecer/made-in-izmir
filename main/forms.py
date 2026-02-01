@@ -265,6 +265,15 @@ class CustomLoginForm(AuthenticationForm):
 class ProductForm(forms.ModelForm):
     """Form for producers to add/edit products"""
     
+    sector = forms.ModelChoiceField(
+        queryset=None,  # Will be set in __init__
+        required=True,
+        widget=forms.Select(attrs={
+            'class': 'form-control'
+        }),
+        label='Sektör'
+    )
+    
     tags = forms.ModelMultipleChoiceField(
         queryset=ProductTag.objects.all(),
         required=False,
@@ -276,7 +285,7 @@ class ProductForm(forms.ModelForm):
     
     class Meta:
         model = Product
-        fields = ['title_tr', 'title_en', 'description_tr', 'description_en', 
+        fields = ['sector', 'title_tr', 'title_en', 'description_tr', 'description_en', 
                   'photo1', 'photo2', 'photo3', 'tags', 'is_active']
         widgets = {
             'title_tr': forms.TextInput(attrs={
@@ -329,7 +338,20 @@ class ProductForm(forms.ModelForm):
         }
     
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+        
+        # Filter sectors based on user's profile
+        if user and hasattr(user, 'profile'):
+            self.fields['sector'].queryset = user.profile.producer_sectors.all()
+        else:
+            # Fallback to all sectors if no user provided
+            from .models import Sector
+            self.fields['sector'].queryset = Sector.objects.all()
+        
+        # Set sector labels
+        self.fields['sector'].label_from_instance = lambda obj: f"{obj.name_tr} | {obj.name_en}"
+        
         # Set tag labels
         self.fields['tags'].label_from_instance = lambda obj: f"{obj.name_tr} | {obj.name_en}"
     

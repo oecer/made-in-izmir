@@ -195,7 +195,9 @@ const translations = {
             multiselect_help: "Birden fazla seçmek için Ctrl (Windows) veya Command (Mac) tuşuna basılı tutun.",
             tag_help: "Ürününüzü en iyi tanımlayan etiketleri seçin.",
             product_status: "Ürün Durumu",
-            product_request_pending: "Ürün talebiniz alındı! Ürününüz yönetici onayından sonra aktif hale gelecektir."
+            product_request_pending: "Ürün talebiniz alındı! Ürününüz yönetici onayından sonra aktif hale gelecektir.",
+            sector: "Sektör",
+            sector_help: "Ürününüzün ait olduğu sektörü seçin."
         }
     },
     en: {
@@ -394,7 +396,9 @@ const translations = {
             multiselect_help: "Hold down Ctrl (Windows) or Command (Mac) to select multiple.",
             tag_help: "Choose the tags that best describe your product.",
             product_status: "Product Status",
-            product_request_pending: "Your product request has been received! Your product will become active after admin approval."
+            product_request_pending: "Your product request has been received! Your product will become active after admin approval.",
+            sector: "Sector",
+            sector_help: "Select the sector your product belongs to."
         }
     }
 };

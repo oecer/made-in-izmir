@@ -240,6 +240,9 @@ class ProductRequestAdmin(admin.ModelAdmin):
         ('Producer', {
             'fields': ('producer',)
         }),
+        ('Sector', {
+            'fields': ('sector',)
+        }),
         ('Product Information (Turkish)', {
             'fields': ('title_tr', 'description_tr')
         }),
@@ -305,11 +308,11 @@ class ProductRequestAdmin(admin.ModelAdmin):
         if obj and obj.status == 'pending':
             return ('created_at', 'updated_at', 'reviewed_by', 'reviewed_at', 'tags_display',
                     'photo1_preview', 'photo2_preview', 'photo3_preview',
-                    'producer', 'title_tr', 'title_en', 'description_tr', 'description_en',
+                    'producer', 'sector', 'title_tr', 'title_en', 'description_tr', 'description_en',
                     'photo1', 'photo2', 'photo3', 'tags_ids', 'is_active')
         return ('created_at', 'updated_at', 'reviewed_by', 'reviewed_at', 'tags_display',
                 'photo1_preview', 'photo2_preview', 'photo3_preview',
-                'producer', 'title_tr', 'title_en', 'description_tr', 'description_en',
+                'producer', 'sector', 'title_tr', 'title_en', 'description_tr', 'description_en',
                 'photo1', 'photo2', 'photo3', 'tags_ids', 'is_active')
     
     def save_model(self, request, obj, form, change):
@@ -334,6 +337,7 @@ class ProductRequestAdmin(admin.ModelAdmin):
         # Create product
         product = Product.objects.create(
             producer=product_request.producer,
+            sector=product_request.sector,
             title_tr=product_request.title_tr,
             title_en=product_request.title_en,
             description_tr=product_request.description_tr,
@@ -401,8 +405,8 @@ class ProductTagAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title_tr', 'title_en', 'producer', 'is_active', 'created_at')
-    list_filter = ('is_active', 'created_at', 'tags')
+    list_display = ('title_tr', 'title_en', 'producer', 'sector', 'is_active', 'created_at')
+    list_filter = ('is_active', 'sector', 'created_at', 'tags')
     search_fields = ('title_tr', 'title_en', 'description_tr', 'description_en', 'producer__username')
     readonly_fields = ('created_at', 'updated_at')
     filter_horizontal = ('tags',)
@@ -410,6 +414,9 @@ class ProductAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Producer', {
             'fields': ('producer',)
+        }),
+        ('Sector', {
+            'fields': ('sector',)
         }),
         ('Product Information (Turkish)', {
             'fields': ('title_tr', 'description_tr')
