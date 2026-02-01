@@ -122,29 +122,35 @@
     .dashboard-container {
         min-height: 100vh;
         background: #f8fafc;
-        padding-top: 100px;
+        padding-top: 0;
+        /* Remove top padding as we have a full-width header */
         padding-bottom: 60px;
     }
 
     .dashboard-header {
-        background: white;
-        padding: 40px 0;
-        color: #0f172a;
+        background: #0f172a;
+        /* Brand Primary - Dark enough for white navbar */
+        padding: 120px 0 60px;
+        /* More top padding for navbar */
+        color: white;
         text-align: center;
         margin-bottom: 40px;
-        border-bottom: 1px solid #e2e8f0;
-        box-shadow: var(--shadow-sm);
+        border-bottom: 3px solid #cca43b;
+        /* Premium Gold Accent */
+        box-shadow: var(--shadow-md);
     }
 
     .dashboard-header h1 {
         font-size: 2.5rem;
         margin-bottom: 10px;
         font-weight: 600;
-        color: #0f172a;
+        color: white;
+        /* Ensure visibility on dark background */
     }
 
     .dashboard-header p {
-        color: #64748b;
+        color: rgba(255, 255, 255, 0.7);
+        /* Muted light text */
     }
 
     .dashboard-content {

@@ -139,10 +139,25 @@
     .product-detail-container {
         min-height: 100vh;
         background: #f8fafc;
+        position: relative;
         padding: 120px 20px 60px;
     }
 
+    .product-detail-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 300px;
+        background: #0f172a;
+        border-bottom: 3px solid #cca43b;
+        z-index: 0;
+    }
+
     .product-detail-wrapper {
+        position: relative;
+        z-index: 1;
         max-width: 1200px;
         margin: 0 auto;
     }
