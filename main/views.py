@@ -154,8 +154,8 @@ def buyer_dashboard_view(request):
             messages.error(request, 'Bu sayfaya erişim yetkiniz yok.')
             return redirect('main:dashboard')
         
-        # Get all approved and active products (buyers can browse products)
-        all_products = Product.objects.filter(is_active=True, approval_status='approved').order_by('-created_at')
+        # Get all active products (buyers can browse products)
+        all_products = Product.objects.filter(is_active=True).order_by('-created_at')
         
         context = {
             'profile': profile,
@@ -186,10 +186,9 @@ def add_product_view(request):
         if form.is_valid():
             product = form.save(commit=False)
             product.producer = request.user
-            product.approval_status = 'pending'  # Set to pending for admin approval
             product.save()
             form.save_m2m()  # Save many-to-many relationships (tags)
-            messages.success(request, 'Ürün başarıyla eklendi! Yönetici onayından sonra yayınlanacaktır.')
+            messages.success(request, 'Ürün başarıyla eklendi!')
             return redirect('main:producer_dashboard')
         else:
             messages.error(request, 'Lütfen formdaki hataları düzeltin.')
@@ -237,11 +236,11 @@ def product_detail_view(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     
     # Check if user has permission to view this product
-    # Producers can see their own products (any status), buyers can see approved active products
+    # Producers can see their own products, buyers can see active products
     can_view = False
     if request.user == product.producer:
         can_view = True
-    elif hasattr(request.user, 'profile') and request.user.profile.is_buyer and product.is_active and product.approval_status == 'approved':
+    elif hasattr(request.user, 'profile') and request.user.profile.is_buyer and product.is_active:
         can_view = True
     
     if not can_view:

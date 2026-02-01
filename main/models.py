@@ -215,32 +215,6 @@ class Product(models.Model):
         verbose_name="Etiketler"
     )
     
-    # Approval status
-    APPROVAL_STATUS_CHOICES = [
-        ('pending', 'Onay Bekliyor'),
-        ('approved', 'Onaylandı'),
-        ('rejected', 'Reddedildi'),
-    ]
-    
-    approval_status = models.CharField(
-        max_length=20,
-        choices=APPROVAL_STATUS_CHOICES,
-        default='pending',
-        verbose_name="Onay Durumu"
-    )
-    
-    # Admin actions
-    reviewed_by = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='reviewed_products',
-        verbose_name="İnceleyen"
-    )
-    reviewed_at = models.DateTimeField(null=True, blank=True, verbose_name="İnceleme Tarihi")
-    rejection_reason = models.TextField(blank=True, null=True, verbose_name="Red Nedeni")
-    
     # Status
     is_active = models.BooleanField(default=True, verbose_name="Aktif")
     
