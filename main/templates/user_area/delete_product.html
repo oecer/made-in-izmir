@@ -1,116 +1,62 @@
-{% extends 'base.html' %}
+{% extends 'user_area/base_dashboard.html' %}
 {% load static %}
 
 {% block title %}Ürün Sil - Made in Izmir{% endblock %}
 
-{% block content %}
-<div class="delete-container">
-    <div class="container">
-        <div class="delete-wrapper">
-            <div class="delete-header">
-                <i class="fas fa-exclamation-triangle"></i>
-                <h1 data-i18n="dashboard.delete_warning_title">Ürünü Sil</h1>
-                <p data-i18n="dashboard.delete_warning_desc">Bu işlem geri alınamaz!</p>
-            </div>
+{% block dashboard_title %}
+<span data-i18n="dashboard.delete_warning_title" style="color: #ef4444;">Ürünü Sil</span>
+{% endblock %}
 
-            <div class="product-preview">
-                <div class="product-image">
-                    {% if product.photo1 %}
-                    <img src="{{ product.photo1.url }}" alt="{{ product.title_tr|default:product.title_en }}">
-                    {% else %}
-                    <div class="no-image">
-                        <i class="fas fa-image"></i>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="product-info">
-                    <h2>{{ product.title_tr|default:product.title_en }}</h2>
-                    {% if product.title_en and product.title_tr %}
-                    <p class="subtitle">{{ product.title_en }}</p>
-                    {% endif %}
-                    <p class="description">{{ product.description_tr|default:product.description_en|truncatewords:30 }}
-                    </p>
-                </div>
-            </div>
+{% block dashboard_desc %}
+<span data-i18n="dashboard.delete_warning_desc">Bu işlem geri alınamaz!</span>
+{% endblock %}
 
-            <div class="warning-message">
-                <i class="fas fa-info-circle"></i>
-                <p data-i18n="dashboard.delete_confirm_text">Bu ürünü silmek istediğinizden emin misiniz? Bu işlem geri
-                    alınamaz ve ürünle ilgili tüm bilgiler kalıcı olarak silinecektir.</p>
-            </div>
+{% block dashboard_content %}
+<div class="dashboard-card" style="max-width: 800px; margin: 0 auto; border-color: #fee2e2;">
+    <div class="delete-header-icon text-center mb-4">
+        <i class="fas fa-exclamation-triangle" style="font-size: 60px; color: #dc3545;"></i>
+    </div>
 
-            <form method="post" class="delete-form">
-                {% csrf_token %}
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash"></i> <span data-i18n="dashboard.yes_delete">Evet, Ürünü Sil</span>
-                    </button>
-                    <a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> <span data-i18n="dashboard.cancel">İptal</span>
-                    </a>
-                </div>
-            </form>
+    <div class="product-preview">
+        <div class="product-image">
+            {% if product.photo1 %}
+            <img src="{{ product.photo1.url }}" alt="{{ product.title_tr|default:product.title_en }}">
+            {% else %}
+            <div class="no-image">
+                <i class="fas fa-image"></i>
+            </div>
+            {% endif %}
+        </div>
+        <div class="product-info">
+            <h2>{{ product.title_tr|default:product.title_en }}</h2>
+            {% if product.title_en and product.title_tr %}
+            <p class="subtitle">{{ product.title_en }}</p>
+            {% endif %}
+            <p class="description">{{ product.description_tr|default:product.description_en|truncatewords:30 }}
+            </p>
         </div>
     </div>
+
+    <div class="warning-message">
+        <i class="fas fa-info-circle"></i>
+        <p data-i18n="dashboard.delete_confirm_text">Bu ürünü silmek istediğinizden emin misiniz? Bu işlem geri
+            alınamaz ve ürünle ilgili tüm bilgiler kalıcı olarak silinecektir.</p>
+    </div>
+
+    <form method="post" class="delete-form text-center">
+        {% csrf_token %}
+        <div class="form-actions" style="justify-content: center;">
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash"></i> <span data-i18n="dashboard.yes_delete">Evet, Ürünü Sil</span>
+            </button>
+            <a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> <span data-i18n="dashboard.cancel">İptal</span>
+            </a>
+        </div>
+    </form>
 </div>
 
 <style>
-    .delete-container {
-        min-height: 100vh;
-        background: #f8fafc;
-        position: relative;
-        padding: 120px 20px 60px;
-        display: flex;
-        align-items: center;
-    }
-
-    .delete-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 300px;
-        background: #0f172a;
-        border-bottom: 3px solid #dc3545;
-        /* Red accent for delete page */
-        z-index: 0;
-    }
-
-
-    .delete-wrapper {
-        position: relative;
-        z-index: 1;
-        max-width: 600px;
-        margin: 0 auto;
-        background: white;
-        border-radius: 15px;
-        padding: 40px;
-        box-shadow: var(--shadow-xl);
-        border: 1px solid #fee2e2;
-    }
-
-    .delete-header {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-
-    .delete-header i {
-        font-size: 60px;
-        color: #dc3545;
-        margin-bottom: 15px;
-    }
-
-    .delete-header h1 {
-        color: #333;
-        margin-bottom: 10px;
-    }
-
-    .delete-header p {
-        color: #dc3545;
-        font-weight: bold;
-    }
-
     .product-preview {
         display: flex;
         gap: 20px;
@@ -118,6 +64,7 @@
         background: #f8f9fa;
         border-radius: 10px;
         margin-bottom: 25px;
+        text-align: left;
     }
 
     .product-image {
@@ -129,43 +76,17 @@
         flex-shrink: 0;
     }
 
-    .product-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
+    .product-image img { width: 100%; height: 100%; object-fit: cover; }
+    
     .no-image {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 40px;
-        color: #adb5bd;
+        width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+        font-size: 40px; color: #adb5bd;
     }
 
-    .product-info {
-        flex: 1;
-    }
-
-    .product-info h2 {
-        color: #333;
-        margin: 0 0 5px;
-        font-size: 1.3rem;
-    }
-
-    .subtitle {
-        color: #666;
-        font-size: 1rem;
-        margin: 0 0 10px;
-    }
-
-    .description {
-        color: #666;
-        line-height: 1.6;
-        margin: 0;
-    }
+    .product-info { flex: 1; }
+    .product-info h2 { color: #333; margin: 0 0 5px; font-size: 1.3rem; }
+    .subtitle { color: #666; font-size: 1rem; margin: 0 0 10px; }
+    .description { color: #666; line-height: 1.6; margin: 0; }
 
     .warning-message {
         display: flex;
@@ -175,59 +96,19 @@
         border: 2px solid #ffc107;
         border-radius: 10px;
         margin-bottom: 30px;
+        text-align: left;
     }
 
-    .warning-message i {
-        font-size: 24px;
-        color: #856404;
-        flex-shrink: 0;
-    }
+    .warning-message i { font-size: 24px; color: #856404; flex-shrink: 0; }
+    .warning-message p { color: #856404; margin: 0; line-height: 1.6; }
 
-    .warning-message p {
-        color: #856404;
-        margin: 0;
-        line-height: 1.6;
-    }
-
-    .form-actions {
-        display: flex;
-        gap: 15px;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-
-    .btn {
-        padding: 12px 30px;
-        border-radius: 8px;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-    }
-
-    .btn-danger {
-        background: #dc3545;
-        color: white;
-    }
-
-    .btn-danger:hover {
-        background: #c82333;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
-    }
-
-    .btn-secondary {
-        background: #6c757d;
-        color: white;
-    }
-
-    .btn-secondary:hover {
-        background: #5a6268;
-    }
+    .form-actions { display: flex; gap: 15px; flex-wrap: wrap; }
+    
+    .btn { padding: 12px 30px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 500; transition: all 0.3s ease; border: none; cursor: pointer; font-size: 16px; }
+    
+    .btn-danger { background: #dc3545; color: white; }
+    .btn-danger:hover { background: #c82333; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4); }
+    .btn-secondary { background: #6c757d; color: white; }
+    .btn-secondary:hover { background: #5a6268; }
 </style>
 {% endblock %}

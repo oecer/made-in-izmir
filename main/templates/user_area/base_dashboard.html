@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-text">
+                    <h1>{% block dashboard_title %}Dashboard{% endblock %}</h1>
+                    <p>{% block dashboard_desc %}{% endblock %}</p>
+                </div>
+                <div class="header-actions">
+                    {% block dashboard_header_actions %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container dashboard-main-content">
+        {% block dashboard_content %}
+        {% endblock %}
+    </div>
+</div>
+
+<style>
+    .dashboard-container {
+        min-height: 100vh;
+        background: #f8fafc;
+        padding-bottom: 60px;
+    }
+
+    .dashboard-header {
+        background: #0f172a;
+        padding: 120px 0 60px;
+        color: white;
+        margin-bottom: 40px;
+        border-bottom: 3px solid #cca43b;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    /* If actions exist, align text left on large screens */
+    @media (min-width: 768px) {
+        .header-content {
+            text-align: left;
+        }
+        .header-text {
+            flex: 1;
+        }
+    }
+    
+    /* Default center if no complex layout overrides */
+    .dashboard-header .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    /* But we want flexibility. Let's rely on the blocks. */
+    .dashboard-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: white;
+    }
+
+    .dashboard-header p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.1rem;
+        margin-bottom: 0;
+    }
+
+    .dashboard-main-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* Common Card Styles for Dashboard */
+    .dashboard-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid #e2e8f0;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Status Badges */
+    .status-badge {
+        display: inline-block;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .status-badge.active {
+        background: #28a745;
+        color: white;
+    }
+
+    .status-badge.inactive {
+        background: #6c757d;
+        color: white;
+    }
+    
+    /* Buttons consistency */
+    /* Buttons consistency */
+    .btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-dashboard-primary, .btn-primary {
+        background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+        color: white;
+    }
+    
+    .btn-dashboard-primary:hover, .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(15, 23, 42, 0.4);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: white;
+        color: #0f172a;
+        border: 2px solid #0f172a;
+    }
+
+    .btn-secondary:hover {
+        background: #f1f5f9;
+        color: #0f172a;
+    }
+    
+    /* Form Styles Override for Dashboard context */
+    .form-section h3 {
+        color: #cca43b;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .dashboard-header {
+            padding: 100px 0 40px;
+            text-align: center;
+        }
+        
+        .header-content {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .dashboard-header h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+{% block extra_dashboard_css %}{% endblock %}
+
+{% endblock %}

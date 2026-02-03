@@ -1,9 +1,9 @@
-{% extends 'base.html' %}
+{% extends 'user_area/base_dashboard.html' %}
 {% load static %}
 
 {% block title %}Yeni Ürün Ekle - Made in Izmir{% endblock %}
 
-{% block extra_css %}
+{% block extra_dashboard_css %}
 <link href="https://unpkg.com/slim-select@2.8.2/dist/slimselect.css" rel="stylesheet">
 <style>
     .ss-main {
@@ -18,7 +18,7 @@
         border-color: #0f172a;
         box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
     }
-
+    
     .tags-container {
         display: block;
         margin-top: 10px;
@@ -90,194 +90,148 @@
 </script>
 {% endblock %}
 
-{% block content %}
-<div class="form-container">
-    <div class="container">
-        <div class="form-wrapper">
-            <div class="form-header">
-                <h1 data-i18n="dashboard.add_new"><i class="fas fa-plus-circle"></i> Yeni Ürün Ekle</h1>
-                <p data-i18n="dashboard.add_product_instructions">Ürün bilgilerini girin. En az bir dilde başlık ve
-                    açıklama zorunludur.</p>
-            </div>
+{% block dashboard_title %}
+<span data-i18n="dashboard.add_new">Yeni Ürün Ekle</span>
+{% endblock %}
 
-            <form method="post" enctype="multipart/form-data" class="product-form">
-                {% csrf_token %}
+{% block dashboard_desc %}
+<span data-i18n="dashboard.add_product_instructions">Ürün bilgilerini girin. En az bir dilde başlık ve açıklama zorunludur.</span>
+{% endblock %}
 
-                {% if form.non_field_errors %}
-                <div class="alert alert-danger">
-                    {{ form.non_field_errors }}
-                </div>
-                {% endif %}
+{% block dashboard_content %}
+<div class="form-wrapper dashboard-card">
+    <form method="post" enctype="multipart/form-data" class="product-form">
+        {% csrf_token %}
 
-                <div class="form-section">
-                    <h3><i class="fas fa-industry"></i> <span data-i18n="dashboard.sector">Sektör</span></h3>
-                    <div class="form-group">
-                        <label for="{{ form.sector.id_for_label }}">{{ form.sector.label }}</label>
-                        {{ form.sector }}
-                        {% if form.sector.errors %}
-                        <div class="error">{{ form.sector.errors }}</div>
-                        {% endif %}
-                        <p class="field-help" data-i18n="dashboard.sector_help">Ürününüzün ait olduğu sektörü seçin.</p>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3><i class="fas fa-language"></i> <span data-i18n="dashboard.tr_info">Türkçe Bilgiler</span></h3>
-                    <div class="form-group">
-                        <label data-i18n="dashboard.title_tr" for="{{ form.title_tr.id_for_label }}">{{
-                            form.title_tr.label }}</label>
-                        {{ form.title_tr }}
-                        {% if form.title_tr.errors %}
-                        <div class="error">{{ form.title_tr.errors }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="dashboard.desc_tr" for="{{ form.description_tr.id_for_label }}">{{
-                            form.description_tr.label }}</label>
-                        {{ form.description_tr }}
-                        {% if form.description_tr.errors %}
-                        <div class="error">{{ form.description_tr.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3><i class="fas fa-language"></i> <span data-i18n="dashboard.en_info">English Information</span>
-                    </h3>
-                    <div class="form-group">
-                        <label data-i18n="dashboard.title_en" for="{{ form.title_en.id_for_label }}">{{
-                            form.title_en.label }}</label>
-                        {{ form.title_en }}
-                        {% if form.title_en.errors %}
-                        <div class="error">{{ form.title_en.errors }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="dashboard.desc_en" for="{{ form.description_en.id_for_label }}">{{
-                            form.description_en.label }}</label>
-                        {{ form.description_en }}
-                        {% if form.description_en.errors %}
-                        <div class="error">{{ form.description_en.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3><i class="fas fa-camera"></i> <span data-i18n="dashboard.photos">Fotoğraflar (Maksimum 3)</span>
-                    </h3>
-                    <div class="photos-grid">
-                        <div class="form-group">
-                            <label data-i18n="dashboard.photo1" for="{{ form.photo1.id_for_label }}">{{
-                                form.photo1.label }}</label>
-                            {{ form.photo1 }}
-                            {% if form.photo1.errors %}
-                            <div class="error">{{ form.photo1.errors }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="form-group">
-                            <label data-i18n="dashboard.photo2" for="{{ form.photo2.id_for_label }}">{{
-                                form.photo2.label }}</label>
-                            {{ form.photo2 }}
-                            {% if form.photo2.errors %}
-                            <div class="error">{{ form.photo2.errors }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="form-group">
-                            <label data-i18n="dashboard.photo3" for="{{ form.photo3.id_for_label }}">{{
-                                form.photo3.label }}</label>
-                            {{ form.photo3 }}
-                            {% if form.photo3.errors %}
-                            <div class="error">{{ form.photo3.errors }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3><i class="fas fa-tags"></i> <span data-i18n="dashboard.tags">Etiketler (Maksimum 3)</span></h3>
-                    <div class="tags-container">
-                        {{ form.tags }}
-                        <p class="field-help" data-i18n="dashboard.tag_help">Ürününüzü en iyi tanımlayan etiketleri
-                            seçin.</p>
-                        {% if form.tags.errors %}
-                        <div class="error">{{ form.tags.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3><i class="fas fa-info-circle"></i> <span data-i18n="dashboard.product_status">Ürün Durumu</span>
-                    </h3>
-                    <div class="form-group checkbox-group">
-                        {{ form.is_active }}
-                        <label for="{{ form.is_active.id_for_label }}" data-i18n="dashboard.active">Aktif</label>
-                        {% if form.is_active.errors %}
-                        <div class="error">{{ form.is_active.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> <span data-i18n="dashboard.save_product">Ürünü Kaydet</span>
-                    </button>
-                    <a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> <span data-i18n="dashboard.cancel">İptal</span>
-                    </a>
-                </div>
-            </form>
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {{ form.non_field_errors }}
         </div>
-    </div>
+        {% endif %}
+
+        <div class="form-section">
+            <h3><i class="fas fa-industry"></i> <span data-i18n="dashboard.sector">Sektör</span></h3>
+            <div class="form-group">
+                <label for="{{ form.sector.id_for_label }}">{{ form.sector.label }}</label>
+                {{ form.sector }}
+                {% if form.sector.errors %}
+                <div class="error">{{ form.sector.errors }}</div>
+                {% endif %}
+                <p class="field-help" data-i18n="dashboard.sector_help">Ürününüzün ait olduğu sektörü seçin.</p>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3><i class="fas fa-language"></i> <span data-i18n="dashboard.tr_info">Türkçe Bilgiler</span></h3>
+            <div class="form-group">
+                <label data-i18n="dashboard.title_tr" for="{{ form.title_tr.id_for_label }}">{{
+                    form.title_tr.label }}</label>
+                {{ form.title_tr }}
+                {% if form.title_tr.errors %}
+                <div class="error">{{ form.title_tr.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label data-i18n="dashboard.desc_tr" for="{{ form.description_tr.id_for_label }}">{{
+                    form.description_tr.label }}</label>
+                {{ form.description_tr }}
+                {% if form.description_tr.errors %}
+                <div class="error">{{ form.description_tr.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3><i class="fas fa-language"></i> <span data-i18n="dashboard.en_info">English Information</span>
+            </h3>
+            <div class="form-group">
+                <label data-i18n="dashboard.title_en" for="{{ form.title_en.id_for_label }}">{{
+                    form.title_en.label }}</label>
+                {{ form.title_en }}
+                {% if form.title_en.errors %}
+                <div class="error">{{ form.title_en.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label data-i18n="dashboard.desc_en" for="{{ form.description_en.id_for_label }}">{{
+                    form.description_en.label }}</label>
+                {{ form.description_en }}
+                {% if form.description_en.errors %}
+                <div class="error">{{ form.description_en.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3><i class="fas fa-camera"></i> <span data-i18n="dashboard.photos">Fotoğraflar (Maksimum 3)</span>
+            </h3>
+            <div class="photos-grid">
+                <div class="form-group">
+                    <label data-i18n="dashboard.photo1" for="{{ form.photo1.id_for_label }}">{{
+                        form.photo1.label }}</label>
+                    {{ form.photo1 }}
+                    {% if form.photo1.errors %}
+                    <div class="error">{{ form.photo1.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label data-i18n="dashboard.photo2" for="{{ form.photo2.id_for_label }}">{{
+                        form.photo2.label }}</label>
+                    {{ form.photo2 }}
+                    {% if form.photo2.errors %}
+                    <div class="error">{{ form.photo2.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label data-i18n="dashboard.photo3" for="{{ form.photo3.id_for_label }}">{{
+                        form.photo3.label }}</label>
+                    {{ form.photo3 }}
+                    {% if form.photo3.errors %}
+                    <div class="error">{{ form.photo3.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3><i class="fas fa-tags"></i> <span data-i18n="dashboard.tags">Etiketler (Maksimum 3)</span></h3>
+            <div class="tags-container">
+                {{ form.tags }}
+                <p class="field-help" data-i18n="dashboard.tag_help">Ürününüzü en iyi tanımlayan etiketleri
+                    seçin.</p>
+                {% if form.tags.errors %}
+                <div class="error">{{ form.tags.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3><i class="fas fa-info-circle"></i> <span data-i18n="dashboard.product_status">Ürün Durumu</span>
+            </h3>
+            <div class="form-group checkbox-group">
+                {{ form.is_active }}
+                <label for="{{ form.is_active.id_for_label }}" data-i18n="dashboard.active">Aktif</label>
+                {% if form.is_active.errors %}
+                <div class="error">{{ form.is_active.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-dashboard-primary">
+                <i class="fas fa-save"></i> <span data-i18n="dashboard.save_product">Ürünü Kaydet</span>
+            </button>
+            <a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> <span data-i18n="dashboard.cancel">İptal</span>
+            </a>
+        </div>
+    </form>
 </div>
 
 <style>
-    .form-container {
-        min-height: 100vh;
-        background: #f8fafc;
-        position: relative;
-        padding: 120px 20px 60px;
-    }
-
-    .form-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 300px;
-        background: #0f172a;
-        border-bottom: 3px solid #cca43b;
-        z-index: 0;
-    }
-
     .form-wrapper {
-        position: relative;
-        z-index: 1;
         max-width: 800px;
         margin: 0 auto;
-        background: white;
-        border-radius: 15px;
-        padding: 40px;
-        box-shadow: var(--shadow-xl);
-        border: 1px solid #e2e8f0;
-    }
-
-    .form-header {
-        text-align: center;
-        margin-bottom: 40px;
-    }
-
-    .form-header h1 {
-        color: #333;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .form-header p {
-        color: #666;
     }
 
     .form-section {
@@ -288,14 +242,6 @@
 
     .form-section:last-of-type {
         border-bottom: none;
-    }
-
-    .form-section h3 {
-        color: #cca43b;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
     }
 
     .form-group {
@@ -334,25 +280,6 @@
         gap: 20px;
     }
 
-    .tags-container {
-        display: block;
-    }
-
-    .tags-container label {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px;
-        background: #f8f9fa;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background 0.3s ease;
-    }
-
-    .tags-container label:hover {
-        background: #e9ecef;
-    }
-
     .tags-container input[type="checkbox"] {
         width: 18px;
         height: 18px;
@@ -388,25 +315,6 @@
         border: none;
         cursor: pointer;
         font-size: 16px;
-    }
-
-    .btn-primary {
-        background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
-        color: white;
-    }
-
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(15, 23, 42, 0.4);
-    }
-
-    .btn-secondary {
-        background: #6c757d;
-        color: white;
-    }
-
-    .btn-secondary:hover {
-        background: #5a6268;
     }
 
     .alert {

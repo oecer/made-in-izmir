@@ -1,140 +1,136 @@
-{% extends 'base.html' %}
+{% extends 'user_area/base_dashboard.html' %}
 {% load static %}
 
 {% block title %}{{ product.title_tr|default:product.title_en }} - Made in Izmir{% endblock %}
 
-{% block content %}
-<div class="product-detail-container">
-    <div class="container">
-        <div class="product-detail-wrapper">
-            <!-- Back Button -->
-            <div class="back-button">
-                {% if is_owner %}
-                <a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> <span data-i18n="dashboard.back">Panele Dön</span>
-                </a>
-                {% else %}
-                <a href="{% url 'main:buyer_dashboard' %}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> <span data-i18n="dashboard.back">Ürünlere Dön</span>
-                </a>
-                {% endif %}
+{% block dashboard_title %}
+{{ product.title_tr|default:product.title_en }}
+{% endblock %}
+
+{% block dashboard_desc %}
+{% if product.title_en and product.title_tr %}
+{{ product.title_en }}
+{% else %}
+<span data-i18n="dashboard.product_detail">Ürün Detayı</span>
+{% endif %}
+{% endblock %}
+
+{% block dashboard_header_actions %}
+{% if is_owner %}
+<a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
+    <i class="fas fa-arrow-left"></i> <span data-i18n="dashboard.back">Panele Dön</span>
+</a>
+{% else %}
+<a href="{% url 'main:buyer_dashboard' %}" class="btn btn-secondary">
+    <i class="fas fa-arrow-left"></i> <span data-i18n="dashboard.back">Ürünlere Dön</span>
+</a>
+{% endif %}
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="product-detail-content dashboard-card">
+    <!-- Product Images -->
+    <div class="product-images">
+        <div class="main-image">
+            {% if product.photo1 %}
+            <img id="mainImage" src="{{ product.photo1.url }}" alt="{{ product.title_tr|default:product.title_en }}">
+            {% else %}
+            <div class="no-image-large">
+                <i class="fas fa-image"></i>
+                <p data-i18n="dashboard.no_photos">Fotoğraf yok</p>
             </div>
+            {% endif %}
+        </div>
 
-            <div class="product-detail-content">
-                <!-- Product Images -->
-                <div class="product-images">
-                    <div class="main-image">
-                        {% if product.photo1 %}
-                        <img id="mainImage" src="{{ product.photo1.url }}"
-                            alt="{{ product.title_tr|default:product.title_en }}">
-                        {% else %}
-                        <div class="no-image-large">
-                            <i class="fas fa-image"></i>
-                            <p data-i18n="dashboard.no_photos">Fotoğraf yok</p>
-                        </div>
-                        {% endif %}
-                    </div>
+        {% if product.photo1 or product.photo2 or product.photo3 %}
+        <div class="thumbnail-images">
+            {% if product.photo1 %}
+            <img src="{{ product.photo1.url }}" alt="Photo 1" onclick="changeMainImage('{{ product.photo1.url }}')"
+                class="active">
+            {% endif %}
+            {% if product.photo2 %}
+            <img src="{{ product.photo2.url }}" alt="Photo 2" onclick="changeMainImage('{{ product.photo2.url }}')">
+            {% endif %}
+            {% if product.photo3 %}
+            <img src="{{ product.photo3.url }}" alt="Photo 3" onclick="changeMainImage('{{ product.photo3.url }}')">
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
 
-                    {% if product.photo1 or product.photo2 or product.photo3 %}
-                    <div class="thumbnail-images">
-                        {% if product.photo1 %}
-                        <img src="{{ product.photo1.url }}" alt="Photo 1"
-                            onclick="changeMainImage('{{ product.photo1.url }}')" class="active">
-                        {% endif %}
-                        {% if product.photo2 %}
-                        <img src="{{ product.photo2.url }}" alt="Photo 2"
-                            onclick="changeMainImage('{{ product.photo2.url }}')">
-                        {% endif %}
-                        {% if product.photo3 %}
-                        <img src="{{ product.photo3.url }}" alt="Photo 3"
-                            onclick="changeMainImage('{{ product.photo3.url }}')">
-                        {% endif %}
-                    </div>
-                    {% endif %}
-                </div>
+    <!-- Product Info -->
+    <div class="product-info-section">
+        <div class="product-header-inline">
+            {% if product.is_active %}
+            <span class="status-badge active" data-i18n="dashboard.active">Aktif</span>
+            {% else %}
+            <span class="status-badge inactive" data-i18n="dashboard.passive">Pasif</span>
+            {% endif %}
+        </div>
 
-                <!-- Product Info -->
-                <div class="product-info-section">
-                    <div class="product-header">
-                        <h1>{{ product.title_tr|default:product.title_en }}</h1>
-                        {% if product.title_en and product.title_tr %}
-                        <h2 class="subtitle">{{ product.title_en }}</h2>
-                        {% endif %}
-
-                        {% if product.is_active %}
-                        <span class="status-badge active" data-i18n="dashboard.active">Aktif</span>
-                        {% else %}
-                        <span class="status-badge inactive" data-i18n="dashboard.passive">Pasif</span>
-                        {% endif %}
-                    </div>
-
-                    <div class="producer-info">
-                        <i class="fas fa-industry"></i>
-                        <div>
-                            <p class="info-item">
-                                <strong data-i18n="dashboard.producer">Üretici</strong>:
-                                {{ product.producer.profile.company_name }}
-                            </p>
-                            {% if product.sector %}
-                            <p class="info-item">
-                                <strong data-i18n="dashboard.sector">Sektör</strong>:
-                                <span class="sector-name" data-tr="{{ product.sector.name_tr }}"
-                                    data-en="{{ product.sector.name_en }}">
-                                    {{ product.sector.name_tr }}
-                                </span>
-                            </p>
-                            {% endif %}
-                            <small class="location">
-                                <i class="fas fa-map-marker-alt"></i>
-                                {{ product.producer.profile.city }}, {{ product.producer.profile.country }}
-                            </small>
-                        </div>
-                    </div>
-
-                    {% if product.tags.all %}
-                    <div class="product-tags">
-                        <strong class="info-item"><i class="fas fa-tags"></i> <span
-                                data-i18n="dashboard.tags">Etiketler</span>:</strong>
-                        <div class="tags-list">
-                            {% for tag in product.tags.all %}
-                            <span class="tag" data-tr="{{ tag.name_tr }}" data-en="{{ tag.name_en }}">
-                                {{ tag.name_tr }}
-                            </span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    <div class="product-description">
-                        <h3><i class="fas fa-align-left"></i> Açıklama (Türkçe)</h3>
-                        <p>{{ product.description_tr|default:"Türkçe açıklama bulunmuyor." }}</p>
-                    </div>
-
-                    {% if product.description_en %}
-                    <div class="product-description">
-                        <h3><i class="fas fa-align-left"></i> Description (English)</h3>
-                        <p>{{ product.description_en }}</p>
-                    </div>
-                    {% endif %}
-
-                    <div class="product-meta">
-                        <p><i class="fas fa-calendar"></i> Eklenme Tarihi: {{ product.created_at|date:"d.m.Y H:i" }}</p>
-                        <p><i class="fas fa-clock"></i> Son Güncelleme: {{ product.updated_at|date:"d.m.Y H:i" }}</p>
-                    </div>
-
-                    {% if is_owner %}
-                    <div class="owner-actions">
-                        <a href="{% url 'main:edit_product' product.id %}" class="btn btn-warning">
-                            <i class="fas fa-edit"></i> <span data-i18n="dashboard.edit">Düzenle</span>
-                        </a>
-                        <a href="{% url 'main:delete_product' product.id %}" class="btn btn-danger">
-                            <i class="fas fa-trash"></i> <span data-i18n="dashboard.delete">Sil</span>
-                        </a>
-                    </div>
-                    {% endif %}
-                </div>
+        <div class="producer-info">
+            <i class="fas fa-industry"></i>
+            <div>
+                <p class="info-item">
+                    <strong data-i18n="dashboard.producer">Üretici</strong>:
+                    {{ product.producer.profile.company_name }}
+                </p>
+                {% if product.sector %}
+                <p class="info-item">
+                    <strong data-i18n="dashboard.sector">Sektör</strong>:
+                    <span class="sector-name" data-tr="{{ product.sector.name_tr }}"
+                        data-en="{{ product.sector.name_en }}">
+                        {{ product.sector.name_tr }}
+                    </span>
+                </p>
+                {% endif %}
+                <small class="location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    {{ product.producer.profile.city }}, {{ product.producer.profile.country }}
+                </small>
             </div>
         </div>
+
+        {% if product.tags.all %}
+        <div class="product-tags">
+            <strong class="info-item"><i class="fas fa-tags"></i> <span data-i18n="dashboard.tags">Etiketler</span>:</strong>
+            <div class="tags-list">
+                {% for tag in product.tags.all %}
+                <span class="tag" data-tr="{{ tag.name_tr }}" data-en="{{ tag.name_en }}">
+                    {{ tag.name_tr }}
+                </span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="product-description">
+            <h3><i class="fas fa-align-left"></i> Açıklama (Türkçe)</h3>
+            <p>{{ product.description_tr|default:"Türkçe açıklama bulunmuyor." }}</p>
+        </div>
+
+        {% if product.description_en %}
+        <div class="product-description">
+            <h3><i class="fas fa-align-left"></i> Description (English)</h3>
+            <p>{{ product.description_en }}</p>
+        </div>
+        {% endif %}
+
+        <div class="product-meta">
+            <p><i class="fas fa-calendar"></i> Eklenme Tarihi: {{ product.created_at|date:"d.m.Y H:i" }}</p>
+            <p><i class="fas fa-clock"></i> Son Güncelleme: {{ product.updated_at|date:"d.m.Y H:i" }}</p>
+        </div>
+
+        {% if is_owner %}
+        <div class="owner-actions">
+            <a href="{% url 'main:edit_product' product.id %}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> <span data-i18n="dashboard.edit">Düzenle</span>
+            </a>
+            <a href="{% url 'main:delete_product' product.id %}" class="btn btn-danger">
+                <i class="fas fa-trash"></i> <span data-i18n="dashboard.delete">Sil</span>
+            </a>
+        </div>
+        {% endif %}
     </div>
 </div>
 
@@ -154,41 +150,7 @@
 </script>
 
 <style>
-    .product-detail-container {
-        min-height: 100vh;
-        background: #f8fafc;
-        position: relative;
-        padding: 120px 20px 60px;
-    }
-
-    .product-detail-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 300px;
-        background: #0f172a;
-        border-bottom: 3px solid #cca43b;
-        z-index: 0;
-    }
-
-    .product-detail-wrapper {
-        position: relative;
-        z-index: 1;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .back-button {
-        margin-bottom: 20px;
-    }
-
     .product-detail-content {
-        background: white;
-        border-radius: 15px;
-        padding: 40px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 40px;
@@ -212,12 +174,14 @@
         border-radius: 12px;
         overflow: hidden;
         background: #f8f9fa;
+        border: 1px solid #e9ecef;
     }
 
     .main-image img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain; /* Changed to contain to show full image without crop */
+        background: #fff;
     }
 
     .no-image-large {
@@ -260,36 +224,9 @@
         flex-direction: column;
         gap: 25px;
     }
-
-    .product-header h1 {
-        color: #333;
-        margin: 0 0 10px;
-        font-size: 2rem;
-    }
-
-    .subtitle {
-        color: #666;
-        font-size: 1.3rem;
-        margin: 0 0 15px;
-        font-weight: normal;
-    }
-
-    .status-badge {
-        display: inline-block;
-        padding: 6px 15px;
-        border-radius: 20px;
-        font-size: 14px;
-        font-weight: bold;
-    }
-
-    .status-badge.active {
-        background: #28a745;
-        color: white;
-    }
-
-    .status-badge.inactive {
-        background: #6c757d;
-        color: white;
+    
+    .product-header-inline {
+        margin-bottom: 10px;
     }
 
     .producer-info {
@@ -398,32 +335,10 @@
         border: none;
         cursor: pointer;
     }
-
-    .btn-secondary {
-        background: #6c757d;
-        color: white;
-    }
-
-    .btn-secondary:hover {
-        background: #5a6268;
-    }
-
-    .btn-warning {
-        background: #ffc107;
-        color: #333;
-    }
-
-    .btn-warning:hover {
-        background: #e0a800;
-    }
-
-    .btn-danger {
-        background: #dc3545;
-        color: white;
-    }
-
-    .btn-danger:hover {
-        background: #c82333;
-    }
+    
+    .btn-secondary { background: #6c757d; color: white; }
+    .btn-secondary:hover { background: #5a6268; }
+    .btn-warning { background: #ffc107; color: #333; }
+    .btn-danger { background: #dc3545; color: white; }
 </style>
 {% endblock %}

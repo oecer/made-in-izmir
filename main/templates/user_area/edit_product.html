@@ -1,169 +1,27 @@
-{% extends 'user_area/add_product.html' %}
+{% extends 'user_area/base_dashboard.html' %}
+{% load static %}
 
 {% block title %}Ürün Düzenle - Made in Izmir{% endblock %}
 
-{% block content %}
-<div class="form-container">
-    <div class="container">
-        <div class="form-wrapper">
-            <div class="form-header">
-                <h1 data-i18n="dashboard.edit"><i class="fas fa-edit"></i> Ürün Düzenle</h1>
-                <p data-i18n="dashboard.update_product_instructions">Ürün bilgilerini güncelleyin.</p>
-            </div>
-
-            <form method="post" enctype="multipart/form-data" class="product-form">
-                {% csrf_token %}
-
-                {% if form.non_field_errors %}
-                <div class="alert alert-danger">
-                    {{ form.non_field_errors }}
-                </div>
-                {% endif %}
-
-                <div class="form-section">
-                    <h3><i class="fas fa-industry"></i> <span data-i18n="dashboard.sector">Sektör</span></h3>
-                    <div class="form-group">
-                        <label for="{{ form.sector.id_for_label }}">{{ form.sector.label }}</label>
-                        {{ form.sector }}
-                        {% if form.sector.errors %}
-                        <div class="error">{{ form.sector.errors }}</div>
-                        {% endif %}
-                        <p class="field-help" data-i18n="dashboard.sector_help">Ürününüzün ait olduğu sektörü seçin.</p>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3><i class="fas fa-language"></i> <span data-i18n="dashboard.tr_info">Türkçe Bilgiler</span></h3>
-                    <div class="form-group">
-                        <label data-i18n="dashboard.title_tr" for="{{ form.title_tr.id_for_label }}">{{
-                            form.title_tr.label }}</label>
-                        {{ form.title_tr }}
-                        {% if form.title_tr.errors %}
-                        <div class="error">{{ form.title_tr.errors }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="dashboard.desc_tr" for="{{ form.description_tr.id_for_label }}">{{
-                            form.description_tr.label }}</label>
-                        {{ form.description_tr }}
-                        {% if form.description_tr.errors %}
-                        <div class="error">{{ form.description_tr.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3><i class="fas fa-language"></i> <span data-i18n="dashboard.en_info">English Information</span>
-                    </h3>
-                    <div class="form-group">
-                        <label data-i18n="dashboard.title_en" for="{{ form.title_en.id_for_label }}">{{
-                            form.title_en.label }}</label>
-                        {{ form.title_en }}
-                        {% if form.title_en.errors %}
-                        <div class="error">{{ form.title_en.errors }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="dashboard.desc_en" for="{{ form.description_en.id_for_label }}">{{
-                            form.description_en.label }}</label>
-                        {{ form.description_en }}
-                        {% if form.description_en.errors %}
-                        <div class="error">{{ form.description_en.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3><i class="fas fa-camera"></i> <span data-i18n="dashboard.photos">Fotoğraflar (Maksimum 3)</span>
-                    </h3>
-                    <div class="photos-grid">
-                        <div class="form-group">
-                            <label data-i18n="dashboard.photo1" for="{{ form.photo1.id_for_label }}">{{
-                                form.photo1.label }}</label>
-                            {% if product.photo1 %}
-                            <div class="current-photo">
-                                <img src="{{ product.photo1.url }}" alt="Current photo 1">
-                                <p class="photo-note" data-i18n="dashboard.new_photo_note">Yeni fotoğraf yüklemek için
-                                    seçin</p>
-                            </div>
-                            {% endif %}
-                            {{ form.photo1 }}
-                            {% if form.photo1.errors %}
-                            <div class="error">{{ form.photo1.errors }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="form-group">
-                            <label data-i18n="dashboard.photo2" for="{{ form.photo2.id_for_label }}">{{
-                                form.photo2.label }}</label>
-                            {% if product.photo2 %}
-                            <div class="current-photo">
-                                <img src="{{ product.photo2.url }}" alt="Current photo 2">
-                                <p class="photo-note" data-i18n="dashboard.new_photo_note">Yeni fotoğraf yüklemek için
-                                    seçin</p>
-                            </div>
-                            {% endif %}
-                            {{ form.photo2 }}
-                            {% if form.photo2.errors %}
-                            <div class="error">{{ form.photo2.errors }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="form-group">
-                            <label data-i18n="dashboard.photo3" for="{{ form.photo3.id_for_label }}">{{
-                                form.photo3.label }}</label>
-                            {% if product.photo3 %}
-                            <div class="current-photo">
-                                <img src="{{ product.photo3.url }}" alt="Current photo 3">
-                                <p class="photo-note" data-i18n="dashboard.new_photo_note">Yeni fotoğraf yüklemek için
-                                    seçin</p>
-                            </div>
-                            {% endif %}
-                            {{ form.photo3 }}
-                            {% if form.photo3.errors %}
-                            <div class="error">{{ form.photo3.errors }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3><i class="fas fa-tags"></i> <span data-i18n="dashboard.tags">Etiketler (Maksimum 3)</span></h3>
-                    <div class="tags-container">
-                        {{ form.tags }}
-                        <p class="field-help" data-i18n="dashboard.tag_help">Ürününüzü en iyi tanımlayan etiketleri
-                            seçin.</p>
-                        {% if form.tags.errors %}
-                        <div class="error">{{ form.tags.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3><i class="fas fa-info-circle"></i> <span data-i18n="dashboard.product_status">Ürün Durumu</span>
-                    </h3>
-                    <div class="form-group checkbox-group">
-                        {{ form.is_active }}
-                        <label for="{{ form.is_active.id_for_label }}" data-i18n="dashboard.active">Aktif</label>
-                        {% if form.is_active.errors %}
-                        <div class="error">{{ form.is_active.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> <span data-i18n="dashboard.update_product">Değişiklikleri
-                            Kaydet</span>
-                    </button>
-                    <a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> <span data-i18n="dashboard.cancel">İptal</span>
-                    </a>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
+{% block extra_dashboard_css %}
+<link href="https://unpkg.com/slim-select@2.8.2/dist/slimselect.css" rel="stylesheet">
 <style>
+    .ss-main {
+        padding: 0.5rem;
+        border-radius: 8px;
+        border-color: #cbd5e1;
+        background-color: #f8fafc;
+        margin-bottom: 10px;
+    }
+
+    .ss-main:focus {
+        border-color: #0f172a;
+        box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
+    }
+    
+    .tags-container { display: block; margin-top: 10px; }
+    .field-help { font-size: 12px; color: #666; margin-top: 5px; }
+
     .current-photo {
         margin-bottom: 10px;
     }
@@ -181,5 +39,235 @@
         color: #666;
         margin-top: 5px;
     }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/slim-select@2.8.2/dist/slimselect.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let tagSlim;
+        const tagSelect = document.getElementById('id_tags');
+
+        if (tagSelect) {
+            tagSlim = new SlimSelect({
+                select: '#id_tags',
+                settings: {
+                    placeholderText: 'Etiket Seçiniz / Select Tags',
+                    maxSelections: 3,
+                    closeOnSelect: false,
+                }
+            });
+        }
+        // Identical JS as add_product
+        function updateTagLabels() {
+            const currentLang = localStorage.getItem('madeInIzmirLang') || 'tr';
+            const options = document.querySelectorAll('#id_tags option');
+
+            options.forEach(opt => {
+                const fullText = opt.getAttribute('data-full-text') || opt.textContent;
+                if (!opt.getAttribute('data-full-text')) {
+                    opt.setAttribute('data-full-text', fullText);
+                }
+
+                if (fullText.includes(' | ')) {
+                    const parts = fullText.split(' | ');
+                    opt.textContent = `${parts[0].trim()} / ${parts[1].trim()}`;
+                }
+            });
+
+            if (tagSlim) {
+                tagSlim.setData(Array.from(tagSelect.options).map(opt => ({
+                    text: opt.textContent,
+                    value: opt.value,
+                    selected: opt.selected
+                })));
+            }
+        }
+        updateTagLabels();
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => { setTimeout(updateTagLabels, 100); });
+        });
+    });
+</script>
+{% endblock %}
+
+{% block dashboard_title %}
+<span data-i18n="dashboard.edit">Ürün Düzenle</span>
+{% endblock %}
+
+{% block dashboard_desc %}
+<span data-i18n="dashboard.update_product_instructions">Ürün bilgilerini güncelleyin.</span>
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="form-wrapper dashboard-card">
+    <form method="post" enctype="multipart/form-data" class="product-form">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <div class="form-section">
+            <h3><i class="fas fa-industry"></i> <span data-i18n="dashboard.sector">Sektör</span></h3>
+            <div class="form-group">
+                <label for="{{ form.sector.id_for_label }}">{{ form.sector.label }}</label>
+                {{ form.sector }}
+                {% if form.sector.errors %}
+                <div class="error">{{ form.sector.errors }}</div>
+                {% endif %}
+                <p class="field-help" data-i18n="dashboard.sector_help">Ürününüzün ait olduğu sektörü seçin.</p>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3><i class="fas fa-language"></i> <span data-i18n="dashboard.tr_info">Türkçe Bilgiler</span></h3>
+            <div class="form-group">
+                <label data-i18n="dashboard.title_tr" for="{{ form.title_tr.id_for_label }}">{{
+                    form.title_tr.label }}</label>
+                {{ form.title_tr }}
+                {% if form.title_tr.errors %}
+                <div class="error">{{ form.title_tr.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label data-i18n="dashboard.desc_tr" for="{{ form.description_tr.id_for_label }}">{{
+                    form.description_tr.label }}</label>
+                {{ form.description_tr }}
+                {% if form.description_tr.errors %}
+                <div class="error">{{ form.description_tr.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3><i class="fas fa-language"></i> <span data-i18n="dashboard.en_info">English Information</span>
+            </h3>
+            <div class="form-group">
+                <label data-i18n="dashboard.title_en" for="{{ form.title_en.id_for_label }}">{{
+                    form.title_en.label }}</label>
+                {{ form.title_en }}
+                {% if form.title_en.errors %}
+                <div class="error">{{ form.title_en.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label data-i18n="dashboard.desc_en" for="{{ form.description_en.id_for_label }}">{{
+                    form.description_en.label }}</label>
+                {{ form.description_en }}
+                {% if form.description_en.errors %}
+                <div class="error">{{ form.description_en.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3><i class="fas fa-camera"></i> <span data-i18n="dashboard.photos">Fotoğraflar (Maksimum 3)</span>
+            </h3>
+            <div class="photos-grid">
+                <div class="form-group">
+                    <label data-i18n="dashboard.photo1" for="{{ form.photo1.id_for_label }}">{{
+                        form.photo1.label }}</label>
+                    {% if product.photo1 %}
+                    <div class="current-photo">
+                        <img src="{{ product.photo1.url }}" alt="Current photo 1">
+                        <p class="photo-note" data-i18n="dashboard.new_photo_note">Yeni fotoğraf yüklemek için
+                            seçin</p>
+                    </div>
+                    {% endif %}
+                    {{ form.photo1 }}
+                    {% if form.photo1.errors %}
+                    <div class="error">{{ form.photo1.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label data-i18n="dashboard.photo2" for="{{ form.photo2.id_for_label }}">{{
+                        form.photo2.label }}</label>
+                    {% if product.photo2 %}
+                    <div class="current-photo">
+                        <img src="{{ product.photo2.url }}" alt="Current photo 2">
+                        <p class="photo-note" data-i18n="dashboard.new_photo_note">Yeni fotoğraf yüklemek için
+                            seçin</p>
+                    </div>
+                    {% endif %}
+                    {{ form.photo2 }}
+                    {% if form.photo2.errors %}
+                    <div class="error">{{ form.photo2.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label data-i18n="dashboard.photo3" for="{{ form.photo3.id_for_label }}">{{
+                        form.photo3.label }}</label>
+                    {% if product.photo3 %}
+                    <div class="current-photo">
+                        <img src="{{ product.photo3.url }}" alt="Current photo 3">
+                        <p class="photo-note" data-i18n="dashboard.new_photo_note">Yeni fotoğraf yüklemek için
+                            seçin</p>
+                    </div>
+                    {% endif %}
+                    {{ form.photo3 }}
+                    {% if form.photo3.errors %}
+                    <div class="error">{{ form.photo3.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3><i class="fas fa-tags"></i> <span data-i18n="dashboard.tags">Etiketler (Maksimum 3)</span></h3>
+            <div class="tags-container">
+                {{ form.tags }}
+                <p class="field-help" data-i18n="dashboard.tag_help">Ürününüzü en iyi tanımlayan etiketleri
+                    seçin.</p>
+                {% if form.tags.errors %}
+                <div class="error">{{ form.tags.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3><i class="fas fa-info-circle"></i> <span data-i18n="dashboard.product_status">Ürün Durumu</span>
+            </h3>
+            <div class="form-group checkbox-group">
+                {{ form.is_active }}
+                <label for="{{ form.is_active.id_for_label }}" data-i18n="dashboard.active">Aktif</label>
+                {% if form.is_active.errors %}
+                <div class="error">{{ form.is_active.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-dashboard-primary">
+                <i class="fas fa-save"></i> <span data-i18n="dashboard.update_product">Değişiklikleri Kaydet</span>
+            </button>
+            <a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> <span data-i18n="dashboard.cancel">İptal</span>
+            </a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .form-wrapper { max-width: 800px; margin: 0 auto; }
+    .form-section { margin-bottom: 30px; padding-bottom: 30px; border-bottom: 2px solid #f0f0f0; }
+    .form-section:last-of-type { border-bottom: none; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; color: #333; font-weight: 500; }
+    .form-control { width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px; transition: border-color 0.3s ease; }
+    .form-control:focus { outline: none; border-color: #cca43b; }
+    textarea.form-control { resize: vertical; min-height: 100px; }
+    .photos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+    .tags-container input[type="checkbox"] { width: 18px; height: 18px; }
+    .checkbox-group { display: flex; align-items: center; gap: 10px; }
+    .checkbox-group input[type="checkbox"] { width: 20px; height: 20px; }
+    .form-actions { display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap; }
+    .btn { padding: 12px 30px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 500; transition: all 0.3s ease; border: none; cursor: pointer; font-size: 16px; }
+    .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+    .alert-danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .error { color: #dc3545; font-size: 14px; margin-top: 5px; }
 </style>
 {% endblock %}

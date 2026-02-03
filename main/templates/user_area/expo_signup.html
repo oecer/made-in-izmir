@@ -1,125 +1,177 @@
-{% extends 'base.html' %}
+{% extends 'user_area/base_dashboard.html' %}
+{% load static %}
 
 {% block title %}Fuar Kaydı - {{ expo.title_tr }}{% endblock %}
 
-{% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">Fuar Kaydı</h3>
-                </div>
-                <div class="card-body">
-                    <!-- Expo Information -->
-                    <div class="mb-4 p-3 bg-light rounded">
-                        <h4>{{ expo.title_tr }}</h4>
-                        {% if expo.image %}
-                        <img src="{{ expo.image.url }}" class="img-fluid mb-3 rounded" alt="{{ expo.title_tr }}"
-                            style="max-height: 300px; object-fit: cover; width: 100%;">
-                        {% endif %}
-                        <p>{{ expo.description_tr }}</p>
-                        <ul class="list-unstyled">
-                            <li><strong>Tarih:</strong> {{ expo.start_date|date:"d M Y" }} - {{ expo.end_date|date:"d M
-                                Y" }}</li>
-                            <li><strong>Konum:</strong> {{ expo.location_tr }}</li>
-                            <li><strong>Kayıt Son Tarihi:</strong> {{ expo.registration_deadline|date:"d M Y" }}</li>
-                        </ul>
-                    </div>
+{% block dashboard_title %}
+<span data-i18n="dashboard.expo_registration_title">Fuar Kaydı</span>
+{% endblock %}
 
-                    <!-- Signup Form -->
-                    <form method="post" id="expo-signup-form">
-                        {% csrf_token %}
+{% block dashboard_desc %}
+{{ expo.title_tr }} için katılım formunu doldurun.
+{% endblock %}
 
-                        <div class="mb-3">
-                            <label for="{{ form.product_count.id_for_label }}" class="form-label">{{
-                                form.product_count.label }}</label>
-                            {{ form.product_count }}
-                            {% if form.product_count.errors %}
-                            <div class="text-danger">{{ form.product_count.errors }}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="mb-3">
-                            <div class="form-check">
-                                {{ form.uses_listed_products }}
-                                <label class="form-check-label" for="{{ form.uses_listed_products.id_for_label }}">
-                                    {{ form.uses_listed_products.label }}
-                                </label>
-                            </div>
-                            {% if form.uses_listed_products.errors %}
-                            <div class="text-danger">{{ form.uses_listed_products.errors }}</div>
-                            {% endif %}
-                        </div>
-
-                        <!-- Selected Products (shown when checkbox is checked) -->
-                        <div class="mb-3" id="selected-products-container" style="display: none;">
-                            <label for="{{ form.selected_products.id_for_label }}" class="form-label">{{
-                                form.selected_products.label }}</label>
-                            {{ form.selected_products }}
-                            <small class="form-text text-muted">Ctrl tuşuna basılı tutarak birden fazla ürün
-                                seçebilirsiniz.</small>
-                            {% if form.selected_products.errors %}
-                            <div class="text-danger">{{ form.selected_products.errors }}</div>
-                            {% endif %}
-                        </div>
-
-                        <!-- Product Description (shown when checkbox is not checked) -->
-                        <div class="mb-3" id="product-description-container">
-                            <label for="{{ form.product_description.id_for_label }}" class="form-label">{{
-                                form.product_description.label }}</label>
-                            {{ form.product_description }}
-                            {% if form.product_description.errors %}
-                            <div class="text-danger">{{ form.product_description.errors }}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="{{ form.notes.id_for_label }}" class="form-label">{{ form.notes.label }}</label>
-                            {{ form.notes }}
-                            {% if form.notes.errors %}
-                            <div class="text-danger">{{ form.notes.errors }}</div>
-                            {% endif %}
-                        </div>
-
-                        {% if form.non_field_errors %}
-                        <div class="alert alert-danger">
-                            {{ form.non_field_errors }}
-                        </div>
-                        {% endif %}
-
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary">Kayıt Ol</button>
-                            <a href="{% url 'main:dashboard_calendar' %}" class="btn btn-secondary">İptal</a>
-                        </div>
-                    </form>
-                </div>
+{% block dashboard_content %}
+<div class="row" style="max-width: 1000px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 30px;">
+    <!-- Expo Info Column -->
+    <div class="col-md-5" style="flex: 1; min-width: 300px;">
+        <div class="dashboard-card h-100">
+            <h3 class="mb-3">{{ expo.title_tr }}</h3>
+            {% if expo.image %}
+            <div class="expo-image-preview mb-3">
+                <img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
             </div>
+            {% endif %}
+            <p class="description">{{ expo.description_tr }}</p>
+            <ul class="expo-details-list">
+                <li><i class="fas fa-calendar"></i> <strong>Tarih:</strong> {{ expo.start_date|date:"d M Y" }} - {{ expo.end_date|date:"d M Y" }}</li>
+                <li><i class="fas fa-map-marker-alt"></i> <strong>Konum:</strong> {{ expo.location_tr }}</li>
+                <li><i class="fas fa-clock"></i> <strong>Son Başvuru:</strong> {{ expo.registration_deadline|date:"d M Y" }}</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Signup Form Column -->
+    <div class="col-md-7" style="flex: 1.5; min-width: 300px;">
+        <div class="dashboard-card">
+            <h3 class="mb-4"><i class="fas fa-clipboard-list"></i> <span data-i18n="dashboard.registration_form">Başvuru Formu</span></h3>
+            
+            <form method="post" id="expo-signup-form">
+                {% csrf_token %}
+
+                <div class="form-group mb-3">
+                    <label for="{{ form.product_count.id_for_label }}" class="form-label">{{ form.product_count.label }}</label>
+                    {{ form.product_count }}
+                    {% if form.product_count.errors %}
+                    <div class="error">{{ form.product_count.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group mb-3">
+                    <div class="checkbox-wrapper">
+                        {{ form.uses_listed_products }}
+                        <label for="uses_listed_products" class="ml-2">{{ form.uses_listed_products.label }}</label>
+                    </div>
+                    {% if form.uses_listed_products.errors %}
+                    <div class="error">{{ form.uses_listed_products.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Selected Products (shown when checkbox is checked) -->
+                <div class="form-group mb-3" id="selected-products-container" style="display: none;">
+                    <label for="{{ form.selected_products.id_for_label }}" class="form-label">{{ form.selected_products.label }}</label>
+                    {{ form.selected_products }}
+                    <small class="field-help">Ctrl tuşuna basılı tutarak birden fazla ürün seçebilirsiniz.</small>
+                    {% if form.selected_products.errors %}
+                    <div class="error">{{ form.selected_products.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Product Description (shown when checkbox is not checked) -->
+                <div class="form-group mb-3" id="product-description-container">
+                    <label for="{{ form.product_description.id_for_label }}" class="form-label">{{ form.product_description.label }}</label>
+                    {{ form.product_description }}
+                    {% if form.product_description.errors %}
+                    <div class="error">{{ form.product_description.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="{{ form.notes.id_for_label }}" class="form-label">{{ form.notes.label }}</label>
+                    {{ form.notes }}
+                    {% if form.notes.errors %}
+                    <div class="error">{{ form.notes.errors }}</div>
+                    {% endif %}
+                </div>
+
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger mb-3">
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+
+                <div class="form-actions mt-4">
+                    <button type="submit" class="btn btn-dashboard-primary">
+                        <i class="fas fa-check-circle"></i> <span data-i18n="dashboard.complete_registration">Kayıt Ol</span>
+                    </button>
+                    <a href="{% url 'main:dashboard_calendar' %}" class="btn btn-secondary">
+                        <span data-i18n="dashboard.cancel">İptal</span>
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const usesListedCheckbox = document.getElementById('uses_listed_products');
+        // Find the checkbox by ID 'id_uses_listed_products' (Django convention) or standard id
+        let usesListedCheckbox = document.getElementById('id_uses_listed_products');
+        if (!usesListedCheckbox) {
+             // Fallback if id is different
+             usesListedCheckbox = document.querySelector('input[name="uses_listed_products"]');
+        }
+        
         const selectedProductsContainer = document.getElementById('selected-products-container');
         const productDescriptionContainer = document.getElementById('product-description-container');
 
-        function toggleProductFields() {
-            if (usesListedCheckbox.checked) {
-                selectedProductsContainer.style.display = 'block';
-                productDescriptionContainer.style.display = 'none';
-            } else {
-                selectedProductsContainer.style.display = 'none';
-                productDescriptionContainer.style.display = 'block';
+        if (usesListedCheckbox && selectedProductsContainer && productDescriptionContainer) {
+            function toggleProductFields() {
+                if (usesListedCheckbox.checked) {
+                    selectedProductsContainer.style.display = 'block';
+                    productDescriptionContainer.style.display = 'none';
+                } else {
+                    selectedProductsContainer.style.display = 'none';
+                    productDescriptionContainer.style.display = 'block';
+                }
             }
+
+            // Initial state
+            toggleProductFields();
+
+            // Listen for changes
+            usesListedCheckbox.addEventListener('change', toggleProductFields);
         }
-
-        // Initial state
-        toggleProductFields();
-
-        // Listen for changes
-        usesListedCheckbox.addEventListener('change', toggleProductFields);
     });
 </script>
+
+<style>
+    .expo-details-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 20px;
+    }
+    .expo-details-list li {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #333;
+    }
+    .expo-details-list i {
+        color: #cca43b;
+        width: 20px;
+        text-align: center;
+    }
+    .description { color: #666; line-height: 1.6; }
+    
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; margin-bottom: 8px; font-weight: 500; color: #333; }
+    .form-control, select, textarea { 
+        width: 100%; padding: 10px; border: 2px solid #e9ecef; border-radius: 8px; transition: border-color 0.3s;
+    }
+    .form-control:focus, select:focus, textarea:focus { 
+        border-color: #cca43b; outline: none; 
+    }
+    
+    .checkbox-wrapper { display: flex; align-items: center; gap: 10px; }
+    .checkbox-wrapper input[type="checkbox"] { width: 18px; height: 18px; }
+    
+    .form-actions { display: flex; gap: 15px; }
+    .btn { padding: 12px 24px; border-radius: 8px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer; }
+    .btn-secondary { background: #6c757d; color: white; }
+    .error { color: #dc3545; font-size: 14px; margin-top: 5px; }
+    .alert-danger { background: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; border: 1px solid #f5c6cb; }
+    .field-help { font-size: 0.85rem; color: #6c757d; display: block; margin-top: 5px; }
+</style>
 {% endblock %}

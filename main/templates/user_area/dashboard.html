@@ -1,105 +1,77 @@
-{% extends 'base.html' %}
+{% extends 'user_area/base_dashboard.html' %}
 {% load static %}
 
 {% block title %}Ana Panel - Made in Izmir{% endblock %}
 
-{% block content %}
-<div class="dashboard-container">
-    <div class="dashboard-header">
-        <div class="container">
-            <h1 data-i18n="dashboard.main_title">Ana Panel</h1>
-            <p><span data-i18n="dashboard.welcome">Hoş geldiniz</span>, {{ user.get_full_name }}!</p>
+{% block dashboard_title %}
+    <span data-i18n="dashboard.main_title">Ana Panel</span>
+{% endblock %}
+
+{% block dashboard_desc %}
+    <span data-i18n="dashboard.welcome">Hoş geldiniz</span>, {{ user.get_full_name }}!
+{% endblock %}
+
+{% block dashboard_content %}
+    <div class="welcome-section animate-fade-up">
+        <h2 data-i18n="dashboard.choose_action">Ne yapmak istersiniz?</h2>
+        <p class="lead" data-i18n="dashboard.main_desc">İlgili paneli seçerek işlemlerinize devam edebilirsiniz.</p>
+    </div>
+
+    <div class="dashboard-grid animate-fade-up" style="animation-delay: 0.1s;">
+        {% if profile.is_producer %}
+        <div class="dashboard-main-card producer-card">
+            <div class="card-icon">
+                <i class="fas fa-industry"></i>
+            </div>
+            <h3>Üretici Paneli</h3>
+            <p>Ürünlerinizi yönetin, yeni ürün ekleyin ve fuar takiplerini yapın.</p>
+            <a href="{% url 'main:producer_dashboard' %}" class="btn btn-primary">
+                <span data-i18n="dashboard.go_to_producer">Üretici Paneline Git</span>
+            </a>
+        </div>
+        {% endif %}
+
+        {% if profile.is_buyer %}
+        <div class="dashboard-main-card buyer-card">
+            <div class="card-icon">
+                <i class="fas fa-shopping-bag"></i>
+            </div>
+            <h3>Alıcı Paneli</h3>
+            <p>Üreticileri keşfedin, ürünleri inceleyin ve iş bağlantıları kurun.</p>
+            <a href="{% url 'main:buyer_dashboard' %}" class="btn btn-primary">
+                <span data-i18n="dashboard.go_to_buyer">Alıcı Paneline Git</span>
+            </a>
+        </div>
+        {% endif %}
+
+        <div class="dashboard-main-card calendar-card">
+            <div class="card-icon">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <h3>Fuar Takvimi</h3>
+            <p>Yaklaşan fuarları inceleyin ve katılım taleplerinizi yönetin.</p>
+            <a href="{% url 'main:dashboard_calendar' %}" class="btn btn-secondary">
+                <span data-i18n="dashboard.go_to_calendar">Takvime Git</span>
+            </a>
+        </div>
+
+        <div class="dashboard-main-card profile-card">
+            <div class="card-icon">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <h3>Profil Bilgileri</h3>
+            <p>Firma bilgilerinizi ve iletişim detaylarınızı güncelleyin.</p>
+            <a href="{% url 'main:profile' %}" class="btn btn-secondary">
+                <span data-i18n="dashboard.go_to_profile">Profilimi Düzenle</span>
+            </a>
         </div>
     </div>
 
-    <div class="container dashboard-main-content">
-        <div class="welcome-section animate-fade-up">
-            <h2 data-i18n="dashboard.choose_action">Ne yapmak istersiniz?</h2>
-            <p class="lead" data-i18n="dashboard.main_desc">İlgili paneli seçerek işlemlerinize devam edebilirsiniz.</p>
-        </div>
+{% endblock %}
 
-        <div class="dashboard-grid animate-fade-up" style="animation-delay: 0.1s;">
-            {% if profile.is_producer %}
-            <div class="dashboard-main-card producer-card">
-                <div class="card-icon">
-                    <i class="fas fa-industry"></i>
-                </div>
-                <h3>Üretici Paneli</h3>
-                <p>Ürünlerinizi yönetin, yeni ürün ekleyin ve fuar takiplerini yapın.</p>
-                <a href="{% url 'main:producer_dashboard' %}" class="btn btn-primary">
-                    <span data-i18n="dashboard.go_to_producer">Üretici Paneline Git</span>
-                </a>
-            </div>
-            {% endif %}
-
-            {% if profile.is_buyer %}
-            <div class="dashboard-main-card buyer-card">
-                <div class="card-icon">
-                    <i class="fas fa-shopping-bag"></i>
-                </div>
-                <h3>Alıcı Paneli</h3>
-                <p>Üreticileri keşfedin, ürünleri inceleyin ve iş bağlantıları kurun.</p>
-                <a href="{% url 'main:buyer_dashboard' %}" class="btn btn-primary">
-                    <span data-i18n="dashboard.go_to_buyer">Alıcı Paneline Git</span>
-                </a>
-            </div>
-            {% endif %}
-
-            <div class="dashboard-main-card calendar-card">
-                <div class="card-icon">
-                    <i class="fas fa-calendar-alt"></i>
-                </div>
-                <h3>Fuar Takvimi</h3>
-                <p>Yaklaşan fuarları inceleyin ve katılım taleplerinizi yönetin.</p>
-                <a href="{% url 'main:dashboard_calendar' %}" class="btn btn-secondary">
-                    <span data-i18n="dashboard.go_to_calendar">Takvime Git</span>
-                </a>
-            </div>
-
-            <div class="dashboard-main-card profile-card">
-                <div class="card-icon">
-                    <i class="fas fa-user-circle"></i>
-                </div>
-                <h3>Profil Bilgileri</h3>
-                <p>Firma bilgilerinizi ve iletişim detaylarınızı güncelleyin.</p>
-                <a href="{% url 'main:profile' %}" class="btn btn-secondary">
-                    <span data-i18n="dashboard.go_to_profile">Profilimi Düzenle</span>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
+{% block extra_dashboard_css %}
 <style>
-    .dashboard-container {
-        min-height: 100vh;
-        background: #f8fafc;
-        padding-bottom: 60px;
-    }
-
-    .dashboard-header {
-        background: #0f172a;
-        padding: 120px 0 60px;
-        color: white;
-        text-align: center;
-        margin-bottom: 40px;
-        border-bottom: 3px solid #cca43b;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .dashboard-header h1 {
-        font-size: 2.5rem;
-        margin-bottom: 10px;
-        font-weight: 700;
-        letter-spacing: -0.5px;
-    }
-
-    .dashboard-main-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-    }
-
+    /* Specific styles for dashboard main cards only */
     .welcome-section {
         text-align: center;
         margin-bottom: 50px;
@@ -127,7 +99,7 @@
         border-radius: 20px;
         padding: 40px 30px;
         text-align: center;
-        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         border: 1px solid #e2e8f0;
         display: flex;
         flex-direction: column;
@@ -135,6 +107,7 @@
         align-items: center;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); /* Lighter initial shadow */
     }
 
     .dashboard-main-card::after {
@@ -151,7 +124,7 @@
 
     .dashboard-main-card:hover {
         transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); /* More dramatic shadow matching producer dash */
         border-color: #cbd5e1;
     }
 
@@ -162,21 +135,22 @@
     .card-icon {
         width: 80px;
         height: 80px;
-        background: #f1f5f9;
+        /* Match the Stat Card Gradient from Producer Dashboard */
+        background: linear-gradient(135deg, #0f172a 100%, #cca43b 0%);
         border-radius: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 32px;
-        color: #0f172a;
+        color: white;
         margin-bottom: 25px;
-        transition: all 0.3s;
+        transition: transform 0.3s ease;
+        box-shadow: 0 5px 15px rgba(15, 23, 42, 0.2);
     }
 
     .dashboard-main-card:hover .card-icon {
-        background: #0f172a;
-        color: white;
-        transform: scale(1.1);
+        /* Scale effect instead of color change, keeping the gradient */
+        transform: scale(1.1) rotate(5deg);
     }
 
     .dashboard-main-card h3 {
@@ -197,42 +171,7 @@
     .btn {
         width: 100%;
         padding: 14px 24px;
-        border-radius: 12px;
-        font-weight: 600;
-        transition: all 0.3s;
-        text-decoration: none;
-        display: inline-block;
-    }
-
-    .btn-primary {
-        background: #0f172a;
-        color: white;
-        border: none;
-    }
-
-    .btn-primary:hover {
-        background: #1e293b;
-        box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
-    }
-
-    .btn-secondary {
-        background: white;
-        color: #0f172a;
-        border: 2px solid #0f172a;
-    }
-
-    .btn-secondary:hover {
-        background: #f1f5f9;
-    }
-
-    @media (max-width: 768px) {
-        .dashboard-header {
-            padding: 100px 0 40px;
-        }
-
-        .dashboard-header h1 {
-            font-size: 2rem;
-        }
+        /* Inherits font-weight/radius/colors from base_dashboard */
     }
 </style>
 {% endblock %}

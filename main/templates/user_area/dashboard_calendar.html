@@ -1,142 +1,273 @@
-{% extends 'base.html' %}
+{% extends 'user_area/base_dashboard.html' %}
+{% load static %}
 
-{% block title %}Fuar Takvimi - Dashboard{% endblock %}
+{% block title %}Fuar Takvimi - Made in Izmir{% endblock %}
 
-{% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="mb-4">Fuar Takvimi</h1>
+{% block dashboard_title %}
+<span data-i18n="dashboard.expo_calendar">Fuar Takvimi</span>
+{% endblock %}
 
-            <!-- User's Signups -->
-            {% if user_signups %}
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Kayıt Olduğunuz Fuarlar</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Fuar</th>
-                                    <th>Tarih</th>
-                                    <th>Konum</th>
-                                    <th>Ürün Sayısı</th>
-                                    <th>Durum</th>
-                                    <th>Kayıt Tarihi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for signup in user_signups %}
-                                <tr>
-                                    <td><strong>{{ signup.expo.title_tr }}</strong></td>
-                                    <td>{{ signup.expo.start_date|date:"d M Y" }} - {{ signup.expo.end_date|date:"d M Y"
-                                        }}</td>
-                                    <td>{{ signup.expo.location_tr }}</td>
-                                    <td>{{ signup.product_count }}</td>
-                                    <td>
-                                        {% if signup.status == 'pending' %}
-                                        <span class="badge bg-warning">Beklemede</span>
-                                        {% elif signup.status == 'confirmed' %}
-                                        <span class="badge bg-success">Onaylandı</span>
-                                        {% else %}
-                                        <span class="badge bg-danger">İptal Edildi</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ signup.created_at|date:"d M Y" }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
+{% block dashboard_desc %}
+<span data-i18n="dashboard.expo_calendar_desc">Yaklaşan fuarları takip edin ve başvurularınızı yönetin.</span>
+{% endblock %}
 
-            <!-- Upcoming Expos -->
-            <div class="card mb-4">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">Yaklaşan Fuarlar</h5>
-                </div>
-                <div class="card-body">
-                    {% if upcoming_expos %}
-                    <div class="row">
-                        {% for expo in upcoming_expos %}
-                        <div class="col-md-6 col-lg-4 mb-4">
-                            <div class="card h-100 shadow-sm">
-                                {% if expo.image %}
-                                <img src="{{ expo.image.url }}" class="card-img-top" alt="{{ expo.title_tr }}"
-                                    style="height: 200px; object-fit: cover;">
-                                {% endif %}
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ expo.title_tr }}</h5>
-                                    <p class="card-text">{{ expo.description_tr|truncatewords:20 }}</p>
-                                    <ul class="list-unstyled">
-                                        <li><strong>Tarih:</strong> {{ expo.start_date|date:"d M Y" }} - {{
-                                            expo.end_date|date:"d M Y" }}</li>
-                                        <li><strong>Konum:</strong> {{ expo.location_tr }}</li>
-                                        <li><strong>Kayıt Son Tarihi:</strong> {{ expo.registration_deadline|date:"d M
-                                            Y" }}</li>
-                                    </ul>
-                                </div>
-                                <div class="card-footer bg-transparent">
-                                    {% if expo.id in user_signup_expo_ids %}
-                                    <button class="btn btn-secondary w-100" disabled>Kayıt Oldunuz</button>
-                                    {% elif expo.is_registration_open %}
-                                    <a href="{% url 'main:expo_signup' expo.id %}" class="btn btn-primary w-100">Kayıt
-                                        Ol / Bizi Kiralayın</a>
-                                    {% else %}
-                                    <button class="btn btn-warning w-100" disabled>Kayıt Süresi Doldu</button>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    <p class="text-muted">Şu anda yaklaşan fuar bulunmamaktadır.</p>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Past Expos -->
-            {% if past_expos %}
-            <div class="card">
-                <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0">Geçmiş Fuarlar</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Fuar</th>
-                                    <th>Tarih</th>
-                                    <th>Konum</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for expo in past_expos %}
-                                <tr>
-                                    <td>
-                                        <strong>{{ expo.title_tr }}</strong>
-                                        {% if expo.image %}
-                                        <br><img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}"
-                                            style="max-width: 80px; margin-top: 5px;">
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ expo.start_date|date:"d M Y" }} - {{ expo.end_date|date:"d M Y" }}</td>
-                                    <td>{{ expo.location_tr }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
+{% block dashboard_content %}
+<!-- User's Signups -->
+{% if user_signups %}
+<div class="dashboard-card mb-4">
+    <div class="card-header-styled">
+        <h3 class="mb-0"><i class="fas fa-clipboard-check"></i> <span data-i18n="dashboard.my_signups">Kayıt Olduğunuz Fuarlar</span></h3>
+    </div>
+    <div class="card-body-styled">
+        <div class="table-responsive">
+            <table class="table custom-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="dashboard.expo">Fuar</th>
+                        <th data-i18n="dashboard.date">Tarih</th>
+                        <th data-i18n="dashboard.location">Konum</th>
+                        <th data-i18n="dashboard.product_count">Ürün Sayısı</th>
+                        <th data-i18n="dashboard.status">Durum</th>
+                        <th data-i18n="dashboard.registration_date">Kayıt Tarihi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for signup in user_signups %}
+                    <tr>
+                        <td><strong>{{ signup.expo.title_tr }}</strong></td>
+                        <td>{{ signup.expo.start_date|date:"d M Y" }} - {{ signup.expo.end_date|date:"d M Y" }}</td>
+                        <td>{{ signup.expo.location_tr }}</td>
+                        <td>{{ signup.product_count }}</td>
+                        <td>
+                            {% if signup.status == 'pending' %}
+                            <span class="status-badge inactive" data-i18n="dashboard.pending">Beklemede</span>
+                            {% elif signup.status == 'confirmed' %}
+                            <span class="status-badge active" data-i18n="dashboard.approved">Onaylandı</span>
+                            {% else %}
+                            <span class="status-badge canceled" style="background: #dc3545; color: white;">İptal Edildi</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ signup.created_at|date:"d M Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
+{% endif %}
+
+<!-- Upcoming Expos -->
+<div class="dashboard-card mb-4">
+    <div class="card-header-styled">
+        <h3 class="mb-0"><i class="fas fa-calendar-alt"></i> <span data-i18n="dashboard.upcoming_expos">Yaklaşan Fuarlar</span></h3>
+    </div>
+    <div class="card-body-styled">
+        {% if upcoming_expos %}
+        <div class="expos-grid">
+            {% for expo in upcoming_expos %}
+            <div class="expo-card h-100">
+                {% if expo.image %}
+                <div class="expo-image">
+                    <img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}">
+                </div>
+                {% endif %}
+                <div class="expo-content">
+                    <h5>{{ expo.title_tr }}</h5>
+                    <p class="expo-desc">{{ expo.description_tr|truncatewords:20 }}</p>
+                    <ul class="expo-details">
+                        <li><i class="fas fa-calendar"></i> {{ expo.start_date|date:"d M Y" }} - {{
+                            expo.end_date|date:"d M Y" }}</li>
+                        <li><i class="fas fa-map-marker-alt"></i> {{ expo.location_tr }}</li>
+                        <li><i class="fas fa-clock"></i> <strong data-i18n="dashboard.deadline">Son Başvuru:</strong> {{ expo.registration_deadline|date:"d M Y" }}</li>
+                    </ul>
+                </div>
+                <div class="expo-footer">
+                    {% if expo.id in user_signup_expo_ids %}
+                    <button class="btn btn-secondary w-100" disabled data-i18n="dashboard.already_registered">Kayıt Oldunuz</button>
+                    {% elif expo.is_registration_open %}
+                    <a href="{% url 'main:expo_signup' expo.id %}" class="btn btn-dashboard-primary w-100" data-i18n="dashboard.register_expo">Kayıt Ol / Bizi Kiralayın</a>
+                    {% else %}
+                    <button class="btn btn-warning w-100" disabled data-i18n="dashboard.registration_closed">Kayıt Süresi Doldu</button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p class="text-muted" data-i18n="dashboard.no_upcoming_expos">Şu anda yaklaşan fuar bulunmamaktadır.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Past Expos -->
+{% if past_expos %}
+<div class="dashboard-card">
+    <div class="card-header-styled">
+        <h3 class="mb-0"><i class="fas fa-history"></i> <span data-i18n="dashboard.past_expos">Geçmiş Fuarlar</span></h3>
+    </div>
+    <div class="card-body-styled">
+        <div class="table-responsive">
+            <table class="table custom-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="dashboard.expo">Fuar</th>
+                        <th data-i18n="dashboard.date">Tarih</th>
+                        <th data-i18n="dashboard.location">Konum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expo in past_expos %}
+                    <tr>
+                        <td>
+                            <strong>{{ expo.title_tr }}</strong>
+                            {% if expo.image %}
+                            <br><img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}"
+                                style="max-width: 80px; margin-top: 5px; border-radius: 4px;">
+                            {% endif %}
+                        </td>
+                        <td>{{ expo.start_date|date:"d M Y" }} - {{ expo.end_date|date:"d M Y" }}</td>
+                        <td>{{ expo.location_tr }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<style>
+    .card-header-styled {
+        margin-bottom: 20px;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 15px;
+    }
+    
+    .card-header-styled h3 {
+        font-size: 1.5rem;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .card-header-styled i {
+        color: #cca43b;
+    }
+    
+    /* Tables */
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .custom-table th {
+        text-align: left;
+        padding: 12px;
+        background: #f8f9fa;
+        color: #64748b;
+        font-weight: 600;
+        border-bottom: 2px solid #e9ecef;
+    }
+    
+    .custom-table td {
+        padding: 12px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+        color: #333;
+    }
+    
+    .custom-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    /* Expos Grid */
+    .expos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+    }
+    
+    .expo-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .expo-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+    
+    .expo-image {
+        height: 180px;
+        background: #f1f5f9;
+        overflow: hidden;
+    }
+    
+    .expo-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .expo-content {
+        padding: 20px;
+        flex-grow: 1;
+    }
+    
+    .expo-content h5 {
+        font-size: 1.25rem;
+        margin-bottom: 10px;
+        color: #0f172a;
+        font-weight: 600;
+    }
+    
+    .expo-desc {
+        color: #64748b;
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+    }
+    
+    .expo-details {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        font-size: 0.9rem;
+        color: #475569;
+    }
+    
+    .expo-details li {
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .expo-details i {
+        color: #cca43b;
+        width: 16px;
+    }
+    
+    .expo-footer {
+        padding: 15px 20px;
+        background: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #94a3b8;
+    }
+    
+    .mb-4 { margin-bottom: 1.5rem; }
+    .w-100 { width: 100%; }
+</style>
 {% endblock %}
