@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import SignUpForm, CustomLoginForm, ProductForm, ExpoSignupForm
-from .models import Product, ProductTag, ProductRequest, Expo, ExpoSignup
+from .models import Product, ProductTag, ProductRequest, Expo, ExpoSignup, UserProfile, Sector
 
 
 def index(request):
@@ -133,24 +133,89 @@ def producer_dashboard_view(request):
             messages.error(request, 'Bu sayfaya erişim yetkiniz yok.')
             return redirect('main:dashboard')
         
-        # Get producer's products
-        products = Product.objects.filter(producer=request.user).order_by('-created_at')
+        # Get filter parameters
+        status_filter = request.GET.get('status')
+        tag_filter = request.GET.get('tag')
+        sector_filter = request.GET.get('sector')
         
-        # Get pending product requests
-        pending_products_count = ProductRequest.objects.filter(producer=request.user, status='pending').count()
+        # Get base querysets
+        products_qs = Product.objects.filter(producer=request.user)
+        requests_qs = ProductRequest.objects.filter(producer=request.user, status='pending')
+        
+        # Determine available tags and sectors for the producer (for dropdowns)
+        prod_product_tag_ids = products_qs.values_list('tags', flat=True)
+        prod_request_tag_ids_str = requests_qs.values_list('tags_ids', flat=True)
+        
+        all_prod_tag_ids = set(tid for tid in prod_product_tag_ids if tid)
+        for tags_str in prod_request_tag_ids_str:
+            if tags_str:
+                all_prod_tag_ids.update(int(tid) for tid in tags_str.split(',') if tid.strip().isdigit())
+        
+        available_tags = ProductTag.objects.filter(id__in=all_prod_tag_ids).distinct()
+        
+        prod_product_sector_ids = products_qs.values_list('sector_id', flat=True)
+        prod_request_sector_ids = requests_qs.values_list('sector_id', flat=True)
+        all_prod_sector_ids = set(sid for sid in prod_product_sector_ids if sid) | set(sid for sid in prod_request_sector_ids if sid)
+        
+        available_sectors = Sector.objects.filter(id__in=all_prod_sector_ids).distinct()
+
+        # Apply filters to querysets
+        if status_filter == 'active':
+            products_qs = products_qs.filter(is_active=True)
+            requests_qs = requests_qs.none()
+        elif status_filter == 'passive':
+            products_qs = products_qs.filter(is_active=False)
+            requests_qs = requests_qs.none()
+        elif status_filter == 'pending':
+            products_qs = products_qs.none()
+        
+        if sector_filter:
+            products_qs = products_qs.filter(sector_id=sector_filter)
+            requests_qs = requests_qs.filter(sector_id=sector_filter)
+        
+        if tag_filter:
+            products_qs = products_qs.filter(tags__id=tag_filter)
+            # For requests, we filter the list later
+            tag_id_str = str(tag_filter)
+            request_list = [r for r in requests_qs if tag_id_str in (r.tags_ids or '').split(',')]
+        else:
+            request_list = list(requests_qs)
+
+        # Unify Products and Requests
+        display_items = list(products_qs)
+        for req in request_list:
+            req.is_pending = True
+            display_items.append(req)
+        
+        # Sort by creation date
+        display_items.sort(key=lambda x: x.created_at, reverse=True)
+        
+        # Stats (unfiltered for the stats cards)
+        unfiltered_products = Product.objects.filter(producer=request.user)
+        pending_count = ProductRequest.objects.filter(producer=request.user, status='pending').count()
         
         context = {
             'profile': profile,
-            'products': products,
-            'total_products': products.count(),
-            'active_products': products.filter(is_active=True).count(),
-            'pending_products_count': pending_products_count,
+            'products': display_items,
+            'total_products': unfiltered_products.count(),
+            'active_products': unfiltered_products.filter(is_active=True).count(),
+            'pending_products_count': pending_count,
+            'available_tags': available_tags,
+            'available_sectors': available_sectors,
+            'current_filters': {
+                'status': status_filter,
+                'tag': tag_filter,
+                'sector': sector_filter,
+            }
         }
         
         return render(request, 'user_area/producer_dashboard.html', context)
-    except:
+    except UserProfile.DoesNotExist:
         messages.error(request, 'Profil bilgileriniz bulunamadı.')
         return redirect('main:index')
+    except Exception as e:
+        messages.error(request, f'Sistem hatası: {str(e)}')
+        return redirect('main:dashboard')
 
 
 @login_required

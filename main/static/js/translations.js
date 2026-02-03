@@ -211,7 +211,13 @@ const translations = {
             go_to_calendar: "Takvime Git",
             go_to_profile: "Profilimi Düzenle",
             expo_calendar: "Fuar Takvimi",
-            pending_products: "Onay Bekleyen Ürünler"
+            pending_products: "Onay Bekleyen Ürünler",
+            filter_status: "Durum Filtrele",
+            filter_tag: "Etikete Göre Filtrele",
+            filter_sector: "Sektöre Göre Filtrele",
+            all: "Hepsi",
+            apply_filter: "Filtrele",
+            waiting_approval: "Onay Bekleyenler"
         }
     },
     en: {
@@ -426,7 +432,13 @@ const translations = {
             go_to_calendar: "Go to Calendar",
             go_to_profile: "Edit My Profile",
             expo_calendar: "Expo Calendar",
-            pending_products: "Pending Products"
+            pending_products: "Pending Products",
+            filter_status: "Filter by Status",
+            filter_tag: "Filter by Tag",
+            filter_sector: "Filter by Sector",
+            all: "All",
+            apply_filter: "Filter",
+            waiting_approval: "Waiting Approval"
         }
     }
 };

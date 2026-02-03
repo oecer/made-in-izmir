@@ -60,13 +60,61 @@
 </div>
 
 <!-- Products List -->
-<div class="products-section dashboard-card">
-    <h2 data-i18n="dashboard.my_products">Ürünlerim</h2>
+<div class="products-section dashboard-card mb-5">
+    <div class="section-title-area animate-fade-up">
+        <h2 data-i18n="dashboard.my_products">Ürünlerim</h2>
+        <div class="filter-toolbar">
+            <form id="filter-form" method="GET" class="filter-form-inline">
+                <div class="filter-group">
+                    <div class="filter-icon"><i class="fas fa-stream"></i></div>
+                    <select name="status" onchange="this.form.submit()" class="filter-select">
+                        <option value="" data-i18n="dashboard.filter_status">Durum</option>
+                        <option value="all" {% if current_filters.status == 'all' %}selected{% endif %} data-i18n="dashboard.all">Hepsi</option>
+                        <option value="active" {% if current_filters.status == 'active' %}selected{% endif %} data-i18n="dashboard.active">Aktif</option>
+                        <option value="passive" {% if current_filters.status == 'passive' %}selected{% endif %} data-i18n="dashboard.passive">Pasif</option>
+                        <option value="pending" {% if current_filters.status == 'pending' %}selected{% endif %} data-i18n="dashboard.waiting_approval">Onay Bekleyenler</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <div class="filter-icon"><i class="fas fa-industry"></i></div>
+                    <select name="sector" onchange="this.form.submit()" class="filter-select">
+                        <option value="" data-i18n="dashboard.filter_sector">Sektör</option>
+                        <option value="" data-i18n="dashboard.all">Hepsi</option>
+                        {% for sector in available_sectors %}
+                        <option value="{{ sector.id }}" {% if current_filters.sector == sector.id|stringformat:"i" %}selected{% endif %}>
+                            {{ sector.name_tr }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <div class="filter-icon"><i class="fas fa-tags"></i></div>
+                    <select name="tag" onchange="this.form.submit()" class="filter-select">
+                        <option value="" data-i18n="dashboard.filter_tag">Etiket</option>
+                        <option value="" data-i18n="dashboard.all">Hepsi</option>
+                        {% for tag in available_tags %}
+                        <option value="{{ tag.id }}" {% if current_filters.tag == tag.id|stringformat:"i" %}selected{% endif %}>
+                            {{ tag.name_tr }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                {% if current_filters.status or current_filters.sector or current_filters.tag %}
+                <a href="{% url 'main:producer_dashboard' %}" class="filter-reset" title="Temizle">
+                    <i class="fas fa-times-circle"></i>
+                </a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
 
     {% if products %}
     <div class="products-grid">
         {% for product in products %}
-        <div class="product-card {% if not product.is_active %}inactive{% endif %}">
+        <div class="product-card {% if product.is_pending %}pending{% elif not product.is_active %}inactive{% endif %} animate-fade-up">
             <div class="product-image">
                 {% if product.photo1 %}
                 <img src="{{ product.photo1.url }}" alt="{{ product.title_tr|default:product.title_en }}">
@@ -75,7 +123,10 @@
                     <i class="fas fa-image"></i>
                 </div>
                 {% endif %}
-                {% if not product.is_active %}
+                
+                {% if product.is_pending %}
+                <span class="status-badge pending" data-i18n="dashboard.waiting_approval">Onay Bekliyor</span>
+                {% elif not product.is_active %}
                 <span class="status-badge inactive" data-i18n="dashboard.passive">Pasif</span>
                 {% else %}
                 <span class="status-badge active" data-i18n="dashboard.active">Aktif</span>
@@ -94,7 +145,7 @@
                 {% endif %}
 
                 <div class="product-tags">
-                    {% for tag in product.tags.all %}
+                    {% for tag in product.get_tags %}
                     <span class="tag" data-tr="{{ tag.name_tr }}" data-en="{{ tag.name_en }}">
                         {{ tag.name_tr }}
                     </span>
@@ -102,15 +153,21 @@
                 </div>
 
                 <div class="product-actions">
-                    <a href="{% url 'main:product_detail' product.id %}" class="btn btn-sm btn-info">
-                        <i class="fas fa-eye"></i> <span data-i18n="dashboard.details">Görüntüle</span>
-                    </a>
-                    <a href="{% url 'main:edit_product' product.id %}" class="btn btn-sm btn-warning">
-                        <i class="fas fa-edit"></i> <span data-i18n="dashboard.edit">Düzenle</span>
-                    </a>
-                    <a href="{% url 'main:delete_product' product.id %}" class="btn btn-sm btn-danger">
-                        <i class="fas fa-trash"></i> <span data-i18n="dashboard.delete">Sil</span>
-                    </a>
+                    {% if not product.is_pending %}
+                        <a href="{% url 'main:product_detail' product.id %}" class="btn btn-sm btn-info">
+                            <i class="fas fa-eye"></i> <span data-i18n="dashboard.details">Görüntüle</span>
+                        </a>
+                        <a href="{% url 'main:edit_product' product.id %}" class="btn btn-sm btn-warning">
+                            <i class="fas fa-edit"></i> <span data-i18n="dashboard.edit">Düzenle</span>
+                        </a>
+                        <a href="{% url 'main:delete_product' product.id %}" class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash"></i> <span data-i18n="dashboard.delete">Sil</span>
+                        </a>
+                    {% else %}
+                        <div class="pending-notice text-muted small mt-2">
+                            <i class="fas fa-hourglass-half"></i> <span data-i18n="dashboard.product_request_pending">Onay Sürecinde</span>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -165,6 +222,13 @@
         font-size: 24px;
     }
 
+    .section-title-area h2 {
+        font-size: 1.8rem;
+        margin: 0;
+        color: #1e293b;
+        font-weight: 700;
+    }
+    
     .stat-info h3 {
         font-size: 2rem;
         margin: 0;
@@ -297,15 +361,157 @@
         margin-top: auto;
     }
 
+    .products-section {
+        margin-top: 60px;
+    }
+
+    .section-title-area {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        gap: 20px;
+        border-bottom: 1px solid #f1f5f9;
+        padding-bottom: 25px;
+    }
+
+    .filter-toolbar {
+        background: #f8fafc;
+        padding: 5px;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .filter-group {
+        background: white;
+    }
+
+    .filter-form-inline {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .filter-group {
+        display: flex;
+        align-items: center;
+        background: #f8fafc;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+    .filter-group:hover, .filter-group:focus-within {
+        border-color: #cca43b;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(204, 164, 59, 0.1);
+    }
+
+    .filter-icon {
+        padding: 0 12px;
+        color: #94a3b8;
+        font-size: 14px;
+        border-right: 1px solid #e2e8f0;
+    }
+
+    .filter-select {
+        border: none;
+        background: transparent;
+        padding: 10px 15px;
+        color: #475569;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        min-width: 140px;
+        outline: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 16px;
+        padding-right: 35px;
+    }
+
+    .filter-reset {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        color: #ef4444;
+        font-size: 20px;
+        transition: transform 0.3s ease;
+        text-decoration: none;
+    }
+
+    .filter-reset:hover {
+        transform: rotate(90deg);
+        color: #dc2626;
+    }
+
+    /* Keep existing product card styles but ensure grid is solid */
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 30px;
+    }
+
+    @media (max-width: 992px) {
+        .filter-form-inline {
+            flex-wrap: wrap;
+        }
+        .filter-group {
+            flex: 1;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .section-title-area {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    /* Rest of the original btn styles */
     .btn-sm {
         padding: 6px 12px;
         font-size: 14px;
         border-radius: 6px;
     }
     
-    .btn-info { background: #17a2b8; color: white; border: none; }
-    .btn-warning { background: #ffc107; color: #333; border: none; }
-    .btn-danger { background: #dc3545; color: white; border: none; }
+    .btn-info { background: #0ea5e9; color: white; border: none; }
+    .btn-warning { background: #f59e0b; color: white; border: none; }
+    .btn-danger { background: #ef4444; color: white; border: none; }
+
+    .btn-info:hover { background: #0284c7; color: white; }
+    .btn-warning:hover { background: #d97706; color: white; }
+    .btn-danger:hover { background: #dc2626; color: white; }
+
+    .product-card.pending {
+        border-color: #fef3c7;
+        background-color: #fffbeb;
+    }
+
+    .status-badge.pending {
+        background: #f59e0b;
+        color: white;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .pending-notice {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px;
+        background: rgba(245, 158, 11, 0.05);
+        border-radius: 8px;
+        border: 1px dashed #f59e0b;
+    }
     
     .empty-state {
         text-align: center;

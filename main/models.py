@@ -318,6 +318,10 @@ class Product(models.Model):
     def __str__(self):
         return self.title_tr or self.title_en or f"Product #{self.id}"
     
+    def get_tags(self):
+        """Get tags as queryset - added for consistency with ProductRequest"""
+        return self.tags.all()
+    
     def clean(self):
         """Validate that at least one title is provided"""
         from django.core.exceptions import ValidationError
