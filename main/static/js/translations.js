@@ -210,7 +210,8 @@ const translations = {
             go_to_buyer: "Alıcı Paneline Git",
             go_to_calendar: "Takvime Git",
             go_to_profile: "Profilimi Düzenle",
-            expo_calendar: "Fuar Takvimi"
+            expo_calendar: "Fuar Takvimi",
+            pending_products: "Onay Bekleyen Ürünler"
         }
     },
     en: {
@@ -424,7 +425,8 @@ const translations = {
             go_to_buyer: "Go to Buyer Dashboard",
             go_to_calendar: "Go to Calendar",
             go_to_profile: "Edit My Profile",
-            expo_calendar: "Expo Calendar"
+            expo_calendar: "Expo Calendar",
+            pending_products: "Pending Products"
         }
     }
 };

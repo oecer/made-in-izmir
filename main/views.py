@@ -136,11 +136,15 @@ def producer_dashboard_view(request):
         # Get producer's products
         products = Product.objects.filter(producer=request.user).order_by('-created_at')
         
+        # Get pending product requests
+        pending_products_count = ProductRequest.objects.filter(producer=request.user, status='pending').count()
+        
         context = {
             'profile': profile,
             'products': products,
             'total_products': products.count(),
             'active_products': products.filter(is_active=True).count(),
+            'pending_products_count': pending_products_count,
         }
         
         return render(request, 'user_area/producer_dashboard.html', context)
