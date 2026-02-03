@@ -12,9 +12,6 @@
 {% endblock %}
 
 {% block dashboard_header_actions %}
-<a href="{% url 'main:add_product' %}" class="btn btn-dashboard-primary">
-    <i class="fas fa-plus"></i> <span data-i18n="dashboard.add_new_product">Yeni Ürün Ekle</span>
-</a>
 {% endblock %}
 
 {% block dashboard_content %}
@@ -25,7 +22,7 @@
             <i class="fas fa-boxes"></i>
         </div>
         <div class="stat-info">
-            <h3 data-label="total_products">{{ products.count }}</h3>
+            <h3 data-label="total_products">{{ total_products }}</h3>
             <p data-i18n="dashboard.total_products">Toplam Ürün</p>
         </div>
     </div>
@@ -49,8 +46,14 @@
     </div>
 </div>
 
-<!-- Secondary Actions -->
-<div class="dashboard-actions mb-5">
+<!-- Secondary Actions (Quick Links) -->
+<div class="quick-links-title mb-3">
+    <h3 data-i18n="dashboard.quick_links" style="font-size: 1.2rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Hızlı Bağlantılar</h3>
+</div>
+<div class="dashboard-actions mt-5 mb-5">
+    <a href="{% url 'main:add_product' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> <span data-i18n="dashboard.add_new_product">Yeni Ürün Ekle</span>
+    </a>
     <a href="{% url 'main:profile' %}" class="btn btn-secondary">
         <i class="fas fa-user"></i> <span data-i18n="dashboard.view_profile">Profili Görüntüle</span>
     </a>

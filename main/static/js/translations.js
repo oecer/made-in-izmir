@@ -217,7 +217,8 @@ const translations = {
             filter_sector: "Sektöre Göre Filtrele",
             all: "Hepsi",
             apply_filter: "Filtrele",
-            waiting_approval: "Onay Bekleyenler"
+            waiting_approval: "Onay Bekleyenler",
+            quick_links: "Hızlı Bağlantılar"
         }
     },
     en: {
@@ -438,7 +439,8 @@ const translations = {
             filter_sector: "Filter by Sector",
             all: "All",
             apply_filter: "Filter",
-            waiting_approval: "Waiting Approval"
+            waiting_approval: "Waiting Approval",
+            quick_links: "Quick Links"
         }
     }
 };

@@ -209,7 +209,7 @@ def producer_dashboard_view(request):
         context = {
             'profile': profile,
             'products': display_items,
-            'total_products': unfiltered_products.count(),
+            'total_products': unfiltered_products.count() + pending_count,
             'active_products': unfiltered_products.filter(is_active=True).count(),
             'pending_products_count': pending_count,
             'available_tags': available_tags,
