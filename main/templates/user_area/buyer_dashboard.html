@@ -90,7 +90,6 @@
                 </div>
                 {% endif %}
 
-                {% if product.tags.all %}
                 <div class="product-tags">
                     {% for tag in product.tags.all %}
                     <span class="tag" data-tr="{{ tag.name_tr }}" data-en="{{ tag.name_en }}">
@@ -98,7 +97,6 @@
                     </span>
                     {% endfor %}
                 </div>
-                {% endif %}
 
                 <div class="product-actions">
                     <a href="{% url 'main:product_detail' product.id %}" class="btn btn-sm btn-dashboard-primary">
@@ -176,6 +174,9 @@
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         border: 2px solid #e9ecef;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
     }
 
     .product-card:hover {
@@ -197,7 +198,12 @@
         font-size: 48px; color: #adb5bd; height: 100%;
     }
 
-    .product-info { padding: 20px; }
+    .product-info { 
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
     .product-info h3 { margin: 0 0 10px; color: #333; font-size: 1.2rem; }
     
     .product-producer {
@@ -209,14 +215,25 @@
     }
     .product-sector i { color: #cca43b; font-size: 0.8rem; }
     
-    .product-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
+    .product-tags { 
+        display: flex; 
+        gap: 8px; 
+        flex-wrap: wrap; 
+        margin-bottom: 15px; 
+        min-height: 26px;
+    }
     
     .tag {
         background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
         color: white; padding: 4px 12px; border-radius: 15px; font-size: 12px;
     }
     
-    .product-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .product-actions { 
+        display: flex; 
+        gap: 8px; 
+        flex-wrap: wrap; 
+        margin-top: auto;
+    }
     .btn-sm { padding: 6px 12px; font-size: 14px; }
     
     .empty-state { text-align: center; padding: 60px 20px; color: #666; }

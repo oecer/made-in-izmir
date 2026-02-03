@@ -93,7 +93,6 @@
                 </div>
                 {% endif %}
 
-                {% if product.tags.all %}
                 <div class="product-tags">
                     {% for tag in product.tags.all %}
                     <span class="tag" data-tr="{{ tag.name_tr }}" data-en="{{ tag.name_en }}">
@@ -101,7 +100,6 @@
                     </span>
                     {% endfor %}
                 </div>
-                {% endif %}
 
                 <div class="product-actions">
                     <a href="{% url 'main:product_detail' product.id %}" class="btn btn-sm btn-info">
@@ -201,6 +199,9 @@
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         border: 2px solid #e9ecef;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
     }
 
     .product-card.inactive {
@@ -243,6 +244,9 @@
 
     .product-info {
         padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
     }
 
     .product-info h3 {
@@ -270,6 +274,7 @@
         gap: 8px;
         flex-wrap: wrap;
         margin-bottom: 15px;
+        min-height: 26px;
     }
 
     .tag {
@@ -284,6 +289,7 @@
         display: flex;
         gap: 8px;
         flex-wrap: wrap;
+        margin-top: auto;
     }
 
     .btn-sm {
