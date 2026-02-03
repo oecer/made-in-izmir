@@ -133,10 +133,10 @@ def producer_dashboard_view(request):
             messages.error(request, 'Bu sayfaya erişim yetkiniz yok.')
             return redirect('main:dashboard')
         
-        # Get filter parameters
-        status_filter = request.GET.get('status')
-        tag_filter = request.GET.get('tag')
-        sector_filter = request.GET.get('sector')
+        # Get filter parameters (support multiple values)
+        status_filters = request.GET.getlist('status')
+        tag_filters = [t for t in request.GET.getlist('tag') if t]
+        sector_filters = [s for s in request.GET.getlist('sector') if s]
         
         # Get base querysets
         products_qs = Product.objects.filter(producer=request.user)
@@ -159,25 +159,37 @@ def producer_dashboard_view(request):
         
         available_sectors = Sector.objects.filter(id__in=all_prod_sector_ids).distinct()
 
-        # Apply filters to querysets
-        if status_filter == 'active':
-            products_qs = products_qs.filter(is_active=True)
-            requests_qs = requests_qs.none()
-        elif status_filter == 'passive':
-            products_qs = products_qs.filter(is_active=False)
-            requests_qs = requests_qs.none()
-        elif status_filter == 'pending':
-            products_qs = products_qs.none()
+        # Apply Status Filters
+        if status_filters:
+            has_active = 'active' in status_filters
+            has_passive = 'passive' in status_filters
+            has_pending = 'pending' in status_filters
+            
+            if not has_pending:
+                requests_qs = requests_qs.none()
+            
+            if has_active and not has_passive:
+                products_qs = products_qs.filter(is_active=True)
+            elif has_passive and not has_active:
+                products_qs = products_qs.filter(is_active=False)
+            elif not has_active and not has_passive:
+                products_qs = products_qs.none()
         
-        if sector_filter:
-            products_qs = products_qs.filter(sector_id=sector_filter)
-            requests_qs = requests_qs.filter(sector_id=sector_filter)
+        # Apply Sector Filters
+        if sector_filters:
+            products_qs = products_qs.filter(sector_id__in=sector_filters)
+            requests_qs = requests_qs.filter(sector_id__in=sector_filters)
         
-        if tag_filter:
-            products_qs = products_qs.filter(tags__id=tag_filter)
-            # For requests, we filter the list later
-            tag_id_str = str(tag_filter)
-            request_list = [r for r in requests_qs if tag_id_str in (r.tags_ids or '').split(',')]
+        # Apply Tag Filters
+        if tag_filters:
+            products_qs = products_qs.filter(tags__id__in=tag_filters).distinct()
+            # For requests, filter the list: check if any of the selected tags match the request's tags
+            selected_tag_set = set(str(t) for t in tag_filters)
+            request_list = []
+            for r in requests_qs:
+                r_tags = (r.tags_ids or '').split(',')
+                if any(t.strip() in selected_tag_set for t in r_tags if t.strip()):
+                    request_list.append(r)
         else:
             request_list = list(requests_qs)
 
@@ -203,9 +215,9 @@ def producer_dashboard_view(request):
             'available_tags': available_tags,
             'available_sectors': available_sectors,
             'current_filters': {
-                'status': status_filter,
-                'tag': tag_filter,
-                'sector': sector_filter,
+                'status': status_filters,
+                'tag': tag_filters,
+                'sector': sector_filters,
             }
         }
         

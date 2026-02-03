@@ -65,41 +65,61 @@
         <h2 data-i18n="dashboard.my_products">Ürünlerim</h2>
         <div class="filter-toolbar">
             <form id="filter-form" method="GET" class="filter-form-inline">
-                <div class="filter-group">
+                <!-- Status Multiselect -->
+                <div class="filter-group ms-dropdown" id="status-ms">
                     <div class="filter-icon"><i class="fas fa-stream"></i></div>
-                    <select name="status" onchange="this.form.submit()" class="filter-select">
-                        <option value="" data-i18n="dashboard.filter_status">Durum</option>
-                        <option value="all" {% if current_filters.status == 'all' %}selected{% endif %} data-i18n="dashboard.all">Hepsi</option>
-                        <option value="active" {% if current_filters.status == 'active' %}selected{% endif %} data-i18n="dashboard.active">Aktif</option>
-                        <option value="passive" {% if current_filters.status == 'passive' %}selected{% endif %} data-i18n="dashboard.passive">Pasif</option>
-                        <option value="pending" {% if current_filters.status == 'pending' %}selected{% endif %} data-i18n="dashboard.waiting_approval">Onay Bekleyenler</option>
-                    </select>
+                    <div class="ms-toggle">
+                        <span data-i18n="dashboard.filter_status">Durum</span>
+                        {% if current_filters.status %}<span class="badge ms-count">{{ current_filters.status|length }}</span>{% endif %}
+                    </div>
+                    <div class="ms-menu">
+                        <label class="ms-option">
+                            <input type="checkbox" name="status" value="active" {% if 'active' in current_filters.status %}checked{% endif %}>
+                            <span data-i18n="dashboard.active">Aktif</span>
+                        </label>
+                        <label class="ms-option">
+                            <input type="checkbox" name="status" value="passive" {% if 'passive' in current_filters.status %}checked{% endif %}>
+                            <span data-i18n="dashboard.passive">Pasif</span>
+                        </label>
+                        <label class="ms-option">
+                            <input type="checkbox" name="status" value="pending" {% if 'pending' in current_filters.status %}checked{% endif %}>
+                            <span data-i18n="dashboard.waiting_approval">Onay Bekleyenler</span>
+                        </label>
+                    </div>
                 </div>
                 
-                <div class="filter-group">
+                <!-- Sector Multiselect -->
+                <div class="filter-group ms-dropdown" id="sector-ms">
                     <div class="filter-icon"><i class="fas fa-industry"></i></div>
-                    <select name="sector" onchange="this.form.submit()" class="filter-select">
-                        <option value="" data-i18n="dashboard.filter_sector">Sektör</option>
-                        <option value="" data-i18n="dashboard.all">Hepsi</option>
+                    <div class="ms-toggle">
+                        <span data-i18n="dashboard.filter_sector">Sektör</span>
+                        {% if current_filters.sector %}<span class="badge ms-count">{{ current_filters.sector|length }}</span>{% endif %}
+                    </div>
+                    <div class="ms-menu">
                         {% for sector in available_sectors %}
-                        <option value="{{ sector.id }}" {% if current_filters.sector == sector.id|stringformat:"i" %}selected{% endif %}>
-                            {{ sector.name_tr }}
-                        </option>
+                        <label class="ms-option">
+                            <input type="checkbox" name="sector" value="{{ sector.id }}" {% if sector.id|stringformat:"i" in current_filters.sector %}checked{% endif %}>
+                            <span>{{ sector.name_tr }}</span>
+                        </label>
                         {% endfor %}
-                    </select>
+                    </div>
                 </div>
                 
-                <div class="filter-group">
+                <!-- Tag Multiselect -->
+                <div class="filter-group ms-dropdown" id="tag-ms">
                     <div class="filter-icon"><i class="fas fa-tags"></i></div>
-                    <select name="tag" onchange="this.form.submit()" class="filter-select">
-                        <option value="" data-i18n="dashboard.filter_tag">Etiket</option>
-                        <option value="" data-i18n="dashboard.all">Hepsi</option>
+                    <div class="ms-toggle">
+                        <span data-i18n="dashboard.filter_tag">Etiket</span>
+                        {% if current_filters.tag %}<span class="badge ms-count">{{ current_filters.tag|length }}</span>{% endif %}
+                    </div>
+                    <div class="ms-menu">
                         {% for tag in available_tags %}
-                        <option value="{{ tag.id }}" {% if current_filters.tag == tag.id|stringformat:"i" %}selected{% endif %}>
-                            {{ tag.name_tr }}
-                        </option>
+                        <label class="ms-option">
+                            <input type="checkbox" name="tag" value="{{ tag.id }}" {% if tag.id|stringformat:"i" in current_filters.tag %}checked{% endif %}>
+                            <span>{{ tag.name_tr }}</span>
+                        </label>
                         {% endfor %}
-                    </select>
+                    </div>
                 </div>
                 
                 {% if current_filters.status or current_filters.sector or current_filters.tag %}
@@ -365,6 +385,13 @@
         margin-top: 60px;
     }
 
+    /* Fix: Allow dropdowns to overflow the white card */
+    .products-section.dashboard-card {
+        overflow: visible !important;
+        position: relative;
+        z-index: 10;
+    }
+
     .section-title-area {
         display: flex;
         justify-content: space-between;
@@ -374,13 +401,17 @@
         gap: 20px;
         border-bottom: 1px solid #f1f5f9;
         padding-bottom: 25px;
+        position: relative;
+        z-index: 20; /* Ensure header is above grid */
     }
 
     .filter-toolbar {
         background: #f8fafc;
-        padding: 5px;
-        border-radius: 10px;
+        padding: 6px;
+        border-radius: 12px;
         border: 1px solid #e2e8f0;
+        position: relative;
+        z-index: 30;
     }
 
     .filter-group {
@@ -402,10 +433,9 @@
         transition: all 0.3s ease;
     }
 
-    .filter-group:hover, .filter-group:focus-within {
+    .filter-group:hover {
         border-color: #cca43b;
         background: white;
-        box-shadow: 0 0 0 3px rgba(204, 164, 59, 0.1);
     }
 
     .filter-icon {
@@ -415,22 +445,91 @@
         border-right: 1px solid #e2e8f0;
     }
 
-    .filter-select {
-        border: none;
-        background: transparent;
+    .filter-group.ms-dropdown {
+        position: relative;
+        cursor: pointer;
+        padding-right: 40px !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+        min-width: 180px;
+    }
+
+    .filter-group.ms-dropdown.active {
+        z-index: 100; /* Active dropdown must be highest */
+    }
+
+    .ms-toggle {
         padding: 10px 15px;
         color: #475569;
         font-size: 14px;
         font-weight: 500;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .ms-count {
+        background: #cca43b !important;
+        color: white;
+        margin-left: 8px;
+        font-size: 10px;
+        padding: 3px 6px;
+        border-radius: 10px;
+    }
+
+    .ms-menu {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        min-width: 240px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); /* Stronger shadow for depth */
+        z-index: 500; /* High z-index to clear product cards */
+        padding: 8px;
+        display: none;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .ms-dropdown.active .ms-menu {
+        display: block;
+        animation: slideDown 0.2s ease;
+    }
+
+    .ms-option {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        border-radius: 6px;
         cursor: pointer;
-        min-width: 140px;
-        outline: none;
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 10px center;
-        background-size: 16px;
-        padding-right: 35px;
+        transition: background 0.2s;
+        margin: 0;
+        font-size: 14px;
+        color: #475569;
+        white-space: nowrap;
+    }
+
+    .ms-option:hover {
+        background: #f1f5f9;
+        color: #1e293b;
+    }
+
+    .ms-option input[type="checkbox"] {
+        margin-right: 12px;
+        width: 16px;
+        height: 16px;
+        accent-color: #cca43b;
+        cursor: pointer;
+    }
+
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     .filter-reset {
@@ -534,4 +633,64 @@
         margin-bottom: 30px;
     }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dropdowns = document.querySelectorAll('.ms-dropdown');
+        const form = document.getElementById('filter-form');
+
+        dropdowns.forEach(dropdown => {
+            // Track if changes were made while open
+            dropdown.dataset.changed = "false";
+            
+            dropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                const isActive = dropdown.classList.contains('active');
+                
+                // Close all dropdowns
+                dropdowns.forEach(d => {
+                    if (d.classList.contains('active') && d !== dropdown) {
+                        closeDropdown(d);
+                    }
+                });
+
+                if (!isActive) {
+                    dropdown.classList.add('active');
+                    dropdown.dataset.changed = "false"; // Reset change tracker when opening
+                } else {
+                    closeDropdown(dropdown);
+                }
+            });
+
+            // Track changes to checkboxes
+            dropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', () => {
+                    dropdown.dataset.changed = "true";
+                });
+            });
+        });
+
+        function closeDropdown(dropdown) {
+            if (!dropdown.classList.contains('active')) return;
+            
+            dropdown.classList.remove('active');
+            
+            // Apply filters ONLY if something changed while it was open
+            if (dropdown.dataset.changed === "true") {
+                form.submit();
+            }
+        }
+
+        // Global click to close
+        document.addEventListener('click', () => {
+            dropdowns.forEach(d => closeDropdown(d));
+        });
+
+        // Prevent dropdown menu clicks from bubbling up to document
+        document.querySelectorAll('.ms-menu').forEach(menu => {
+            menu.addEventListener('click', (e) => e.stopPropagation());
+        });
+    });
+</script>
 {% endblock %}
