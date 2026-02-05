@@ -76,8 +76,7 @@
                     <h5>{{ expo.title_tr }}</h5>
                     <p class="expo-desc">{{ expo.description_tr|truncatewords:20 }}</p>
                     <ul class="expo-details">
-                        <li><i class="fas fa-calendar"></i> {{ expo.start_date|date:"d M Y" }} - {{
-                            expo.end_date|date:"d M Y" }}</li>
+                        <li><i class="fas fa-calendar"></i> {{ expo.start_date|date:"d M Y" }} - {{ expo.end_date|date:"d M Y" }}</li>
                         <li><i class="fas fa-map-marker-alt"></i> {{ expo.location_tr }}</li>
                         <li><i class="fas fa-clock"></i> <strong data-i18n="dashboard.deadline">Son Başvuru:</strong> {{ expo.registration_deadline|date:"d M Y" }}</li>
                     </ul>
@@ -86,7 +85,7 @@
                     {% if expo.id in user_signup_expo_ids %}
                     <button class="btn btn-secondary w-100" disabled data-i18n="dashboard.already_registered">Kayıt Oldunuz</button>
                     {% elif expo.is_registration_open %}
-                    <a href="{% url 'main:expo_signup' expo.id %}" class="btn btn-dashboard-primary w-100" data-i18n="dashboard.register_expo">Kayıt Ol / Bizi Kiralayın</a>
+                    <a href="{% url 'main:expo_signup' expo.id %}" class="btn btn-dashboard-primary w-100" data-i18n="dashboard.register_expo">Başvurunuzu Yapın</a>
                     {% else %}
                     <button class="btn btn-warning w-100" disabled data-i18n="dashboard.registration_closed">Kayıt Süresi Doldu</button>
                     {% endif %}

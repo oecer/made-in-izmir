@@ -382,7 +382,7 @@ class ExpoSignupForm(forms.ModelForm):
         required=True,
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Kaç ürün göndermek istiyorsunuz?'
+            'placeholder': 'Kaç ürün sergilemek istiyorsunuz?'
         }),
         label='Ürün Sayısı'
     )
@@ -410,7 +410,7 @@ class ExpoSignupForm(forms.ModelForm):
         required=False,
         widget=forms.Textarea(attrs={
             'class': 'form-control',
-            'placeholder': 'Fuara göndermek istediğiniz ürünleri açıklayın...',
+            'placeholder': 'Fuarda sergilemek istediğiniz ürünleri açıklayın...',
             'rows': 4,
             'id': 'product_description'
         }),
