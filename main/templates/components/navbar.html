@@ -21,7 +21,7 @@
                 <li><a href="{% url 'main:dashboard_calendar' %}" data-i18n="nav.dashboard_calendar">Fuar Takvimi</a>
                 </li>
                 <li><a href="{% url 'main:profile' %}" data-i18n="nav.profile">Profilim</a></li>
-                <li><a href="{% url 'main:logout' %}" data-i18n="nav.logout" class="btn-logout-nav">Çıkış</a></li>
+                {% comment %} <li><a href="{% url 'main:logout' %}" data-i18n="nav.logout" class="btn-logout-nav">Çıkış</a></li> {% endcomment %}
                 {% else %}
                 <!-- Main Site Navbar Items (Authenticated) -->
                 <li><a href="{% url 'main:index' %}" data-i18n="nav.home">Ana Sayfa</a></li>

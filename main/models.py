@@ -173,6 +173,94 @@ class UserProfile(models.Model):
         return ", ".join(types) if types else "Belirtilmemiş"
 
 
+class ProfileEditRequest(models.Model):
+    """Pending profile edit requests awaiting admin approval"""
+    
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+    
+    # User who requested the edit
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='profile_edit_requests',
+        verbose_name="Kullanıcı"
+    )
+    
+    # Common fields (username and email cannot be changed)
+    first_name = models.CharField(max_length=100, blank=True, verbose_name="Ad")
+    last_name = models.CharField(max_length=100, blank=True, verbose_name="Soyad")
+    company_name = models.CharField(max_length=200, blank=True, verbose_name="Firma Adı")
+    phone_number = models.CharField(max_length=20, blank=True, verbose_name="Telefon Numarası")
+    country = models.CharField(max_length=100, blank=True, verbose_name="Ülke")
+    city = models.CharField(max_length=100, blank=True, verbose_name="Şehir")
+    
+    # Buyer-specific fields (stored as JSON-like text for sectors)
+    buyer_interested_sectors_ids = models.TextField(blank=True, null=True, verbose_name="İlgilenilen Sektör ID'leri")
+    buyer_quarterly_volume = models.DecimalField(
+        max_digits=15,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="Çeyreklik Alım Hacmi (USD)"
+    )
+    
+    # Producer-specific fields
+    producer_sectors_ids = models.TextField(blank=True, null=True, verbose_name="Sektör ID'leri")
+    producer_quarterly_sales = models.DecimalField(
+        max_digits=15,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="Çeyreklik Satış Hacmi (USD)"
+    )
+    producer_product_count = models.IntegerField(blank=True, null=True, verbose_name="Yaklaşık Ürün Sayısı")
+    
+    # Request status
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name="Durum")
+    
+    # Admin actions
+    reviewed_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='reviewed_profile_edits',
+        verbose_name="İnceleyen"
+    )
+    reviewed_at = models.DateTimeField(null=True, blank=True, verbose_name="İnceleme Tarihi")
+    rejection_reason = models.TextField(blank=True, null=True, verbose_name="Red Nedeni")
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = "Profil Düzenleme Talebi"
+        verbose_name_plural = "Profil Düzenleme Talepleri"
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} - Profil Düzenleme ({self.get_status_display()})"
+    
+    def get_buyer_sectors(self):
+        """Get buyer interested sectors as queryset"""
+        if self.buyer_interested_sectors_ids:
+            ids = [int(id.strip()) for id in self.buyer_interested_sectors_ids.split(',') if id.strip()]
+            return Sector.objects.filter(id__in=ids)
+        return Sector.objects.none()
+    
+    def get_producer_sectors(self):
+        """Get producer sectors as queryset"""
+        if self.producer_sectors_ids:
+            ids = [int(id.strip()) for id in self.producer_sectors_ids.split(',') if id.strip()]
+            return Sector.objects.filter(id__in=ids)
+        return Sector.objects.none()
+
+
 class ProductTag(models.Model):
     """Tags for categorizing products"""
     name_tr = models.CharField(max_length=100, verbose_name="Etiket Adı (TR)")

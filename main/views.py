@@ -114,6 +114,39 @@ def profile_view(request):
 
 
 @login_required
+def edit_profile_view(request):
+    """Edit user profile view - creates edit request for admin approval"""
+    from .forms import ProfileEditForm
+    
+    try:
+        profile = request.user.profile
+    except:
+        messages.error(request, 'Profil bilgileriniz bulunamadı.')
+        return redirect('main:index')
+    
+    if request.method == 'POST':
+        form = ProfileEditForm(request.POST, user=request.user)
+        if form.is_valid():
+            edit_request = form.save()
+            messages.success(
+                request,
+                'Profil düzenleme talebiniz alındı! Değişiklikler yönetici onayından sonra aktif hale gelecektir.'
+            )
+            return redirect('main:profile')
+        else:
+            messages.error(request, 'Lütfen formdaki hataları düzeltin.')
+    else:
+        form = ProfileEditForm(user=request.user)
+    
+    context = {
+        'form': form,
+        'profile': profile
+    }
+    
+    return render(request, 'auth/edit_profile.html', context)
+
+
+@login_required
 def dashboard_view(request):
     """Main dashboard landing page"""
     try:

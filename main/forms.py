@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from .models import UserProfile, Sector, SignupRequest, Product, ProductTag, ExpoSignup
+from .models import UserProfile, Sector, SignupRequest, Product, ProductTag, ExpoSignup, ProfileEditRequest
 
 
 
@@ -260,6 +260,181 @@ class CustomLoginForm(AuthenticationForm):
         }),
         label='Şifre'
     )
+
+
+class ProfileEditForm(forms.Form):
+    """Form for users to edit their profile - creates edit request for admin approval"""
+    
+    # Personal information (username, email, first name, and last name cannot be changed)
+    
+    # Company information
+    company_name = forms.CharField(
+        max_length=200,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Firma Adı'
+        }),
+        label='Firma Adı'
+    )
+    phone_number = forms.CharField(
+        max_length=20,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': '+90 555 123 4567'
+        }),
+        label='Telefon Numarası'
+    )
+    country = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ülke'
+        }),
+        label='Ülke'
+    )
+    city = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Şehir'
+        }),
+        label='Şehir'
+    )
+    
+    # Buyer-specific fields
+    buyer_interested_sectors = forms.ModelMultipleChoiceField(
+        queryset=Sector.objects.all(),
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-control sector-select',
+        }),
+        label='İlgilenilen Sektörler'
+    )
+    buyer_quarterly_volume = forms.DecimalField(
+        required=False,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control buyer-field',
+            'placeholder': '50000'
+        }),
+        label='Çeyreklik Alım Hacmi (USD)'
+    )
+    
+    # Producer-specific fields
+    producer_sectors = forms.ModelMultipleChoiceField(
+        queryset=Sector.objects.all(),
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-control sector-select',
+        }),
+        label='Sektörler'
+    )
+    producer_quarterly_sales = forms.DecimalField(
+        required=False,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control producer-field',
+            'placeholder': '100000'
+        }),
+        label='Çeyreklik Satış Hacmi (USD)'
+    )
+    producer_product_count = forms.IntegerField(
+        required=False,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control producer-field',
+            'placeholder': '50'
+        }),
+        label='Yaklaşık Ürün Sayısı'
+    )
+    
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        
+        # Set sector labels
+        self.fields['buyer_interested_sectors'].label_from_instance = lambda obj: f"{obj.name_tr} | {obj.name_en}"
+        self.fields['producer_sectors'].label_from_instance = lambda obj: f"{obj.name_tr} | {obj.name_en}"
+        
+        # Pre-populate fields with current user data if available
+        if self.user and hasattr(self.user, 'profile'):
+            profile = self.user.profile
+            if not self.is_bound:  # Only set initial values if form is not bound
+                self.fields['company_name'].initial = profile.company_name
+                self.fields['phone_number'].initial = profile.phone_number
+                self.fields['country'].initial = profile.country
+                self.fields['city'].initial = profile.city
+                
+                if profile.is_buyer:
+                    self.fields['buyer_interested_sectors'].initial = profile.buyer_interested_sectors.all()
+                    self.fields['buyer_quarterly_volume'].initial = profile.buyer_quarterly_volume
+                
+                if profile.is_producer:
+                    self.fields['producer_sectors'].initial = profile.producer_sectors.all()
+                    self.fields['producer_quarterly_sales'].initial = profile.producer_quarterly_sales
+                    self.fields['producer_product_count'].initial = profile.producer_product_count
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        if not self.user or not hasattr(self.user, 'profile'):
+            raise forms.ValidationError("Kullanıcı profili bulunamadı.")
+        
+        profile = self.user.profile
+        
+        # Validate buyer fields if user is a buyer
+        if profile.is_buyer:
+            if not cleaned_data.get('buyer_interested_sectors'):
+                self.add_error('buyer_interested_sectors', 'Alıcı olarak bu alan zorunludur.')
+            if not cleaned_data.get('buyer_quarterly_volume'):
+                self.add_error('buyer_quarterly_volume', 'Alıcı olarak bu alan zorunludur.')
+        
+        # Validate producer fields if user is a producer
+        if profile.is_producer:
+            if not cleaned_data.get('producer_sectors'):
+                self.add_error('producer_sectors', 'Üretici olarak bu alan zorunludur.')
+            if not cleaned_data.get('producer_quarterly_sales'):
+                self.add_error('producer_quarterly_sales', 'Üretici olarak bu alan zorunludur.')
+            if not cleaned_data.get('producer_product_count'):
+                self.add_error('producer_product_count', 'Üretici olarak bu alan zorunludur.')
+        
+        return cleaned_data
+    
+    def save(self, commit=True):
+        """Create a profile edit request instead of updating profile directly"""
+        from .models import ProfileEditRequest
+        
+        # Get sector IDs as comma-separated strings
+        buyer_sector_ids = ','.join(
+            str(s.id) for s in self.cleaned_data.get('buyer_interested_sectors', [])
+        ) if self.cleaned_data.get('buyer_interested_sectors') else ''
+        
+        producer_sector_ids = ','.join(
+            str(s.id) for s in self.cleaned_data.get('producer_sectors', [])
+        ) if self.cleaned_data.get('producer_sectors') else ''
+        
+        if commit:
+            # Create profile edit request
+            # Note: first_name and last_name use current user values (not editable)
+            edit_request = ProfileEditRequest.objects.create(
+                user=self.user,
+                first_name=self.user.first_name,
+                last_name=self.user.last_name,
+                company_name=self.cleaned_data['company_name'],
+                phone_number=self.cleaned_data['phone_number'],
+                country=self.cleaned_data['country'],
+                city=self.cleaned_data['city'],
+                buyer_interested_sectors_ids=buyer_sector_ids,
+                buyer_quarterly_volume=self.cleaned_data.get('buyer_quarterly_volume'),
+                producer_sectors_ids=producer_sector_ids,
+                producer_quarterly_sales=self.cleaned_data.get('producer_quarterly_sales'),
+                producer_product_count=self.cleaned_data.get('producer_product_count'),
+                status='pending'
+            )
+            return edit_request
+        
+        return None
 
 
 class ProductForm(forms.ModelForm):

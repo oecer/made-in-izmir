@@ -137,6 +137,10 @@
 
     <!-- Actions -->
     <div class="profile-actions mt-5">
+        <a href="{% url 'main:edit_profile' %}" class="btn btn-primary-outline btn-lg me-3">
+            <i class="fas fa-edit"></i>
+            <span data-i18n="profile.edit_profile">Profili Düzenle</span>
+        </a>
         <a href="{% url 'main:logout' %}" class="btn btn-danger-outline btn-lg">
             <i class="fas fa-sign-out-alt"></i>
             <span data-i18n="profile.logout">Çıkış Yap</span>
@@ -265,6 +269,25 @@
     .profile-actions {
         display: flex;
         justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .btn-primary-outline {
+        background: transparent;
+        color: #cca43b;
+        border: 2px solid #cca43b;
+        padding: 12px 40px;
+        font-weight: 600;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary-outline:hover {
+        background: #cca43b;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(204, 164, 59, 0.2);
     }
 
     .btn-danger-outline {

@@ -142,7 +142,13 @@ const translations = {
             sector: "Sektörler",
             quarterly_sales: "Çeyreklik Satış Hacmi",
             product_count: "Ürün Sayısı",
-            logout: "Çıkış Yap"
+            logout: "Çıkış Yap",
+            edit_profile: "Profili Düzenle",
+            edit_profile_title: "Profili Düzenle",
+            edit_profile_desc: "Profil bilgilerinizi güncelleyin. Değişiklikler yönetici onayından sonra aktif olacaktır.",
+            edit_note: "Not: Ad, soyad, kullanıcı adı ve e-posta adresi değiştirilemez. Diğer bilgilerinizi güncelleyebilirsiniz.",
+            cannot_change: "Değiştirilemez",
+            save_changes: "Değişiklikleri Kaydet"
         },
         dashboard: {
             producer_title: "Üretici Paneli",
@@ -365,7 +371,13 @@ const translations = {
             sector: "Sectors",
             quarterly_sales: "Quarterly Sales Volume",
             product_count: "Product Count",
-            logout: "Logout"
+            logout: "Logout",
+            edit_profile: "Edit Profile",
+            edit_profile_title: "Edit Profile",
+            edit_profile_desc: "Update your profile information. Changes will be active after admin approval.",
+            edit_note: "Note: First name, last name, username and email address cannot be changed. You can update your other information.",
+            cannot_change: "Cannot be changed",
+            save_changes: "Save Changes"
         },
         dashboard: {
             producer_title: "Producer Dashboard",

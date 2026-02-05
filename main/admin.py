@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib import messages
-from .models import UserProfile, SignupRequest, Sector, ProductTag, Product, ProductRequest, Expo, ExpoSignup
+from .models import UserProfile, SignupRequest, Sector, ProductTag, Product, ProductRequest, Expo, ExpoSignup, ProfileEditRequest
 
 
 @admin.register(SignupRequest)
@@ -219,6 +219,175 @@ class UserProfileAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+
+@admin.register(ProfileEditRequest)
+class ProfileEditRequestAdmin(admin.ModelAdmin):
+    list_display = (
+        'user', 'get_user_company', 'get_user_email', 'status', 'created_at'
+    )
+    list_filter = ('status', 'created_at')
+    search_fields = ('user__username', 'user__email', 'company_name', 'phone_number', 'first_name', 'last_name')
+    readonly_fields = (
+        'created_at', 'updated_at', 'reviewed_by', 'reviewed_at',
+        'buyer_interested_sectors_display', 'producer_sectors_display'
+    )
+    
+    fieldsets = (
+        ('Request Status', {
+            'fields': ('status', 'reviewed_by', 'reviewed_at', 'rejection_reason')
+        }),
+        ('User', {
+            'fields': ('user',)
+        }),
+        ('Personal Information', {
+            'fields': ('first_name', 'last_name')
+        }),
+        ('Company Information', {
+            'fields': ('company_name', 'phone_number', 'country', 'city')
+        }),
+        ('Buyer Information', {
+            'fields': ('buyer_interested_sectors_ids', 'buyer_interested_sectors_display', 'buyer_quarterly_volume'),
+        }),
+        ('Producer Information', {
+            'fields': ('producer_sectors_ids', 'producer_sectors_display', 'producer_quarterly_sales', 'producer_product_count'),
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+        }),
+    )
+    
+    actions = ['approve_profile_edits', 'reject_profile_edits']
+    
+    def get_user_company(self, obj):
+        """Display user's current company name"""
+        if hasattr(obj.user, 'profile'):
+            return obj.user.profile.company_name
+        return '-'
+    get_user_company.short_description = 'Mevcut Firma'
+    
+    def get_user_email(self, obj):
+        """Display user's email"""
+        return obj.user.email
+    get_user_email.short_description = 'E-posta'
+    
+    def buyer_interested_sectors_display(self, obj):
+        """Display buyer interested sectors"""
+        sectors = obj.get_buyer_sectors()
+        if sectors.exists():
+            return ', '.join([f"{s.name_tr} | {s.name_en}" for s in sectors])
+        return '-'
+    buyer_interested_sectors_display.short_description = 'İlgilenilen Sektörler'
+    
+    def producer_sectors_display(self, obj):
+        """Display producer sectors"""
+        sectors = obj.get_producer_sectors()
+        if sectors.exists():
+            return ', '.join([f"{s.name_tr} | {s.name_en}" for s in sectors])
+        return '-'
+    producer_sectors_display.short_description = 'Sektörler'
+    
+    def get_readonly_fields(self, request, obj=None):
+        """Make all fields readonly except status and rejection_reason for pending requests"""
+        if obj and obj.status == 'pending':
+            return ('created_at', 'updated_at', 'reviewed_by', 'reviewed_at',
+                    'user', 'first_name', 'last_name', 'company_name', 
+                    'phone_number', 'country', 'city',
+                    'buyer_interested_sectors_ids', 'buyer_interested_sectors_display', 'buyer_quarterly_volume',
+                    'producer_sectors_ids', 'producer_sectors_display', 'producer_quarterly_sales', 'producer_product_count')
+        return ('created_at', 'updated_at', 'reviewed_by', 'reviewed_at',
+                'buyer_interested_sectors_display', 'producer_sectors_display',
+                'user', 'first_name', 'last_name', 'company_name', 
+                'phone_number', 'country', 'city',
+                'buyer_interested_sectors_ids', 'buyer_quarterly_volume',
+                'producer_sectors_ids', 'producer_quarterly_sales', 'producer_product_count')
+    
+    def save_model(self, request, obj, form, change):
+        """Handle status changes from the admin change form"""
+        if change and 'status' in form.changed_data and obj.status == 'approved':
+            try:
+                old_instance = ProfileEditRequest.objects.get(pk=obj.pk)
+                if old_instance.status == 'pending':
+                    self._process_approval(request, obj)
+            except Exception as e:
+                obj.status = 'pending'
+                obj.reviewed_by = None
+                obj.reviewed_at = None
+                messages.error(request, f"Onay işlemi başarısız oldu: {str(e)}")
+        
+        super().save_model(request, obj, form, change)
+    
+    def _process_approval(self, request, edit_request):
+        """Helper to update User and Profile"""
+        from django.db import transaction
+        
+        user = edit_request.user
+        profile = user.profile
+        
+        # Note: first_name and last_name are not updated as they are not editable
+        
+        # Update Profile model
+        profile.company_name = edit_request.company_name
+        profile.phone_number = edit_request.phone_number
+        profile.country = edit_request.country
+        profile.city = edit_request.city
+        profile.buyer_quarterly_volume = edit_request.buyer_quarterly_volume
+        profile.producer_quarterly_sales = edit_request.producer_quarterly_sales
+        profile.producer_product_count = edit_request.producer_product_count
+        profile.save()
+        
+        # Update sectors
+        if profile.is_buyer and edit_request.buyer_interested_sectors_ids:
+            buyer_sectors = edit_request.get_buyer_sectors()
+            if buyer_sectors.exists():
+                profile.buyer_interested_sectors.set(buyer_sectors)
+        
+        if profile.is_producer and edit_request.producer_sectors_ids:
+            producer_sectors = edit_request.get_producer_sectors()
+            if producer_sectors.exists():
+                profile.producer_sectors.set(producer_sectors)
+        
+        # Update request fields
+        edit_request.reviewed_by = request.user
+        edit_request.reviewed_at = timezone.now()
+    
+    def approve_profile_edits(self, request, queryset):
+        """Approve selected profile edit requests"""
+        from django.db import transaction
+        
+        approved_count = 0
+        error_count = 0
+        
+        for edit_request in queryset.filter(status='pending'):
+            try:
+                with transaction.atomic():
+                    self._process_approval(request, edit_request)
+                    edit_request.status = 'approved'
+                    edit_request.save()
+                    approved_count += 1
+            except Exception as e:
+                error_count += 1
+                messages.error(request, f"Error ({edit_request.user.username}): {str(e)}")
+        
+        if approved_count > 0:
+            messages.success(request, f"✓ {approved_count} profile edit request(s) approved successfully!")
+        if error_count > 0:
+            messages.warning(request, f"⚠ {error_count} request(s) failed.")
+    
+    approve_profile_edits.short_description = "Approve selected profile edit requests"
+    
+    def reject_profile_edits(self, request, queryset):
+        """Reject selected profile edit requests"""
+        rejected_count = queryset.filter(status='pending').update(
+            status='rejected',
+            reviewed_by=request.user,
+            reviewed_at=timezone.now()
+        )
+        
+        if rejected_count > 0:
+            messages.success(request, f"{rejected_count} profile edit request(s) rejected.")
+    
+    reject_profile_edits.short_description = "Reject selected profile edit requests"
 
 
 @admin.register(ProductRequest)
