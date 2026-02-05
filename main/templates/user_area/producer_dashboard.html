@@ -47,7 +47,7 @@
 </div>
 
 <!-- Secondary Actions (Quick Links) -->
-<div class="quick-links-title mb-5">
+<div class="quick-links-title mb-2">
     <h3 data-i18n="dashboard.quick_links" style="font-size: 1.2rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Hızlı Bağlantılar</h3>
 </div>
 <div class="dashboard-actions mb-5">
@@ -63,7 +63,7 @@
 </div>
 
 <!-- Products List -->
-<div class="products-section dashboard-card mb-5">
+<div class="products-section dashboard-card mb-2">
     <div class="section-title-area animate-fade-up">
         <h2 data-i18n="dashboard.my_products">Ürünlerim</h2>
         <div class="filter-toolbar">
@@ -267,15 +267,15 @@
         display: flex;
         gap: 15px;
         flex-wrap: wrap;
-        margin-bottom: 30px;
+        {% comment %} margin-bottom: 30px; {% endcomment %}
     }
 
     .products-section {
-        margin-top: 40px;
+        {% comment %} margin-top: 40px; {% endcomment %}
     }
 
     .products-section h2 {
-        margin-bottom: 30px;
+        {% comment %} margin-bottom: 30px; {% endcomment %}
         color: #333;
     }
 
@@ -385,7 +385,7 @@
     }
 
     .products-section {
-        margin-top: 60px;
+        {% comment %} margin-top: 60px; {% endcomment %}
     }
 
     /* Fix: Allow dropdowns to overflow the white card */
