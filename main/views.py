@@ -239,13 +239,57 @@ def buyer_dashboard_view(request):
             messages.error(request, 'Bu sayfaya erişim yetkiniz yok.')
             return redirect('main:dashboard')
         
+        # Get filter parameters (support multiple values)
+        tag_filters = [t for t in request.GET.getlist('tag') if t]
+        sector_filters = [s for s in request.GET.getlist('sector') if s]
+        producer_filters = [p for p in request.GET.getlist('producer') if p]
+        
         # Get all active products (buyers can browse products)
-        all_products = Product.objects.filter(is_active=True).order_by('-created_at')
+        products_qs = Product.objects.filter(is_active=True)
+        
+        # Apply Sector Filters
+        if sector_filters:
+            products_qs = products_qs.filter(sector_id__in=sector_filters)
+        
+        # Apply Tag Filters
+        if tag_filters:
+            products_qs = products_qs.filter(tags__id__in=tag_filters).distinct()
+        
+        # Apply Producer Filters
+        if producer_filters:
+            products_qs = products_qs.filter(producer_id__in=producer_filters)
+        
+        # Order by creation date
+        products_qs = products_qs.order_by('-created_at')
+        
+        # Get available filters (all active products)
+        all_active_products = Product.objects.filter(is_active=True)
+        
+        # Available tags
+        available_tag_ids = all_active_products.values_list('tags', flat=True).distinct()
+        available_tags = ProductTag.objects.filter(id__in=available_tag_ids).distinct()
+        
+        # Available sectors
+        available_sector_ids = all_active_products.values_list('sector_id', flat=True).distinct()
+        available_sectors = Sector.objects.filter(id__in=available_sector_ids).distinct()
+        
+        # Available producers (users who have active products)
+        from django.contrib.auth.models import User
+        available_producer_ids = all_active_products.values_list('producer_id', flat=True).distinct()
+        available_producers = User.objects.filter(id__in=available_producer_ids).select_related('profile')
         
         context = {
             'profile': profile,
-            'products': all_products,
-            'total_products': all_products.count(),
+            'products': products_qs,
+            'total_products': all_active_products.count(),
+            'available_tags': available_tags,
+            'available_sectors': available_sectors,
+            'available_producers': available_producers,
+            'current_filters': {
+                'tag': tag_filters,
+                'sector': sector_filters,
+                'producer': producer_filters,
+            }
         }
         
         return render(request, 'user_area/buyer_dashboard.html', context)

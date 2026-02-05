@@ -61,7 +61,69 @@
 
 <!-- Products Browse -->
 <div class="products-section dashboard-card mb-2">
-    <h2 data-i18n="dashboard.available_products">Mevcut Ürünler</h2>
+    <div class="section-title-area animate-fade-up">
+        <h2 data-i18n="dashboard.available_products">Mevcut Ürünler</h2>
+        <div class="filter-toolbar">
+            <form id="filter-form" method="GET" class="filter-form-inline">
+                <!-- Sector Multiselect -->
+                <div class="filter-group ms-dropdown" id="sector-ms">
+                    <div class="filter-icon"><i class="fas fa-industry"></i></div>
+                    <div class="ms-toggle">
+                        <span data-i18n="dashboard.filter_sector">Sektör</span>
+                        {% if current_filters.sector %}<span class="badge ms-count">{{ current_filters.sector|length }}</span>{% endif %}
+                    </div>
+                    <div class="ms-menu">
+                        {% for sector in available_sectors %}
+                        <label class="ms-option">
+                            <input type="checkbox" name="sector" value="{{ sector.id }}" {% if sector.id|stringformat:"i" in current_filters.sector %}checked{% endif %}>
+                            <span>{{ sector.name_tr }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Tag Multiselect -->
+                <div class="filter-group ms-dropdown" id="tag-ms">
+                    <div class="filter-icon"><i class="fas fa-tags"></i></div>
+                    <div class="ms-toggle">
+                        <span data-i18n="dashboard.filter_tag">Etiket</span>
+                        {% if current_filters.tag %}<span class="badge ms-count">{{ current_filters.tag|length }}</span>{% endif %}
+                    </div>
+                    <div class="ms-menu">
+                        {% for tag in available_tags %}
+                        <label class="ms-option">
+                            <input type="checkbox" name="tag" value="{{ tag.id }}" {% if tag.id|stringformat:"i" in current_filters.tag %}checked{% endif %}>
+                            <span>{{ tag.name_tr }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Producer Multiselect -->
+                <div class="filter-group ms-dropdown" id="producer-ms">
+                    <div class="filter-icon"><i class="fas fa-user-tie"></i></div>
+                    <div class="ms-toggle">
+                        <span data-i18n="dashboard.filter_producer">Üretici</span>
+                        {% if current_filters.producer %}<span class="badge ms-count">{{ current_filters.producer|length }}</span>{% endif %}
+                    </div>
+                    <div class="ms-menu">
+                        {% for producer in available_producers %}
+                        <label class="ms-option">
+                            <input type="checkbox" name="producer" value="{{ producer.id }}" {% if producer.id|stringformat:"i" in current_filters.producer %}checked{% endif %}>
+                            <span>{{ producer.profile.company_name }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                {% if current_filters.sector or current_filters.tag or current_filters.producer %}
+                <a href="{% url 'main:buyer_dashboard' %}" class="filter-reset" title="Temizle">
+                    <i class="fas fa-times-circle"></i>
+                </a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
     <p class="section-description" data-i18n="dashboard.explore">Üreticilerin sunduğu ürünlere göz atın</p>
 
     {% if products %}
@@ -120,4 +182,63 @@
     {% endif %}
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dropdowns = document.querySelectorAll('.ms-dropdown');
+        const form = document.getElementById('filter-form');
+
+        dropdowns.forEach(dropdown => {
+            // Track if changes were made while open
+            dropdown.dataset.changed = "false";
+            
+            dropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                const isActive = dropdown.classList.contains('active');
+                
+                // Close all dropdowns
+                dropdowns.forEach(d => {
+                    if (d.classList.contains('active') && d !== dropdown) {
+                        closeDropdown(d);
+                    }
+                });
+
+                if (!isActive) {
+                    dropdown.classList.add('active');
+                    dropdown.dataset.changed = "false"; // Reset change tracker when opening
+                } else {
+                    closeDropdown(dropdown);
+                }
+            });
+
+            // Track changes to checkboxes
+            dropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', () => {
+                    dropdown.dataset.changed = "true";
+                });
+            });
+        });
+
+        function closeDropdown(dropdown) {
+            if (!dropdown.classList.contains('active')) return;
+            
+            dropdown.classList.remove('active');
+            
+            // Apply filters ONLY if something changed while it was open
+            if (dropdown.dataset.changed === "true") {
+                form.submit();
+            }
+        }
+
+        // Global click to close
+        document.addEventListener('click', () => {
+            dropdowns.forEach(d => closeDropdown(d));
+        });
+
+        // Prevent dropdown menu clicks from bubbling up to document
+        document.querySelectorAll('.ms-menu').forEach(menu => {
+            menu.addEventListener('click', (e) => e.stopPropagation());
+        });
+    });
+</script>
 {% endblock %}
