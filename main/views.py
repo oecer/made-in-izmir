@@ -137,10 +137,27 @@ def producer_dashboard_view(request):
         status_filters = request.GET.getlist('status')
         tag_filters = [t for t in request.GET.getlist('tag') if t]
         sector_filters = [s for s in request.GET.getlist('sector') if s]
+        search_query = request.GET.get('search', '').strip()
         
         # Get base querysets
         products_qs = Product.objects.filter(producer=request.user)
         requests_qs = ProductRequest.objects.filter(producer=request.user, status='pending')
+        
+        # Apply Search Filter
+        if search_query:
+            from django.db.models import Q
+            products_qs = products_qs.filter(
+                Q(title_tr__icontains=search_query) |
+                Q(title_en__icontains=search_query) |
+                Q(description_tr__icontains=search_query) |
+                Q(description_en__icontains=search_query)
+            )
+            requests_qs = requests_qs.filter(
+                Q(title_tr__icontains=search_query) |
+                Q(title_en__icontains=search_query) |
+                Q(description_tr__icontains=search_query) |
+                Q(description_en__icontains=search_query)
+            )
         
         # Determine available tags and sectors for the producer (for dropdowns)
         prod_product_tag_ids = products_qs.values_list('tags', flat=True)
@@ -218,7 +235,8 @@ def producer_dashboard_view(request):
                 'status': status_filters,
                 'tag': tag_filters,
                 'sector': sector_filters,
-            }
+            },
+            'search_query': search_query,
         }
         
         return render(request, 'user_area/producer_dashboard.html', context)
@@ -243,9 +261,20 @@ def buyer_dashboard_view(request):
         tag_filters = [t for t in request.GET.getlist('tag') if t]
         sector_filters = [s for s in request.GET.getlist('sector') if s]
         producer_filters = [p for p in request.GET.getlist('producer') if p]
+        search_query = request.GET.get('search', '').strip()
         
         # Get all active products (buyers can browse products)
         products_qs = Product.objects.filter(is_active=True)
+        
+        # Apply Search Filter
+        if search_query:
+            from django.db.models import Q
+            products_qs = products_qs.filter(
+                Q(title_tr__icontains=search_query) |
+                Q(title_en__icontains=search_query) |
+                Q(description_tr__icontains=search_query) |
+                Q(description_en__icontains=search_query)
+            )
         
         # Apply Sector Filters
         if sector_filters:
@@ -289,7 +318,8 @@ def buyer_dashboard_view(request):
                 'tag': tag_filters,
                 'sector': sector_filters,
                 'producer': producer_filters,
-            }
+            },
+            'search_query': search_query,
         }
         
         return render(request, 'user_area/buyer_dashboard.html', context)

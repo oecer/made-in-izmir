@@ -187,7 +187,7 @@ const translations = {
             photo2: "Fotoğraf 2",
             photo3: "Fotoğraf 3",
             stats: "İstatistikler",
-            explore: "Keşfet",
+            explore: "Üreticilerin sunduğu ürünlere göz atın",
             all_sectors: "Tüm Sektörler",
             add_new_product: "Yeni Ürün Ekle",
             view_profile: "Profili Görüntüle",

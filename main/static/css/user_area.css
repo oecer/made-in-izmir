@@ -734,6 +734,114 @@
 }
 
 /* ============================================
+   SEARCH BAR
+   ============================================ */
+
+.search-bar-container {
+    margin: 25px 0;
+}
+
+.search-form {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.search-input-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    color: #94a3b8;
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.search-input {
+    width: 100%;
+    padding: 14px 50px 14px 48px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #cca43b;
+    box-shadow: 0 0 0 3px rgba(204, 164, 59, 0.1);
+}
+
+.search-input::placeholder {
+    color: #94a3b8;
+}
+
+.clear-search {
+    position: absolute;
+    right: 16px;
+    color: #94a3b8;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #f1f5f9;
+}
+
+.clear-search:hover {
+    color: #ef4444;
+    background: #fee2e2;
+    transform: rotate(90deg);
+}
+
+.search-button {
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.search-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.3);
+}
+
+.search-button i {
+    font-size: 14px;
+}
+
+/* Responsive search bar */
+@media (max-width: 768px) {
+    .search-form {
+        flex-direction: column;
+    }
+
+    .search-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ============================================
    FORM WRAPPER & PRODUCT FORMS
    ============================================ */
 

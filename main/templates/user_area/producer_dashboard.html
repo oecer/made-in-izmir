@@ -134,6 +134,43 @@
         </div>
     </div>
 
+    <!-- Search Bar -->
+    <div class="search-bar-container">
+        <form method="GET" class="search-form">
+            <!-- Preserve existing filters -->
+            {% for status in current_filters.status %}
+            <input type="hidden" name="status" value="{{ status }}">
+            {% endfor %}
+            {% for tag in current_filters.tag %}
+            <input type="hidden" name="tag" value="{{ tag }}">
+            {% endfor %}
+            {% for sector in current_filters.sector %}
+            <input type="hidden" name="sector" value="{{ sector }}">
+            {% endfor %}
+            
+            <div class="search-input-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input 
+                    type="text" 
+                    name="search" 
+                    class="search-input" 
+                    placeholder="Ürün ara..." 
+                    value="{{ search_query }}"
+                    data-i18n-placeholder="dashboard.search_products"
+                >
+                {% if search_query %}
+                <a href="?{% for status in current_filters.status %}status={{ status }}&{% endfor %}{% for tag in current_filters.tag %}tag={{ tag }}&{% endfor %}{% for sector in current_filters.sector %}sector={{ sector }}&{% endfor %}" class="clear-search" title="Aramayı Temizle">
+                    <i class="fas fa-times"></i>
+                </a>
+                {% endif %}
+            </div>
+            <button type="submit" class="search-button">
+                <i class="fas fa-search"></i>
+                <span data-i18n="dashboard.search">Ara</span>
+            </button>
+        </form>
+    </div>
+
     {% if products %}
     <div class="products-grid">
         {% for product in products %}
