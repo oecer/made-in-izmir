@@ -351,6 +351,27 @@ class ProductRequest(models.Model):
             ids = [int(id.strip()) for id in self.tags_ids.split(',') if id.strip()]
             return ProductTag.objects.filter(id__in=ids)
         return ProductTag.objects.none()
+    
+    def save(self, *args, **kwargs):
+        """Override save to compress images before saving"""
+        from django.conf import settings
+        from .utils import compress_image
+        
+        # Only compress if enabled in settings
+        if getattr(settings, 'IMAGE_COMPRESS_ENABLED', True):
+            max_size = getattr(settings, 'IMAGE_MAX_SIZE', (1920, 1920))
+            quality = getattr(settings, 'IMAGE_QUALITY', 85)
+            
+            # Compress each photo if it exists and hasn't been saved yet
+            if self.photo1 and not self.pk:
+                self.photo1 = compress_image(self.photo1, max_size, quality)
+            if self.photo2 and not self.pk:
+                self.photo2 = compress_image(self.photo2, max_size, quality)
+            if self.photo3 and not self.pk:
+                self.photo3 = compress_image(self.photo3, max_size, quality)
+        
+        super().save(*args, **kwargs)
+
 
 
 class Product(models.Model):
@@ -428,6 +449,27 @@ class Product(models.Model):
         if self.photo3:
             photos.append(self.photo3)
         return photos
+    
+    def save(self, *args, **kwargs):
+        """Override save to compress images before saving"""
+        from django.conf import settings
+        from .utils import compress_image
+        
+        # Only compress if enabled in settings
+        if getattr(settings, 'IMAGE_COMPRESS_ENABLED', True):
+            max_size = getattr(settings, 'IMAGE_MAX_SIZE', (1920, 1920))
+            quality = getattr(settings, 'IMAGE_QUALITY', 85)
+            
+            # Compress each photo if it exists and hasn't been saved yet
+            if self.photo1 and not self.pk:
+                self.photo1 = compress_image(self.photo1, max_size, quality)
+            if self.photo2 and not self.pk:
+                self.photo2 = compress_image(self.photo2, max_size, quality)
+            if self.photo3 and not self.pk:
+                self.photo3 = compress_image(self.photo3, max_size, quality)
+        
+        super().save(*args, **kwargs)
+
 
 
 class Expo(models.Model):

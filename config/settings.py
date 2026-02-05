@@ -138,3 +138,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'main:login'
 LOGIN_REDIRECT_URL = 'main:index'
 LOGOUT_REDIRECT_URL = 'main:index'
+
+# Image compression settings
+IMAGE_MAX_SIZE = (1920, 1920)  # Maximum image dimensions (width, height)
+IMAGE_QUALITY = 85  # JPEG compression quality (1-100)
+IMAGE_COMPRESS_ENABLED = True  # Enable/disable automatic image compression
+
