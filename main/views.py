@@ -425,9 +425,17 @@ def product_detail_view(request, product_id):
         messages.error(request, 'Bu ürünü görüntüleme yetkiniz yok.')
         return redirect('main:dashboard')
     
+    # Fetch other products from the same seller in the same category
+    other_products = Product.objects.filter(
+        producer=product.producer,
+        sector=product.sector,
+        is_active=True
+    ).exclude(id=product.id).order_by('-created_at')[:4]
+    
     context = {
         'product': product,
         'is_owner': request.user == product.producer,
+        'other_products': other_products,
     }
     
     return render(request, 'user_area/product_detail.html', context)

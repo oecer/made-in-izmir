@@ -218,7 +218,8 @@ const translations = {
             all: "Hepsi",
             apply_filter: "Filtrele",
             waiting_approval: "Onay Bekleyenler",
-            quick_links: "Hızlı Bağlantılar"
+            quick_links: "Hızlı Bağlantılar",
+            more_from_seller: "Üreticinin Aynı Sektördeki Diğer Ürünleri"
         }
     },
     en: {
@@ -440,7 +441,8 @@ const translations = {
             all: "All",
             apply_filter: "Filter",
             waiting_approval: "Waiting Approval",
-            quick_links: "Quick Links"
+            quick_links: "Quick Links",
+            more_from_seller: "Other Products from this Producer in the Same Sector"
         }
     }
 };
