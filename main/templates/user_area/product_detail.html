@@ -16,18 +16,21 @@
 {% endblock %}
 
 {% block dashboard_header_actions %}
-{% if is_owner %}
-<a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
-    <i class="fas fa-arrow-left"></i> <span data-i18n="dashboard.back">Panele Dön</span>
-</a>
-{% else %}
-<a href="{% url 'main:buyer_dashboard' %}" class="btn btn-secondary">
-    <i class="fas fa-arrow-left"></i> <span data-i18n="dashboard.back">Ürünlere Dön</span>
-</a>
-{% endif %}
 {% endblock %}
 
 {% block dashboard_content %}
+<div class="back-button-container">
+    {% if is_owner %}
+    <a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> <span data-i18n="dashboard.back">Panele Dön</span>
+    </a>
+    {% else %}
+    <a href="{% url 'main:buyer_dashboard' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> <span data-i18n="dashboard.back">Ürünlere Dön</span>
+    </a>
+    {% endif %}
+</div>
+
 <div class="product-detail-content dashboard-card">
     <!-- Product Images -->
     <div class="product-images">
@@ -150,6 +153,10 @@
 </script>
 
 <style>
+    .back-button-container {
+        margin-bottom: 20px;
+    }
+
     .product-detail-content {
         display: grid;
         grid-template-columns: 1fr 1fr;
