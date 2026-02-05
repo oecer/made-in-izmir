@@ -137,7 +137,7 @@
     {% if products %}
     <div class="products-grid">
         {% for product in products %}
-        <div class="product-card {% if product.is_pending %}pending{% elif not product.is_active %}inactive{% endif %} animate-fade-up">
+        <div class="product-card {% if product.is_pending %}pending{% elif not product.is_active %}inactive{% endif %}">
             <div class="product-image">
                 {% if product.photo1 %}
                 <img src="{{ product.photo1.url }}" alt="{{ product.title_tr|default:product.title_en }}">
