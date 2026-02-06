@@ -27,6 +27,7 @@ db.sqlite3
 db.sqlite3-journal
 /media
 /staticfiles
+.env
 
 # Virtual Environment
 venv/
@@ -48,3 +49,4 @@ Thumbs.db
 
 # Temporary files
 update_templates.py
+*.md

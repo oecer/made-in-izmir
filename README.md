@@ -89,14 +89,41 @@ All templates use Django's `{% static %}` template tag:
 
 ## Production Deployment
 
-Before deploying to production:
+### cPanel Deployment
 
-1. Set `DEBUG = False` in `config/settings.py`
-2. Configure `ALLOWED_HOSTS` with your domain
-3. Set a secure `SECRET_KEY`
-4. Run `python manage.py collectstatic` to collect all static files
-5. Use a production-ready web server (e.g., Gunicorn, uWSGI)
-6. Serve static files with Nginx or a CDN
+This project is ready for cPanel deployment. See the comprehensive guides:
+
+- **[CPANEL_DEPLOYMENT.md](CPANEL_DEPLOYMENT.md)** - Complete step-by-step deployment guide
+- **[DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md)** - Quick checklist for deployment
+
+### Quick Deployment Steps
+
+1. Generate a new SECRET_KEY:
+   ```bash
+   python generate_secret_key.py
+   ```
+
+2. Create `.env` file on server (copy from `.env.example`)
+
+3. Set environment variables:
+   - `DEBUG=False`
+   - `SECRET_KEY=your-generated-key`
+   - `ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com`
+
+4. Install dependencies in cPanel virtual environment:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. Run migrations and collect static files:
+   ```bash
+   python manage.py migrate
+   python manage.py collectstatic --noinput
+   ```
+
+6. Restart the application in cPanel
+
+For detailed instructions, see **[CPANEL_DEPLOYMENT.md](CPANEL_DEPLOYMENT.md)**
 
 ## Development Notes
 
@@ -107,4 +134,4 @@ Before deploying to production:
 
 ## License
 
-© 2024 Made in İzmir. All Rights Reserved.
+© 2026 Made in İzmir. All Rights Reserved.
