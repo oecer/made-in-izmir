@@ -52,3 +52,4 @@ update_templates.py
 *.md
 test_*.py
 ssh.txt
+__pycache__
