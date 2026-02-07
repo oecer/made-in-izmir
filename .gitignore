@@ -50,3 +50,4 @@ Thumbs.db
 # Temporary files
 update_templates.py
 *.md
+test_*.py

@@ -1,6 +1,6 @@
-PassengerAppRoot /home/yourusername/made-in-izmir
+PassengerAppRoot /home/madeiniz/public_html/v2
 PassengerBaseURI /
-PassengerPython /home/yourusername/virtualenv/made-in-izmir/3.11/bin/python
+PassengerPython /home/madeiniz/virtualenv/v2/3.11/bin/python
 
 # Force HTTPS (optional but recommended)
 # RewriteEngine On
