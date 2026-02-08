@@ -1,6 +1,6 @@
-PassengerAppRoot /home/madeohlx/repostories/made-in-izmir
+PassengerAppRoot /home/madeohlx/public_html
 PassengerBaseURI /
-PassengerPython /home/madeohlx/virtualenv/repostories/made-in-izmir/3.13/bin/python
+PassengerPython /home/madeohlx/virtualenv/public_html/3.11/bin/python
 
 # Force HTTPS (optional but recommended)
 # RewriteEngine On
