@@ -49,7 +49,9 @@ Thumbs.db
 
 # Temporary files
 update_templates.py
-*.md
+/docs
 test_*.py
 ssh.txt
 __pycache__
+.gemini/
+/test

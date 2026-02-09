@@ -1,0 +1,18 @@
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
+PassengerAppRoot "/home/madeohlx/public_html/made-in-izmir"
+PassengerBaseURI "/"
+PassengerPython "/home/madeohlx/virtualenv/public_html/made-in-izmir/3.13/bin/python"
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
+# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION BEGIN
+<IfModule Litespeed>
+SetEnv SECRET_KEY yfpj9%qcnscq&qz)bx%s@cebogi!13c3sckm_@^9lz5!4mdno1
+SetEnv DEBUG Falsw
+SetEnv DB_PORT 3306
+SetEnv DB_HOST localhost
+SetEnv DB_PASSWORD W,lGU%NDCW^Z
+SetEnv DB_USER madeohlx_madeinizmir_db_user
+SetEnv DB_NAME madeohlx_madeinizmir
+SetEnv DB_ENGINE django.db.backends.mysql
+SetEnv ALLOWED_HOSTS madeinizmir.com,www.madeinizmir.com
+</IfModule>
+# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION END
