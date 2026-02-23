@@ -38,6 +38,9 @@
                 {% if form.password.errors %}
                 <div class="error-message">{{ form.password.errors.0 }}</div>
                 {% endif %}
+                <div class="forgot-password-link">
+                    <a href="{% url 'password_reset' %}" data-i18n="login.forgot_password">Şifremi Unuttum?</a>
+                </div>
             </div>
 
             {% if form.non_field_errors %}
@@ -53,4 +56,21 @@
         </div>
     </div>
 </div>
+
+<style>
+.forgot-password-link {
+    text-align: right;
+    margin-top: 0.4rem;
+}
+.forgot-password-link a {
+    font-size: 0.85rem;
+    color: var(--accent-color, #cca43b);
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+.forgot-password-link a:hover {
+    opacity: 0.75;
+    text-decoration: underline;
+}
+</style>
 {% endblock %}
