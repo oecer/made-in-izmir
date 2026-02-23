@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib import messages
+from django.utils.html import format_html
 from .models import UserProfile, SignupRequest, Sector, ProductTag, Product, ProductRequest, Expo, ExpoSignup, ProfileEditRequest
 
 
@@ -453,24 +454,21 @@ class ProductRequestAdmin(admin.ModelAdmin):
     
     def photo1_preview(self, obj):
         if obj.photo1:
-            return f'<img src="{obj.photo1.url}" style="max-width: 200px; max-height: 200px;" />'
+            return format_html('<img src="{}" style="max-width: 200px; max-height: 200px;" />', obj.photo1.url)
         return '-'
     photo1_preview.short_description = 'Fotoğraf 1 Önizleme'
-    photo1_preview.allow_tags = True
     
     def photo2_preview(self, obj):
         if obj.photo2:
-            return f'<img src="{obj.photo2.url}" style="max-width: 200px; max-height: 200px;" />'
+            return format_html('<img src="{}" style="max-width: 200px; max-height: 200px;" />', obj.photo2.url)
         return '-'
     photo2_preview.short_description = 'Fotoğraf 2 Önizleme'
-    photo2_preview.allow_tags = True
     
     def photo3_preview(self, obj):
         if obj.photo3:
-            return f'<img src="{obj.photo3.url}" style="max-width: 200px; max-height: 200px;" />'
+            return format_html('<img src="{}" style="max-width: 200px; max-height: 200px;" />', obj.photo3.url)
         return '-'
     photo3_preview.short_description = 'Fotoğraf 3 Önizleme'
-    photo3_preview.allow_tags = True
     
     def get_readonly_fields(self, request, obj=None):
         """Make all fields readonly except status and rejection_reason for pending requests"""
@@ -645,10 +643,9 @@ class ExpoAdmin(admin.ModelAdmin):
     
     def image_preview(self, obj):
         if obj.image:
-            return f'<img src="{obj.image.url}" style="max-width: 300px; max-height: 300px;" />'
+            return format_html('<img src="{}" style="max-width: 300px; max-height: 300px;" />', obj.image.url)
         return '-'
     image_preview.short_description = 'Görsel Önizleme'
-    image_preview.allow_tags = True
 
 
 @admin.register(ExpoSignup)
