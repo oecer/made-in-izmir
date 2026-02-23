@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib import messages
 from django.utils.html import format_html
-from .models import UserProfile, SignupRequest, Sector, ProductTag, Product, ProductRequest, Expo, ExpoSignup, ProfileEditRequest
+from .models import UserProfile, SignupRequest, Sector, ProductTag, Product, ProductRequest, Expo, ExpoSignup, ProfileEditRequest, MembershipConsent, ConsentText
 
 
 @admin.register(SignupRequest)
@@ -16,7 +16,8 @@ class SignupRequestAdmin(admin.ModelAdmin):
     search_fields = ('username', 'email', 'company_name', 'phone_number', 'first_name', 'last_name')
     readonly_fields = (
         'created_at', 'updated_at', 'reviewed_by', 'reviewed_at', 'password_hash',
-        'buyer_interested_sectors_display', 'producer_sectors_display'
+        'buyer_interested_sectors_display', 'producer_sectors_display',
+        'consent_given', 'consent_timestamp', 'consent_ip',
     )
     
     fieldsets = (
@@ -40,6 +41,10 @@ class SignupRequestAdmin(admin.ModelAdmin):
         }),
         ('Timestamps', {
             'fields': ('created_at', 'updated_at'),
+        }),
+        ('\u00dcyelik Onay\u0131 (Hukuki Kay\u0131t)', {
+            'fields': ('consent_given', 'consent_timestamp', 'consent_ip'),
+            'description': 'Bu bilgiler kullan\u0131c\u0131 kayd\u0131 s\u0131ras\u0131nda otomatik olarak kaydedilir ve de\u011fi\u015ftirilemez.',
         }),
     )
     
@@ -686,3 +691,72 @@ class ExpoSignupAdmin(admin.ModelAdmin):
             return ', '.join([p.title_tr or p.title_en for p in products])
         return '-'
     selected_products_display.short_description = 'Seçilen Ürünler'
+
+
+@admin.register(MembershipConsent)
+class MembershipConsentAdmin(admin.ModelAdmin):
+    """Read-only admin for permanent membership consent audit records."""
+    list_display = (
+        'company_name', 'username', 'email',
+        'consent_given_at', 'ip_address', 'consent_text_version'
+    )
+    list_filter = ('consent_given_at', 'consent_text_version')
+    search_fields = ('username', 'email', 'company_name', 'ip_address')
+    readonly_fields = (
+        'signup_request', 'username', 'email', 'company_name',
+        'consent_given_at', 'ip_address', 'consent_text_version'
+    )
+    ordering = ('-consent_given_at',)
+
+    def has_add_permission(self, request):
+        return False  # Records must only be created programmatically
+
+    def has_change_permission(self, request, obj=None):
+        return False  # Immutable audit log
+
+    def has_delete_permission(self, request, obj=None):
+        return False  # Must never be deleted
+
+    class Meta:
+        verbose_name = "Üyelik Onay Kaydı"
+        verbose_name_plural = "Üyelik Onay Kayıtları"
+
+
+@admin.register(ConsentText)
+class ConsentTextAdmin(admin.ModelAdmin):
+    """Singleton admin – only one ConsentText record exists."""
+    list_display = ('__str__', 'version', 'updated_at')
+    readonly_fields = ('updated_at',)
+
+    fieldsets = (
+        ('Türkçe Metin', {
+            'fields': ('text_tr',),
+            'description': 'Kayıt formunda ve onay popup\'ında Türkçe olarak gösterilecek metin.'
+        }),
+        ('English Text', {
+            'fields': ('text_en',),
+            'description': 'English text shown in the registration form and confirmation popup.'
+        }),
+        ('Versiyon Bilgisi', {
+            'fields': ('version', 'updated_at'),
+            'description': 'Metni her değiştirdiğinizde versiyonu güncelleyin (örn. v1.0 → v1.1). '
+                           'Bu değer kullanıcının onay kaydına işlenir.'
+        }),
+    )
+
+    def has_add_permission(self, request):
+        """Prevent adding a second row – singleton."""
+        return not ConsentText.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        """Prevent deletion – the text must always be present."""
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        """Redirect the list view straight to the single edit page."""
+        obj = ConsentText.get_solo()  # ensures row exists
+        from django.shortcuts import redirect
+        from django.urls import reverse
+        return redirect(
+            reverse('admin:main_consenttext_change', args=[obj.pk])
+        )

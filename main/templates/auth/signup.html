@@ -238,12 +238,57 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn-auth" data-i18n="signup.submit">Kayıt Ol</button>
+            <!-- Mandatory membership consent checkbox -->
+            <div class="consent-checkbox-wrapper" id="consentSection">
+                <label class="consent-label" for="membership_consent">
+                    <input type="checkbox" name="membership_consent" id="membership_consent">
+                    <span class="consent-checkbox-text">
+                        {% if consent_text %}
+                            <span id="consentPreview">{{ consent_text.text_tr|truncatewords:40 }}</span>
+                            <span id="consentFull" style="display:none;">{{ consent_text.text_tr|linebreaksbr }}</span>
+                            <a href="#" id="consentToggleLink" class="consent-toggle-link" onclick="toggleConsentText(event)">Devamını Gör ▾</a>
+                        {% else %}
+                            Üyelik onay metnini okuyup kabul etmeniz gerekmektedir.
+                        {% endif %}
+                        <strong>Onay vermeden kayıt tamamlanamaz.</strong>
+                    </span>
+                </label>
+                <div class="consent-error" id="consentError" style="display:none;">
+                    Devam etmek için üyelik onay metnini kabul etmelisiniz.
+                </div>
+            </div>
+
+            <button type="button" class="btn-auth" id="submitBtn" disabled onclick="openConsentPopup()">Kayıt Ol</button>
+
         </form>
 
         <div class="link-text">
             <span data-i18n="signup.have_account">Zaten hesabınız var mı?</span>
             <a href="{% url 'main:login' %}" data-i18n="signup.login_link">Giriş Yapın</a>
+        </div>
+    </div>
+</div>
+
+<!-- ===== Membership Consent Confirmation Popup ===== -->
+<div id="consentModal" role="dialog" aria-modal="true" aria-labelledby="consentModalTitle">
+    <div class="consent-modal-box">
+        <div class="consent-modal-header">
+            <span class="lock-icon">🔒</span>
+            <h3 id="consentModalTitle">Üyelik Onay Metni – Son Onay</h3>
+        </div>
+        <div class="consent-modal-body">
+            {% if consent_text %}
+                <span class="lang-badge tr">TR</span>
+                <div class="consent-modal-text">{{ consent_text.text_tr|linebreaksbr }}</div>
+                <span class="lang-badge en">EN</span>
+                <div class="consent-modal-text">{{ consent_text.text_en|linebreaksbr }}</div>
+            {% else %}
+                <p>Onay metni yüklenemedi. Lütfen daha sonra tekrar deneyin.</p>
+            {% endif %}
+        </div>
+        <div class="consent-modal-footer">
+            <button type="button" class="btn-consent-cancel" onclick="closeConsentPopup()">Vazgeç</button>
+            <button type="button" class="btn-consent-confirm" id="confirmAndRegisterBtn" onclick="confirmAndSubmit()">✓ Onaylıyorum ve Üye Ol</button>
         </div>
     </div>
 </div>
@@ -264,6 +309,165 @@
         background: rgba(204, 164, 59, 0.1);
         border-color: var(--accent-color);
     }
+
+    /* ===== Consent Checkbox ===== */
+    .consent-checkbox-wrapper {
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+        padding: 1rem 1.2rem;
+        background: rgba(204, 164, 59, 0.06);
+        border: 1.5px solid rgba(204, 164, 59, 0.35);
+        border-radius: var(--radius-md);
+    }
+    .consent-label {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        cursor: pointer;
+    }
+    .consent-label input[type="checkbox"] {
+        margin-top: 3px;
+        min-width: 18px;
+        height: 18px;
+        accent-color: var(--accent-color);
+        cursor: pointer;
+    }
+    .consent-checkbox-text {
+        font-size: 0.82rem;
+        line-height: 1.55;
+        color: var(--text-secondary, #64748b);
+    }
+    .consent-error {
+        color: #e53e3e;
+        font-size: 0.8rem;
+        margin-top: 0.4rem;
+    }
+    #submitBtn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+    .consent-toggle-link {
+        display: inline-block;
+        margin-top: 0.35rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--accent-color, #cca43b);
+        text-decoration: none;
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+    .consent-toggle-link:hover { opacity: 0.75; }
+    #consentFull {
+        display: none;
+        margin-top: 0.4rem;
+        font-size: 0.82rem;
+        line-height: 1.6;
+        color: var(--text-secondary, #64748b);
+        animation: fadeIn 0.25s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* ===== Consent Popup Modal ===== */
+    #consentModal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(0,0,0,0.55);
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+    #consentModal.open {
+        display: flex;
+    }
+    .consent-modal-box {
+        background: #fff;
+        border-radius: 14px;
+        max-width: 620px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+        overflow: hidden;
+        animation: modalSlideIn 0.3s ease;
+    }
+    @keyframes modalSlideIn {
+        from { transform: translateY(-30px); opacity: 0; }
+        to   { transform: translateY(0);    opacity: 1; }
+    }
+    .consent-modal-header {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: #fff;
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .consent-modal-header h3 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        color: #ffffff !important;
+    }
+    .consent-modal-header .lock-icon {
+        font-size: 1.3rem;
+        color: #ffffff !important;
+    }
+    .consent-modal-body {
+        padding: 1.5rem;
+        max-height: 55vh;
+        overflow-y: auto;
+    }
+    .consent-modal-body p,
+    .consent-modal-text {
+        font-size: 0.84rem;
+        line-height: 1.7;
+        color: #334155;
+        margin-bottom: 0.9rem;
+    }
+    .consent-modal-body .lang-badge {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        padding: 2px 8px;
+        border-radius: 20px;
+        margin-bottom: 0.5rem;
+    }
+    .lang-badge.tr { background: #fef3c7; color: #92400e; }
+    .lang-badge.en { background: #dbeafe; color: #1e40af; margin-top: 0.75rem; }
+    .consent-modal-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+        background: #f8fafc;
+    }
+    .btn-consent-cancel {
+        padding: 0.6rem 1.3rem;
+        border-radius: var(--radius-md);
+        border: 1.5px solid #cbd5e1;
+        background: transparent;
+        color: #64748b;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .btn-consent-cancel:hover { background: #f1f5f9; color: #1e293b; }
+    .btn-consent-confirm {
+        padding: 0.6rem 1.5rem;
+        border-radius: var(--radius-md);
+        border: none;
+        background: linear-gradient(135deg, var(--accent-color, #cca43b) 0%, #a87d20 100%);
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 2px 8px rgba(204,164,59,0.3);
+    }
+    .btn-consent-confirm:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(204,164,59,0.4); }
 </style>
 {% endblock %}
 
@@ -383,6 +587,70 @@
                 setTimeout(updateSectorLabels, 50);
             });
         });
+
+        // ===== Consent Checkbox: enable/disable the submit button =====
+        const consentCheckbox = document.getElementById('membership_consent');
+        const submitBtn = document.getElementById('submitBtn');
+
+        consentCheckbox.addEventListener('change', function () {
+            submitBtn.disabled = !this.checked;
+            document.getElementById('consentError').style.display = 'none';
+        });
+    });
+
+    // ===== Consent Text Toggle (See More / Hide) =====
+    function toggleConsentText(e) {
+        e.preventDefault();
+        e.stopPropagation(); // don't trigger the checkbox label
+        const preview = document.getElementById('consentPreview');
+        const full    = document.getElementById('consentFull');
+        const link    = document.getElementById('consentToggleLink');
+        const isExpanded = full.style.display !== 'none';
+        if (isExpanded) {
+            full.style.display = 'none';
+            preview.style.display = '';
+            link.textContent = 'Devamını Gör ▾';
+        } else {
+            preview.style.display = 'none';
+            full.style.display = 'block';
+            link.textContent = 'Gizle ▴';
+        }
+    }
+
+    // ===== Consent Popup Functions =====
+    function openConsentPopup() {
+        const consentCheckbox = document.getElementById('membership_consent');
+        if (!consentCheckbox.checked) {
+            document.getElementById('consentError').style.display = 'block';
+            return;
+        }
+        document.getElementById('consentModal').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeConsentPopup() {
+        document.getElementById('consentModal').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    function confirmAndSubmit() {
+        // User confirmed in the popup – submit the actual form
+        closeConsentPopup();
+        const form = document.getElementById('signupForm');
+        // Change button to loading state
+        const btn = document.getElementById('confirmAndRegisterBtn');
+        if (btn) { btn.textContent = 'Kaydediliyor…'; btn.disabled = true; }
+        form.submit();
+    }
+
+    // Close modal on backdrop click
+    document.getElementById('consentModal').addEventListener('click', function (e) {
+        if (e.target === this) { closeConsentPopup(); }
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { closeConsentPopup(); }
     });
 </script>
 {% endblock %}

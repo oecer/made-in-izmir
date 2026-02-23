@@ -48,6 +48,11 @@ class SignupRequest(models.Model):
     )
     producer_product_count = models.IntegerField(blank=True, null=True)
     
+    # Membership consent (legal record)
+    consent_given = models.BooleanField(default=False, verbose_name="Üyelik Onayı Verildi")
+    consent_timestamp = models.DateTimeField(null=True, blank=True, verbose_name="Onay Tarihi/Saati")
+    consent_ip = models.GenericIPAddressField(null=True, blank=True, verbose_name="Onay IP Adresi")
+
     # Request status
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     
@@ -87,6 +92,103 @@ class SignupRequest(models.Model):
             ids = [int(id.strip()) for id in self.producer_sectors_ids.split(',') if id.strip()]
             return Sector.objects.filter(id__in=ids)
         return Sector.objects.none()
+
+
+
+
+class ConsentText(models.Model):
+    """Singleton model – stores the editable membership consent text shown during signup."""
+
+    text_tr = models.TextField(
+        verbose_name="Onay Metni (Türkçe)",
+        help_text="Kayıt formunda ve onay popup'ında gösterilecek Türkçe metin."
+    )
+    text_en = models.TextField(
+        verbose_name="Consent Text (English)",
+        help_text="English text shown in the registration form and confirmation popup."
+    )
+    version = models.CharField(
+        max_length=20,
+        default='v1.0',
+        verbose_name="Versiyon",
+        help_text="Değişiklik yapıldığında versiyonu güncelleyin (örn. v1.1). Bu değer onay kayıtlarına işlenir."
+    )
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Son Güncelleme")
+
+    class Meta:
+        verbose_name = "Üyelik Onay Metni"
+        verbose_name_plural = "Üyelik Onay Metni"  # Intentionally singular – singleton
+
+    def __str__(self):
+        return f"Üyelik Onay Metni ({self.version}) – {self.updated_at.strftime('%d.%m.%Y')}"
+
+    def save(self, *args, **kwargs):
+        """Enforce singleton: only one ConsentText row may exist."""
+        self.pk = 1  # Always overwrite the same row
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get_solo(cls):
+        """Return the single ConsentText instance, creating a default one if necessary."""
+        obj, _ = cls.objects.get_or_create(
+            pk=1,
+            defaults={
+                'text_tr': (
+                    "Madeinİzmir platformuna üye olarak; kayıt sırasında ve sonrasında sisteme girdiğim tüm firma bilgileri, ürün bilgileri, logo, görsel ve diğer içeriklerin Madeinİzmir platformunda, gerek yurt içinde gerek yurt dışında tanıtım ve görünürlük amacıyla herkese açık şekilde yayınlanacağını bildiğimi ve kabul ettiğimi beyan ederim.\n\n"
+                    "Yüklediğim tüm içeriklerin tarafıma ait olduğunu; telif hakkı, marka, patent, tasarım koruması, gizlilik veya üçüncü kişi haklarına tabi olması durumunda doğabilecek tüm hukuki ve cezai sorumluluğun tamamen tarafıma ait olduğunu kabul ederim.\n\n"
+                    "Madeinİzmir'in, üye firma tarafından yüklenen içeriklerden kaynaklanan hiçbir hukuki sorumluluğu bulunmadığını kabul ederim.\n\n"
+                    "Madeinİzmir platformunun firma tanıtımı, ticari görünürlük ve ihracata yönelik dijital vitrin amacıyla faaliyet gösterdiğini ve üyeliğimin bu kapsamda oluşturulduğunu kabul ederim."
+                ),
+                'text_en': (
+                    "By becoming a member of the Madeinİzmir platform, I hereby acknowledge and accept that all company information, product details, logos, images, and other content that I provide during registration and thereafter will be published publicly on the Madeinİzmir platform for promotional and visibility purposes, both domestically and internationally.\n\n"
+                    "I accept that all content uploaded by me belongs to my company and that any legal and criminal liability arising from copyright, trademark, patent, design rights, confidentiality obligations, or third-party rights related to such content rests entirely with me.\n\n"
+                    "I accept that Madeinİzmir shall bear no legal responsibility for any content uploaded by member companies.\n\n"
+                    "I acknowledge and accept that the Madeinİzmir platform operates as a digital showcase for company promotion, commercial visibility, and export-oriented presentation, and that my membership is established within this scope."
+                ),
+                'version': 'v1.0',
+            }
+        )
+        return obj
+
+
+class MembershipConsent(models.Model):
+
+    """Permanent, immutable record of every membership consent event – must never be deleted."""
+
+    # Reference to the pending signup request (kept even if request is deleted later)
+    signup_request = models.ForeignKey(
+        'SignupRequest',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='consent_records',
+        verbose_name="Kayıt Talebi"
+    )
+
+    # Who gave consent (company info copied at the time of consent)
+    username = models.CharField(max_length=150, verbose_name="Kullanıcı Adı")
+    email = models.EmailField(verbose_name="E-posta")
+    company_name = models.CharField(max_length=200, verbose_name="Firma Adı")
+
+    # When and from where
+    consent_given_at = models.DateTimeField(verbose_name="Onay Tarihi/Saati")
+    ip_address = models.GenericIPAddressField(verbose_name="IP Adresi")
+
+    # The exact text that was shown and accepted
+    consent_text_version = models.CharField(
+        max_length=50,
+        default='v1.0',
+        verbose_name="Onay Metni Versiyonu"
+    )
+
+    class Meta:
+        verbose_name = "Üyelik Onay Kaydı"
+        verbose_name_plural = "Üyelik Onay Kayıtları"
+        ordering = ['-consent_given_at']
+        # Intentionally no delete permission override; records must be kept permanently.
+
+    def __str__(self):
+        return f"{self.company_name} ({self.username}) – {self.consent_given_at.strftime('%d.%m.%Y %H:%M')}"
 
 
 class Sector(models.Model):

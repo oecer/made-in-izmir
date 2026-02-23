@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import SignUpForm, CustomLoginForm, ProductForm, ExpoSignupForm
-from .models import Product, ProductTag, ProductRequest, Expo, ExpoSignup, UserProfile, Sector
+from .models import Product, ProductTag, ProductRequest, Expo, ExpoSignup, UserProfile, Sector, MembershipConsent, ConsentText
 
 
 def index(request):
@@ -51,27 +51,67 @@ def contact(request):
     return render(request, 'contact.html')
 
 
+def _get_client_ip(request):
+    """Extract real client IP, respecting common proxy headers."""
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        return x_forwarded_for.split(',')[0].strip()
+    return request.META.get('REMOTE_ADDR', '0.0.0.0')
+
+
 def signup_view(request):
     """User registration view - creates signup request for admin approval"""
     if request.user.is_authenticated:
         return redirect('main:index')
-    
+
+    consent_text = ConsentText.get_solo()  # singleton – never None
+
     if request.method == 'POST':
+        # Consent checkbox must be ticked (second confirmation happens via JS popup)
+        consent_given = request.POST.get('membership_consent') == 'on'
         form = SignUpForm(request.POST)
+
+        if not consent_given:
+            messages.error(request, 'Devam etmek için üyelik onay metnini kabul etmelisiniz.')
+            return render(request, 'auth/signup.html', {'form': form, 'consent_text': consent_text})
+
         if form.is_valid():
+            from django.utils import timezone as tz
+            now = tz.now()
+            ip = _get_client_ip(request)
+
+            # form.save() already calls SignupRequest.objects.create() internally
             signup_request = form.save()
+
+            # Patch consent fields and save again (single extra UPDATE query)
+            signup_request.consent_given = True
+            signup_request.consent_timestamp = now
+            signup_request.consent_ip = ip
+            signup_request.save(update_fields=['consent_given', 'consent_timestamp', 'consent_ip'])
+
+            # Write permanent, immutable consent audit record
+            MembershipConsent.objects.create(
+                signup_request=signup_request,
+                username=signup_request.username,
+                email=signup_request.email,
+                company_name=signup_request.company_name,
+                consent_given_at=now,
+                ip_address=ip,
+                consent_text_version=consent_text.version,  # tracks live version
+            )
+
             messages.success(
-                request, 
-                'Kayıt talebiniz alındı! Hesabınız yönetici onayından sonra aktif hale gelecektir. '
+                request,
+                'Kayıt talebiniz alındı! Hesabınız yönetici onaylandıktan sonra aktif hale gelecektir. '
                 'E-posta adresinize onay durumu hakkında bilgi gönderilecektir.'
             )
             return redirect('main:index')
         else:
-            messages.error(request, 'Lütfen formdaki hataları düzeltin.')
+            messages.error(request, 'Lütfen formdaki hataları düzeltiniz.')
     else:
         form = SignUpForm()
-    
-    return render(request, 'auth/signup.html', {'form': form})
+
+    return render(request, 'auth/signup.html', {'form': form, 'consent_text': consent_text})
 
 
 
