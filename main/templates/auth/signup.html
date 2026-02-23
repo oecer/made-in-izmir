@@ -238,6 +238,11 @@
                 </div>
             </div>
 
+            {% if consent_text %}
+            {{ consent_text.text_tr|json_script:"consent-text-tr" }}
+            {{ consent_text.text_en|json_script:"consent-text-en" }}
+            {% endif %}
+
             <!-- Mandatory membership consent checkbox -->
             <div class="consent-checkbox-wrapper" id="consentSection">
                 <label class="consent-label" for="membership_consent">
@@ -250,7 +255,7 @@
                         {% else %}
                             Üyelik onay metnini okuyup kabul etmeniz gerekmektedir.
                         {% endif %}
-                        <strong>Onay vermeden kayıt tamamlanamaz.</strong>
+                        <strong id="consentMandatoryLabel">Onay vermeden kayıt tamamlanamaz.</strong>
                     </span>
                 </label>
                 <div class="consent-error" id="consentError" style="display:none;">
@@ -258,7 +263,7 @@
                 </div>
             </div>
 
-            <button type="button" class="btn-auth" id="submitBtn" disabled onclick="openConsentPopup()">Kayıt Ol</button>
+            <button type="button" class="btn-auth" id="submitBtn" disabled onclick="openConsentPopup()" data-i18n="signup.submit">Kayıt Ol</button>
 
         </form>
 
@@ -274,7 +279,7 @@
     <div class="consent-modal-box">
         <div class="consent-modal-header">
             <span class="lock-icon">🔒</span>
-            <h3 id="consentModalTitle">Üyelik Onay Metni – Son Onay</h3>
+            <h3 id="consentModalTitle" data-i18n="signup.consent_title">Üyelik Onay Metni – Son Onay</h3>
         </div>
         <div class="consent-modal-body">
             {% if consent_text %}
@@ -287,8 +292,8 @@
             {% endif %}
         </div>
         <div class="consent-modal-footer">
-            <button type="button" class="btn-consent-cancel" onclick="closeConsentPopup()">Vazgeç</button>
-            <button type="button" class="btn-consent-confirm" id="confirmAndRegisterBtn" onclick="confirmAndSubmit()">✓ Onaylıyorum ve Üye Ol</button>
+            <button type="button" class="btn-consent-cancel" onclick="closeConsentPopup()" data-i18n="signup.consent_cancel">Vazgeç</button>
+            <button type="button" class="btn-consent-confirm" id="confirmAndRegisterBtn" onclick="confirmAndSubmit()" data-i18n="signup.consent_confirm">✓ Onaylıyorum ve Üye Ol</button>
         </div>
     </div>
 </div>
@@ -584,9 +589,71 @@
         document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 // Wait a tiny bit for localStorage to update
-                setTimeout(updateSectorLabels, 50);
+                setTimeout(() => {
+                    updateSectorLabels();
+                    updateConsentText();
+                }, 50);
             });
         });
+
+        // --- Consent Text Translation Logic ---
+        function truncateWords(str, n) {
+            const words = str.split(/\s+/);
+            if (words.length <= n) return str;
+            return words.slice(0, n).join(' ') + '…';
+        }
+
+        function updateConsentText() {
+            const lang = localStorage.getItem('madeInIzmirLang') || 'tr';
+
+            // Read texts from the safe json_script blocks Django rendered
+            const trEl = document.getElementById('consent-text-tr');
+            const enEl = document.getElementById('consent-text-en');
+            if (!trEl || !enEl) return;
+
+            const textTr = JSON.parse(trEl.textContent);
+            const textEn = JSON.parse(enEl.textContent);
+            const activeText = lang === 'en' ? textEn : textTr;
+            if (!activeText) return;
+
+            // Update preview (truncated)
+            const preview = document.getElementById('consentPreview');
+            if (preview) preview.textContent = truncateWords(activeText, 40);
+
+            // Update full expanded text (convert \n to <br>)
+            const full = document.getElementById('consentFull');
+            if (full) full.innerHTML = activeText.replace(/\n/g, '<br>');
+
+            // Translate toggle link label
+            const link = document.getElementById('consentToggleLink');
+            if (link) {
+                const isExpanded = full && full.style.display !== 'none';
+                if (lang === 'en') {
+                    link.textContent = isExpanded ? 'Show Less ▴' : 'Read More ▾';
+                } else {
+                    link.textContent = isExpanded ? 'Gizle ▴' : 'Devamını Gör ▾';
+                }
+            }
+
+            // Translate mandatory label
+            const mandatory = document.getElementById('consentMandatoryLabel');
+            if (mandatory) {
+                mandatory.textContent = lang === 'en'
+                    ? 'Consent is required to complete registration.'
+                    : 'Onay vermeden kayıt tamamlanamaz.';
+            }
+
+            // Translate inline error message
+            const err = document.getElementById('consentError');
+            if (err) {
+                err.textContent = lang === 'en'
+                    ? 'You must accept the membership consent to proceed.'
+                    : 'Devam etmek için üyelik onay metnini kabul etmelisiniz.';
+            }
+        }
+
+        // Run on initial page load to match saved language
+        updateConsentText();
 
         // ===== Consent Checkbox: enable/disable the submit button =====
         const consentCheckbox = document.getElementById('membership_consent');

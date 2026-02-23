@@ -113,7 +113,10 @@ const translations = {
             producer_products: "Yaklaşık Ürün Sayısı",
             submit: "Kayıt Ol",
             have_account: "Zaten hesabınız var mı?",
-            login_link: "Giriş Yapın"
+            login_link: "Giriş Yapın",
+            consent_title: "Üyelik Onay Metni – Son Onay",
+            consent_cancel: "Vazgeç",
+            consent_confirm: "✓ Onaylıyorum ve Üye Ol"
         },
         login: {
             title: "Giriş Yap",
@@ -342,7 +345,10 @@ const translations = {
             producer_products: "Approximate Number of Products",
             submit: "Sign Up",
             have_account: "Already have an account?",
-            login_link: "Login"
+            login_link: "Login",
+            consent_title: "Membership Consent – Final Confirmation",
+            consent_cancel: "Cancel",
+            consent_confirm: "✓ I Agree & Register"
         },
         login: {
             title: "Login",
