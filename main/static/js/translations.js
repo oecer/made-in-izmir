@@ -87,6 +87,7 @@ const translations = {
         },
         signup: {
             title: "Kayıt Ol",
+            subtitle: "Platforma katılmak için bilgilerinizi doldurun",
             personal_info: "Kişisel Bilgiler",
             first_name: "Ad",
             last_name: "Soyad",

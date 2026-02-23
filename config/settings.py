@@ -208,15 +208,14 @@ if not DEBUG:
     X_FRAME_OPTIONS = 'DENY'
 
 # ──────────────────────────────────────────────
-# Email / SMTP configuration  (Microsoft 365)
+# Email configuration (Microsoft Graph API / OAuth2)
 # ──────────────────────────────────────────────
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.office365.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True          # Office 365 uses STARTTLS on port 587
-EMAIL_USE_SSL = False         # Do NOT enable SSL when TLS is True
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-SERVER_EMAIL = EMAIL_HOST_USER
+EMAIL_BACKEND = 'main.email_backend.MicrosoftGraphEmailBackend'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')          # Licensed mailbox for sending
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)  # From: noreply@
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
+# Azure App Registration (used by email backend to get OAuth2 tokens)
+AZURE_TENANT_ID = os.getenv('AZURE_TENANT_ID')
+AZURE_CLIENT_ID = os.getenv('AZURE_CLIENT_ID')
+AZURE_CLIENT_SECRET = os.getenv('AZURE_CLIENT_SECRET')
