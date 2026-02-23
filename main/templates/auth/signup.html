@@ -24,12 +24,11 @@
 <div class="signup-container">
     <div class="auth-card">
         <h2 data-i18n="signup.title">Kayıt Ol</h2>
+        <p class="auth-subtitle" data-i18n="signup.subtitle">Platforma katılmak için bilgilerinizi doldurun</p>
 
         {% if messages %}
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            {{ message }}
-        </div>
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
         {% endfor %}
         {% endif %}
 
@@ -40,31 +39,43 @@
             <div class="form-section">
                 <h3 data-i18n="signup.personal_info">Kişisel Bilgiler</h3>
 
-                <div class="form-group">
-                    <label for="{{ form.first_name.id_for_label }}">
-                        <span data-i18n="signup.first_name">Ad</span> <span class="required">*</span>
-                    </label>
-                    {{ form.first_name }}
-                    {% if form.first_name.errors %}
-                    <div class="error-message">{{ form.first_name.errors.0 }}</div>
-                    {% endif %}
-                </div>
+                <!-- First + Last name side by side -->
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="{{ form.first_name.id_for_label }}">
+                            <span data-i18n="signup.first_name">Ad</span> <span class="required">*</span>
+                        </label>
+                        <input type="text" name="first_name" id="{{ form.first_name.id_for_label }}"
+                               class="form-control{% if form.first_name.errors %} is-invalid{% endif %}"
+                               autocomplete="given-name" required
+                               value="{{ form.first_name.value|default:'' }}">
+                        {% if form.first_name.errors %}
+                        <div class="error-message">{{ form.first_name.errors.0 }}</div>
+                        {% endif %}
+                    </div>
 
-                <div class="form-group">
-                    <label for="{{ form.last_name.id_for_label }}">
-                        <span data-i18n="signup.last_name">Soyad</span> <span class="required">*</span>
-                    </label>
-                    {{ form.last_name }}
-                    {% if form.last_name.errors %}
-                    <div class="error-message">{{ form.last_name.errors.0 }}</div>
-                    {% endif %}
+                    <div class="form-group">
+                        <label for="{{ form.last_name.id_for_label }}">
+                            <span data-i18n="signup.last_name">Soyad</span> <span class="required">*</span>
+                        </label>
+                        <input type="text" name="last_name" id="{{ form.last_name.id_for_label }}"
+                               class="form-control{% if form.last_name.errors %} is-invalid{% endif %}"
+                               autocomplete="family-name" required
+                               value="{{ form.last_name.value|default:'' }}">
+                        {% if form.last_name.errors %}
+                        <div class="error-message">{{ form.last_name.errors.0 }}</div>
+                        {% endif %}
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label for="{{ form.email.id_for_label }}">
                         <span data-i18n="signup.email">E-posta</span> <span class="required">*</span>
                     </label>
-                    {{ form.email }}
+                    <input type="email" name="email" id="{{ form.email.id_for_label }}"
+                           class="form-control{% if form.email.errors %} is-invalid{% endif %}"
+                           autocomplete="email" required
+                           value="{{ form.email.value|default:'' }}">
                     {% if form.email.errors %}
                     <div class="error-message">{{ form.email.errors.0 }}</div>
                     {% endif %}
@@ -74,7 +85,10 @@
                     <label for="{{ form.username.id_for_label }}">
                         <span data-i18n="signup.username">Kullanıcı Adı</span> <span class="required">*</span>
                     </label>
-                    {{ form.username }}
+                    <input type="text" name="username" id="{{ form.username.id_for_label }}"
+                           class="form-control{% if form.username.errors %} is-invalid{% endif %}"
+                           autocomplete="username" required
+                           value="{{ form.username.value|default:'' }}">
                     {% if form.username.errors %}
                     <div class="error-message">{{ form.username.errors.0 }}</div>
                     {% endif %}
@@ -84,7 +98,12 @@
                     <label for="{{ form.password1.id_for_label }}">
                         <span data-i18n="signup.password">Şifre</span> <span class="required">*</span>
                     </label>
-                    {{ form.password1 }}
+                    <div class="input-wrapper">
+                        <input type="password" name="password1" id="{{ form.password1.id_for_label }}"
+                               class="form-control{% if form.password1.errors %} is-invalid{% endif %}"
+                               autocomplete="new-password" required>
+                        <button type="button" class="btn-eye" id="togglePwd1" tabindex="-1" aria-label="Şifreyi göster">👁</button>
+                    </div>
                     {% if form.password1.errors %}
                     <div class="error-message">{{ form.password1.errors.0 }}</div>
                     {% endif %}
@@ -111,7 +130,12 @@
                     <label for="{{ form.password2.id_for_label }}">
                         <span data-i18n="signup.password_confirm">Şifre Tekrar</span> <span class="required">*</span>
                     </label>
-                    {{ form.password2 }}
+                    <div class="input-wrapper">
+                        <input type="password" name="password2" id="{{ form.password2.id_for_label }}"
+                               class="form-control{% if form.password2.errors %} is-invalid{% endif %}"
+                               autocomplete="new-password" required>
+                        <button type="button" class="btn-eye" id="togglePwd2" tabindex="-1" aria-label="Şifreyi göster">👁</button>
+                    </div>
                     {% if form.password2.errors %}
                     <div class="error-message">{{ form.password2.errors.0 }}</div>
                     {% endif %}
@@ -186,7 +210,7 @@
                 </div>
 
                 {% if form.non_field_errors %}
-                <div class="error-message">{{ form.non_field_errors.0 }}</div>
+                <div class="non-field-error">{{ form.non_field_errors.0 }}</div>
                 {% endif %}
             </div>
 
@@ -644,6 +668,28 @@
 {% block extra_js %}
 <script src="https://unpkg.com/slim-select@2.8.2/dist/slimselect.min.js"></script>
 <script>
+    // ===== Eye toggles for password fields =====
+    document.addEventListener('DOMContentLoaded', function () {
+        function makeEyeToggle(btnId, inputId) {
+            const btn = document.getElementById(btnId);
+            const inp = document.getElementById(inputId);
+            if (!btn || !inp) return;
+            btn.addEventListener('click', function () {
+                const show = inp.type === 'password';
+                inp.type = show ? 'text' : 'password';
+                this.textContent = show ? '🙈' : '👁';
+            });
+        }
+        makeEyeToggle('togglePwd1', 'id_password1');
+        makeEyeToggle('togglePwd2', 'id_password2');
+
+        // Scroll to first error on server-side validation failure
+        const firstErr = document.querySelector('.error-message, .non-field-error, .is-invalid');
+        if (firstErr) {
+            firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    });
+
     // ===== Real-Time Password Strength Checker =====
     (function () {
         const SPECIAL_RE = /[!@#$%^&*()\-_=+\[\]{};':"\\|,.<>/?`~]/;

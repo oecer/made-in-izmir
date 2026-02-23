@@ -8,23 +8,34 @@
 <div class="login-container">
     <div class="auth-card">
         <h2 data-i18n="login.title">Giriş Yap</h2>
+        <p class="auth-subtitle" data-i18n="login.subtitle">Hesabınıza giriş yapın</p>
 
         {% if messages %}
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            {{ message }}
-        </div>
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
         {% endfor %}
         {% endif %}
 
-        <form method="post">
+        {% if form.non_field_errors %}
+        <div class="non-field-error">{{ form.non_field_errors.0 }}</div>
+        {% endif %}
+
+        <form method="post" id="loginForm" novalidate autocomplete="on">
             {% csrf_token %}
 
             <div class="form-group">
                 <label for="{{ form.username.id_for_label }}">
-                    <span data-i18n="login.username">Kullanıcı Adı veya E-posta</span> <span class="required">*</span>
+                    <span data-i18n="login.username">Kullanıcı Adı veya E-posta</span>
+                    <span class="required">*</span>
                 </label>
-                {{ form.username }}
+                <input type="text"
+                       name="username"
+                       id="{{ form.username.id_for_label }}"
+                       class="form-control{% if form.username.errors %} is-invalid{% endif %}"
+                       autocomplete="username email"
+                       autofocus
+                       required
+                       value="{{ form.username.value|default:'' }}">
                 {% if form.username.errors %}
                 <div class="error-message">{{ form.username.errors.0 }}</div>
                 {% endif %}
@@ -32,9 +43,20 @@
 
             <div class="form-group">
                 <label for="{{ form.password.id_for_label }}">
-                    <span data-i18n="login.password">Şifre</span> <span class="required">*</span>
+                    <span data-i18n="login.password">Şifre</span>
+                    <span class="required">*</span>
                 </label>
-                {{ form.password }}
+                <div class="input-wrapper">
+                    <input type="password"
+                           name="password"
+                           id="{{ form.password.id_for_label }}"
+                           class="form-control{% if form.password.errors %} is-invalid{% endif %}"
+                           autocomplete="current-password"
+                           required>
+                    <button type="button" class="btn-eye" id="togglePwd" aria-label="Şifreyi göster/gizle" tabindex="-1">
+                        👁
+                    </button>
+                </div>
                 {% if form.password.errors %}
                 <div class="error-message">{{ form.password.errors.0 }}</div>
                 {% endif %}
@@ -43,11 +65,7 @@
                 </div>
             </div>
 
-            {% if form.non_field_errors %}
-            <div class="error-message">{{ form.non_field_errors.0 }}</div>
-            {% endif %}
-
-            <button type="submit" class="btn-auth" data-i18n="login.submit">Giriş Yap</button>
+            <button type="submit" class="btn-auth" id="loginBtn" data-i18n="login.submit">Giriş Yap</button>
         </form>
 
         <div class="link-text">
@@ -57,20 +75,31 @@
     </div>
 </div>
 
-<style>
-.forgot-password-link {
-    text-align: right;
-    margin-top: 0.4rem;
-}
-.forgot-password-link a {
-    font-size: 0.85rem;
-    color: var(--accent-color, #cca43b);
-    text-decoration: none;
-    transition: opacity 0.2s;
-}
-.forgot-password-link a:hover {
-    opacity: 0.75;
-    text-decoration: underline;
-}
-</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Eye toggle
+    const toggleBtn = document.getElementById('togglePwd');
+    const pwdInput  = document.getElementById('{{ form.password.id_for_label }}');
+    if (toggleBtn && pwdInput) {
+        toggleBtn.addEventListener('click', function () {
+            const isPassword = pwdInput.type === 'password';
+            pwdInput.type = isPassword ? 'text' : 'password';
+            this.textContent = isPassword ? '🙈' : '👁';
+        });
+    }
+
+    // Loading state on submit
+    const form = document.getElementById('loginForm');
+    const btn  = document.getElementById('loginBtn');
+    if (form && btn) {
+        form.addEventListener('submit', function () {
+            btn.classList.add('loading');
+            btn.disabled = true;
+        });
+    }
+});
+</script>
 {% endblock %}
