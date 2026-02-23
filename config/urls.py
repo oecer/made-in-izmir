@@ -51,6 +51,7 @@ urlpatterns = [
          name='password_reset_complete'),
 ]
 
-# Serve media files in development
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Serve media files (uploaded photos, etc.) in both dev and production.
+# Django's static() helper is used here because Railway/Gunicorn does not
+# have a separate web server (nginx/Apache) to handle /media/ URLs.
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
