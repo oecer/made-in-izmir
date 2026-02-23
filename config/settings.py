@@ -166,6 +166,11 @@ LOGIN_URL = 'main:login'
 LOGIN_REDIRECT_URL = 'main:index'
 LOGOUT_REDIRECT_URL = 'main:index'
 
+# Custom authentication backends - allows login with username OR email
+AUTHENTICATION_BACKENDS = [
+    'main.backends.EmailOrUsernameBackend',
+]
+
 # Image compression settings
 IMAGE_MAX_SIZE = (1920, 1920)  # Maximum image dimensions (width, height)
 IMAGE_QUALITY = 85  # JPEG compression quality (1-100)

@@ -76,23 +76,26 @@ def signup_view(request):
 
 
 def login_view(request):
-    """User login view"""
+    """User login view - accepts username OR email"""
     if request.user.is_authenticated:
         return redirect('main:dashboard')
     
     if request.method == 'POST':
-        form = CustomLoginForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                messages.success(request, f'Hoş geldiniz, {user.get_full_name() or user.username}!')
-                next_url = request.GET.get('next', 'main:dashboard')
-                return redirect(next_url)
+        # Get the raw login identifier (username or email) and password
+        login_identifier = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '')
+        
+        # authenticate() will call our custom backend which tries username then email
+        user = authenticate(request, username=login_identifier, password=password)
+        
+        if user is not None:
+            login(request, user)
+            messages.success(request, f'Hoş geldiniz, {user.get_full_name() or user.username}!')
+            next_url = request.GET.get('next', 'main:dashboard')
+            return redirect(next_url)
         else:
-            messages.error(request, 'Kullanıcı adı veya şifre hatalı.')
+            messages.error(request, 'Kullanıcı adı/e-posta veya şifre hatalı.')
+            form = CustomLoginForm()
     else:
         form = CustomLoginForm()
     

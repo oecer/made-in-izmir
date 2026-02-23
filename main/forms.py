@@ -250,7 +250,7 @@ class CustomLoginForm(AuthenticationForm):
             'placeholder': 'Kullanıcı Adı veya E-posta',
             'data-i18n-placeholder': 'login.username'
         }),
-        label='Kullanıcı Adı'
+        label='Kullanıcı Adı veya E-posta'
     )
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
