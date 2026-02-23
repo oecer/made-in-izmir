@@ -88,6 +88,23 @@
                     {% if form.password1.errors %}
                     <div class="error-message">{{ form.password1.errors.0 }}</div>
                     {% endif %}
+                    <!-- Real-time strength meter -->
+                    <div id="pwdStrengthBox" class="pwd-strength-box" style="display:none;">
+                        <div class="pwd-strength-header">
+                            <span data-i18n="signup.pwd_strength">Şifre Gücü</span>:
+                            <span id="pwdStrengthLabel" class="pwd-strength-label"></span>
+                        </div>
+                        <div class="pwd-strength-bar-track">
+                            <div id="pwdStrengthBar" class="pwd-strength-bar"></div>
+                        </div>
+                        <ul class="pwd-requirements" id="pwdRequirements">
+                            <li id="req-length"  class="req-item"><span class="req-icon"></span> <span data-i18n="signup.pwd_req_length">En az 8 karakter</span></li>
+                            <li id="req-upper"   class="req-item"><span class="req-icon"></span> <span data-i18n="signup.pwd_req_upper">En az bir büyük harf (A-Z)</span></li>
+                            <li id="req-lower"   class="req-item"><span class="req-icon"></span> <span data-i18n="signup.pwd_req_lower">En az bir küçük harf (a-z)</span></li>
+                            <li id="req-digit"   class="req-item"><span class="req-icon"></span> <span data-i18n="signup.pwd_req_digit">En az bir rakam (0-9)</span></li>
+                            <li id="req-special" class="req-item"><span class="req-icon"></span> <span data-i18n="signup.pwd_req_special">En az bir özel karakter (!@#$%^&amp;*...)</span></li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -98,6 +115,7 @@
                     {% if form.password2.errors %}
                     <div class="error-message">{{ form.password2.errors.0 }}</div>
                     {% endif %}
+                    <div id="pwdMatchHint" class="pwd-match-hint" style="display:none;"></div>
                 </div>
             </div>
 
@@ -298,6 +316,21 @@
     </div>
 </div>
 
+<!-- ===== Signup Success Popup ===== -->
+<div id="signupSuccessModal" role="dialog" aria-modal="true" aria-labelledby="successModalTitle">
+    <div class="success-modal-box">
+        <div class="success-modal-icon">
+            <svg viewBox="0 0 52 52" class="success-checkmark">
+                <circle class="success-checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                <path class="success-checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+        </div>
+        <h3 id="successModalTitle" data-i18n="signup.success_title">Kayıt Talebiniz Alındı!</h3>
+        <p data-i18n="signup.success_message">Hesabınız yönetici onaylandıktan sonra aktif hale gelecektir. E-posta adresinize onay durumu hakkında bilgi gönderilecektir.</p>
+        <a href="{% url 'main:index' %}" class="btn-success-home" data-i18n="signup.success_btn">Ana Sayfaya Git</a>
+    </div>
+</div>
+
 <style>
     /* Styling for the sector dropdowns */
     .sector-select {
@@ -314,6 +347,78 @@
         background: rgba(204, 164, 59, 0.1);
         border-color: var(--accent-color);
     }
+
+    /* ===== Signup Success Modal ===== */
+    #signupSuccessModal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        background: rgba(0,0,0,0.6);
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+    #signupSuccessModal.open { display: flex; }
+    .success-modal-box {
+        background: #fff;
+        border-radius: 20px;
+        max-width: 480px;
+        width: 100%;
+        padding: 2.5rem 2rem;
+        text-align: center;
+        box-shadow: 0 24px 64px rgba(0,0,0,0.2);
+        animation: modalSlideIn 0.35s ease;
+    }
+    .success-modal-box h3 {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 1rem 0 0.6rem;
+    }
+    .success-modal-box p {
+        font-size: 0.9rem;
+        line-height: 1.7;
+        color: #475569;
+        margin-bottom: 1.8rem;
+    }
+    .btn-success-home {
+        display: inline-block;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        background: linear-gradient(135deg, var(--accent-color, #cca43b) 0%, #a87d20 100%);
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-decoration: none;
+        box-shadow: 0 4px 14px rgba(204,164,59,0.35);
+        transition: all 0.2s;
+    }
+    .btn-success-home:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(204,164,59,0.45); }
+    /* Animated SVG checkmark */
+    .success-modal-icon { margin-bottom: 0.5rem; }
+    .success-checkmark {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+    }
+    .success-checkmark-circle {
+        stroke: #22c55e;
+        stroke-width: 2;
+        stroke-dasharray: 166;
+        stroke-dashoffset: 166;
+        animation: strokeDraw 0.6s cubic-bezier(0.65,0,0.45,1) forwards;
+    }
+    .success-checkmark-check {
+        stroke: #22c55e;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 48;
+        stroke-dashoffset: 48;
+        animation: strokeDraw 0.4s 0.5s cubic-bezier(0.65,0,0.45,1) forwards;
+    }
+    @keyframes strokeDraw { to { stroke-dashoffset: 0; } }
 
     /* ===== Consent Checkbox ===== */
     .consent-checkbox-wrapper {
@@ -351,6 +456,66 @@
         opacity: 0.45;
         cursor: not-allowed;
     }
+    /* ===== Password Strength Meter ===== */
+    .pwd-strength-box {
+        margin-top: 0.6rem;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        background: rgba(15,23,42,0.04);
+        border: 1px solid rgba(15,23,42,0.08);
+    }
+    .pwd-strength-header {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 0.45rem;
+    }
+    .pwd-strength-label {
+        font-weight: 700;
+        transition: color 0.3s;
+    }
+    .pwd-strength-bar-track {
+        height: 5px;
+        background: #e2e8f0;
+        border-radius: 99px;
+        overflow: hidden;
+        margin-bottom: 0.65rem;
+    }
+    .pwd-strength-bar {
+        height: 100%;
+        width: 0;
+        border-radius: 99px;
+        transition: width 0.35s ease, background 0.35s ease;
+    }
+    .pwd-requirements {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 0.25rem;
+    }
+    .req-item {
+        font-size: 0.76rem;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: color 0.2s;
+    }
+    .req-item.met { color: #22c55e; }
+    .req-item.unmet { color: #ef4444; }
+    .req-icon::before { content: '✗'; font-size: 0.8rem; }
+    .req-item.met .req-icon::before { content: '✓'; }
+    .pwd-match-hint {
+        margin-top: 0.4rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+    }
+    .pwd-match-hint.match   { color: #22c55e; }
+    .pwd-match-hint.nomatch { color: #ef4444; }
     .consent-toggle-link {
         display: inline-block;
         margin-top: 0.35rem;
@@ -479,6 +644,116 @@
 {% block extra_js %}
 <script src="https://unpkg.com/slim-select@2.8.2/dist/slimselect.min.js"></script>
 <script>
+    // ===== Real-Time Password Strength Checker =====
+    (function () {
+        const SPECIAL_RE = /[!@#$%^&*()\-_=+\[\]{};':"\\|,.<>/?`~]/;
+
+        function getLang() {
+            return localStorage.getItem('madeInIzmirLang') || 'tr';
+        }
+        function t(key) {
+            try { return translations[getLang()].signup[key] || key; } catch { return key; }
+        }
+
+        function checkRequirements(pwd) {
+            return {
+                length:  pwd.length >= 8,
+                upper:   /[A-Z]/.test(pwd),
+                lower:   /[a-z]/.test(pwd),
+                digit:   /\d/.test(pwd),
+                special: SPECIAL_RE.test(pwd),
+            };
+        }
+
+        function score(reqs) {
+            return Object.values(reqs).filter(Boolean).length; // 0-5
+        }
+
+        const BAR_CONFIG = [
+            { pct: '0%',   bg: '#e2e8f0', label: '' },
+            { pct: '20%',  bg: '#ef4444', label: 'pwd_weak' },
+            { pct: '40%',  bg: '#f97316', label: 'pwd_fair' },
+            { pct: '60%',  bg: '#eab308', label: 'pwd_fair' },
+            { pct: '80%',  bg: '#84cc16', label: 'pwd_good' },
+            { pct: '100%', bg: '#22c55e', label: 'pwd_strong' },
+        ];
+
+        function updateStrength(pwd) {
+            const box   = document.getElementById('pwdStrengthBox');
+            const bar   = document.getElementById('pwdStrengthBar');
+            const label = document.getElementById('pwdStrengthLabel');
+
+            if (!box) return;
+
+            if (!pwd) { box.style.display = 'none'; return; }
+            box.style.display = 'block';
+
+            const reqs = checkRequirements(pwd);
+            const s    = score(reqs);
+            const cfg  = BAR_CONFIG[s];
+
+            bar.style.width      = cfg.pct;
+            bar.style.background = cfg.bg;
+            label.textContent    = cfg.label ? t(cfg.label) : '';
+            label.style.color    = cfg.bg;
+
+            // Update requirement items
+            const map = { 'req-length': 'length', 'req-upper': 'upper',
+                          'req-lower': 'lower',   'req-digit': 'digit',
+                          'req-special': 'special' };
+            Object.entries(map).forEach(([id, key]) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.classList.toggle('met',   reqs[key]);
+                el.classList.toggle('unmet', !reqs[key]);
+            });
+        }
+
+        function updateMatch(pwd1, pwd2) {
+            const hint = document.getElementById('pwdMatchHint');
+            if (!hint) return;
+            if (!pwd2) { hint.style.display = 'none'; return; }
+            hint.style.display = 'block';
+            if (pwd1 === pwd2) {
+                hint.textContent = t('pwd_match');
+                hint.className = 'pwd-match-hint match';
+            } else {
+                hint.textContent = t('pwd_mismatch');
+                hint.className = 'pwd-match-hint nomatch';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const pwd1El = document.getElementById('id_password1');
+            const pwd2El = document.getElementById('id_password2');
+            if (!pwd1El) return;
+
+            pwd1El.addEventListener('input', function () {
+                updateStrength(this.value);
+                if (pwd2El && pwd2El.value) updateMatch(this.value, pwd2El.value);
+            });
+            if (pwd2El) {
+                pwd2El.addEventListener('input', function () {
+                    updateMatch(pwd1El.value, this.value);
+                });
+            }
+        });
+
+        // Re-translate labels when language is switched
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setTimeout(() => {
+                        const pwd1El = document.getElementById('id_password1');
+                        if (pwd1El && pwd1El.value) updateStrength(pwd1El.value);
+                        const pwd2El = document.getElementById('id_password2');
+                        if (pwd2El && pwd2El.value) updateMatch(pwd1El.value, pwd2El.value);
+                    }, 60);
+                });
+            });
+        });
+    })();
+
     // Show/hide conditional fields based on user type selection
     document.addEventListener('DOMContentLoaded', function () {
         const buyerCheckbox = document.getElementById('is_buyer');
@@ -706,7 +981,7 @@
         const form = document.getElementById('signupForm');
         // Change button to loading state
         const btn = document.getElementById('confirmAndRegisterBtn');
-        if (btn) { btn.textContent = 'Kaydediliyor…'; btn.disabled = true; }
+        if (btn) { btn.textContent = getLoadingText(); btn.disabled = true; }
         form.submit();
     }
 
@@ -719,5 +994,22 @@
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') { closeConsentPopup(); }
     });
+
+    // ===== Auto-open Success Modal if signup just completed =====
+    {% if signup_success %}
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('signupSuccessModal').classList.add('open');
+        document.body.style.overflow = 'hidden';
+        // Make sure text is in the right language
+        const lang = localStorage.getItem('madeInIzmirLang') || 'tr';
+        if (typeof setLanguage === 'function') setLanguage(lang);
+    });
+    {% endif %}
+
+    // Translate loading text in confirmAndSubmit dynamically
+    function getLoadingText() {
+        const lang = localStorage.getItem('madeInIzmirLang') || 'tr';
+        return lang === 'en' ? 'Saving…' : 'Kaydediliyor…';
+    }
 </script>
 {% endblock %}

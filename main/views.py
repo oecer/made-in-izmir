@@ -100,12 +100,11 @@ def signup_view(request):
                 consent_text_version=consent_text.version,  # tracks live version
             )
 
-            messages.success(
-                request,
-                'Kayıt talebiniz alındı! Hesabınız yönetici onaylandıktan sonra aktif hale gelecektir. '
-                'E-posta adresinize onay durumu hakkında bilgi gönderilecektir.'
-            )
-            return redirect('main:index')
+            return render(request, 'auth/signup.html', {
+                'form': SignUpForm(),           # fresh empty form
+                'consent_text': consent_text,
+                'signup_success': True,
+            })
         else:
             messages.error(request, 'Lütfen formdaki hataları düzeltiniz.')
     else:
