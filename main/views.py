@@ -106,7 +106,6 @@ def login_view(request):
 def logout_view(request):
     """User logout view"""
     logout(request)
-    messages.info(request, 'Başarıyla çıkış yaptınız.')
     return redirect('main:index')
 
 
