@@ -274,13 +274,13 @@ const translations = {
             more_from_seller: "Üreticinin Aynı Sektördeki Diğer Ürünleri"
         },
         platform: {
-            title: "Nasil Calisir?",
-            subtitle: "Made in Izmir, Turkiye kaliteli ureticileri ile dunyanin dort bir yanindaki alicilari tek bir dijital cati altinda bulusturan entegre bir B2B ticaret platformudur.",
-            step1_title: "Ureticiler Katilir",
-            step1_desc: "Turk ureticiler platforma uye olur ve urunlerini, hikayelrini ve iletisim bilgilerini kendi dijital profillerine ekler.",
-            step2_title: "Alicilar Kesffeder",
-            step2_desc: "Kuresel alicilar platforma uye olur, sektore ve urune gore tedarikci arar ve ureticilerle dogrudan iletisime gecer.",
-            step3_title: "Made in Izmir Destekler",
+            title: "Nasil Çalışır?",
+            subtitle: "Made in İzmir, Türkiye kaliteli üreticileri ile dünyanın dört bir yanındaki alicilari tek bir dijital cati altinda bulusturan entegre bir B2B ticaret platformudur.",
+            step1_title: "Üreticiler Katılır",
+            step1_desc: "Türk üreticiler platforma uye olur ve ürünlerini, hikayelerini ve iletişim bilgilerini kendi dijital profillerine ekler.",
+            step2_title: "Alicilar Keşfeder",
+            step2_desc: "Küresel alicilar platforma uye olur, sektore ve urune gore tedarikci arar ve ureticilerle dogrudan iletisime gecer.",
+            step3_title: "Made in İzmir Destekler",
             step3_desc: "Fuar temsilciligi, lojistik danismanligı ve pazar arastirmasi hizmetleriyle her iki tarafin basarisini destekliyoruz."
         },
         buyers_panel: {
