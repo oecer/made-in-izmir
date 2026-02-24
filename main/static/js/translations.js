@@ -312,7 +312,7 @@ const translations = {
             active: "Aktif"
         },
         storefront: {
-            title: "Kendi E-Ticaret Sayfanız — ÜcreE",
+            title: "Kendi E-Ticaret Sayfanız - Ücretsiz",
             subtitle: "Made in İzmir'e üye olan her üretici, kendi özel URL'sine sahip profesyonel bir dijital vitrin kazanır. Web sitesi kurmanıza gerek yok.",
             verified_badge: "✓ Onaylı Üretici",
             b1_title: "Kişisel URL",
