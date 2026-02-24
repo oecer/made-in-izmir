@@ -19,16 +19,43 @@ const translations = {
         hero: {
             title: "İzmir'in En Seçkin Üreticilerini Dünyayla Buluşturuyoruz",
             subtitle: "Siz işinize odaklanın, fuarları ve ihracatı bize bırakın.",
-            cta: "Hizmetlerimizi Keşfedin"
+            cta: "Hizmetlerimizi Keşfedin",
+            contact: "Bize Ulaşın",
+            badge: "🌍 Global Ticaret Ortağınız"
         },
+        stats: {
+            expos: "Uluslararası Fuar",
+            producers: "Kayıtlı Üretici",
+            countries: "Hedef Ülke"
+        },
+        services: {
+            rep_title: "Temsil",
+            rep_desc: "Profesyonel ekibimizle markanızı küresel arenada temsil ediyoruz. Stand kurulumu, müşteri görüşmeleri ve raporlama dahil.",
+            src_title: "Tedarik",
+            src_desc: "İzmir'in en kaliteli üreticilerinden doğrudan tedarik sağlıyoruz. Kalite kontrol ve lojistik danışmanlığıyla birlikte.",
+            net_title: "Global Ağ",
+            net_desc: "Sürekli genişleyen fuar takvimimizle fırsatları yakalayın. 50'den fazla uluslararası fuar kapsamındayız.",
+            learn_more: "Daha Fazla →"
+        },
+        cta: {
+            title: "Hazır mısınız?",
+            desc: "Küresel pazarlarda yerinizi almak için bugün başvurun.",
+            signup: "Hemen Kayıt Ol",
+            contact: "Bilgi Al"
+        },
+
         services_proxy: {
             title: "Sizin Yerinize Fuardayız",
             desc: "Dünyanın dört bir yanındaki fuarlara sizin adınıza katılıyoruz, ürünlerinizi sergiliyoruz ve doğrudan müşterilerle görüşüyoruz."
         },
         footer: {
             desc: "Made in İzmir: Küresel Ticaret Merkeziniz.",
-            copyright: "© 2024 Made in İzmir. Tüm Hakları Saklıdır."
+            copyright: "© Made in İzmir. Tüm Hakları Saklıdır.",
+            nav_title: "Sayfalar",
+            account_title: "Hesap",
+            whatsapp: "WhatsApp ile Ulaşın"
         },
+
         producers: {
             title: "Üreticiler İçin Hizmetlerimiz",
             subtitle: "Global pazarlara açılmanız için gereken tüm desteği sağlıyoruz.",
@@ -245,7 +272,58 @@ const translations = {
             waiting_approval: "Onay Bekleyenler",
             quick_links: "Hızlı Bağlantılar",
             more_from_seller: "Üreticinin Aynı Sektördeki Diğer Ürünleri"
-        }
+        },
+        platform: {
+            title: "Nasil Calisir?",
+            subtitle: "Made in Izmir, Turkiye kaliteli ureticileri ile dunyanin dort bir yanindaki alicilari tek bir dijital cati altinda bulusturan entegre bir B2B ticaret platformudur.",
+            step1_title: "Ureticiler Katilir",
+            step1_desc: "Turk ureticiler platforma uye olur ve urunlerini, hikayelrini ve iletisim bilgilerini kendi dijital profillerine ekler.",
+            step2_title: "Alicilar Kesffeder",
+            step2_desc: "Kuresel alicilar platforma uye olur, sektore ve urune gore tedarikci arar ve ureticilerle dogrudan iletisime gecer.",
+            step3_title: "Made in Izmir Destekler",
+            step3_desc: "Fuar temsilciligi, lojistik danismanligı ve pazar arastirmasi hizmetleriyle her iki tarafin basarisini destekliyoruz."
+        },
+        buyers_panel: {
+            eyebrow: "Alıcılar İçin",
+            title: "Doğru Üreticiyi Saniyeler İçinde Bulun",
+            desc: "Made in İzmir alıcı paneli sayesinde Türkiye'nin en kaliteli üreticilerine sektöre, ürüne ve kapasiteye göre kolayca ulaşabilirsiniz.",
+            f1: "Sektör ve ürün tipi bazlı filtreleme",
+            f2: "Üretici profillerini ve ürün kataloglarını görüntüleme",
+            f3: "Onaylı ve güvenilir tedarikçi ağı",
+            f4: "Talepte bulunma ve numune isteme",
+            cta: "Alıcı Panelini Keşfet",
+            mockup_title: "Alıcı Paneli",
+            search_placeholder: "Ürün veya sektör ara…",
+            verified: "✓ Onaylı"
+        },
+        producers_panel: {
+            eyebrow: "Üreticiler İçin",
+            title: "Ürünlerinizi Dünyaya Listeleyin",
+            desc: "Made in İzmir üretici paneli ile ürünlerinizi yükleyin, fiyat ve stok bilgilerinizi güncelleyin, küresel alıcıların taleplerini yönetin.",
+            f1: "Ürün kataloğu oluşturma ve yönetme",
+            f2: "Alıcı taleplerini ve teklifleri görüntüleme",
+            f3: "Fuar takvimi ve temsil hizmeti takibi",
+            f4: "İstatistik ve görüntülenme raporları",
+            cta: "Üretici Panelini Keşfet",
+            mockup_title: "Üretici Paneli",
+            stat1: "Ürün",
+            stat2: "Görüntülenme",
+            stat3: "Talep",
+            active: "Aktif"
+        },
+        storefront: {
+            title: "Kendi E-Ticaret Sayfanız — ÜcreE",
+            subtitle: "Made in İzmir'e üye olan her üretici, kendi özel URL'sine sahip profesyonel bir dijital vitrin kazanır. Web sitesi kurmanıza gerek yok.",
+            verified_badge: "✓ Onaylı Üretici",
+            b1_title: "Kişisel URL",
+            b1_desc: "<strong>madeinizmir.com/firma-adiniz</strong> adresinde profesyonel profiliniz anında hazır. Kartvizitinize, e-postanıza ve sosyal medyanıza ekleyin.",
+            b2_title: "Ürün Kataloğu",
+            b2_desc: "Ürünlerinizi fotoğraf, açıklama ve fiyat bilgisiyle sergileyin. Türkçe ve İngilizce içerik desteği ile iki dilde yayın yapın.",
+            b3_title: "Küresel Görünürlük",
+            b3_desc: "Profiliniz, Made in İzmir'i ziyaret eden tüm küresel alıcılara görünürdür. Ekstra pazarlama maliyeti sıfır.",
+            b4_title: "Kurulum Kolay",
+            b4_desc: "Kayıt olun, profilinizi doldurun — dijital vitrine sahip olun. Kod bilgisi, teknik kurulum veya aylık ücret gerekmez."
+        },
     },
     en: {
         nav: {
@@ -267,7 +345,29 @@ const translations = {
         hero: {
             title: "Connecting Izmir’s Finest Producers with the World",
             subtitle: "We go to trade shows so you don't have to.",
-            cta: "Explore Our Services"
+            cta: "Explore Our Services",
+            contact: "Contact Us",
+            badge: "🌍 Your Global Trade Partner"
+        },
+        stats: {
+            expos: "International Expos",
+            producers: "Registered Producers",
+            countries: "Target Countries"
+        },
+        services: {
+            rep_title: "Representation",
+            rep_desc: "Our professional team represents your brand in the global arena. Includes booth setup, client meetings, and reporting.",
+            src_title: "Sourcing",
+            src_desc: "We source directly from Izmir's finest producers, with quality control and logistics consulting included.",
+            net_title: "Global Network",
+            net_desc: "Seize opportunities with our ever-growing expo calendar. We cover over 50 international trade shows.",
+            learn_more: "Learn More →"
+        },
+        cta: {
+            title: "Ready to grow?",
+            desc: "Register today to secure your spot in global markets.",
+            signup: "Sign Up Now",
+            contact: "Learn More"
         },
         services_proxy: {
             title: "The Expo Proxy Service",
@@ -275,8 +375,12 @@ const translations = {
         },
         footer: {
             desc: "Made in Izmir: Your Global Trade Hub.",
-            copyright: "© 2024 Made in Izmir. All Rights Reserved."
+            copyright: "© Made in Izmir. All Rights Reserved.",
+            nav_title: "Pages",
+            account_title: "Account",
+            whatsapp: "Contact on WhatsApp"
         },
+
         producers: {
             title: "Services for Producers",
             subtitle: "We provide all the support you need to open up to global markets.",
@@ -492,7 +596,58 @@ const translations = {
             waiting_approval: "Waiting Approval",
             quick_links: "Quick Links",
             more_from_seller: "Other Products from this Producer in the Same Sector"
-        }
+        },
+        platform: {
+            title: "How It Works",
+            subtitle: "Made in Izmir is an integrated B2B trade platform — connecting Turkey's quality producers with buyers worldwide under one digital roof.",
+            step1_title: "Producers Join",
+            step1_desc: "Turkish producers sign up and add their products, story, and contact information to their own digital profile.",
+            step2_title: "Buyers Discover",
+            step2_desc: "Global buyers register, search for suppliers by sector and product, and contact producers directly.",
+            step3_title: "Made in Izmir Supports",
+            step3_desc: "We support the success of both parties with expo representation, logistics consulting, and market research services."
+        },
+        buyers_panel: {
+            eyebrow: "For Buyers",
+            title: "Find the Right Producer in Seconds",
+            desc: "With the Made in Izmir buyer panel, you can easily access Turkey's finest producers filtered by sector, product type, and capacity.",
+            f1: "Filter by sector and product type",
+            f2: "View producer profiles and product catalogs",
+            f3: "Approved and trusted supplier network",
+            f4: "Submit inquiries and request samples",
+            cta: "Explore Buyer Panel",
+            mockup_title: "Buyer Panel",
+            search_placeholder: "Search product or sector…",
+            verified: "✓ Verified"
+        },
+        producers_panel: {
+            eyebrow: "For Producers",
+            title: "List Your Products to the World",
+            desc: "With the Made in İzmir producer panel, upload your products, update prices and stock, and manage global buyer inquiries — all from one dashboard.",
+            f1: "Create and manage product catalog",
+            f2: "View buyer requests and offers",
+            f3: "Track expo calendar and representation service",
+            f4: "Statistics and view reports",
+            cta: "Explore Producer Panel",
+            mockup_title: "Producer Panel",
+            stat1: "Products",
+            stat2: "Views",
+            stat3: "Requests",
+            active: "Active"
+        },
+        storefront: {
+            title: "Your Own E-Commerce Page — Free",
+            subtitle: "Every producer who joins Made in Izmir gets a professional digital storefront with their own unique URL. No website required.",
+            verified_badge: "✓ Verified Producer",
+            b1_title: "Personal URL",
+            b1_desc: "<strong>madeinizmir.com/your-company</strong> — your professional profile is instantly ready. Add it to your business card, email signature, and social media.",
+            b2_title: "Product Catalog",
+            b2_desc: "Showcase your products with photos, descriptions, and pricing. Dual-language support: publish in both Turkish and English.",
+            b3_title: "Global Visibility",
+            b3_desc: "Your profile is visible to all global buyers visiting Made in Izmir. Zero extra marketing cost.",
+            b4_title: "Easy Setup",
+            b4_desc: "Sign up, fill in your profile — and your digital storefront is ready. No coding, technical setup, or monthly fees required."
+        },
     }
 };
 
@@ -561,13 +716,25 @@ document.addEventListener('DOMContentLoaded', () => {
         header.classList.add('scrolled');
     }
 
-    // Mobile Menu Toggle
+    // Active nav-link detection based on current URL
+    const currentPath = window.location.pathname;
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && href !== '/' && currentPath.startsWith(href)) {
+            link.classList.add('active');
+        } else if (href === '/' && currentPath === '/') {
+            link.classList.add('active');
+        }
+    });
+
+    // Update aria-expanded for mobile menu
     const mobileMenu = document.getElementById('mobile-menu');
     const navLinks = document.querySelector('.nav-links');
 
     if (mobileMenu && navLinks) {
         mobileMenu.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
+            const isOpen = navLinks.classList.toggle('active');
+            mobileMenu.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
             mobileMenu.querySelector('i').classList.toggle('fa-bars');
             mobileMenu.querySelector('i').classList.toggle('fa-xmark');
         });
@@ -576,6 +743,7 @@ document.addEventListener('DOMContentLoaded', () => {
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
+                mobileMenu.setAttribute('aria-expanded', 'false');
                 mobileMenu.querySelector('i').classList.add('fa-bars');
                 mobileMenu.querySelector('i').classList.remove('fa-xmark');
             });

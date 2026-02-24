@@ -1,9 +1,50 @@
 <!-- Footer -->
 <footer>
     <div class="container footer-content">
-        <h3 class="logo">Made in Izmir</h3>
-        <p data-i18n="footer.desc">Made in İzmir: Küresel Ticaret Merkeziniz.</p>
-        <p style="margin-top: 2rem; font-size: 0.8rem; color: #aaa;" data-i18n="footer.copyright">© 2024 Made in İzmir.
-            Tüm Hakları Saklıdır.</p>
+        <div class="footer-grid">
+            <!-- Brand Column -->
+            <div class="footer-brand">
+                <h3 class="logo footer-logo">Made in İzmir</h3>
+                <p class="footer-tagline" data-i18n="footer.desc">Made in İzmir: Küresel Ticaret Merkeziniz.</p>
+                <a href="https://wa.me/905555555555" class="footer-whatsapp" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-whatsapp"></i>
+                    <span data-i18n="footer.whatsapp">WhatsApp ile Ulaşın</span>
+                </a>
+            </div>
+
+            <!-- Navigation Column -->
+            <div class="footer-col">
+                <h4 class="footer-heading" data-i18n="footer.nav_title">Sayfalar</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'main:producers' %}" data-i18n="nav.producers">Üreticiler İçin</a></li>
+                    <li><a href="{% url 'main:buyers' %}" data-i18n="nav.buyers">Alıcılar İçin</a></li>
+                    <li><a href="{% url 'main:calendar' %}" data-i18n="nav.calendar">Fuar Takvimi</a></li>
+                    <li><a href="{% url 'main:about' %}" data-i18n="nav.about">Hakkımızda</a></li>
+                    <li><a href="{% url 'main:contact' %}" data-i18n="nav.contact">İletişim</a></li>
+                </ul>
+            </div>
+
+            <!-- Account Column -->
+            <div class="footer-col">
+                <h4 class="footer-heading" data-i18n="footer.account_title">Hesap</h4>
+                <ul class="footer-links">
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'main:dashboard' %}" data-i18n="nav.dashboard">Panel</a></li>
+                    <li><a href="{% url 'main:profile' %}" data-i18n="nav.profile">Profilim</a></li>
+                    {% else %}
+                    <li><a href="{% url 'main:login' %}" data-i18n="nav.login">Giriş Yap</a></li>
+                    <li><a href="{% url 'main:signup' %}" data-i18n="nav.signup">Kayıt Ol</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p data-i18n="footer.copyright">© <span id="footer-year"></span> Made in İzmir. Tüm Hakları Saklıdır.</p>
+        </div>
     </div>
 </footer>
+<script>
+    const yearEl = document.getElementById('footer-year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+</script>

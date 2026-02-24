@@ -1,27 +1,24 @@
 <!-- Header / Navigation -->
 <header id="header">
     <div class="container">
-        <nav>
+        <nav role="navigation" aria-label="Ana navigasyon">
             <div class="logo">
                 <a href="{% url 'main:index' %}" style="text-decoration: none; color: inherit;">Made in İzmir</a>
             </div>
 
-            <ul class="nav-links">
+            <ul class="nav-links" id="nav-links">
                 {% if user.is_authenticated %}
                 {% if '/dashboard' in request.path or '/profile' in request.path or '/products' in request.path or '/expo' in request.path %}
                 <!-- Dashboard Specific Navbar Items -->
                 <li><a href="{% url 'main:dashboard' %}" data-i18n="nav.main_dashboard">Ana Panel</a></li>
                 {% if user.profile.is_producer %}
-                <li><a href="{% url 'main:producer_dashboard' %}" data-i18n="nav.producer_dashboard">Üretici Paneli</a>
-                </li>
+                <li><a href="{% url 'main:producer_dashboard' %}" data-i18n="nav.producer_dashboard">Üretici Paneli</a></li>
                 {% endif %}
                 {% if user.profile.is_buyer %}
                 <li><a href="{% url 'main:buyer_dashboard' %}" data-i18n="nav.buyer_dashboard">Alıcı Paneli</a></li>
                 {% endif %}
-                <li><a href="{% url 'main:dashboard_calendar' %}" data-i18n="nav.dashboard_calendar">Fuar Takvimi</a>
-                </li>
+                <li><a href="{% url 'main:dashboard_calendar' %}" data-i18n="nav.dashboard_calendar">Fuar Takvimi</a></li>
                 <li><a href="{% url 'main:profile' %}" data-i18n="nav.profile">Profilim</a></li>
-                {% comment %} <li><a href="{% url 'main:logout' %}" data-i18n="nav.logout" class="btn-logout-nav">Çıkış</a></li> {% endcomment %}
                 {% else %}
                 <!-- Main Site Navbar Items (Authenticated) -->
                 <li><a href="{% url 'main:index' %}" data-i18n="nav.home">Ana Sayfa</a></li>
@@ -30,8 +27,7 @@
                 <li><a href="{% url 'main:calendar' %}" data-i18n="nav.calendar">Fuar Takvimi</a></li>
                 <li><a href="{% url 'main:about' %}" data-i18n="nav.about">Hakkımızda</a></li>
                 <li><a href="{% url 'main:contact' %}" data-i18n="nav.contact">İletişim</a></li>
-                <li><a href="{% url 'main:dashboard' %}" data-i18n="nav.dashboard" class="btn-dashboard-nav">Panel</a>
-                </li>
+                <li><a href="{% url 'main:dashboard' %}" data-i18n="nav.dashboard" class="btn-dashboard-nav">Panel</a></li>
                 {% endif %}
                 {% else %}
                 <!-- Main Site Navbar Items (Anonymous) -->
@@ -46,12 +42,14 @@
                 {% endif %}
             </ul>
 
-            <div class="lang-switch">
-                <button class="lang-btn active" data-lang="tr">TR</button>
-                <button class="lang-btn" data-lang="en">EN</button>
-            </div>
-            <div class="menu-toggle" id="mobile-menu">
-                <i class="fas fa-bars"></i>
+            <div class="nav-right">
+                <div class="lang-switch">
+                    <button class="lang-btn active" data-lang="tr" aria-label="Türkçe">TR</button>
+                    <button class="lang-btn" data-lang="en" aria-label="English">EN</button>
+                </div>
+                <button class="menu-toggle" id="mobile-menu" aria-label="Menüyü aç/kapat" aria-expanded="false" aria-controls="nav-links">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+                </button>
             </div>
         </nav>
     </div>

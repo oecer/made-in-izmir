@@ -1,44 +1,398 @@
 {% extends 'base.html' %}
 
-{% block title %}Made in Izmir - Global Trade Hub{% endblock %}
+{% block title %}Made in İzmir - Küresel Ticaret Merkeziniz{% endblock %}
+
+{% block extra_css %}
+<meta name="description" content="Made in İzmir: Türk üreticileri dünya alıcılarıyla buluşturan dijital ticaret platformu. Üretici portföyü, tedarik paneli ve fuar temsilciliği.">
+{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
+
+<!-- ═══ HERO ═══ -->
 <section class="hero">
-    <div class="container hero-content">
-        <h1 data-i18n="hero.title">İzmir'in En Seçkin Üreticilerini Dünyayla Buluşturuyoruz</h1>
-        <p data-i18n="hero.subtitle">Siz işinize odaklanın, fuarları ve ihracatı bize bırakın.</p>
-        <a href="{% url 'main:index' %}" class="btn btn-secondary" data-i18n="hero.cta">Hizmetlerimizi Keşfedin</a>
+    <div class="container hero-content animate-fade-up">
+        <div class="hero-badge" data-i18n="hero.badge">🌍 Global Ticaret Platformu</div>
+        <h1 data-i18n="hero.title">Türk Üreticileri Dünya Alıcılarıyla Buluşturuyoruz</h1>
+        <p data-i18n="hero.subtitle">Made in İzmir, Türk üreticilere dijital vitrin ve küresel alıcılara güvenilir tedarik kaynağı sunan entegre bir B2B ticaret platformudur.</p>
+        <div class="hero-cta-group">
+            <a href="#platform" class="btn btn-secondary" data-i18n="hero.cta">Platformu Keşfedin</a>
+            <a href="{% url 'main:contact' %}" class="btn btn-outline-hero" data-i18n="hero.contact">Bize Ulaşın</a>
+        </div>
+    </div>
+    <div class="scroll-indicator" aria-hidden="true">
+        <i class="fas fa-chevron-down"></i>
     </div>
 </section>
 
-<!-- Expo Proxy Service Highlight -->
-<section class="section proxy-service">
-    <div class="container">
-        <h2 data-i18n="services_proxy.title">Sizin Yerinize Fuardayız</h2>
-        <p data-i18n="services_proxy.desc" style="max-width: 600px; margin: 0 auto; margin-bottom: 3rem;">Dünyanın
-            dört bir yanındaki fuarlara sizin adınıza katılıyoruz.</p>
+<!-- ═══ STATS BAR ═══ -->
+<section class="stats-bar">
+    <div class="container stats-grid">
+        <div class="stat-item">
+            <span class="stat-number">500+</span>
+            <span class="stat-label" data-i18n="stats.products">Kayıtlı Ürün</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+            <span class="stat-number">200+</span>
+            <span class="stat-label" data-i18n="stats.producers">Kayıtlı Üretici</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+            <span class="stat-number">50+</span>
+            <span class="stat-label" data-i18n="stats.expos">Uluslararası Fuar</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+            <span class="stat-number">30+</span>
+            <span class="stat-label" data-i18n="stats.countries">Hedef Ülke</span>
+        </div>
+    </div>
+</section>
 
-        <div class="card-grid">
-            <!-- Feature 1 -->
-            <div class="card glass">
-                <i class="fas fa-handshake fa-3x" style="color: var(--primary-color); margin-bottom: 1rem;"></i>
-                <h3 data-i18n="nav.producers">Temsil</h3>
-                <p>Profesyonel ekibimizle markanızı küresel arenada temsil ediyoruz.</p>
+<!-- ═══ PLATFORM OVERVIEW ═══ -->
+<section class="section platform-overview" id="platform">
+    <div class="container">
+        <div class="section-title">
+            <h2 data-i18n="platform.title">Nasıl Çalışır?</h2>
+            <div class="section-title-bar"></div>
+            <p class="section-subtitle" data-i18n="platform.subtitle">Made in İzmir, Türkiye'nin kaliteli üreticileri ile dünyanın dört bir yanındaki alıcıları tek bir dijital çatı altında buluşturan entegre bir B2B ticaret platformudur.</p>
+        </div>
+
+        <div class="how-it-works-grid">
+            <!-- Step 1 -->
+            <div class="how-step" data-animate>
+                <div class="how-step-number">01</div>
+                <div class="how-step-content">
+                    <h3 data-i18n="platform.step1_title">Üreticiler Katılır</h3>
+                    <p data-i18n="platform.step1_desc">Türk üreticiler platforma üye olur ve ürünlerini, hikâyelerini ve iletişim bilgilerini kendi dijital profillerine ekler.</p>
+                </div>
             </div>
-            <!-- Feature 2 -->
-            <div class="card glass">
-                <i class="fas fa-search fa-3x" style="color: var(--primary-color); margin-bottom: 1rem;"></i>
-                <h3 data-i18n="nav.buyers">Tedarik</h3>
-                <p>İzmir'in en kaliteli üreticilerinden doğrudan tedarik sağlıyoruz.</p>
+            <!-- Step 2 -->
+            <div class="how-step" data-animate>
+                <div class="how-step-number">02</div>
+                <div class="how-step-content">
+                    <h3 data-i18n="platform.step2_title">Alıcılar Keşfeder</h3>
+                    <p data-i18n="platform.step2_desc">Küresel alıcılar platforma üye olur, sektöre ve ürüne göre tedarikçi arar ve üreticilerle doğrudan iletişime geçer.</p>
+                </div>
             </div>
-            <!-- Feature 3 -->
-            <div class="card glass">
-                <i class="fas fa-globe-europe fa-3x" style="color: var(--primary-color); margin-bottom: 1rem;"></i>
-                <h3 data-i18n="nav.calendar">Global Ağ</h3>
-                <p>Sürekli genişleyen fuar takvimimizle fırsatları yakalayın.</p>
+            <!-- Step 3 -->
+            <div class="how-step" data-animate>
+                <div class="how-step-number">03</div>
+                <div class="how-step-content">
+                    <h3 data-i18n="platform.step3_title">Made in İzmir Destekler</h3>
+                    <p data-i18n="platform.step3_desc">Fuar temsilciliği, lojistik danışmanlığı ve pazar araştırması hizmetleriyle her iki tarafın başarısını destekliyoruz.</p>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
+<!-- ═══ SPLIT: FOR BUYERS ═══ -->
+<section class="section feature-split bg-light-surface" id="for-buyers">
+    <div class="container feature-split-inner">
+        <div class="feature-split-visual" data-animate>
+            <div class="mockup-card">
+                <div class="mockup-header">
+                    <div class="mockup-dot red"></div>
+                    <div class="mockup-dot yellow"></div>
+                    <div class="mockup-dot green"></div>
+                    <span class="mockup-title" data-i18n="buyers_panel.mockup_title">Alıcı Paneli</span>
+                </div>
+                <div class="mockup-body">
+                    <div class="mockup-search">
+                        <i class="fas fa-search"></i>
+                        <span data-i18n="buyers_panel.search_placeholder">Ürün veya sektör ara…</span>
+                    </div>
+                    <div class="mockup-items">
+                        <div class="mockup-producer-row">
+                            <div class="mockup-avatar blue"></div>
+                            <div class="mockup-info">
+                                <div class="mockup-name"></div>
+                                <div class="mockup-meta"></div>
+                            </div>
+                            <div class="mockup-badge" data-i18n="buyers_panel.verified">✓ Onaylı</div>
+                        </div>
+                        <div class="mockup-producer-row">
+                            <div class="mockup-avatar gold"></div>
+                            <div class="mockup-info">
+                                <div class="mockup-name"></div>
+                                <div class="mockup-meta short"></div>
+                            </div>
+                            <div class="mockup-badge" data-i18n="buyers_panel.verified">✓ Onaylı</div>
+                        </div>
+                        <div class="mockup-producer-row">
+                            <div class="mockup-avatar green"></div>
+                            <div class="mockup-info">
+                                <div class="mockup-name wide"></div>
+                                <div class="mockup-meta"></div>
+                            </div>
+                            <div class="mockup-badge" data-i18n="buyers_panel.verified">✓ Onaylı</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-split-text" data-animate>
+            <div class="feature-eyebrow" data-i18n="buyers_panel.eyebrow">Alıcılar İçin</div>
+            <h2 data-i18n="buyers_panel.title">Doğru Üreticiyi Saniyeler İçinde Bulun</h2>
+            <p data-i18n="buyers_panel.desc">Made in İzmir alıcı paneli sayesinde Türkiye'nin en kaliteli üreticilerine sektöre, ürüne ve kapasiteye göre kolayca ulaşabilirsiniz. Üreticilerin ürün kataloglarını inceleyin, numune talep edin ve doğrudan iletişime geçin.</p>
+            <ul class="feature-list">
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="buyers_panel.f1">Sektör ve ürün tipi bazlı filtreleme</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="buyers_panel.f2">Üretici profillerini ve ürün kataloglarını görüntüleme</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="buyers_panel.f3">Onaylı ve güvenilir tedarikçi ağı</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="buyers_panel.f4">Talepte bulunma ve numune isteme</span></li>
+            </ul>
+            <a href="{% url 'main:buyers' %}" class="btn btn-primary" data-i18n="buyers_panel.cta">Alıcı Panelini Keşfet</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ SPLIT: FOR PRODUCERS ═══ -->
+<section class="section feature-split feature-split-reverse" id="for-producers">
+    <div class="container feature-split-inner">
+        <div class="feature-split-text" data-animate>
+            <div class="feature-eyebrow" data-i18n="producers_panel.eyebrow">Üreticiler İçin</div>
+            <h2 data-i18n="producers_panel.title">Ürünlerinizi Dünyaya Listeleyin</h2>
+            <p data-i18n="producers_panel.desc">Made in İzmir üretici paneli ile ürünlerinizi yükleyin, fiyat ve stok bilgilerinizi güncelleyin, küresel alıcıların taleplerini yönetin. Platform; ürün yönetiminizi, alıcı ilişkilerinizi ve fuar süreçlerinizi tek ekrandan takip etmenizi sağlar.</p>
+            <ul class="feature-list">
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="producers_panel.f1">Ürün kataloğu oluşturma ve yönetme</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="producers_panel.f2">Alıcı taleplerini ve teklifleri görüntüleme</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="producers_panel.f3">Fuar takvimi ve temsil hizmeti takibi</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="producers_panel.f4">İstatistik ve görüntülenme raporları</span></li>
+            </ul>
+            <a href="{% url 'main:producers' %}" class="btn btn-primary" data-i18n="producers_panel.cta">Üretici Panelini Keşfet</a>
+        </div>
+
+        <div class="feature-split-visual" data-animate>
+            <div class="mockup-card producer-mockup">
+                <div class="mockup-header">
+                    <div class="mockup-dot red"></div>
+                    <div class="mockup-dot yellow"></div>
+                    <div class="mockup-dot green"></div>
+                    <span class="mockup-title" data-i18n="producers_panel.mockup_title">Üretici Paneli</span>
+                </div>
+                <div class="mockup-body">
+                    <div class="mockup-stats-mini">
+                        <div class="mockup-stat-box">
+                            <span class="mockup-stat-num">24</span>
+                            <span class="mockup-stat-lbl" data-i18n="producers_panel.stat1">Ürün</span>
+                        </div>
+                        <div class="mockup-stat-box">
+                            <span class="mockup-stat-num">138</span>
+                            <span class="mockup-stat-lbl" data-i18n="producers_panel.stat2">Görüntülenme</span>
+                        </div>
+                        <div class="mockup-stat-box">
+                            <span class="mockup-stat-num">7</span>
+                            <span class="mockup-stat-lbl" data-i18n="producers_panel.stat3">Talep</span>
+                        </div>
+                    </div>
+                    <div class="mockup-product-list">
+                        <div class="mockup-product-row">
+                            <div class="mockup-product-img"></div>
+                            <div class="mockup-product-info">
+                                <div class="mockup-name"></div>
+                                <div class="mockup-meta"></div>
+                            </div>
+                            <div class="mockup-status active" data-i18n="producers_panel.active">Aktif</div>
+                        </div>
+                        <div class="mockup-product-row">
+                            <div class="mockup-product-img"></div>
+                            <div class="mockup-product-info">
+                                <div class="mockup-name wide"></div>
+                                <div class="mockup-meta short"></div>
+                            </div>
+                            <div class="mockup-status active" data-i18n="producers_panel.active">Aktif</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ DEDICATED STOREFRONT ═══ -->
+<section class="section storefront-section" id="storefront">
+    <div class="container">
+        <div class="section-title">
+            <h2 data-i18n="storefront.title">Kendi E-Ticaret Sayfanız — Ücretsiz</h2>
+            <div class="section-title-bar"></div>
+            <p class="section-subtitle" data-i18n="storefront.subtitle">Made in İzmir'e üye olan her üretici, kendi özel URL'sine sahip profesyonel bir dijital vitrin kazanır. Web sitesi kurmanıza gerek yok.</p>
+        </div>
+
+        <div class="storefront-showcase" data-animate>
+            <div class="storefront-url-demo">
+                <div class="url-bar">
+                    <div class="url-bar-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="url-bar-input">
+                        <i class="fas fa-lock" style="color: #22c55e; font-size: 0.75rem;"></i>
+                        <span class="url-text">madeinizmir.com/<span class="url-highlight" id="url-animated">firma-adiniz</span></span>
+                    </div>
+                </div>
+                <div class="storefront-preview">
+                    <div class="sp-header">
+                        <div class="sp-avatar"></div>
+                        <div class="sp-brand">
+                            <div class="sp-brand-name"></div>
+                            <div class="sp-brand-meta"></div>
+                        </div>
+                        <div class="sp-badge" data-i18n="storefront.verified_badge">✓ Onaylı Üretici</div>
+                    </div>
+                    <div class="sp-products">
+                        <div class="sp-product-card">
+                            <div class="sp-product-img img1"></div>
+                            <div class="sp-product-caption"></div>
+                        </div>
+                        <div class="sp-product-card">
+                            <div class="sp-product-img img2"></div>
+                            <div class="sp-product-caption short"></div>
+                        </div>
+                        <div class="sp-product-card">
+                            <div class="sp-product-img img3"></div>
+                            <div class="sp-product-caption"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="storefront-benefits">
+                <div class="storebenefit-item" data-animate>
+                    <div class="storebenefit-icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <div>
+                        <h4 data-i18n="storefront.b1_title">Kişisel URL</h4>
+                        <p data-i18n="storefront.b1_desc"><strong>madeinizmir.com/firma-adiniz</strong> adresinde profesyonel profiliniz anında hazır. Kartvizitinize, e-postanıza ve sosyal medyanıza ekleyin.</p>
+                    </div>
+                </div>
+                <div class="storebenefit-item" data-animate>
+                    <div class="storebenefit-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div>
+                        <h4 data-i18n="storefront.b2_title">Ürün Kataloğu</h4>
+                        <p data-i18n="storefront.b2_desc">Ürünlerinizi fotoğraf, açıklama ve fiyat bilgisiyle sergileyin. Türkçe ve İngilizce içerik desteği ile iki dilde yayın yapın.</p>
+                    </div>
+                </div>
+                <div class="storebenefit-item" data-animate>
+                    <div class="storebenefit-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div>
+                        <h4 data-i18n="storefront.b3_title">Küresel Görünürlük</h4>
+                        <p data-i18n="storefront.b3_desc">Profiliniz, Made in İzmir'i ziyaret eden tüm küresel alıcılara görünür. Ekstra pazarlama maliyeti sıfır.</p>
+                    </div>
+                </div>
+                <div class="storebenefit-item" data-animate>
+                    <div class="storebenefit-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <div>
+                        <h4 data-i18n="storefront.b4_title">Kurulum Kolay</h4>
+                        <p data-i18n="storefront.b4_desc">Kayıt olun, profilinizi doldurun — dijital vitrine sahip olun. Kod bilgisi, teknik kurulum veya aylık ücret gerekmez.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ EXPO PROXY SERVICES ═══ -->
+<section class="section proxy-service bg-light-surface" id="services">
+    <div class="container">
+        <div class="section-title">
+            <h2 data-i18n="services_proxy.title">Sizin Yerinize Fuardayız</h2>
+            <div class="section-title-bar"></div>
+            <p class="section-subtitle" data-i18n="services_proxy.desc">Dünyanın dört bir yanındaki fuarlara sizin adınıza katılıyoruz, ürünlerinizi sergiliyoruz ve doğrudan müşterilerle görüşüyoruz.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card glass card-feature" data-animate>
+                <div class="card-icon-wrap card-icon-blue">
+                    <i class="fas fa-handshake fa-2x"></i>
+                </div>
+                <h3 data-i18n="services.rep_title">Temsil</h3>
+                <p data-i18n="services.rep_desc">Profesyonel ekibimizle markanızı küresel arenada temsil ediyoruz. Stand kurulumu, müşteri görüşmeleri ve raporlama dahil.</p>
+                <a href="{% url 'main:producers' %}" class="card-link" data-i18n="services.learn_more">Daha Fazla →</a>
+            </div>
+            <div class="card glass card-feature" data-animate>
+                <div class="card-icon-wrap card-icon-gold">
+                    <i class="fas fa-search fa-2x"></i>
+                </div>
+                <h3 data-i18n="services.src_title">Tedarik</h3>
+                <p data-i18n="services.src_desc">İzmir'in en kaliteli üreticilerinden doğrudan tedarik sağlıyoruz. Kalite kontrol ve lojistik danışmanlığıyla birlikte.</p>
+                <a href="{% url 'main:buyers' %}" class="card-link" data-i18n="services.learn_more">Daha Fazla →</a>
+            </div>
+            <div class="card glass card-feature" data-animate>
+                <div class="card-icon-wrap card-icon-green">
+                    <i class="fas fa-globe-europe fa-2x"></i>
+                </div>
+                <h3 data-i18n="services.net_title">Global Ağ</h3>
+                <p data-i18n="services.net_desc">Sürekli genişleyen fuar takvimimizle fırsatları yakalayın. 50'den fazla uluslararası fuar kapsamındayız.</p>
+                <a href="{% url 'main:calendar' %}" class="card-link" data-i18n="services.learn_more">Daha Fazla →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ CTA BANNER ═══ -->
+<section class="cta-banner">
+    <div class="container cta-banner-inner">
+        <div class="cta-banner-text">
+            <h2 data-i18n="cta.title">Platforma Katılın</h2>
+            <p data-i18n="cta.desc">Üretici veya alıcı olarak bugün kayıt olun — dijital vitrine sahip olun, küresel pazara açılın.</p>
+        </div>
+        <div class="cta-banner-actions">
+            <a href="{% url 'main:signup' %}" class="btn btn-secondary" data-i18n="cta.signup">Hemen Kayıt Ol</a>
+            <a href="{% url 'main:contact' %}" class="btn btn-outline-light" data-i18n="cta.contact">Bilgi Al</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Smooth scroll for in-page anchors
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+
+// Scroll-triggered fade-in for [data-animate] elements
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+            setTimeout(() => {
+                entry.target.classList.add('is-visible');
+            }, i * 100);
+            observer.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
+
+// Animated URL slug in storefront section
+const slugs = ['ahmet-tekstil', 'izmir-mermer', 'ege-gida', 'firma-adiniz'];
+let slugIndex = 0;
+const urlEl = document.getElementById('url-animated');
+if (urlEl) {
+    setInterval(() => {
+        slugIndex = (slugIndex + 1) % slugs.length;
+        urlEl.style.opacity = '0';
+        setTimeout(() => {
+            urlEl.textContent = slugs[slugIndex];
+            urlEl.style.opacity = '1';
+        }, 300);
+    }, 2000);
+}
+</script>
 {% endblock %}
