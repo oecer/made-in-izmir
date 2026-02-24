@@ -274,7 +274,7 @@ const translations = {
             more_from_seller: "Üreticinin Aynı Sektördeki Diğer Ürünleri"
         },
         platform: {
-            title: "Nasil Çalışır?",
+            title: "Nasıl Çalışır?",
             subtitle: "Made in İzmir, Türkiye kaliteli üreticileri ile dünyanın dört bir yanındaki alicilari tek bir dijital cati altinda bulusturan entegre bir B2B ticaret platformudur.",
             step1_title: "Üreticiler Katılır",
             step1_desc: "Türk üreticiler platforma uye olur ve ürünlerini, hikayelerini ve iletişim bilgilerini kendi dijital profillerine ekler.",
