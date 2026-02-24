@@ -59,18 +59,125 @@ const translations = {
         producers: {
             title: "Üreticiler İçin Hizmetlerimiz",
             subtitle: "Global pazarlara açılmanız için gereken tüm desteği sağlıyoruz.",
+
+            // Hero
+            hero_badge: "🏭 Üreticiler İçin Özel Program",
+            hero_title: "Ürünlerinizi Dünya Pazarlarına Taşıyın",
+            hero_desc: "Made in İzmir'in entegre B2B platformuyla dijital vitrininizi kurun, fuarlarda temsil edilin ve küresel alıcılarla buluşun. Biz işin zor kısmını hallederiz.",
+            hero_cta_primary: "Hemen Başvurun",
+            hero_cta_secondary: "Hizmetleri Keşfedin",
+
+            // Stats
+            stat1_label: "Kayıtlı Üretici",
+            stat2_label: "Uluslararası Fuar",
+            stat3_label: "Hedef Pazar",
+            stat4_label: "Ücretsiz Kayıt",
+
+            // Why Join
+            why_eyebrow: "Neden Made in İzmir?",
+            why_title: "Tek Platformda Her Şey",
+            why_desc: "Geleneksel ihracat yöntemlerinin aksine, Made in İzmir size hem dijital bir vitrin hem de sahada aktif bir temsilci sunar. Ürünlerinizi yükleyin, biz pazarlayalım, fuarlarda temsil edelim ve küresel alıcılarla buluşturalım.",
+            why_cta: "Ağımıza Katılın →",
+            benefit1_title: "Küresel Görünürlük",
+            benefit1_desc: "30+ ülkedeki alıcılar profilinizi görür, ürünlerinizi inceler.",
+            benefit2_title: "Ücretsiz Dijital Vitrin",
+            benefit2_desc: "madeinizmir.com/firma-adiniz adresinde kendi özel sayfanız hazır.",
+            benefit3_title: "Fuar Temsilcisi",
+            benefit3_desc: "Siz üretime odaklanın, biz uluslararası fuarlarda sizi temsil edelim.",
+            benefit4_title: "Analitik & Raporlama",
+            benefit4_desc: "Profilinizi kaç alıcının incelediğini ve taleplerinizi takip edin.",
+
+            // Services (detailed)
+            services_title: "Sizin İçin Neler Yapıyoruz?",
+            services_subtitle: "Üç temel hizmetimizle ihracat sürecinizin her adımında yanınızdayız.",
             service1_title: "Pazar Araştırması",
             service1_desc: "Hedef pazarınızdaki fırsatları ve rakipleri analiz ediyoruz.",
+            service1_long: "Hedef ülkenizdeki rekabet koşullarını, müşteri taleplerini ve fiyat aralıklarını analiz ediyoruz. Hangi pazarın sizin ürününüze uygun olduğunu veri odaklı raporlarla sunuyoruz; siz karar verin, biz zemin hazırlayalım.",
+            s1_tag1: "Rakip Analizi", s1_tag2: "Fiyat Araştırması", s1_tag3: "Talep Raporu",
             service2_title: "Lojistik Danışmanlığı",
             service2_desc: "Ürünlerinizin en uygun maliyetle ve güvenle ulaşmasını sağlıyoruz.",
+            service2_long: "Ürünlerinizin gümrük işlemlerinden son mile kadar sorunsuz ulaşmasını sağlıyoruz. Doğru nakliye modelini, belge gereksinimlerini ve maliyet optimizasyonunu sizin adınıza planlıyoruz.",
+            s2_tag1: "Gümrük Danışmanlığı", s2_tag2: "Maliyet Optimizasyonu", s2_tag3: "Belge Yönetimi",
             service3_title: "Fuar Temsilciliği",
             service3_desc: "Biz gidiyoruz, siz kazanıyorsunuz. Stand kurulumundan müşteri görüşmelerine kadar her şey bizde.",
+            service3_long: "Dünyanın dört bir yanındaki ticaret fuarlarında profesyonel ekibimiz sizi temsil eder. Stand kurulumu, tanıtım materyalleri, alıcı toplantıları ve fuar sonrası detaylı raporlama hepsi dahil.",
+            s3_tag1: "Stand Kurulumu", s3_tag2: "Alıcı Görüşmeleri", s3_tag3: "Fuar Raporu",
+
+            // How It Works
+            how_title: "Katılım Süreci Nasıl İşler?",
+            how_subtitle: "4 basit adımda global pazarlara açılın.",
+            step1_title: "Başvurun",
+            step1_desc: "Aşağıdaki formu doldurun veya WhatsApp'tan bize ulaşın. Başvurunuz 24 saat içinde değerlendirilir.",
+            step2_title: "Profilinizi Oluşturun",
+            step2_desc: "Onaylandıktan sonra ürünlerinizi, şirket bilgilerinizi ve fotoğraflarınızı yükleyin. Türkçe ve İngilizce destek.",
+            step3_title: "Görünür Olun",
+            step3_desc: "Profiliniz 30+ ülkedeki alıcılara anında görünür olur. Fuar temsilciliği talebinizi iletin.",
+            step4_title: "Büyüyün",
+            step4_desc: "Gelen talepleri yönetin, alıcılarla iletişime geçin ve ihracat gelirinizi artırın.",
+
+            // Storefront
+            storefront_eyebrow: "Ücretsiz Dijital Vitrin",
+            storefront_title: "Kendi E-Ticaret Sayfanız Hemen Hazır",
+            storefront_desc: "Made in İzmir'e katılan her üretici, profesyonel bir dijital vitrin kazanır. Web sitesi kurmanıza, teknik bilgiye ya da aylık ödemeye gerek yok.",
+
+            // FAQ
+            faq_title: "Sık Sorulan Sorular",
+            faq_subtitle: "Merak ettiklerinizi yanıtlıyoruz.",
+            faq1_q: "Platforma katılmak ücretli mi?",
+            faq1_a: "Hayır, platforma kayıt tamamen ücretsizdir. Dijital vitrin oluşturma, ürün yükleme ve alıcı talepleri alma hiçbir ücret gerektirmez. Fuar temsilciliği ve lojistik danışmanlığı gibi premium hizmetler için ayrıca bilgi alabilirsiniz.",
+            faq2_q: "Fuar temsilciliği hizmeti nasıl çalışır?",
+            faq2_a: "Ekibimiz, seçtiğiniz uluslararası fuarlara sizin adınıza katılır. Stand kurulumu, ürün kataloglarınızın hazırlanması ve potansiyel alıcılarla birebir görüşmeler ekibimiz tarafından yürütülür. Fuar sonrasında detaylı bir rapor ve toplantı notları tarafınıza iletilir.",
+            faq3_q: "Hangi sektörler için hizmet veriyorsunuz?",
+            faq3_a: "Başta tekstil, gıda & tarım, mermer & doğaltaş ve otomotiv yedek parça olmak üzere İzmir menşeli her türlü üründe hizmet veriyoruz. Sektörünüz listede yoksa bizimle iletişime geçin; büyük ihtimalle size yardımcı olabiliriz.",
+            faq4_q: "Başvurunun onaylanması ne kadar sürer?",
+            faq4_a: "Başvurular genellikle 24-48 iş saati içinde değerlendirilir. Onay sürecinde size bilgi için ulaşabiliriz. Onaylandıktan sonra hemen profilinizi oluşturmaya başlayabilirsiniz.",
+            faq5_q: "Yabancı alıcılarla nasıl iletişim kuracağım?",
+            faq5_a: "Platform üzerinden alıcılardan gelen talepleri Türkçe olarak görüntüleyebilirsiniz. Dil engeli konusunda da destek sağlıyoruz - özellikle fuar süreçlerinde çevirimiz ekibimiz tarafından gerçekleştirilir.",
+
+            // Form
+            form_eyebrow: "Hemen Başvurun",
             form_title: "Made in İzmir Ağına Katılın",
+            form_pitch_desc: "Formu doldurun, 24 saat içinde sizinle iletişime geçelim. Platform katılımı ve premium hizmetler hakkında bilgi alalım.",
+            fpb1: "Ücretsiz dijital vitrin",
+            fpb2: "30+ ülkedeki alıcılara anında erişim",
+            fpb3: "Profesyonel fuar temsilciliği",
+            fpb4: "Pazar araştırması & lojistik desteği",
+            fpb5: "24-48 saat başvuru değerlendirme",
+            form_box_title: "Başvuru Formu",
+            form_box_subtitle: "Tüm alanları doldurun, en kısa sürede dönüş yapalım.",
             name: "Ad Soyad",
             company: "Firma Adı",
+            form_email: "E-posta",
+            form_email_ph: "ornek@firma.com",
+            form_phone: "Telefon",
             sector: "Sektör",
+            sector_select: "Sektörünüzü seçin...",
+            sector_textile: "Tekstil",
+            sector_food: "Gıda ve Tarım",
+            sector_marble: "Mermer ve Doğaltaş",
+            sector_auto: "Otomotiv Yedek Parça",
+            sector_chemicals: "Kimyasallar",
+            sector_electronics: "Elektronik",
+            sector_other: "Diğer",
+            form_services: "İlgilendiğiniz Hizmetler",
+            service_all: "Tüm Hizmetler (Dijital Vitrin + Fuar)",
+            service_digital: "Sadece Dijital Vitrin",
+            service_expo: "Fuar Temsilciliği",
+            service_market: "Pazar Araştırması",
+            service_logistics: "Lojistik Danışmanlığı",
             message: "Mesajınız",
-            submit: "Başvuruyu Gönder"
+            form_message_ph: "Ürünleriniz, hedef pazarlarınız veya özel talepleriniz hakkında kısaca bilgi verin...",
+            submit: "Başvuruyu Gönder →",
+            success_title: "Başvurunuz Alındı!",
+            success_desc: "En geç 24-48 saat içinde sizinle iletişime geçeceğiz. WhatsApp hattımızdan da ulaşabilirsiniz.",
+            privacy_note: "Bilgileriniz güvendedir ve asla üçüncü taraflarla paylaşılmaz.",
+
+            // Final CTA
+            cta_eyebrow: "Hazır mısınız?",
+            cta_title: "Küresel Ticarete Bugün Başlayın",
+            cta_desc: "200'den fazla üreticinin güvendiği platform. Kaydınız ücretsiz, görünürlüğünüz global.",
+            cta_signup: "Ücretsiz Kayıt Ol",
+            cta_contact: "Bize Ulaşın"
         },
         buyers: {
             title: "Küresel Alıcılar İçin",
@@ -316,13 +423,13 @@ const translations = {
             subtitle: "Made in İzmir'e üye olan her üretici, kendi özel URL'sine sahip profesyonel bir dijital vitrin kazanır. Web sitesi kurmanıza gerek yok.",
             verified_badge: "✓ Onaylı Üretici",
             b1_title: "Kişisel URL",
-            b1_desc: "<strong>madeinizmir.com/firma-adiniz</strong> adresinde profesyonel profiliniz anında hazır. Kartvizitinize, e-postanıza ve sosyal medyanıza ekleyin.",
+            b1_desc: "madeinizmir.com/firma-adiniz adresinde profesyonel profiliniz anında hazır. Kartvizitinize, e-postanıza ve sosyal medyanıza ekleyin.",
             b2_title: "Ürün Kataloğu",
             b2_desc: "Ürünlerinizi fotoğraf, açıklama ve fiyat bilgisiyle sergileyin. Türkçe ve İngilizce içerik desteği ile iki dilde yayın yapın.",
             b3_title: "Küresel Görünürlük",
             b3_desc: "Profiliniz, Made in İzmir'i ziyaret eden tüm küresel alıcılara görünürdür. Ekstra pazarlama maliyeti sıfır.",
             b4_title: "Kurulum Kolay",
-            b4_desc: "Kayıt olun, profilinizi doldurun — dijital vitrine sahip olun. Kod bilgisi, teknik kurulum veya aylık ücret gerekmez."
+            b4_desc: "Kayıt olun, profilinizi doldurun - dijital vitrine sahip olun. Kod bilgisi, teknik kurulum veya aylık ücret gerekmez."
         },
     },
     en: {
@@ -384,18 +491,125 @@ const translations = {
         producers: {
             title: "Services for Producers",
             subtitle: "We provide all the support you need to open up to global markets.",
+
+            // Hero
+            hero_badge: "🏭 Exclusive Program for Producers",
+            hero_title: "Take Your Products to Global Markets",
+            hero_desc: "Build your digital storefront, get represented at trade shows, and connect with global buyers through Made in Izmir's integrated B2B platform. We handle the hard part.",
+            hero_cta_primary: "Apply Now",
+            hero_cta_secondary: "Explore Services",
+
+            // Stats
+            stat1_label: "Registered Producers",
+            stat2_label: "International Expos",
+            stat3_label: "Target Markets",
+            stat4_label: "Free Registration",
+
+            // Why Join
+            why_eyebrow: "Why Made in Izmir?",
+            why_title: "Everything in One Platform",
+            why_desc: "Unlike traditional export methods, Made in Izmir gives you both a digital storefront and an active field representative. Upload your products, we market them, represent you at trade shows, and connect you with global buyers.",
+            why_cta: "Join Our Network →",
+            benefit1_title: "Global Visibility",
+            benefit1_desc: "Buyers from 30+ countries can view your profile and browse your products.",
+            benefit2_title: "Free Digital Storefront",
+            benefit2_desc: "Your own dedicated page at madeinizmir.com/your-company - ready instantly.",
+            benefit3_title: "Expo Representative",
+            benefit3_desc: "Focus on production; we represent you at international trade shows.",
+            benefit4_title: "Analytics & Reporting",
+            benefit4_desc: "Track how many buyers viewed your profile and manage your incoming requests.",
+
+            // Services (detailed)
+            services_title: "What Do We Do for You?",
+            services_subtitle: "We are with you at every step of your export process with three core services.",
             service1_title: "Market Research",
             service1_desc: "We analyze opportunities and competitors in your target market.",
+            service1_long: "We analyze competitive conditions, customer demands, and price ranges in your target country. We present data-driven reports on which markets are suitable for your products - you decide, we lay the ground.",
+            s1_tag1: "Competitor Analysis", s1_tag2: "Price Research", s1_tag3: "Demand Report",
             service2_title: "Logistics Consulting",
             service2_desc: "We ensure your products arrive safely and cost-effectively.",
+            service2_long: "We ensure your products arrive smoothly from customs to last-mile delivery. We plan the right shipping model, document requirements, and cost optimization on your behalf.",
+            s2_tag1: "Customs Consulting", s2_tag2: "Cost Optimization", s2_tag3: "Document Management",
             service3_title: "Expo Representation",
             service3_desc: "We go, you win. From stand setup to client meetings, we handle it all.",
+            service3_long: "Our professional team represents you at trade shows around the world. Booth setup, promotional materials, buyer meetings, and detailed post-show reporting are all included.",
+            s3_tag1: "Booth Setup", s3_tag2: "Buyer Meetings", s3_tag3: "Post-Show Report",
+
+            // How It Works
+            how_title: "How Does the Onboarding Process Work?",
+            how_subtitle: "Open up to global markets in 4 simple steps.",
+            step1_title: "Apply",
+            step1_desc: "Fill out the form below or reach us via WhatsApp. Your application will be reviewed within 24 hours.",
+            step2_title: "Create Your Profile",
+            step2_desc: "Once approved, upload your products, company info, and photos. Turkish and English support included.",
+            step3_title: "Get Discovered",
+            step3_desc: "Your profile instantly becomes visible to buyers in 30+ countries. Submit your expo representation request.",
+            step4_title: "Grow",
+            step4_desc: "Manage incoming requests, connect with buyers, and grow your export revenue.",
+
+            // Storefront
+            storefront_eyebrow: "Free Digital Storefront",
+            storefront_title: "Your Own E-Commerce Page - Ready Instantly",
+            storefront_desc: "Every producer who joins Made in Izmir gets a professional digital storefront. No website, technical knowledge, or monthly payment required.",
+
+            // FAQ
+            faq_title: "Frequently Asked Questions",
+            faq_subtitle: "We answer your questions.",
+            faq1_q: "Is joining the platform free?",
+            faq1_a: "Yes, registration is completely free. Creating a digital storefront, uploading products, and receiving buyer inquiries require no payment. For premium services like expo representation and logistics consulting, you can request more information.",
+            faq2_q: "How does the expo representation service work?",
+            faq2_a: "Our team attends the international trade shows you choose on your behalf. Booth setup, preparation of your product catalogs, and one-on-one meetings with potential buyers are all handled by our team. A detailed report and meeting notes are sent to you after each show.",
+            faq3_q: "Which sectors do you serve?",
+            faq3_a: "We primarily serve textiles, food & agriculture, marble & natural stone, and automotive parts - but we work with any Izmir-based product. If your sector isn't listed, contact us; we can likely help.",
+            faq4_q: "How long does application approval take?",
+            faq4_a: "Applications are typically reviewed within 24-48 business hours. We may contact you during the process for more information. Once approved, you can start building your profile immediately.",
+            faq5_q: "How will I communicate with foreign buyers?",
+            faq5_a: "You can view inquiries from buyers in Turkish through the platform. We also provide language support - especially during expo processes where our team handles translation.",
+
+            // Form
+            form_eyebrow: "Apply Now",
             form_title: "Join the Made in Izmir Network",
+            form_pitch_desc: "Fill out the form and we'll contact you within 24 hours to discuss platform membership and premium services.",
+            fpb1: "Free digital storefront",
+            fpb2: "Instant access to buyers in 30+ countries",
+            fpb3: "Professional expo representation",
+            fpb4: "Market research & logistics support",
+            fpb5: "24-48 hour application review",
+            form_box_title: "Application Form",
+            form_box_subtitle: "Fill in all fields and we'll get back to you as soon as possible.",
             name: "Full Name",
             company: "Company Name",
+            form_email: "Email",
+            form_email_ph: "example@company.com",
+            form_phone: "Phone",
             sector: "Sector",
+            sector_select: "Select your sector...",
+            sector_textile: "Textiles",
+            sector_food: "Food & Agriculture",
+            sector_marble: "Marble & Natural Stone",
+            sector_auto: "Automotive Parts",
+            sector_chemicals: "Chemicals",
+            sector_electronics: "Electronics",
+            sector_other: "Other",
+            form_services: "Services of Interest",
+            service_all: "All Services (Digital Storefront + Expo)",
+            service_digital: "Digital Storefront Only",
+            service_expo: "Expo Representation",
+            service_market: "Market Research",
+            service_logistics: "Logistics Consulting",
             message: "Your Message",
-            submit: "Submit Application"
+            form_message_ph: "Tell us briefly about your products, target markets, or any specific requests...",
+            submit: "Submit Application →",
+            success_title: "Application Received!",
+            success_desc: "We will contact you within 24-48 hours. You can also reach us on our WhatsApp line.",
+            privacy_note: "Your information is secure and will never be shared with third parties.",
+
+            // Final CTA
+            cta_eyebrow: "Ready?",
+            cta_title: "Start Global Trading Today",
+            cta_desc: "Trusted by 200+ producers. Free registration, global visibility.",
+            cta_signup: "Register for Free",
+            cta_contact: "Contact Us"
         },
         buyers: {
             title: "For Global Buyers",
@@ -599,7 +813,7 @@ const translations = {
         },
         platform: {
             title: "How It Works",
-            subtitle: "Made in Izmir is an integrated B2B trade platform — connecting Turkey's quality producers with buyers worldwide under one digital roof.",
+            subtitle: "Made in Izmir is an integrated B2B trade platform - connecting Turkey's quality producers with buyers worldwide under one digital roof.",
             step1_title: "Producers Join",
             step1_desc: "Turkish producers sign up and add their products, story, and contact information to their own digital profile.",
             step2_title: "Buyers Discover",
@@ -623,7 +837,7 @@ const translations = {
         producers_panel: {
             eyebrow: "For Producers",
             title: "List Your Products to the World",
-            desc: "With the Made in İzmir producer panel, upload your products, update prices and stock, and manage global buyer inquiries — all from one dashboard.",
+            desc: "With the Made in İzmir producer panel, upload your products, update prices and stock, and manage global buyer inquiries - all from one dashboard.",
             f1: "Create and manage product catalog",
             f2: "View buyer requests and offers",
             f3: "Track expo calendar and representation service",
@@ -636,17 +850,17 @@ const translations = {
             active: "Active"
         },
         storefront: {
-            title: "Your Own E-Commerce Page — Free",
+            title: "Your Own E-Commerce Page - Free",
             subtitle: "Every producer who joins Made in Izmir gets a professional digital storefront with their own unique URL. No website required.",
             verified_badge: "✓ Verified Producer",
             b1_title: "Personal URL",
-            b1_desc: "<strong>madeinizmir.com/your-company</strong> — your professional profile is instantly ready. Add it to your business card, email signature, and social media.",
+            b1_desc: "madeinizmir.com/your-company - your professional profile is instantly ready. Add it to your business card, email signature, and social media.",
             b2_title: "Product Catalog",
             b2_desc: "Showcase your products with photos, descriptions, and pricing. Dual-language support: publish in both Turkish and English.",
             b3_title: "Global Visibility",
             b3_desc: "Your profile is visible to all global buyers visiting Made in Izmir. Zero extra marketing cost.",
             b4_title: "Easy Setup",
-            b4_desc: "Sign up, fill in your profile — and your digital storefront is ready. No coding, technical setup, or monthly fees required."
+            b4_desc: "Sign up, fill in your profile - and your digital storefront is ready. No coding, technical setup, or monthly fees required."
         },
     }
 };

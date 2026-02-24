@@ -134,7 +134,7 @@ class MicrosoftGraphEmailBackend(BaseEmailBackend):
                     logger.debug("Graph API: email sent to %s", email_message.to)
                 else:
                     logger.error(
-                        "Graph API: failed to send email to %s — %s %s",
+                        "Graph API: failed to send email to %s - %s %s",
                         email_message.to,
                         response.status_code,
                         response.text,
