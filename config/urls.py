@@ -15,10 +15,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.contrib.auth import views as auth_views
 from django.conf import settings
-from django.conf.urls.static import static
+from django.views.static import serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -52,6 +52,9 @@ urlpatterns = [
 ]
 
 # Serve media files (uploaded photos, etc.) in both dev and production.
-# Django's static() helper is used here because Railway/Gunicorn does not
-# have a separate web server (nginx/Apache) to handle /media/ URLs.
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# We use re_path + serve directly instead of static() because static() is a
+# no-op when DEBUG=False, which breaks media serving on cPanel/shared hosting
+# where there is no separate web server (nginx/Apache) handling /media/ URLs.
+urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+]
