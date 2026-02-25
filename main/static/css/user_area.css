@@ -29,6 +29,7 @@
     flex-wrap: wrap;
     gap: 20px;
     text-align: center;
+    width: 100%;
 }
 
 /* If actions exist, align text left on large screens */
@@ -278,7 +279,7 @@
 .card-icon {
     width: 80px;
     height: 80px;
-    background: linear-gradient(135deg, #0f172a 100%, #cca43b 0%);
+    background: linear-gradient(135deg, #0f172a 0%, #cca43b 100%);
     border-radius: 20px;
     display: flex;
     align-items: center;
@@ -344,7 +345,7 @@
 .stat-icon {
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, #0f172a 100%, #cca43b 0%);
+    background: linear-gradient(135deg, #0f172a 0%, #cca43b 100%);
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -1075,4 +1076,518 @@ textarea.form-control {
     font-size: 12px;
     color: #666;
     margin-top: 5px;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+.small {
+    font-size: 0.875em;
+}
+
+/* ============================================
+   BACK NAVIGATION
+   ============================================ */
+
+.dashboard-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 8px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.dashboard-back-btn:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.dashboard-back-btn i {
+    font-size: 0.85rem;
+}
+
+/* ============================================
+   QUICK LINKS SECTION LABEL
+   ============================================ */
+
+.quick-links-label {
+    font-size: 1.1rem;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ============================================
+   STAT INFO — GRACEFUL TEXT VALUE HANDLING
+   ============================================ */
+
+.stat-info h3 {
+    font-size: 2rem;
+    margin: 0;
+    color: #333;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+.stat-info h3.stat-text-value {
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+/* ============================================
+   CARD BODY STYLED (used in dashboard_calendar)
+   ============================================ */
+
+.card-body-styled {
+    padding: 5px 0 0;
+}
+
+/* ============================================
+   DASHBOARD CALENDAR — EXPO STYLES
+   ============================================ */
+
+.card-header-styled {
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 15px;
+}
+
+.card-header-styled h3 {
+    font-size: 1.5rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+}
+
+.card-header-styled i {
+    color: #cca43b;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.custom-table th {
+    text-align: left;
+    padding: 12px;
+    background: #f8f9fa;
+    color: #64748b;
+    font-weight: 600;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.custom-table td {
+    padding: 12px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+    color: #333;
+}
+
+.custom-table tr:last-child td {
+    border-bottom: none;
+}
+
+.expos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.expo-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.expo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.expo-image {
+    height: 180px;
+    background: #f1f5f9;
+    overflow: hidden;
+}
+
+.expo-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.expo-content {
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.expo-content h5 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #0f172a;
+    font-weight: 600;
+}
+
+.expo-desc {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+}
+
+.expo-details {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+.expo-details li {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.expo-details i {
+    color: #cca43b;
+    width: 16px;
+    flex-shrink: 0;
+}
+
+.expo-footer {
+    padding: 15px 20px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
+
+.w-100 {
+    width: 100% !important;
+}
+
+/* ============================================
+   MOBILE — FILTER TOOLBAR OVERFLOW FIX
+   ============================================ */
+
+@media (max-width: 576px) {
+    .filter-toolbar {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .filter-form-inline {
+        flex-wrap: nowrap;
+        min-width: max-content;
+    }
+
+    .filter-group.ms-dropdown {
+        min-width: 140px;
+    }
+}
+
+/* ============================================
+   STAT CARD — SEMANTIC COLOR VARIANTS
+   ============================================ */
+
+.stat-card--total {
+    border-left: 4px solid #cca43b;
+}
+
+.stat-card--active {
+    border-left: 4px solid #10b981;
+}
+
+.stat-card--pending {
+    border-left: 4px solid #f59e0b;
+}
+
+.stat-icon--total {
+    background: linear-gradient(135deg, #0f172a 0%, #cca43b 100%);
+}
+
+.stat-icon--active {
+    background: linear-gradient(135deg, #059669 0%, #34d399 100%);
+}
+
+.stat-icon--pending {
+    background: linear-gradient(135deg, #d97706 0%, #fbbf24 100%);
+}
+
+/* ============================================
+   SECTION TITLE — RESTRUCTURED LAYOUT
+   ============================================ */
+
+.section-title-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.section-title-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+/* ============================================
+   PRODUCTS COUNT BADGE
+   ============================================ */
+
+.products-count-badge {
+    background: #cca43b;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 20px;
+    line-height: 1.6;
+    flex-shrink: 0;
+}
+
+/* ============================================
+   INLINE ADD PRODUCT BUTTON
+   ============================================ */
+
+.btn-add-inline {
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    color: white !important;
+    font-size: 13px;
+    padding: 8px 16px;
+    white-space: nowrap;
+    border: none;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.btn-add-inline:hover {
+    background: linear-gradient(135deg, #047857 0%, #059669 100%);
+    color: white !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+/* ============================================
+   TAG — LIGHT OUTLINED STYLE
+   ============================================ */
+
+.tag {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.tag:hover {
+    background: #e2e8f0;
+    border-color: #94a3b8;
+    color: #334155;
+}
+
+/* ============================================
+   DELETE BUTTON — GHOST / OUTLINED STYLE
+   ============================================ */
+
+.btn-danger-ghost {
+    background: transparent;
+    color: #ef4444;
+    border: 1.5px solid #ef4444;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.btn-danger-ghost:hover {
+    background: #ef4444;
+    color: white;
+    box-shadow: 0 3px 10px rgba(239, 68, 68, 0.35);
+}
+
+/* ============================================
+   FILTER — ACTIVE SELECTION STATE
+   ============================================ */
+
+.filter-group.ms-dropdown.has-selection {
+    border-color: #cca43b;
+    background: #fffbeb;
+}
+
+.filter-group.ms-dropdown.has-selection .ms-toggle {
+    color: #92400e;
+}
+
+.filter-group.ms-dropdown.has-selection .filter-icon {
+    color: #cca43b;
+    border-right-color: #fde68a;
+}
+
+/* ============================================
+   ACTIVE FILTERS INFO BAR
+   ============================================ */
+
+.active-filters-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fef9ec;
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #78350f;
+    flex-wrap: wrap;
+}
+
+.active-filters-bar i.fa-filter {
+    color: #cca43b;
+    flex-shrink: 0;
+}
+
+.active-filters-bar span {
+    flex: 1;
+}
+
+.clear-all-link {
+    color: #ef4444;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+}
+
+.clear-all-link:hover {
+    color: #dc2626;
+}
+
+/* ============================================
+   NO-IMAGE PLACEHOLDER — IMPROVED
+   ============================================ */
+
+.no-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 36px;
+    color: #94a3b8;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+}
+
+.no-image span {
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+/* ============================================
+   PENDING NOTICE — IMPROVED CLARITY
+   ============================================ */
+
+.pending-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    background: rgba(245, 158, 11, 0.08);
+    border-radius: 8px;
+    border: 1px dashed #f59e0b;
+    width: 100%;
+    font-size: 13px;
+    color: #92400e;
+    line-height: 1.5;
+}
+
+.pending-notice i {
+    color: #f59e0b;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+/* ============================================
+   SECTION TITLE AREA — RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+    .section-title-area {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .section-title-right {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .btn-add-inline {
+        font-size: 12px;
+        padding: 7px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-title-right {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .btn-add-inline {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .filter-toolbar {
+        width: 100%;
+    }
+
+    .products-count-badge {
+        font-size: 11px;
+    }
+
+    .active-filters-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }

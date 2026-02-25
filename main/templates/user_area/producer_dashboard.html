@@ -12,13 +12,17 @@
 {% endblock %}
 
 {% block dashboard_header_actions %}
+<a href="{% url 'main:dashboard' %}" class="dashboard-back-btn">
+    <i class="fas fa-arrow-left"></i>
+    <span data-i18n="dashboard.back_to_main">Ana Panel</span>
+</a>
 {% endblock %}
 
 {% block dashboard_content %}
 <!-- Stats Cards -->
 <div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-icon">
+    <div class="stat-card stat-card--total">
+        <div class="stat-icon stat-icon--total">
             <i class="fas fa-boxes"></i>
         </div>
         <div class="stat-info">
@@ -26,8 +30,8 @@
             <p data-i18n="dashboard.total_products">Toplam Ürün</p>
         </div>
     </div>
-    <div class="stat-card">
-        <div class="stat-icon">
+    <div class="stat-card stat-card--active">
+        <div class="stat-icon stat-icon--active">
             <i class="fas fa-check-circle"></i>
         </div>
         <div class="stat-info">
@@ -35,20 +39,20 @@
             <p data-i18n="dashboard.active_products">Aktif Ürünler</p>
         </div>
     </div>
-    <div class="stat-card">
-        <div class="stat-icon">
+    <div class="stat-card stat-card--pending">
+        <div class="stat-icon stat-icon--pending">
             <i class="fas fa-clock"></i>
         </div>
         <div class="stat-info">
             <h3>{{ pending_products_count }}</h3>
-            <p data-i18n="dashboard.pending_products">Onay Bekleyen Ürünler</p>
+            <p data-i18n="dashboard.pending_products">Onay Bekleyen</p>
         </div>
     </div>
 </div>
 
-<!-- Secondary Actions (Quick Links) -->
+<!-- Quick Links -->
 <div class="quick-links-title mb-2">
-    <h3 data-i18n="dashboard.quick_links" style="font-size: 1.2rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Hızlı Bağlantılar</h3>
+    <h3 data-i18n="dashboard.quick_links" class="quick-links-label">Hızlı Bağlantılar</h3>
 </div>
 <div class="dashboard-actions mb-5">
     <a href="{% url 'main:add_product' %}" class="btn btn-primary">
@@ -65,79 +69,93 @@
 <!-- Products List -->
 <div class="products-section dashboard-card mb-2">
     <div class="section-title-area animate-fade-up">
-        <h2 data-i18n="dashboard.my_products">Ürünlerim</h2>
-        <div class="filter-toolbar">
-            <form id="filter-form" method="GET" class="filter-form-inline">
-                <!-- Status Multiselect -->
-                <div class="filter-group ms-dropdown" id="status-ms">
-                    <div class="filter-icon"><i class="fas fa-stream"></i></div>
-                    <div class="ms-toggle">
-                        <span data-i18n="dashboard.filter_status">Durum</span>
-                        {% if current_filters.status %}<span class="badge ms-count">{{ current_filters.status|length }}</span>{% endif %}
+        <div class="section-title-left">
+            <h2 data-i18n="dashboard.my_products">Ürünlerim</h2>
+            {% if products %}
+            <span class="products-count-badge">{{ products|length }}</span>
+            {% endif %}
+        </div>
+        <div class="section-title-right">
+            <a href="{% url 'main:add_product' %}" class="btn btn-sm btn-add-inline">
+                <i class="fas fa-plus"></i>
+                <span data-i18n="dashboard.add_new_product">Yeni Ürün Ekle</span>
+            </a>
+            <div class="filter-toolbar">
+                <form id="filter-form" method="GET" class="filter-form-inline">
+                    {% if search_query %}
+                    <input type="hidden" name="search" value="{{ search_query }}">
+                    {% endif %}
+
+                    <!-- Status Multiselect -->
+                    <div class="filter-group ms-dropdown {% if current_filters.status %}has-selection{% endif %}" id="status-ms">
+                        <div class="filter-icon"><i class="fas fa-stream"></i></div>
+                        <div class="ms-toggle">
+                            <span data-i18n="dashboard.filter_status">Durum</span>
+                            {% if current_filters.status %}<span class="badge ms-count">{{ current_filters.status|length }}</span>{% endif %}
+                        </div>
+                        <div class="ms-menu">
+                            <label class="ms-option">
+                                <input type="checkbox" name="status" value="active" {% if 'active' in current_filters.status %}checked{% endif %}>
+                                <span data-i18n="dashboard.active">Aktif</span>
+                            </label>
+                            <label class="ms-option">
+                                <input type="checkbox" name="status" value="passive" {% if 'passive' in current_filters.status %}checked{% endif %}>
+                                <span data-i18n="dashboard.passive">Pasif</span>
+                            </label>
+                            <label class="ms-option">
+                                <input type="checkbox" name="status" value="pending" {% if 'pending' in current_filters.status %}checked{% endif %}>
+                                <span data-i18n="dashboard.waiting_approval">Onay Bekleyenler</span>
+                            </label>
+                        </div>
                     </div>
-                    <div class="ms-menu">
-                        <label class="ms-option">
-                            <input type="checkbox" name="status" value="active" {% if 'active' in current_filters.status %}checked{% endif %}>
-                            <span data-i18n="dashboard.active">Aktif</span>
-                        </label>
-                        <label class="ms-option">
-                            <input type="checkbox" name="status" value="passive" {% if 'passive' in current_filters.status %}checked{% endif %}>
-                            <span data-i18n="dashboard.passive">Pasif</span>
-                        </label>
-                        <label class="ms-option">
-                            <input type="checkbox" name="status" value="pending" {% if 'pending' in current_filters.status %}checked{% endif %}>
-                            <span data-i18n="dashboard.waiting_approval">Onay Bekleyenler</span>
-                        </label>
+
+                    <!-- Sector Multiselect -->
+                    <div class="filter-group ms-dropdown {% if current_filters.sector %}has-selection{% endif %}" id="sector-ms">
+                        <div class="filter-icon"><i class="fas fa-industry"></i></div>
+                        <div class="ms-toggle">
+                            <span data-i18n="dashboard.filter_sector">Sektör</span>
+                            {% if current_filters.sector %}<span class="badge ms-count">{{ current_filters.sector|length }}</span>{% endif %}
+                        </div>
+                        <div class="ms-menu">
+                            {% for sector in available_sectors %}
+                            <label class="ms-option">
+                                <input type="checkbox" name="sector" value="{{ sector.id }}" {% if sector.id|stringformat:"i" in current_filters.sector %}checked{% endif %}>
+                                <span>{{ sector.name_tr }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
                     </div>
-                </div>
-                
-                <!-- Sector Multiselect -->
-                <div class="filter-group ms-dropdown" id="sector-ms">
-                    <div class="filter-icon"><i class="fas fa-industry"></i></div>
-                    <div class="ms-toggle">
-                        <span data-i18n="dashboard.filter_sector">Sektör</span>
-                        {% if current_filters.sector %}<span class="badge ms-count">{{ current_filters.sector|length }}</span>{% endif %}
+
+                    <!-- Tag Multiselect -->
+                    <div class="filter-group ms-dropdown {% if current_filters.tag %}has-selection{% endif %}" id="tag-ms">
+                        <div class="filter-icon"><i class="fas fa-tags"></i></div>
+                        <div class="ms-toggle">
+                            <span data-i18n="dashboard.filter_tag">Etiket</span>
+                            {% if current_filters.tag %}<span class="badge ms-count">{{ current_filters.tag|length }}</span>{% endif %}
+                        </div>
+                        <div class="ms-menu">
+                            {% for tag in available_tags %}
+                            <label class="ms-option">
+                                <input type="checkbox" name="tag" value="{{ tag.id }}" {% if tag.id|stringformat:"i" in current_filters.tag %}checked{% endif %}>
+                                <span>{{ tag.name_tr }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
                     </div>
-                    <div class="ms-menu">
-                        {% for sector in available_sectors %}
-                        <label class="ms-option">
-                            <input type="checkbox" name="sector" value="{{ sector.id }}" {% if sector.id|stringformat:"i" in current_filters.sector %}checked{% endif %}>
-                            <span>{{ sector.name_tr }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                </div>
-                
-                <!-- Tag Multiselect -->
-                <div class="filter-group ms-dropdown" id="tag-ms">
-                    <div class="filter-icon"><i class="fas fa-tags"></i></div>
-                    <div class="ms-toggle">
-                        <span data-i18n="dashboard.filter_tag">Etiket</span>
-                        {% if current_filters.tag %}<span class="badge ms-count">{{ current_filters.tag|length }}</span>{% endif %}
-                    </div>
-                    <div class="ms-menu">
-                        {% for tag in available_tags %}
-                        <label class="ms-option">
-                            <input type="checkbox" name="tag" value="{{ tag.id }}" {% if tag.id|stringformat:"i" in current_filters.tag %}checked{% endif %}>
-                            <span>{{ tag.name_tr }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                </div>
-                
-                {% if current_filters.status or current_filters.sector or current_filters.tag %}
-                <a href="{% url 'main:producer_dashboard' %}" class="filter-reset" title="Temizle">
-                    <i class="fas fa-times-circle"></i>
-                </a>
-                {% endif %}
-            </form>
+
+                    {% if current_filters.status or current_filters.sector or current_filters.tag %}
+                    <a href="{% url 'main:producer_dashboard' %}{% if search_query %}?search={{ search_query }}{% endif %}" class="filter-reset" title="Filtreleri Temizle">
+                        <i class="fas fa-times-circle"></i>
+                    </a>
+                    {% endif %}
+                </form>
+            </div>
         </div>
     </div>
 
     <!-- Search Bar -->
     <div class="search-bar-container">
         <form method="GET" class="search-form">
-            <!-- Preserve existing filters -->
             {% for status in current_filters.status %}
             <input type="hidden" name="status" value="{{ status }}">
             {% endfor %}
@@ -147,16 +165,17 @@
             {% for sector in current_filters.sector %}
             <input type="hidden" name="sector" value="{{ sector }}">
             {% endfor %}
-            
+
             <div class="search-input-wrapper">
                 <i class="fas fa-search search-icon"></i>
-                <input 
-                    type="text" 
-                    name="search" 
-                    class="search-input" 
-                    placeholder="Ürün ara..." 
+                <input
+                    type="text"
+                    name="search"
+                    class="search-input"
+                    placeholder="Ürün adı veya açıklamasında ara..."
                     value="{{ search_query }}"
                     data-i18n-placeholder="dashboard.search_products"
+                    autocomplete="off"
                 >
                 {% if search_query %}
                 <a href="?{% for status in current_filters.status %}status={{ status }}&{% endfor %}{% for tag in current_filters.tag %}tag={{ tag }}&{% endfor %}{% for sector in current_filters.sector %}sector={{ sector }}&{% endfor %}" class="clear-search" title="Aramayı Temizle">
@@ -165,11 +184,28 @@
                 {% endif %}
             </div>
             <button type="submit" class="search-button">
-                <i class="fas fa-search"></i>
                 <span data-i18n="dashboard.search">Ara</span>
             </button>
         </form>
     </div>
+
+    <!-- Active search/filter info bar -->
+    {% if search_query or current_filters.status or current_filters.sector or current_filters.tag %}
+    <div class="active-filters-bar">
+        <i class="fas fa-filter"></i>
+        <span>
+            {% if products %}
+            <strong>{{ products|length }}</strong> sonuç
+            {% else %}
+            Sonuç bulunamadı
+            {% endif %}
+            {% if search_query %} &mdash; "<em>{{ search_query }}</em>" için{% endif %}
+        </span>
+        <a href="{% url 'main:producer_dashboard' %}" class="clear-all-link">
+            <i class="fas fa-times"></i> Tümünü Temizle
+        </a>
+    </div>
+    {% endif %}
 
     {% if products %}
     <div class="products-grid">
@@ -177,13 +213,14 @@
         <div class="product-card {% if product.is_pending %}pending{% elif not product.is_active %}inactive{% endif %}">
             <div class="product-image">
                 {% if product.photo1 %}
-                <img src="{{ product.photo1.url }}" alt="{{ product.title_tr|default:product.title_en }}">
+                <img src="{{ product.photo1.url }}" alt="{{ product.title_tr|default:product.title_en }}" loading="lazy">
                 {% else %}
                 <div class="no-image">
                     <i class="fas fa-image"></i>
+                    <span>Görsel yok</span>
                 </div>
                 {% endif %}
-                
+
                 {% if product.is_pending %}
                 <span class="status-badge pending" data-i18n="dashboard.waiting_approval">Onay Bekliyor</span>
                 {% elif not product.is_active %}
@@ -214,18 +251,22 @@
 
                 <div class="product-actions">
                     {% if not product.is_pending %}
-                        <a href="{% url 'main:product_detail' product.id %}" class="btn btn-sm btn-info">
+                        <a href="{% url 'main:product_detail' product.id %}" class="btn btn-sm btn-info" title="Görüntüle">
                             <i class="fas fa-eye"></i> <span data-i18n="dashboard.details">Görüntüle</span>
                         </a>
-                        <a href="{% url 'main:edit_product' product.id %}" class="btn btn-sm btn-warning">
+                        <a href="{% url 'main:edit_product' product.id %}" class="btn btn-sm btn-warning" title="Düzenle">
                             <i class="fas fa-edit"></i> <span data-i18n="dashboard.edit">Düzenle</span>
                         </a>
-                        <a href="{% url 'main:delete_product' product.id %}" class="btn btn-sm btn-danger">
-                            <i class="fas fa-trash"></i> <span data-i18n="dashboard.delete">Sil</span>
+                        <a href="{% url 'main:delete_product' product.id %}"
+                           class="btn btn-sm btn-danger-ghost"
+                           title="Sil"
+                           onclick="return confirm('Bu ürünü kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.')">
+                            <i class="fas fa-trash"></i>
                         </a>
                     {% else %}
-                        <div class="pending-notice text-muted small mt-2">
-                            <i class="fas fa-hourglass-half"></i> <span data-i18n="dashboard.product_request_pending">Onay Sürecinde</span>
+                        <div class="pending-notice">
+                            <i class="fas fa-hourglass-half"></i>
+                            <span data-i18n="dashboard.product_request_pending">Yönetici onayı bekleniyor. Bu süreçte düzenleme yapılamaz.</span>
                         </div>
                     {% endif %}
                 </div>
@@ -234,74 +275,28 @@
         {% endfor %}
     </div>
     {% else %}
-    <div class="empty-state">
-        <i class="fas fa-box-open"></i>
-        <h3 data-i18n="dashboard.no_products_yet">Henüz ürün eklemediniz</h3>
-        <p data-i18n="dashboard.add_first_product_prompt">İlk ürününüzü ekleyerek başlayın!</p>
-        <a href="{% url 'main:add_product' %}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> <span data-i18n="dashboard.add_first_product">İlk Ürünü Ekle</span>
-        </a>
-    </div>
+        {% if search_query or current_filters.status or current_filters.sector or current_filters.tag %}
+        <!-- No results matching current filters/search -->
+        <div class="empty-state">
+            <i class="fas fa-search"></i>
+            <h3 data-i18n="dashboard.no_results">Aramanızla eşleşen ürün bulunamadı</h3>
+            <p>Farklı arama terimleri veya filtreler deneyin.</p>
+            <a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Filtreleri Temizle
+            </a>
+        </div>
+        {% else %}
+        <!-- Truly no products -->
+        <div class="empty-state">
+            <i class="fas fa-box-open"></i>
+            <h3 data-i18n="dashboard.no_products_yet">Henüz ürün eklemediniz</h3>
+            <p data-i18n="dashboard.add_first_product_prompt">İlk ürününüzü ekleyerek başlayın!</p>
+            <a href="{% url 'main:add_product' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> <span data-i18n="dashboard.add_first_product">İlk Ürünü Ekle</span>
+            </a>
+        </div>
+        {% endif %}
     {% endif %}
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const dropdowns = document.querySelectorAll('.ms-dropdown');
-        const form = document.getElementById('filter-form');
-
-        dropdowns.forEach(dropdown => {
-            // Track if changes were made while open
-            dropdown.dataset.changed = "false";
-            
-            dropdown.addEventListener('click', (e) => {
-                e.stopPropagation();
-                
-                const isActive = dropdown.classList.contains('active');
-                
-                // Close all dropdowns
-                dropdowns.forEach(d => {
-                    if (d.classList.contains('active') && d !== dropdown) {
-                        closeDropdown(d);
-                    }
-                });
-
-                if (!isActive) {
-                    dropdown.classList.add('active');
-                    dropdown.dataset.changed = "false"; // Reset change tracker when opening
-                } else {
-                    closeDropdown(dropdown);
-                }
-            });
-
-            // Track changes to checkboxes
-            dropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-                cb.addEventListener('change', () => {
-                    dropdown.dataset.changed = "true";
-                });
-            });
-        });
-
-        function closeDropdown(dropdown) {
-            if (!dropdown.classList.contains('active')) return;
-            
-            dropdown.classList.remove('active');
-            
-            // Apply filters ONLY if something changed while it was open
-            if (dropdown.dataset.changed === "true") {
-                form.submit();
-            }
-        }
-
-        // Global click to close
-        document.addEventListener('click', () => {
-            dropdowns.forEach(d => closeDropdown(d));
-        });
-
-        // Prevent dropdown menu clicks from bubbling up to document
-        document.querySelectorAll('.ms-menu').forEach(menu => {
-            menu.addEventListener('click', (e) => e.stopPropagation());
-        });
-    });
-</script>
 {% endblock %}

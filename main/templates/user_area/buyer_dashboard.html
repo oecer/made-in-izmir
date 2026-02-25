@@ -12,6 +12,10 @@
 {% endblock %}
 
 {% block dashboard_header_actions %}
+<a href="{% url 'main:dashboard' %}" class="dashboard-back-btn">
+    <i class="fas fa-arrow-left"></i>
+    <span data-i18n="dashboard.back_to_main">Ana Panel</span>
+</a>
 {% endblock %}
 
 {% block dashboard_content %}
@@ -31,7 +35,7 @@
             <i class="fas fa-building"></i>
         </div>
         <div class="stat-info">
-            <h3 data-label="company_name">{{ profile.company_name }}</h3>
+            <h3 data-label="company_name" class="stat-text-value">{{ profile.company_name }}</h3>
             <p data-i18n="dashboard.company">Firma</p>
         </div>
     </div>
@@ -40,7 +44,7 @@
             <i class="fas fa-globe"></i>
         </div>
         <div class="stat-info">
-            <h3 data-label="country">{{ profile.country }}</h3>
+            <h3 data-label="country" class="stat-text-value">{{ profile.country }}</h3>
             <p data-i18n="dashboard.country">Ülke</p>
         </div>
     </div>
@@ -48,7 +52,7 @@
 
 <!-- Secondary Actions (Quick Links) -->
 <div class="quick-links-title mb-2">
-    <h3 data-i18n="dashboard.quick_links" style="font-size: 1.2rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Hızlı Bağlantılar</h3>
+    <h3 data-i18n="dashboard.quick_links" class="quick-links-label">Hızlı Bağlantılar</h3>
 </div>
 <div class="dashboard-actions mb-5">
     <a href="{% url 'main:profile' %}" class="btn btn-secondary">
@@ -176,7 +180,7 @@
             <div class="product-info">
                 <h3>{{ product.title_tr|default:product.title_en }}</h3>
                 <p class="product-producer">
-                    <i class="fas fa-industry"></i> <span data-i18n="dashboard.producer">Üretici</span>:
+                    <i class="fas fa-user-tie"></i> <span data-i18n="dashboard.producer">Üretici</span>:
                     {{ product.producer.profile.company_name }}
                 </p>
                 {% if product.sector %}
@@ -216,63 +220,4 @@
     {% endif %}
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const dropdowns = document.querySelectorAll('.ms-dropdown');
-        const form = document.getElementById('filter-form');
-
-        dropdowns.forEach(dropdown => {
-            // Track if changes were made while open
-            dropdown.dataset.changed = "false";
-            
-            dropdown.addEventListener('click', (e) => {
-                e.stopPropagation();
-                
-                const isActive = dropdown.classList.contains('active');
-                
-                // Close all dropdowns
-                dropdowns.forEach(d => {
-                    if (d.classList.contains('active') && d !== dropdown) {
-                        closeDropdown(d);
-                    }
-                });
-
-                if (!isActive) {
-                    dropdown.classList.add('active');
-                    dropdown.dataset.changed = "false"; // Reset change tracker when opening
-                } else {
-                    closeDropdown(dropdown);
-                }
-            });
-
-            // Track changes to checkboxes
-            dropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-                cb.addEventListener('change', () => {
-                    dropdown.dataset.changed = "true";
-                });
-            });
-        });
-
-        function closeDropdown(dropdown) {
-            if (!dropdown.classList.contains('active')) return;
-            
-            dropdown.classList.remove('active');
-            
-            // Apply filters ONLY if something changed while it was open
-            if (dropdown.dataset.changed === "true") {
-                form.submit();
-            }
-        }
-
-        // Global click to close
-        document.addEventListener('click', () => {
-            dropdowns.forEach(d => closeDropdown(d));
-        });
-
-        // Prevent dropdown menu clicks from bubbling up to document
-        document.querySelectorAll('.ms-menu').forEach(menu => {
-            menu.addEventListener('click', (e) => e.stopPropagation());
-        });
-    });
-</script>
 {% endblock %}

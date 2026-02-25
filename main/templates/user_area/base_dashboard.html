@@ -29,4 +29,58 @@
 
 {% block extra_dashboard_css %}{% endblock %}
 
+<script>
+/* Shared multi-select filter dropdown logic */
+document.addEventListener('DOMContentLoaded', function () {
+    const dropdowns = document.querySelectorAll('.ms-dropdown');
+    if (!dropdowns.length) return;
+
+    const form = document.getElementById('filter-form');
+
+    dropdowns.forEach(function (dropdown) {
+        dropdown.dataset.changed = 'false';
+
+        dropdown.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const isActive = dropdown.classList.contains('active');
+
+            dropdowns.forEach(function (d) {
+                if (d.classList.contains('active') && d !== dropdown) {
+                    closeDropdown(d);
+                }
+            });
+
+            if (!isActive) {
+                dropdown.classList.add('active');
+                dropdown.dataset.changed = 'false';
+            } else {
+                closeDropdown(dropdown);
+            }
+        });
+
+        dropdown.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
+            cb.addEventListener('change', function () {
+                dropdown.dataset.changed = 'true';
+            });
+        });
+    });
+
+    function closeDropdown(dropdown) {
+        if (!dropdown.classList.contains('active')) return;
+        dropdown.classList.remove('active');
+        if (dropdown.dataset.changed === 'true') {
+            form.submit();
+        }
+    }
+
+    document.addEventListener('click', function () {
+        dropdowns.forEach(function (d) { closeDropdown(d); });
+    });
+
+    document.querySelectorAll('.ms-menu').forEach(function (menu) {
+        menu.addEventListener('click', function (e) { e.stopPropagation(); });
+    });
+});
+</script>
+
 {% endblock %}
