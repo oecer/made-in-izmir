@@ -1,7 +1,6 @@
 <!-- Header / Navigation -->
 <header id="header">
-    <div class="container">
-        <nav role="navigation" aria-label="Ana navigasyon">
+    <nav class="navbar-fullwidth" role="navigation" aria-label="Ana navigasyon">
             <div class="logo">
                 <a href="{% url 'main:index' %}" style="text-decoration: none; color: inherit;">Made in İzmir</a>
             </div>
@@ -22,9 +21,9 @@
                 {% else %}
                 <!-- Main Site Navbar Items (Authenticated) -->
                 <li><a href="{% url 'main:index' %}" data-i18n="nav.home">Ana Sayfa</a></li>
+                <li><a href="{% url 'main:neden_izmir' %}" data-i18n="nav.neden_izmir">Neden İzmir?</a></li>
                 <li><a href="{% url 'main:producers' %}" data-i18n="nav.producers">Üreticiler İçin</a></li>
                 <li><a href="{% url 'main:buyers' %}" data-i18n="nav.buyers">Alıcılar İçin</a></li>
-                <li><a href="{% url 'main:neden_izmir' %}" data-i18n="nav.neden_izmir">Neden İzmir?</a></li>
                 <li><a href="{% url 'main:calendar' %}" data-i18n="nav.calendar">Fuar Takvimi</a></li>
                 <li><a href="{% url 'main:about' %}" data-i18n="nav.about">Hakkımızda</a></li>
                 <li><a href="{% url 'main:contact' %}" data-i18n="nav.contact">İletişim</a></li>
@@ -33,9 +32,9 @@
                 {% else %}
                 <!-- Main Site Navbar Items (Anonymous) -->
                 <li><a href="{% url 'main:index' %}" data-i18n="nav.home">Ana Sayfa</a></li>
+                <li><a href="{% url 'main:neden_izmir' %}" data-i18n="nav.neden_izmir">Neden İzmir?</a></li>
                 <li><a href="{% url 'main:producers' %}" data-i18n="nav.producers">Üreticiler İçin</a></li>
                 <li><a href="{% url 'main:buyers' %}" data-i18n="nav.buyers">Alıcılar İçin</a></li>
-                <li><a href="{% url 'main:neden_izmir' %}" data-i18n="nav.neden_izmir">Neden İzmir?</a></li>
                 <li><a href="{% url 'main:calendar' %}" data-i18n="nav.calendar">Fuar Takvimi</a></li>
                 <li><a href="{% url 'main:about' %}" data-i18n="nav.about">Hakkımızda</a></li>
                 <li><a href="{% url 'main:contact' %}" data-i18n="nav.contact">İletişim</a></li>
@@ -53,6 +52,5 @@
                     <i class="fas fa-bars" aria-hidden="true"></i>
                 </button>
             </div>
-        </nav>
-    </div>
+    </nav>
 </header>
