@@ -6,6 +6,7 @@ app_name = 'main'
 urlpatterns = [
     path('', views.index, name='index'),
     path('about/', views.about, name='about'),
+    path('why-izmir/', views.neden_izmir, name='neden_izmir'),
     path('producers/', views.producers, name='producers'),
     path('buyers/', views.buyers, name='buyers'),
     path('calendar/', views.calendar, name='calendar'),

@@ -19,6 +19,11 @@ def about(request):
     return render(request, 'about.html')
 
 
+def neden_izmir(request):
+    """Why Izmir page view"""
+    return render(request, 'neden_izmir.html')
+
+
 def producers(request):
     """Producers page view"""
     return render(request, 'producers.html')

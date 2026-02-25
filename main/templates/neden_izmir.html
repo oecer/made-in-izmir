@@ -1,0 +1,791 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Made in İzmir - Neden İzmir? / Why Izmir?{% endblock %}
+
+{% block extra_css %}
+<meta name="description" content="Neden İzmir? Stratejik liman, güçlü üretim altyapısı ve köklü ticaret kültürüyle uluslararası alıcılar için ideal tedarik merkezi.">
+<style>
+/* ═══════════════════════════════════════════════════
+   NEDEN İZMİR PAGE – SPECIFIC STYLES
+   ═══════════════════════════════════════════════════ */
+
+/* ── Hero ── */
+.ni-hero-badge {
+    display: inline-block;
+    background: rgba(204, 164, 59, 0.18);
+    border: 1px solid rgba(204, 164, 59, 0.5);
+    color: var(--accent-color);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 0.35rem 1rem;
+    border-radius: 50px;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(8px);
+}
+
+/* ── Stats bar ── */
+.ni-stats-bar { background: var(--primary-color); padding: 0; }
+.ni-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    text-align: center;
+}
+.ni-stat-item {
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+.ni-stat-item:last-child { border-right: none; }
+.ni-stat-num {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    font-family: 'Playfair Display', serif;
+    line-height: 1;
+}
+.ni-stat-lbl {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+@media (max-width: 640px) {
+    .ni-stats-grid { grid-template-columns: 1fr 1fr; }
+    .ni-stat-item { border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+    .ni-stat-item:last-child { border-bottom: none; }
+}
+
+/* ── Intro paragraph ── */
+.ni-intro-body {
+    max-width: 860px;
+    margin: 0 auto;
+}
+.ni-intro-para {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    line-height: 1.9;
+}
+.ni-intro-para strong {
+    color: var(--text-main);
+    font-weight: 600;
+}
+.ni-tagline {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    font-style: italic;
+    border-left: 3px solid var(--accent-color);
+    padding-left: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+/* ── 3 Pillars ── */
+.ni-pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 1rem;
+}
+@media (max-width: 900px) { .ni-pillars-grid { grid-template-columns: 1fr; gap: 1.5rem; } }
+
+.ni-pillar-card {
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 2rem;
+    border: 1px solid rgba(204, 164, 59, 0.12);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s var(--transition), box-shadow 0.3s var(--transition), border-color 0.3s var(--transition);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.ni-pillar-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(204, 164, 59, 0.4);
+}
+.ni-pillar-icon {
+    width: 68px; height: 68px;
+    border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    background: rgba(204, 164, 59, 0.09);
+    color: var(--accent-color);
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+.ni-pillar-card:hover .ni-pillar-icon {
+    background: var(--accent-color);
+    color: var(--primary-color);
+}
+.ni-pillar-number {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-color);
+}
+.ni-pillar-card h3 {
+    font-size: 1.3rem;
+    color: var(--primary-color);
+    margin: 0;
+}
+.ni-pillar-card p {
+    font-size: 0.925rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+    margin: 0;
+    flex: 1;
+}
+
+/* ── Deep-dive section (dark) ── */
+.ni-deep-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #1a2e4a 100%);
+    padding: 5.5rem 0;
+    position: relative;
+    overflow: hidden;
+}
+.ni-deep-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 80% 50%, rgba(204, 164, 59, 0.07) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.ni-deep-intro {
+    max-width: 680px;
+    margin: 0 auto 4rem;
+    text-align: center;
+}
+.ni-deep-intro p {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 1.025rem;
+    line-height: 1.85;
+    margin-top: 1rem;
+}
+
+.ni-deep-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+}
+@media (max-width: 900px) { .ni-deep-grid { grid-template-columns: 1fr; } }
+
+.ni-deep-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    padding: 2rem 1.75rem;
+    backdrop-filter: blur(8px);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.ni-deep-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(204, 164, 59, 0.35);
+}
+.ni-deep-card-icon {
+    width: 50px; height: 50px;
+    border-radius: 14px;
+    background: rgba(204, 164, 59, 0.14);
+    color: var(--accent-color);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+}
+.ni-deep-card h4 {
+    font-size: 1rem;
+    color: var(--text-light);
+    margin: 0;
+}
+.ni-deep-card p {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.62);
+    line-height: 1.75;
+    margin: 0;
+    flex: 1;
+}
+
+/* ── Markets strip ── */
+.ni-markets-section { background: var(--bg-body); padding: 5rem 0; }
+.ni-markets-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+}
+@media (max-width: 900px) { .ni-markets-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .ni-markets-grid { grid-template-columns: 1fr; } }
+
+.ni-market-card {
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+.ni-market-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: rgba(204, 164, 59, 0.25);
+    transform: translateY(-3px);
+}
+.ni-market-flag {
+    font-size: 2rem;
+    line-height: 1;
+}
+.ni-market-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--primary-color);
+    font-weight: 700;
+}
+.ni-market-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* ── Logistics visual ── */
+.ni-logistics-section {
+    background: var(--bg-surface);
+    padding: 5rem 0;
+}
+.ni-logistics-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+@media (max-width: 768px) {
+    .ni-logistics-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+}
+.ni-logistics-copy h2 {
+    font-size: 2rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.25rem;
+}
+.ni-logistics-copy p {
+    font-size: 0.975rem;
+    color: var(--text-muted);
+    line-height: 1.85;
+    margin-bottom: 1.5rem;
+}
+.ni-logistics-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.ni-logistics-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.925rem;
+    color: var(--text-main);
+}
+.ni-logistics-list li i {
+    color: var(--accent-color);
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+    font-size: 0.85rem;
+}
+.ni-logistics-visual {
+    position: relative;
+}
+.ni-map-box {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5rem;
+}
+.ni-map-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 60% 40%, rgba(204, 164, 59, 0.12) 0%, transparent 65%);
+}
+.ni-map-center {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0 auto;
+}
+.ni-map-dot {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    box-shadow: 0 0 0 12px rgba(204, 164, 59, 0.15), 0 0 0 24px rgba(204, 164, 59, 0.06);
+    flex-shrink: 0;
+}
+.ni-map-label {
+    color: var(--text-light);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+.ni-map-sublabel {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+}
+.ni-map-routes {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+.ni-route-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 0.625rem 0.875rem;
+}
+.ni-route-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.ni-route-dot.sea   { background: #38bdf8; }
+.ni-route-dot.land  { background: #4ade80; }
+.ni-route-dot.air   { background: #f59e0b; }
+.ni-route-dot.fast  { background: #c084fc; }
+.ni-route-text {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.3;
+}
+.ni-route-time {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.45);
+    margin-top: 0.1rem;
+}
+
+/* ── CTA ── */
+.ni-cta-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    padding: 5rem 0;
+    text-align: center;
+}
+.ni-cta-eyebrow {
+    font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent-color); margin-bottom: 0.75rem;
+}
+.ni-cta-section h2 {
+    font-size: 2.5rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+}
+.ni-cta-section > .container > p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.05rem;
+    margin-bottom: 2.5rem;
+    max-width: 520px;
+    margin-left: auto; margin-right: auto;
+}
+.ni-cta-actions {
+    display: flex; gap: 1rem;
+    align-items: center; justify-content: center; flex-wrap: wrap;
+}
+@media (max-width: 768px) {
+    .ni-cta-section h2 { font-size: 1.75rem; }
+}
+
+/* ── Shared utility ── */
+.section-eyebrow {
+    font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent-color); margin-bottom: 0.6rem; display: block;
+}
+[data-animate] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+}
+[data-animate].visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ═══════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════ -->
+<div class="page-header" style="
+    background-image:
+        linear-gradient(160deg, rgba(10,18,35,0.72) 0%, rgba(13,35,64,0.65) 100%),
+        url('{% static "images/izmir_port.png" %}');
+    background-size: cover;
+    background-position: center 60%;
+    background-repeat: no-repeat;
+    padding: 9rem 0 6rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;">
+    <!-- subtle gold radial glow -->
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 55% 65% at 70% 50%, rgba(204,164,59,0.08) 0%, transparent 65%);pointer-events:none;"></div>
+    <div class="container animate-fade-up" style="z-index:1;position:relative;">
+        <div class="ni-hero-badge" data-i18n="neden_izmir.hero_badge">🌊 İzmir - Global Ticaret Merkezi</div>
+        <h1 style="color:var(--text-light);font-size:clamp(2.25rem,5vw,3.5rem);letter-spacing:-0.03em;margin-bottom:1.25rem;text-shadow:0 2px 16px rgba(0,0,0,0.45);" data-i18n="neden_izmir.hero_title">
+            Neden İzmir?
+        </h1>
+        <p style="color:rgba(255,255,255,0.82);font-size:1.15rem;max-width:720px;margin:0 auto;line-height:1.75;font-weight:300;text-shadow:0 1px 8px rgba(0,0,0,0.4);" data-i18n="neden_izmir.hero_subtitle">
+            Güçlü liman ağı, geniş üretim yelpazesi ve köklü ticaret kültürüyle uluslararası alıcılar için Türkiye'nin en güvenilir tedarik merkezini keşfedin.
+        </p>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STATS BAR
+     ═══════════════════════════════════════════ -->
+<div class="ni-stats-bar">
+    <div class="container ni-stats-grid">
+        <div class="ni-stat-item">
+            <span class="ni-stat-num" data-i18n="neden_izmir.stat1_num">100.000+</span>
+            <span class="ni-stat-lbl" data-i18n="neden_izmir.stat1_lbl">Ürün Çeşidi</span>
+        </div>
+        <div class="ni-stat-item">
+            <span class="ni-stat-num" data-i18n="neden_izmir.stat2_num">8.500</span>
+            <span class="ni-stat-lbl" data-i18n="neden_izmir.stat2_lbl">Yıllık Ticaret Mirası</span>
+        </div>
+        <div class="ni-stat-item">
+            <span class="ni-stat-num" data-i18n="neden_izmir.stat3_num">3–5</span>
+            <span class="ni-stat-lbl" data-i18n="neden_izmir.stat3_lbl">Günde Avrupa'ya Ulaşım</span>
+        </div>
+        <div class="ni-stat-item">
+            <span class="ni-stat-num" data-i18n="neden_izmir.stat4_num">5+</span>
+            <span class="ni-stat-lbl" data-i18n="neden_izmir.stat4_lbl">Kıtaya Doğrudan Erişim</span>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     INTRO
+     ═══════════════════════════════════════════ -->
+<section class="section" style="background:var(--bg-surface);">
+    <div class="container">
+        <div class="section-title" data-animate>
+            <span class="section-eyebrow" data-i18n="neden_izmir.intro_eyebrow">Tedarik Merkezi</span>
+            <h2 style="font-size:clamp(1.6rem,3.5vw,2.25rem);letter-spacing:-0.02em;" data-i18n="neden_izmir.intro_title">
+                Küresel Ticaret için Stratejik Bir Merkez
+            </h2>
+            <div class="section-title-bar"></div>
+        </div>
+
+        <div class="ni-intro-body" data-animate>
+            <p class="ni-intro-para" data-i18n="neden_izmir.intro_para">
+                İzmir; geniş ürün yelpazesi, yüksek kalite standartları ve güçlü üretim altyapısıyla uluslararası alıcılar için güvenilir bir tedarik merkezidir. Gelişmiş liman ağı sayesinde Avrupa, Afrika, Orta Doğu, Amerika ve Asya pazarlarına etkin ve hızlı erişim sağlanırken; kara yolu ile Avrupa'nın en uzak noktalarına, Rusya, Orta Asya ve Türk Cumhuriyetleri'ne ortalama 3–5 gün içinde ulaşabilen stratejik bir lojistik avantaj sunmaktadır. Bu güçlü konum, İzmir'i kaliteli üretim ile hızlı ve sürdürülebilir teslimatın buluştuğu, küresel ticaret için önemli bir merkez haline getirmektedir.
+            </p>
+            <p class="ni-tagline" data-i18n="neden_izmir.intro_tagline">
+                İzmir — Kaliteli Üretim ile Hızlı Teslimatın Buluştuğu Nokta.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     3 PILLARS
+     ═══════════════════════════════════════════ -->
+<section class="section" style="background:var(--bg-body);">
+    <div class="container">
+        <div class="section-title" data-animate>
+            <span class="section-eyebrow" data-i18n="neden_izmir.pillars_eyebrow">Üç Temel Güç</span>
+            <h2 style="font-size:clamp(1.6rem,3.5vw,2.25rem);letter-spacing:-0.02em;" data-i18n="neden_izmir.pillars_title">
+                İzmir'i Özel Kılan Üstünlükler
+            </h2>
+            <div class="section-title-bar"></div>
+            <p class="section-subtitle" data-i18n="neden_izmir.pillars_subtitle">
+                Stratejik konum, üretim gücü ve köklü ticaret kültürünün birleşimi — İzmir'i rakipsiz kılıyor.
+            </p>
+        </div>
+
+        <div class="ni-pillars-grid">
+
+            <!-- Pillar 1: Strategic Port -->
+            <div class="ni-pillar-card" data-animate>
+                <div class="ni-pillar-icon"><i class="fas fa-ship"></i></div>
+                <span class="ni-pillar-number" data-i18n="neden_izmir.p1_num">01</span>
+                <h3 data-i18n="neden_izmir.p1_title">Stratejik Liman</h3>
+                <p data-i18n="neden_izmir.p1_desc">
+                    Avrupa, Asya ve Afrika'nın kesişim noktasında, Ege'nin kalbinde güçlü lojistik altyapı ve uluslararası ticaret erişimi.
+                </p>
+            </div>
+
+            <!-- Pillar 2: Production Strength -->
+            <div class="ni-pillar-card" data-animate style="transition-delay:0.1s;">
+                <div class="ni-pillar-icon"><i class="fas fa-industry"></i></div>
+                <span class="ni-pillar-number" data-i18n="neden_izmir.p2_num">02</span>
+                <h3 data-i18n="neden_izmir.p2_title">Üretim Gücü</h3>
+                <p data-i18n="neden_izmir.p2_desc">
+                    Farklı sektörlerde 100.000'den fazla ürün çeşitliliği ve güçlü üretim altyapısıyla geniş ve sürdürülebilir bir sanayi ekosistemi.
+                </p>
+            </div>
+
+            <!-- Pillar 3: Trade Culture -->
+            <div class="ni-pillar-card" data-animate style="transition-delay:0.2s;">
+                <div class="ni-pillar-icon"><i class="fas fa-landmark"></i></div>
+                <span class="ni-pillar-number" data-i18n="neden_izmir.p3_num">03</span>
+                <h3 data-i18n="neden_izmir.p3_title">Ticaret Kültürü</h3>
+                <p data-i18n="neden_izmir.p3_desc">
+                    8500 yıllık ticaret geçmişi ve Akdeniz ticaret geleneğinin önemli duraklarından biri olma özelliğiyle güvenilir ortak.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     DEEP DIVE (dark section)
+     ═══════════════════════════════════════════ -->
+<section class="ni-deep-section">
+    <div class="container" style="position:relative;">
+
+        <div class="ni-deep-intro" data-animate>
+            <span class="section-eyebrow" data-i18n="neden_izmir.deep_eyebrow">Detaylı Bakış</span>
+            <h2 style="color:var(--text-light);font-size:clamp(1.6rem,3.5vw,2.25rem);letter-spacing:-0.02em;margin-bottom:0;" data-i18n="neden_izmir.deep_title">
+                Her Pillar'ın Ardındaki Güç
+            </h2>
+            <div class="section-title-bar"></div>
+            <p data-i18n="neden_izmir.deep_subtitle">
+                İzmir'in ticari cazibesini oluşturan faktörlere daha yakından bakın.
+            </p>
+        </div>
+
+        <div class="ni-deep-grid">
+
+            <!-- Port -->
+            <div class="ni-deep-card" data-animate>
+                <div class="ni-deep-card-icon"><i class="fas fa-anchor"></i></div>
+                <h4 data-i18n="neden_izmir.deep1_title">Ege'nin Kapısı</h4>
+                <p data-i18n="neden_izmir.deep1_desc">İzmir Körfezi, yılda milyonlarca ton yük kapasitesiyle Türkiye'nin en önemli ihracat limanlarından birini barındırır. Modern elleçleme altyapısı ve düzenli seferler sayesinde küresel pazarlara hızlı, güvenilir erişim mümkündür.</p>
+            </div>
+
+            <div class="ni-deep-card" data-animate style="transition-delay:0.08s;">
+                <div class="ni-deep-card-icon"><i class="fas fa-road"></i></div>
+                <h4 data-i18n="neden_izmir.deep2_title">Kara Yolu Ağı</h4>
+                <p data-i18n="neden_izmir.deep2_desc">TEM Otoyolu bağlantısı ve Avrupa karayolu koridorları aracılığıyla Batı Avrupa'nın en uzak noktalarına 3–5 gün içinde ulaşım sağlanabilir. Rusya ve Orta Asya pazarları da kara yoluyla erişilebilir mesafededir.</p>
+            </div>
+
+            <div class="ni-deep-card" data-animate style="transition-delay:0.16s;">
+                <div class="ni-deep-card-icon"><i class="fas fa-plane"></i></div>
+                <h4 data-i18n="neden_izmir.deep3_title">Hava Kargo</h4>
+                <p data-i18n="neden_izmir.deep3_desc">Adnan Menderes Havalimanı'nın uluslararası kargo kapasitesi, yüksek değerli ve acil sevkiyatlar için hızlı bir alternatif sunar. Avrupa ve Orta Doğu başta olmak üzere geniş rota ağıyla entegre lojistik çözümler sağlar.</p>
+            </div>
+
+            <div class="ni-deep-card" data-animate style="transition-delay:0.24s;">
+                <div class="ni-deep-card-icon"><i class="fas fa-layer-group"></i></div>
+                <h4 data-i18n="neden_izmir.deep4_title">Çok Sektörlü Üretim</h4>
+                <p data-i18n="neden_izmir.deep4_desc">Tekstil, gıda ve tarım, doğal taş, kimya, makine ve daha fazlası. İzmir'in çeşitlendirilmiş sanayi yapısı, tek bir alıcının bile birden fazla kategoride tedarik yapabilmesine imkân tanır.</p>
+            </div>
+
+            <div class="ni-deep-card" data-animate style="transition-delay:0.32s;">
+                <div class="ni-deep-card-icon"><i class="fas fa-certificate"></i></div>
+                <h4 data-i18n="neden_izmir.deep5_title">Kalite Standartları</h4>
+                <p data-i18n="neden_izmir.deep5_desc">İzmir üreticilerinin büyük bölümü ISO, CE ve Avrupa Birliği standartlarına uygun üretim gerçekleştirmektedir. Bu da uluslararası alıcılar için kalite güvencesi ve uyum süreçlerini kolaylaştırmaktadır.</p>
+            </div>
+
+            <div class="ni-deep-card" data-animate style="transition-delay:0.4s;">
+                <div class="ni-deep-card-icon"><i class="fas fa-history"></i></div>
+                <h4 data-i18n="neden_izmir.deep6_title">8.500 Yıllık Güven</h4>
+                <p data-i18n="neden_izmir.deep6_desc">Antik çağlardan bu yana kesintisiz bir ticaret merkezi olan İzmir, dürüstlük, iş bitiricillik ve ortaklık anlayışını kurum kültürüne yerleştirmiş bir iş geleneğine ev sahipliği yapmaktadır.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     LOGISTICS VISUAL
+     ═══════════════════════════════════════════ -->
+<section class="ni-logistics-section">
+    <div class="container">
+        <div class="ni-logistics-inner">
+
+            <!-- Copy -->
+            <div class="ni-logistics-copy" data-animate>
+                <span class="section-eyebrow" data-i18n="neden_izmir.log_eyebrow">Lojistik Avantaj</span>
+                <h2 data-i18n="neden_izmir.log_title">Dünyanın Her Noktasına Hızlı ve Güvenilir Teslimat</h2>
+                <p data-i18n="neden_izmir.log_para">
+                    İzmir'in çok modlu ulaşım altyapısı; deniz yolu, kara yolu ve hava kargo seçenekleriyle her pazara en uygun lojistik çözümü sunar. Kritik teslim sürelerini karşılamak artık çok daha kolay.
+                </p>
+                <ul class="ni-logistics-list">
+                    <li><i class="fas fa-check-circle"></i><span data-i18n="neden_izmir.log_li1">Avrupa'ya kara yoluyla ort. 3–5 gün</span></li>
+                    <li><i class="fas fa-check-circle"></i><span data-i18n="neden_izmir.log_li2">Orta Doğu ve Afrika'ya deniz yoluyla hızlı bağlantı</span></li>
+                    <li><i class="fas fa-check-circle"></i><span data-i18n="neden_izmir.log_li3">Rusya ve Orta Asya'ya kara koridoru ile erişim</span></li>
+                    <li><i class="fas fa-check-circle"></i><span data-i18n="neden_izmir.log_li4">Amerika ve Asya'ya düzenli deniz seferleri</span></li>
+                    <li><i class="fas fa-check-circle"></i><span data-i18n="neden_izmir.log_li5">Acil sevkiyatlar için uluslararası hava kargo</span></li>
+                </ul>
+            </div>
+
+            <!-- Visual map box -->
+            <div class="ni-logistics-visual" data-animate style="transition-delay:0.15s;">
+                <div class="ni-map-box">
+                    <div class="ni-map-center">
+                        <div class="ni-map-dot">🌊</div>
+                        <div>
+                            <div class="ni-map-label" data-i18n="neden_izmir.map_label">İzmir</div>
+                            <div class="ni-map-sublabel" data-i18n="neden_izmir.map_sublabel">Türkiye · 38°N 27°E</div>
+                        </div>
+                    </div>
+                    <div class="ni-map-routes">
+                        <div class="ni-route-item">
+                            <div class="ni-route-dot sea"></div>
+                            <div>
+                                <div class="ni-route-text" data-i18n="neden_izmir.route1_name">Avrupa (Deniz)</div>
+                                <div class="ni-route-time" data-i18n="neden_izmir.route1_time">5–10 gün</div>
+                            </div>
+                        </div>
+                        <div class="ni-route-item">
+                            <div class="ni-route-dot land"></div>
+                            <div>
+                                <div class="ni-route-text" data-i18n="neden_izmir.route2_name">Avrupa (Kara)</div>
+                                <div class="ni-route-time" data-i18n="neden_izmir.route2_time">3–5 gün</div>
+                            </div>
+                        </div>
+                        <div class="ni-route-item">
+                            <div class="ni-route-dot sea"></div>
+                            <div>
+                                <div class="ni-route-text" data-i18n="neden_izmir.route3_name">Orta Doğu</div>
+                                <div class="ni-route-time" data-i18n="neden_izmir.route3_time">3–7 gün</div>
+                            </div>
+                        </div>
+                        <div class="ni-route-item">
+                            <div class="ni-route-dot land"></div>
+                            <div>
+                                <div class="ni-route-text" data-i18n="neden_izmir.route4_name">Orta Asya</div>
+                                <div class="ni-route-time" data-i18n="neden_izmir.route4_time">5–8 gün</div>
+                            </div>
+                        </div>
+                        <div class="ni-route-item">
+                            <div class="ni-route-dot sea"></div>
+                            <div>
+                                <div class="ni-route-text" data-i18n="neden_izmir.route5_name">Kuzey Afrika</div>
+                                <div class="ni-route-time" data-i18n="neden_izmir.route5_time">4–8 gün</div>
+                            </div>
+                        </div>
+                        <div class="ni-route-item">
+                            <div class="ni-route-dot air"></div>
+                            <div>
+                                <div class="ni-route-text" data-i18n="neden_izmir.route6_name">Hava Kargo</div>
+                                <div class="ni-route-time" data-i18n="neden_izmir.route6_time">1–3 gün</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     MARKETS
+     ═══════════════════════════════════════════ -->
+<section class="ni-markets-section">
+    <div class="container">
+        <div class="section-title" data-animate>
+            <span class="section-eyebrow" data-i18n="neden_izmir.markets_eyebrow">Hedef Pazarlar</span>
+            <h2 style="font-size:clamp(1.6rem,3.5vw,2.25rem);letter-spacing:-0.02em;" data-i18n="neden_izmir.markets_title">
+                Eriştiğimiz Kıtalar ve Pazarlar
+            </h2>
+            <div class="section-title-bar"></div>
+            <p class="section-subtitle" data-i18n="neden_izmir.markets_subtitle">
+                İzmir, coğrafi avantajıyla beş kıtadaki pazarlara etkin şekilde ulaşır.
+            </p>
+        </div>
+
+        <div class="ni-markets-grid">
+            <div class="ni-market-card" data-animate>
+                <div class="ni-market-flag">🇪🇺</div>
+                <div class="ni-market-name" data-i18n="neden_izmir.mkt1_name">Avrupa</div>
+                <p class="ni-market-desc" data-i18n="neden_izmir.mkt1_desc">Almanya, Fransa, İtalya, Hollanda ve 40+ ülke</p>
+            </div>
+            <div class="ni-market-card" data-animate style="transition-delay:0.08s;">
+                <div class="ni-market-flag">🌙</div>
+                <div class="ni-market-name" data-i18n="neden_izmir.mkt2_name">Orta Doğu</div>
+                <p class="ni-market-desc" data-i18n="neden_izmir.mkt2_desc">BAE, Suudi Arabistan, Katar ve Körfez ülkeleri</p>
+            </div>
+            <div class="ni-market-card" data-animate style="transition-delay:0.16s;">
+                <div class="ni-market-flag">🌍</div>
+                <div class="ni-market-name" data-i18n="neden_izmir.mkt3_name">Afrika</div>
+                <p class="ni-market-desc" data-i18n="neden_izmir.mkt3_desc">Kuzey Afrika, Sahraaltı ve büyüyen pazarlar</p>
+            </div>
+            <div class="ni-market-card" data-animate style="transition-delay:0.24s;">
+                <div class="ni-market-flag">🌏</div>
+                <div class="ni-market-name" data-i18n="neden_izmir.mkt4_name">Asya & Amerika</div>
+                <p class="ni-market-desc" data-i18n="neden_izmir.mkt4_desc">Uzak Doğu, Güney Asya ve Amerika kıtası</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     CTA
+     ═══════════════════════════════════════════ -->
+<section class="ni-cta-section">
+    <div class="container">
+        <p class="ni-cta-eyebrow" data-i18n="neden_izmir.cta_eyebrow">Hazır mısınız?</p>
+        <h2 data-i18n="neden_izmir.cta_title">İzmir'den Tedarik Etmeye Başlayın</h2>
+        <p data-i18n="neden_izmir.cta_desc">Kalite standartlarını karşılayan, güvenilir İzmirli üreticilerle bağlantıya geçin. Alıcı veya üretici olarak platformumuza katılın.</p>
+        <div class="ni-cta-actions">
+            <a href="{% url 'main:contact' %}" class="btn btn-accent" data-i18n="neden_izmir.cta_contact">
+                <i class="fas fa-envelope" style="margin-right:0.5rem;"></i>Bize Ulaşın
+            </a>
+            <a href="{% url 'main:signup' %}" class="btn btn-outline-light" data-i18n="neden_izmir.cta_signup">
+                Kayıt Ol
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    // Intersection Observer for [data-animate] elements
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
+})();
+</script>
+{% endblock %}
