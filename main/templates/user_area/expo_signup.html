@@ -4,174 +4,423 @@
 {% block title %}Fuar Kaydı - {{ expo.title_tr }}{% endblock %}
 
 {% block dashboard_title %}
-<span data-i18n="dashboard.expo_registration_title">Fuar Kaydı</span>
+<span data-i18n="dashboard.expo_registration_title">Fuar Başvurusu</span>
 {% endblock %}
 
 {% block dashboard_desc %}
-{{ expo.title_tr }} için katılım formunu doldurun.
+<span>{{ expo.title_tr }} için katılım formunu doldurun.</span>
+{% endblock %}
+
+{% block dashboard_header_actions %}
+<a href="{% url 'main:dashboard_calendar' %}" class="dashboard-back-btn">
+    <i class="fas fa-arrow-left"></i>
+    <span data-i18n="dashboard.back_to_calendar">Takvime Dön</span>
+</a>
+{% endblock %}
+
+{% block extra_dashboard_css %}
+<style>
+/* ═══ EXPO SIGNUP — PREMIUM FORM LAYOUT ═══ */
+
+.expo-signup-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 28px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* ── Expo Info Card (Left) ── */
+.expo-info-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #e8edf4;
+    box-shadow: 0 2px 12px rgba(15,23,42,0.07);
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+}
+
+.expo-info-hero {
+    position: relative;
+    height: 180px;
+    background: linear-gradient(135deg, #0f172a, #1e3a5f);
+}
+.expo-info-hero img {
+    width: 100%; height: 100%; object-fit: cover;
+}
+.expo-info-hero-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+}
+.expo-info-hero-placeholder i { font-size: 3rem; color: rgba(204,164,59,0.4); }
+.expo-info-open-badge {
+    position: absolute; bottom: 12px; left: 12px;
+    background: rgba(34,197,94,0.9); backdrop-filter: blur(8px);
+    color: #fff; padding: 4px 12px; border-radius: 50px;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;
+}
+
+.expo-info-body { padding: 20px; }
+.expo-info-body h2 {
+    font-size: 1.1rem; font-weight: 700; color: #0f172a;
+    margin: 0 0 14px; line-height: 1.35;
+    font-family: 'Playfair Display', serif;
+}
+.expo-info-body .desc {
+    font-size: 0.875rem; color: #64748b; line-height: 1.6;
+    margin-bottom: 18px;
+}
+
+.expo-detail-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.expo-detail-list li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 0.85rem; color: #475569;
+}
+.expo-detail-list li i { color: #cca43b; width: 16px; flex-shrink: 0; margin-top: 2px; }
+.expo-detail-list li strong { color: #0f172a; font-weight: 600; display: block; font-size: 0.8rem; }
+.expo-detail-list li span { color: #475569; font-size: 0.85rem; line-height: 1.4; }
+
+.expo-deadline-notice {
+    margin-top: 16px;
+    background: rgba(204,164,59,0.08); border: 1px solid rgba(204,164,59,0.2);
+    border-radius: 9px; padding: 12px 14px;
+    font-size: 0.8rem; color: #92400e;
+    display: flex; align-items: center; gap: 8px;
+}
+.expo-deadline-notice i { color: #cca43b; flex-shrink: 0; }
+
+/* ── Form Card (Right) ── */
+.expo-form-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #e8edf4;
+    box-shadow: 0 2px 12px rgba(15,23,42,0.07);
+    overflow: hidden;
+}
+
+.expo-form-header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+    padding: 24px 28px;
+}
+.expo-form-header h3 {
+    color: #fff; font-size: 1.2rem; font-weight: 700; margin: 0 0 6px;
+    display: flex; align-items: center; gap: 10px;
+}
+.expo-form-header h3 i { color: #cca43b; }
+.expo-form-header p { color: rgba(255,255,255,0.7); font-size: 0.875rem; margin: 0; }
+
+.expo-form-body { padding: 28px; }
+
+/* Form fields */
+.ef-group { margin-bottom: 22px; }
+.ef-group:last-of-type { margin-bottom: 0; }
+.ef-label {
+    display: block; margin-bottom: 8px;
+    font-size: 0.875rem; font-weight: 600; color: #0f172a;
+}
+.ef-label .ef-required { color: #ef4444; margin-left: 2px; }
+.ef-input,
+.ef-textarea,
+.ef-select {
+    width: 100%; padding: 11px 14px;
+    border: 1.5px solid #e2e8f0; border-radius: 10px;
+    font-size: 0.925rem; color: #0f172a;
+    background: #fff; transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+}
+.ef-input:focus, .ef-textarea:focus, .ef-select:focus {
+    outline: none; border-color: #cca43b;
+    box-shadow: 0 0 0 3px rgba(204,164,59,0.1);
+}
+.ef-input::placeholder, .ef-textarea::placeholder { color: #94a3b8; }
+.ef-textarea { resize: vertical; min-height: 100px; }
+.ef-select { cursor: pointer; }
+
+/* Number input styling override */
+.ef-group input[type="number"].ef-input { -moz-appearance: textfield; }
+.ef-group input[type="number"].ef-input::-webkit-outer-spin-button,
+.ef-group input[type="number"].ef-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+/* Checkbox toggle */
+.ef-toggle-wrapper {
+    display: flex; align-items: center; gap: 12px;
+    background: #f8fafc; border: 1.5px solid #e2e8f0;
+    border-radius: 10px; padding: 14px 16px; cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+.ef-toggle-wrapper:hover { border-color: #cca43b; background: rgba(204,164,59,0.04); }
+.ef-toggle-wrapper input[type="checkbox"] {
+    width: 18px; height: 18px; accent-color: #cca43b; cursor: pointer; flex-shrink: 0;
+}
+.ef-toggle-label { font-size: 0.9rem; font-weight: 500; color: #0f172a; cursor: pointer; }
+.ef-toggle-sub { font-size: 0.78rem; color: #64748b; margin-top: 2px; }
+
+/* Hint / help text */
+.ef-hint { font-size: 0.78rem; color: #94a3b8; margin-top: 6px; display: flex; align-items: center; gap: 5px; }
+.ef-hint i { color: #cca43b; }
+
+/* Error display */
+.ef-error { color: #ef4444; font-size: 0.8rem; margin-top: 6px; display: flex; align-items: center; gap: 5px; }
+.ef-error i { flex-shrink: 0; }
+
+/* Divider */
+.ef-divider { border: none; border-top: 1.5px solid #f1f5f9; margin: 22px 0; }
+
+/* Form actions */
+.ef-actions {
+    display: flex; gap: 12px; align-items: center;
+    padding-top: 24px; border-top: 2px solid #f1f5f9; margin-top: 4px;
+    flex-wrap: wrap;
+}
+.btn-ef-submit {
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #cca43b, #e0b84a);
+    color: #0f172a; font-weight: 700; font-size: 0.95rem;
+    border: none; border-radius: 50px; cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    transition: all 0.22s ease; text-decoration: none;
+}
+.btn-ef-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(204,164,59,0.4);
+    color: #0f172a;
+}
+.btn-ef-cancel {
+    padding: 12px 22px; background: transparent;
+    color: #64748b; border: 1.5px solid #e2e8f0;
+    border-radius: 50px; font-size: 0.9rem; font-weight: 600;
+    text-decoration: none; display: flex; align-items: center; gap: 7px;
+    transition: all 0.2s ease;
+}
+.btn-ef-cancel:hover { border-color: #94a3b8; color: #475569; }
+
+/* Non-field errors */
+.ef-nfe {
+    background: rgba(239,68,68,0.06); border: 1.5px solid rgba(239,68,68,0.2);
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 20px;
+    color: #dc2626; font-size: 0.875rem;
+    display: flex; align-items: flex-start; gap: 10px;
+}
+.ef-nfe i { flex-shrink: 0; margin-top: 2px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+    .expo-signup-layout { grid-template-columns: 1fr; }
+    .expo-info-card { position: static; }
+}
+@media (max-width: 576px) {
+    .expo-form-body { padding: 20px; }
+    .expo-form-header { padding: 18px 20px; }
+    .ef-actions { flex-direction: column; }
+    .btn-ef-submit, .btn-ef-cancel { width: 100%; justify-content: center; }
+}
+</style>
 {% endblock %}
 
 {% block dashboard_content %}
-<div class="row" style="max-width: 1000px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 30px;">
-    <!-- Expo Info Column -->
-    <div class="col-md-5" style="flex: 1; min-width: 300px;">
-        <div class="dashboard-card h-100">
-            <h3 class="mb-3">{{ expo.title_tr }}</h3>
+<div class="expo-signup-layout">
+
+    <!-- ── LEFT: Expo Info ── -->
+    <aside class="expo-info-card">
+        <div class="expo-info-hero">
             {% if expo.image %}
-            <div class="expo-image-preview mb-3">
-                <img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+            <img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}">
+            {% else %}
+            <div class="expo-info-hero-placeholder">
+                <i class="fas fa-globe-europe"></i>
             </div>
             {% endif %}
-            <p class="description">{{ expo.description_tr }}</p>
-            <ul class="expo-details-list">
-                <li><i class="fas fa-calendar"></i> <strong>Tarih:</strong> {{ expo.start_date|date:"d M Y" }} - {{ expo.end_date|date:"d M Y" }}</li>
-                <li><i class="fas fa-map-marker-alt"></i> <strong>Konum:</strong> {{ expo.location_tr }}</li>
-                <li><i class="fas fa-clock"></i> <strong>Son Başvuru:</strong> {{ expo.registration_deadline|date:"d M Y" }}</li>
-            </ul>
+            {% if expo.is_registration_open %}
+            <span class="expo-info-open-badge"><i class="fas fa-circle" style="font-size:.5rem;"></i> Kayıt Açık</span>
+            {% endif %}
         </div>
-    </div>
+        <div class="expo-info-body">
+            <h2>{{ expo.title_tr }}</h2>
+            {% if expo.description_tr %}
+            <p class="desc">{{ expo.description_tr|truncatewords:25 }}</p>
+            {% endif %}
+            <ul class="expo-detail-list">
+                <li>
+                    <i class="fas fa-calendar-alt"></i>
+                    <div>
+                        <strong>Fuar Tarihleri</strong>
+                        <span>{{ expo.start_date|date:"d M Y" }} – {{ expo.end_date|date:"d M Y" }}</span>
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <strong>Konum</strong>
+                        <span>{{ expo.location_tr }}</span>
+                    </div>
+                </li>
+                <li>
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <strong>Son Başvuru Tarihi</strong>
+                        <span>{{ expo.registration_deadline|date:"d M Y" }}</span>
+                    </div>
+                </li>
+            </ul>
+            <div class="expo-deadline-notice">
+                <i class="fas fa-info-circle"></i>
+                <span>Başvurunuz yönetici onayına gönderilecektir. Onay sonrası bilgilendirileceksiniz.</span>
+            </div>
+        </div>
+    </aside>
 
-    <!-- Signup Form Column -->
-    <div class="col-md-7" style="flex: 1.5; min-width: 300px;">
-        <div class="dashboard-card">
-            <h3 class="mb-4"><i class="fas fa-clipboard-list"></i> <span data-i18n="dashboard.registration_form">Başvuru Formu</span></h3>
-            
+    <!-- ── RIGHT: Signup Form ── -->
+    <main class="expo-form-card">
+        <div class="expo-form-header">
+            <h3><i class="fas fa-clipboard-list"></i> <span data-i18n="dashboard.registration_form">Başvuru Formu</span></h3>
+            <p>Aşağıdaki bilgileri doldurarak fuara kayıt başvurunuzu tamamlayın.</p>
+        </div>
+        <div class="expo-form-body">
+
+            {% if form.non_field_errors %}
+            <div class="ef-nfe">
+                <i class="fas fa-exclamation-circle"></i>
+                <div>{{ form.non_field_errors }}</div>
+            </div>
+            {% endif %}
+
             <form method="post" id="expo-signup-form">
                 {% csrf_token %}
 
-                <div class="form-group mb-3">
-                    <label for="{{ form.product_count.id_for_label }}" class="form-label">{{ form.product_count.label }}</label>
-                    {{ form.product_count }}
+                <!-- Product count -->
+                <div class="ef-group">
+                    <label for="{{ form.product_count.id_for_label }}" class="ef-label">
+                        {{ form.product_count.label }} <span class="ef-required">*</span>
+                    </label>
+                    <input
+                        type="number"
+                        id="{{ form.product_count.id_for_label }}"
+                        name="{{ form.product_count.html_name }}"
+                        value="{{ form.product_count.value|default:'' }}"
+                        class="ef-input"
+                        min="1"
+                        placeholder="Fuara göndereceğiniz ürün sayısını girin..."
+                    >
+                    <p class="ef-hint"><i class="fas fa-info-circle"></i> Fuara göndermek istediğiniz yaklaşık ürün adedini belirtin.</p>
                     {% if form.product_count.errors %}
-                    <div class="error">{{ form.product_count.errors }}</div>
+                    <div class="ef-error"><i class="fas fa-exclamation-circle"></i> {{ form.product_count.errors|join:", " }}</div>
                     {% endif %}
                 </div>
 
-                <div class="form-group mb-3">
-                    <div class="checkbox-wrapper">
-                        {{ form.uses_listed_products }}
-                        <label for="uses_listed_products" class="ml-2">{{ form.uses_listed_products.label }}</label>
-                    </div>
+                <hr class="ef-divider">
+
+                <!-- Uses listed products toggle -->
+                <div class="ef-group">
+                    <label class="ef-toggle-wrapper" for="{{ form.uses_listed_products.id_for_label }}">
+                        <input
+                            type="checkbox"
+                            id="{{ form.uses_listed_products.id_for_label }}"
+                            name="{{ form.uses_listed_products.html_name }}"
+                            {% if form.uses_listed_products.value %}checked{% endif %}
+                        >
+                        <div>
+                            <div class="ef-toggle-label">{{ form.uses_listed_products.label }}</div>
+                            <div class="ef-toggle-sub">Platforma daha önce eklediğiniz ürünleri seçmek için bu seçeneği işaretleyin.</div>
+                        </div>
+                    </label>
                     {% if form.uses_listed_products.errors %}
-                    <div class="error">{{ form.uses_listed_products.errors }}</div>
+                    <div class="ef-error"><i class="fas fa-exclamation-circle"></i> {{ form.uses_listed_products.errors|join:", " }}</div>
                     {% endif %}
                 </div>
 
-                <!-- Selected Products (shown when checkbox is checked) -->
-                <div class="form-group mb-3" id="selected-products-container" style="display: none;">
-                    <label for="{{ form.selected_products.id_for_label }}" class="form-label">{{ form.selected_products.label }}</label>
+                <!-- Selected products (conditional) -->
+                <div class="ef-group" id="selected-products-container" style="display:none;">
+                    <label for="{{ form.selected_products.id_for_label }}" class="ef-label">
+                        {{ form.selected_products.label }}
+                    </label>
                     {{ form.selected_products }}
-                    <small class="field-help">Ctrl tuşuna basılı tutarak birden fazla ürün seçebilirsiniz.</small>
+                    <p class="ef-hint"><i class="fas fa-mouse-pointer"></i> Ctrl (veya Cmd) tuşuna basılı tutarak birden fazla ürün seçebilirsiniz.</p>
                     {% if form.selected_products.errors %}
-                    <div class="error">{{ form.selected_products.errors }}</div>
+                    <div class="ef-error"><i class="fas fa-exclamation-circle"></i> {{ form.selected_products.errors|join:", " }}</div>
                     {% endif %}
                 </div>
 
-                <!-- Product Description (shown when checkbox is not checked) -->
-                <div class="form-group mb-3" id="product-description-container">
-                    <label for="{{ form.product_description.id_for_label }}" class="form-label">{{ form.product_description.label }}</label>
-                    {{ form.product_description }}
+                <!-- Product description (conditional) -->
+                <div class="ef-group" id="product-description-container">
+                    <label for="{{ form.product_description.id_for_label }}" class="ef-label">
+                        {{ form.product_description.label }}
+                    </label>
+                    <textarea
+                        id="{{ form.product_description.id_for_label }}"
+                        name="{{ form.product_description.html_name }}"
+                        class="ef-textarea"
+                        rows="4"
+                        placeholder="Fuarda sergilermeyi planladığınız ürünleri kısaca açıklayın..."
+                    >{{ form.product_description.value|default:'' }}</textarea>
                     {% if form.product_description.errors %}
-                    <div class="error">{{ form.product_description.errors }}</div>
+                    <div class="ef-error"><i class="fas fa-exclamation-circle"></i> {{ form.product_description.errors|join:", " }}</div>
                     {% endif %}
                 </div>
 
-                <div class="form-group mb-3">
-                    <label for="{{ form.notes.id_for_label }}" class="form-label">{{ form.notes.label }}</label>
-                    {{ form.notes }}
+                <hr class="ef-divider">
+
+                <!-- Notes -->
+                <div class="ef-group">
+                    <label for="{{ form.notes.id_for_label }}" class="ef-label">
+                        {{ form.notes.label }}
+                    </label>
+                    <textarea
+                        id="{{ form.notes.id_for_label }}"
+                        name="{{ form.notes.html_name }}"
+                        class="ef-textarea"
+                        rows="3"
+                        placeholder="Eklemek istediğiniz notlar veya özel talepleriniz..."
+                    >{{ form.notes.value|default:'' }}</textarea>
                     {% if form.notes.errors %}
-                    <div class="error">{{ form.notes.errors }}</div>
+                    <div class="ef-error"><i class="fas fa-exclamation-circle"></i> {{ form.notes.errors|join:", " }}</div>
                     {% endif %}
                 </div>
 
-                {% if form.non_field_errors %}
-                <div class="alert alert-danger mb-3">
-                    {{ form.non_field_errors }}
-                </div>
-                {% endif %}
-
-                <div class="form-actions mt-4">
-                    <button type="submit" class="btn btn-dashboard-primary">
-                        <i class="fas fa-check-circle"></i> <span data-i18n="dashboard.complete_registration">Kayıt Ol</span>
+                <!-- Actions -->
+                <div class="ef-actions">
+                    <button type="submit" class="btn-ef-submit">
+                        <i class="fas fa-paper-plane"></i>
+                        <span data-i18n="dashboard.complete_registration">Başvuruyu Gönder</span>
                     </button>
-                    <a href="{% url 'main:dashboard_calendar' %}" class="btn btn-secondary">
+                    <a href="{% url 'main:dashboard_calendar' %}" class="btn-ef-cancel">
+                        <i class="fas fa-times"></i>
                         <span data-i18n="dashboard.cancel">İptal</span>
                     </a>
                 </div>
             </form>
         </div>
-    </div>
+    </main>
+
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Find the checkbox by ID 'id_uses_listed_products' (Django convention) or standard id
-        let usesListedCheckbox = document.getElementById('id_uses_listed_products');
-        if (!usesListedCheckbox) {
-             // Fallback if id is different
-             usesListedCheckbox = document.querySelector('input[name="uses_listed_products"]');
-        }
-        
-        const selectedProductsContainer = document.getElementById('selected-products-container');
-        const productDescriptionContainer = document.getElementById('product-description-container');
+document.addEventListener('DOMContentLoaded', function () {
+    const usesListedCheckbox = document.getElementById('{{ form.uses_listed_products.id_for_label }}')
+        || document.querySelector('input[name="uses_listed_products"]');
+    const selectedProductsContainer = document.getElementById('selected-products-container');
+    const productDescriptionContainer = document.getElementById('product-description-container');
 
-        if (usesListedCheckbox && selectedProductsContainer && productDescriptionContainer) {
-            function toggleProductFields() {
-                if (usesListedCheckbox.checked) {
-                    selectedProductsContainer.style.display = 'block';
-                    productDescriptionContainer.style.display = 'none';
-                } else {
-                    selectedProductsContainer.style.display = 'none';
-                    productDescriptionContainer.style.display = 'block';
-                }
+    if (usesListedCheckbox && selectedProductsContainer && productDescriptionContainer) {
+        function toggleProductFields() {
+            if (usesListedCheckbox.checked) {
+                selectedProductsContainer.style.display = 'block';
+                productDescriptionContainer.style.display = 'none';
+            } else {
+                selectedProductsContainer.style.display = 'none';
+                productDescriptionContainer.style.display = 'block';
             }
-
-            // Initial state
-            toggleProductFields();
-
-            // Listen for changes
-            usesListedCheckbox.addEventListener('change', toggleProductFields);
         }
-    });
-</script>
+        toggleProductFields();
+        usesListedCheckbox.addEventListener('change', toggleProductFields);
+    }
 
-<style>
-    .expo-details-list {
-        list-style: none;
-        padding: 0;
-        margin-top: 20px;
-    }
-    .expo-details-list li {
-        margin-bottom: 15px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: #333;
-    }
-    .expo-details-list i {
-        color: #cca43b;
-        width: 20px;
-        text-align: center;
-    }
-    .description { color: #666; line-height: 1.6; }
-    
-    .form-group { margin-bottom: 20px; }
-    .form-label { display: block; margin-bottom: 8px; font-weight: 500; color: #333; }
-    .form-control, select, textarea { 
-        width: 100%; padding: 10px; border: 2px solid #e9ecef; border-radius: 8px; transition: border-color 0.3s;
-    }
-    .form-control:focus, select:focus, textarea:focus { 
-        border-color: #cca43b; outline: none; 
-    }
-    
-    .checkbox-wrapper { display: flex; align-items: center; gap: 10px; }
-    .checkbox-wrapper input[type="checkbox"] { width: 18px; height: 18px; }
-    
-    .form-actions { display: flex; gap: 15px; }
-    .btn { padding: 12px 24px; border-radius: 8px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer; }
-    .btn-secondary { background: #6c757d; color: white; }
-    .error { color: #dc3545; font-size: 14px; margin-top: 5px; }
-    .alert-danger { background: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; border: 1px solid #f5c6cb; }
-    .field-help { font-size: 0.85rem; color: #6c757d; display: block; margin-top: 5px; }
-</style>
+    // Apply ef-input / ef-select to Django-rendered fields inside conditional containers
+    document.querySelectorAll('#selected-products-container select').forEach(el => {
+        el.classList.add('ef-select');
+        el.style.minHeight = '120px';
+    });
+});
+</script>
 {% endblock %}

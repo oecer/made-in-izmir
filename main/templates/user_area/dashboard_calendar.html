@@ -18,131 +18,586 @@
 </a>
 {% endblock %}
 
+{% block extra_dashboard_css %}
+<style>
+/* ═══ CALENDAR DASHBOARD — PREMIUM UX STYLES ═══ */
+
+/* ── Stats Summary Strip ── */
+.cal-db-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+.cal-db-stat {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px 20px 18px;
+    border: 1px solid #e8edf4;
+    box-shadow: 0 2px 12px rgba(15,23,42,0.06);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.cal-db-stat:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(15,23,42,0.1); }
+.cal-db-stat-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+}
+.cal-db-stat-icon.gold   { background: rgba(204,164,59,0.12);  color: #cca43b; }
+.cal-db-stat-icon.blue   { background: rgba(59,130,246,0.1);   color: #3b82f6; }
+.cal-db-stat-icon.green  { background: rgba(34,197,94,0.1);    color: #22c55e; }
+.cal-db-stat-icon.slate  { background: rgba(100,116,139,0.1);  color: #64748b; }
+.cal-db-stat-info h3 { font-size: 1.65rem; font-weight: 700; color: #0f172a; line-height: 1; margin: 0 0 4px; }
+.cal-db-stat-info p  { font-size: 0.78rem; color: #64748b; margin: 0; font-weight: 500; }
+
+/* ── My Signups Section ── */
+.cal-my-signups { margin-bottom: 32px; }
+
+.cal-section-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; padding-bottom: 16px;
+    border-bottom: 2px solid #f1f5f9;
+}
+.cal-section-header h2 {
+    font-size: 1.35rem; font-weight: 700; color: #0f172a;
+    display: flex; align-items: center; gap: 10px; margin: 0;
+}
+.cal-section-header h2 i { color: #cca43b; font-size: 1.1rem; }
+.cal-section-counter {
+    background: #cca43b; color: #fff;
+    font-size: 0.72rem; font-weight: 700;
+    padding: 3px 10px; border-radius: 50px; margin-left: auto;
+}
+
+/* Signup cards (horizontal) */
+.signup-cards { display: flex; flex-direction: column; gap: 12px; }
+.signup-card {
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #e8edf4;
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 1px 6px rgba(15,23,42,0.05);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.signup-card:hover { border-color: #cca43b33; box-shadow: 0 4px 16px rgba(15,23,42,0.08); }
+.signup-card-img {
+    width: 64px; height: 64px; border-radius: 10px;
+    overflow: hidden; background: linear-gradient(135deg, #1e3a5f, #334155);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.signup-card-img img { width: 100%; height: 100%; object-fit: cover; }
+.signup-card-img i { color: rgba(204,164,59,0.5); font-size: 1.3rem; }
+.signup-card-info {}
+.signup-card-info h3 { font-size: 0.97rem; font-weight: 700; color: #0f172a; margin: 0 0 5px; line-height: 1.3; }
+.signup-card-meta { display: flex; flex-wrap: wrap; gap: 10px; font-size: 0.78rem; color: #64748b; }
+.signup-card-meta span { display: flex; align-items: center; gap: 4px; }
+.signup-card-meta i { color: #cca43b; width: 12px; }
+.signup-card-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+
+/* Status pills */
+.s-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 0.72rem; font-weight: 700;
+    padding: 4px 12px; border-radius: 50px;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+.s-badge.confirmed  { background: rgba(34,197,94,0.1);   color: #16a34a; border: 1px solid rgba(34,197,94,0.25); }
+.s-badge.pending    { background: rgba(245,158,11,0.1);  color: #d97706; border: 1px solid rgba(245,158,11,0.25); }
+.s-badge.canceled   { background: rgba(239,68,68,0.1);   color: #dc2626; border: 1px solid rgba(239,68,68,0.25); }
+.s-badge i { font-size: 0.65rem; }
+.signup-products-count {
+    font-size: 0.75rem; color: #64748b;
+    display: flex; align-items: center; gap: 4px;
+}
+
+/* ── TABS ── */
+.cal-db-tabs {
+    display: flex; gap: 0;
+    background: #f1f5f9; border-radius: 50px; padding: 4px;
+    width: fit-content; margin-bottom: 28px;
+}
+.cal-db-tab {
+    padding: 0.55rem 1.5rem; border-radius: 50px;
+    font-size: 0.875rem; font-weight: 600; cursor: pointer;
+    border: none; background: transparent; color: #64748b;
+    transition: all 0.22s ease;
+    display: flex; align-items: center; gap: 7px;
+}
+.cal-db-tab.active { background: #0f172a; color: #fff; box-shadow: 0 2px 10px rgba(15,23,42,0.22); }
+.cal-db-tab-count {
+    font-size: 0.68rem; padding: 2px 7px; border-radius: 50px;
+    font-weight: 700; background: rgba(255,255,255,0.2);
+}
+.cal-db-tab:not(.active) .cal-db-tab-count { background: rgba(15,23,42,0.1); color: #475569; }
+
+/* ── EXPO CARDS GRID ── */
+.cal-db-section { display: none; }
+.cal-db-section.active { display: block; }
+
+.cal-db-expo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+/* Premium expo card */
+.cal-expo-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #e8edf4;
+    box-shadow: 0 2px 10px rgba(15,23,42,0.06);
+    display: flex; flex-direction: column;
+    transition: transform 0.28s ease, box-shadow 0.28s ease;
+    position: relative;
+}
+.cal-expo-card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px rgba(15,23,42,0.12); }
+.cal-expo-card.registered { border-color: rgba(34,197,94,0.3); }
+.cal-expo-card.closed-reg { opacity: 0.8; }
+
+/* Card image */
+.cal-expo-img {
+    position: relative; height: 180px; overflow: hidden;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+    flex-shrink: 0;
+}
+.cal-expo-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+.cal-expo-card:hover .cal-expo-img img { transform: scale(1.05); }
+.cal-expo-img-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+}
+.cal-expo-img-placeholder i { font-size: 2.5rem; color: rgba(204,164,59,0.35); }
+
+/* Image overlays */
+.cal-expo-status-badge {
+    position: absolute; top: 12px; left: 12px;
+    padding: 3px 10px; border-radius: 50px;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;
+    text-transform: uppercase; backdrop-filter: blur(8px);
+}
+.cal-expo-status-badge.open    { background: rgba(34,197,94,0.85);   color: #fff; }
+.cal-expo-status-badge.closed  { background: rgba(100,116,139,0.85); color: #fff; }
+.cal-expo-status-badge.regist  { background: rgba(34,197,94,0.9);    color: #fff; }
+
+.cal-expo-days-chip {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(15,23,42,0.72); backdrop-filter: blur(8px);
+    color: #fff; padding: 3px 9px; border-radius: 50px;
+    font-size: 0.7rem; font-weight: 600;
+    display: flex; align-items: center; gap: 4px;
+}
+.cal-expo-days-chip.urgent { background: rgba(220,38,38,0.82); }
+.cal-expo-days-chip.ok     { background: rgba(15,23,42,0.72); }
+
+/* Card body */
+.cal-expo-body { padding: 18px 18px 12px; flex: 1; display: flex; flex-direction: column; }
+.cal-expo-title {
+    font-size: 1.05rem; font-weight: 700; color: #0f172a;
+    margin: 0 0 8px; line-height: 1.35;
+    font-family: 'Playfair Display', serif;
+}
+.cal-expo-desc { font-size: 0.83rem; color: #64748b; line-height: 1.55; margin-bottom: 14px; flex: 1; }
+.cal-expo-meta { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.cal-expo-meta-row { display: flex; align-items: center; gap: 7px; font-size: 0.82rem; color: #64748b; }
+.cal-expo-meta-row i { width: 14px; color: #cca43b; flex-shrink: 0; }
+.cal-expo-meta-row strong { color: #0f172a; font-weight: 600; }
+
+/* Deadline mini-bar */
+.cal-expo-deadline {
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+    padding: 8px 12px; margin-bottom: 14px;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.cal-expo-deadline.urgent { background: rgba(220,38,38,0.04); border-color: rgba(220,38,38,0.18); }
+.cal-expo-deadline-text { font-size: 0.75rem; color: #64748b; line-height: 1.4; }
+.cal-expo-deadline-text strong { display: block; font-size: 0.85rem; color: #0f172a; font-weight: 700; }
+.cal-expo-deadline-text.urgent strong { color: #dc2626; }
+.cal-expo-deadline-pill {
+    font-size: 0.72rem; font-weight: 700; padding: 3px 9px;
+    border-radius: 50px; white-space: nowrap;
+}
+.cal-expo-deadline-pill.open   { background: rgba(34,197,94,0.1);   color: #16a34a; }
+.cal-expo-deadline-pill.closed { background: rgba(100,116,139,0.1); color: #64748b; }
+
+/* Card footer */
+.cal-expo-footer { padding: 12px 18px 16px; display: flex; gap: 10px; align-items: center; }
+.btn-cal-primary {
+    flex: 1; padding: 9px 16px; background: #0f172a; color: #fff;
+    border: none; border-radius: 50px; font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; text-align: center; transition: all 0.22s ease;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    text-decoration: none;
+}
+.btn-cal-primary:hover { background: #1e3a5f; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(15,23,42,0.25); color: #fff; }
+.btn-cal-primary.gold { background: linear-gradient(135deg, #cca43b, #e0b84a); color: #0f172a; }
+.btn-cal-primary.gold:hover { box-shadow: 0 4px 14px rgba(204,164,59,0.4); color: #0f172a; }
+.btn-cal-primary.success { background: linear-gradient(135deg, #059669, #10b981); color: #fff; }
+.btn-cal-primary:disabled,
+.btn-cal-disabled {
+    background: #e2e8f0; color: #94a3b8; cursor: not-allowed;
+    flex: 1; padding: 9px 16px; border: none; border-radius: 50px;
+    font-size: 0.85rem; font-weight: 600; text-align: center;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+
+/* Registered overlay ribbon */
+.cal-registered-ribbon {
+    position: absolute; top: 12px; left: 12px;
+    background: rgba(5,150,105,0.9); backdrop-filter: blur(8px);
+    color: #fff; padding: 4px 12px; border-radius: 50px;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;
+    display: flex; align-items: center; gap: 5px;
+}
+
+/* ── PAST EXPOS LIST ── */
+.cal-past-list { display: flex; flex-direction: column; gap: 1px; background: #e8edf4; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 8px rgba(15,23,42,0.05); }
+.cal-past-row {
+    background: #fff; padding: 16px 20px;
+    display: grid; grid-template-columns: 56px 1fr auto;
+    gap: 14px; align-items: center;
+    transition: background 0.15s ease;
+}
+.cal-past-row:hover { background: #f8fafc; }
+.cal-past-thumb {
+    width: 56px; height: 56px; border-radius: 9px; overflow: hidden;
+    background: linear-gradient(135deg, #1e3a5f, #334155);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.cal-past-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.cal-past-thumb i { color: rgba(204,164,59,0.4); font-size: 1.25rem; }
+.cal-past-info h4 { font-size: 0.95rem; color: #0f172a; font-weight: 600; margin: 0 0 4px; }
+.cal-past-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.77rem; color: #64748b; }
+.cal-past-meta span { display: flex; align-items: center; gap: 4px; }
+.cal-past-meta i { color: #cca43b; }
+.cal-past-badge {
+    font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 50px;
+    background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; white-space: nowrap;
+}
+
+/* ── EMPTY STATES ── */
+.cal-empty {
+    text-align: center; padding: 48px 24px; color: #94a3b8;
+}
+.cal-empty-icon {
+    width: 72px; height: 72px; border-radius: 20px;
+    background: #f1f5f9; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px; font-size: 1.8rem; color: #cbd5e1;
+}
+.cal-empty h3 { font-size: 1.1rem; color: #64748b; margin-bottom: 8px; font-weight: 600; }
+.cal-empty p  { font-size: 0.9rem; color: #94a3b8; margin-bottom: 20px; }
+
+/* ── INFO BANNER ── */
+.cal-info-banner {
+    background: linear-gradient(90deg, rgba(204,164,59,0.08), rgba(204,164,59,0.04));
+    border: 1px solid rgba(204,164,59,0.22); border-radius: 10px;
+    padding: 12px 18px; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    font-size: 0.875rem; color: #475569;
+}
+.cal-info-banner i { color: #cca43b; flex-shrink: 0; }
+.cal-info-banner strong { color: #0f172a; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+    .cal-db-stats { grid-template-columns: 1fr 1fr; }
+    .signup-card { grid-template-columns: 52px 1fr; }
+    .signup-card-actions { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; }
+    .cal-db-expo-grid { grid-template-columns: 1fr; }
+    .cal-db-tabs { flex-direction: column; border-radius: 12px; width: 100%; }
+    .cal-db-tab { border-radius: 8px; justify-content: center; }
+    .cal-past-row { grid-template-columns: 48px 1fr; }
+    .cal-past-badge { display: none; }
+}
+@media (max-width: 480px) {
+    .cal-db-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .signup-card { grid-template-columns: 1fr; }
+    .signup-card-img { display: none; }
+    .signup-card-actions { flex-direction: row; }
+}
+</style>
+{% endblock %}
+
 {% block dashboard_content %}
-<!-- User's Signups -->
-{% if user_signups %}
-<div class="dashboard-card mb-4">
-    <div class="card-header-styled">
-        <h3 class="mb-0"><i class="fas fa-clipboard-check"></i> <span data-i18n="dashboard.my_signups">Kayıt Olduğunuz Fuarlar</span></h3>
-    </div>
-    <div class="card-body-styled">
-        <div class="table-responsive">
-            <table class="table custom-table">
-                <thead>
-                    <tr>
-                        <th data-i18n="dashboard.expo">Fuar</th>
-                        <th data-i18n="dashboard.date">Tarih</th>
-                        <th data-i18n="dashboard.location">Konum</th>
-                        <th data-i18n="dashboard.product_count">Ürün Sayısı</th>
-                        <th data-i18n="dashboard.status">Durum</th>
-                        <th data-i18n="dashboard.registration_date">Kayıt Tarihi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for signup in user_signups %}
-                    <tr>
-                        <td><strong>{{ signup.expo.title_tr }}</strong></td>
-                        <td>{{ signup.expo.start_date|date:"d M Y" }} - {{ signup.expo.end_date|date:"d M Y" }}</td>
-                        <td>{{ signup.expo.location_tr }}</td>
-                        <td>{{ signup.product_count }}</td>
-                        <td>
-                            {% if signup.status == 'pending' %}
-                            <span class="status-badge inactive" data-i18n="dashboard.pending">Beklemede</span>
-                            {% elif signup.status == 'confirmed' %}
-                            <span class="status-badge active" data-i18n="dashboard.approved">Onaylandı</span>
-                            {% else %}
-                            <span class="status-badge canceled" style="background: #dc3545; color: white;">İptal Edildi</span>
-                            {% endif %}
-                        </td>
-                        <td>{{ signup.created_at|date:"d M Y" }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+
+<!-- ── STATS STRIP ── -->
+<div class="cal-db-stats">
+    <div class="cal-db-stat">
+        <div class="cal-db-stat-icon gold"><i class="fas fa-calendar-check"></i></div>
+        <div class="cal-db-stat-info">
+            <h3>{{ user_signups.count }}</h3>
+            <p data-i18n="dashboard.my_registrations">Kayıtlarım</p>
         </div>
+    </div>
+    <div class="cal-db-stat">
+        <div class="cal-db-stat-icon blue"><i class="fas fa-calendar-alt"></i></div>
+        <div class="cal-db-stat-info">
+            <h3>{{ upcoming_expos.count }}</h3>
+            <p data-i18n="dashboard.upcoming_expos_count">Yaklaşan Fuar</p>
+        </div>
+    </div>
+    <div class="cal-db-stat">
+        <div class="cal-db-stat-icon green"><i class="fas fa-check-circle"></i></div>
+        <div class="cal-db-stat-info">
+            <h3>{{ confirmed_count }}</h3>
+            <p data-i18n="dashboard.confirmed_count">Onaylı</p>
+        </div>
+    </div>
+    <div class="cal-db-stat">
+        <div class="cal-db-stat-icon slate"><i class="fas fa-history"></i></div>
+        <div class="cal-db-stat-info">
+            <h3>{{ past_expos.count }}</h3>
+            <p data-i18n="dashboard.past_expos_count">Geçmiş Fuar</p>
+        </div>
+    </div>
+</div>
+
+<!-- ── MY SIGNUPS ── -->
+{% if user_signups %}
+<div class="dashboard-card cal-my-signups">
+    <div class="cal-section-header">
+        <h2>
+            <i class="fas fa-clipboard-check"></i>
+            <span data-i18n="dashboard.my_signups">Kayıt Olduğunuz Fuarlar</span>
+        </h2>
+        <span class="cal-section-counter">{{ user_signups.count }}</span>
+    </div>
+    <div class="signup-cards">
+        {% for signup in user_signups %}
+        <div class="signup-card">
+            <!-- Thumbnail -->
+            <div class="signup-card-img">
+                {% if signup.expo.image %}
+                <img src="{{ signup.expo.image.url }}" alt="{{ signup.expo.title_tr }}" loading="lazy">
+                {% else %}
+                <i class="fas fa-globe-europe"></i>
+                {% endif %}
+            </div>
+
+            <!-- Info -->
+            <div class="signup-card-info">
+                <h3>{{ signup.expo.title_tr }}</h3>
+                <div class="signup-card-meta">
+                    <span><i class="fas fa-calendar"></i> {{ signup.expo.start_date|date:"d M Y" }} – {{ signup.expo.end_date|date:"d M Y" }}</span>
+                    <span><i class="fas fa-map-marker-alt"></i> {{ signup.expo.location_tr }}</span>
+                    <span><i class="fas fa-clock"></i> Kayıt: {{ signup.created_at|date:"d M Y" }}</span>
+                </div>
+            </div>
+
+            <!-- Status + Products -->
+            <div class="signup-card-actions">
+                {% if signup.status == 'confirmed' %}
+                <span class="s-badge confirmed"><i class="fas fa-check-circle"></i> <span data-i18n="dashboard.approved">Onaylandı</span></span>
+                {% elif signup.status == 'pending' %}
+                <span class="s-badge pending"><i class="fas fa-hourglass-half"></i> <span data-i18n="dashboard.pending">Beklemede</span></span>
+                {% else %}
+                <span class="s-badge canceled"><i class="fas fa-times-circle"></i> <span>İptal Edildi</span></span>
+                {% endif %}
+                <span class="signup-products-count">
+                    <i class="fas fa-box"></i>
+                    {{ signup.product_count }} ürün
+                </span>
+            </div>
+        </div>
+        {% endfor %}
     </div>
 </div>
 {% endif %}
 
-<!-- Upcoming Expos -->
-<div class="dashboard-card mb-4">
-    <div class="card-header-styled">
-        <h3 class="mb-0"><i class="fas fa-calendar-alt"></i> <span data-i18n="dashboard.upcoming_expos">Yaklaşan Fuarlar</span></h3>
-    </div>
-    <div class="card-body-styled">
-        {% if upcoming_expos %}
-        <div class="expos-grid">
-            {% for expo in upcoming_expos %}
-            <div class="expo-card h-100">
+<!-- ── INFO BANNER (for users with no signups) ── -->
+{% if not user_signups %}
+<div class="cal-info-banner">
+    <i class="fas fa-lightbulb"></i>
+    <span>Henüz hiçbir fuara kayıt olmadınız. Aşağıdaki fuarları inceleyerek başvurunuzu yapabilirsiniz.</span>
+</div>
+{% endif %}
+
+<!-- ── UPCOMING / PAST TABS ── -->
+<div class="cal-db-tabs" role="tablist">
+    <button class="cal-db-tab active" role="tab" onclick="switchCalTab('upcoming', this)" id="tab-upcoming">
+        <i class="fas fa-calendar-alt"></i>
+        <span data-i18n="dashboard.upcoming_expos">Yaklaşan Fuarlar</span>
+        <span class="cal-db-tab-count">{{ upcoming_expos.count }}</span>
+    </button>
+    <button class="cal-db-tab" role="tab" onclick="switchCalTab('past', this)" id="tab-past">
+        <i class="fas fa-history"></i>
+        <span data-i18n="dashboard.past_expos">Geçmiş Fuarlar</span>
+        <span class="cal-db-tab-count">{{ past_expos.count }}</span>
+    </button>
+</div>
+
+<!-- ─── UPCOMING EXPOS ─── -->
+<div class="cal-db-section active" id="section-upcoming">
+    {% if upcoming_expos %}
+    <div class="cal-db-expo-grid">
+        {% for expo in upcoming_expos %}
+        <article class="cal-expo-card {% if expo.id in user_signup_expo_ids %}registered{% endif %} {% if not expo.is_registration_open %}closed-reg{% endif %}">
+
+            <!-- Image -->
+            <div class="cal-expo-img">
                 {% if expo.image %}
-                <div class="expo-image">
-                    <img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}">
+                <img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}" loading="lazy">
+                {% else %}
+                <div class="cal-expo-img-placeholder">
+                    <i class="fas fa-globe-europe"></i>
                 </div>
                 {% endif %}
-                <div class="expo-content">
-                    <h5>{{ expo.title_tr }}</h5>
-                    <p class="expo-desc">{{ expo.description_tr|truncatewords:20 }}</p>
-                    <ul class="expo-details">
-                        <li><i class="fas fa-calendar"></i> {{ expo.start_date|date:"d M Y" }} - {{ expo.end_date|date:"d M Y" }}</li>
-                        <li><i class="fas fa-map-marker-alt"></i> {{ expo.location_tr }}</li>
-                        <li><i class="fas fa-clock"></i> <strong data-i18n="dashboard.deadline">Son Başvuru:</strong> {{ expo.registration_deadline|date:"d M Y" }}</li>
-                    </ul>
+
+                <!-- Status badge -->
+                {% if expo.id in user_signup_expo_ids %}
+                <span class="cal-registered-ribbon"><i class="fas fa-check"></i> Kayıtlısınız</span>
+                {% elif expo.is_registration_open %}
+                <span class="cal-expo-status-badge open" data-i18n="calendar.badge_open">Kayıt Açık</span>
+                {% else %}
+                <span class="cal-expo-status-badge closed" data-i18n="calendar.badge_closed">Kayıt Kapalı</span>
+                {% endif %}
+
+                <!-- Days chip -->
+                <span class="cal-expo-days-chip" id="cd-{{ expo.id }}"
+                      data-deadline="{{ expo.registration_deadline|date:'Y-m-d' }}">
+                    <i class="fas fa-clock"></i> <span>…</span>
+                </span>
+            </div>
+
+            <!-- Body -->
+            <div class="cal-expo-body">
+                <h3 class="cal-expo-title">{{ expo.title_tr }}</h3>
+                {% if expo.description_tr %}
+                <p class="cal-expo-desc">{{ expo.description_tr|truncatewords:18 }}</p>
+                {% endif %}
+
+                <div class="cal-expo-meta">
+                    <div class="cal-expo-meta-row">
+                        <i class="fas fa-calendar"></i>
+                        <span><strong>{{ expo.start_date|date:"d M Y" }}</strong> – {{ expo.end_date|date:"d M Y" }}</span>
+                    </div>
+                    <div class="cal-expo-meta-row">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{{ expo.location_tr }}</span>
+                    </div>
                 </div>
-                <div class="expo-footer">
-                    {% if expo.id in user_signup_expo_ids %}
-                    <button class="btn btn-secondary w-100" disabled data-i18n="dashboard.already_registered">Kayıt Oldunuz</button>
-                    {% elif expo.is_registration_open %}
-                    <a href="{% url 'main:expo_signup' expo.id %}" class="btn btn-dashboard-primary w-100" data-i18n="dashboard.register_expo">Başvurunuzu Yapın</a>
+
+                <!-- Deadline bar -->
+                <div class="cal-expo-deadline {% if not expo.is_registration_open %}urgent{% endif %}">
+                    <div class="cal-expo-deadline-text {% if not expo.is_registration_open %}urgent{% endif %}">
+                        <span data-i18n="calendar.reg_deadline">Kayıt Son Tarihi</span>
+                        <strong>{{ expo.registration_deadline|date:"d M Y" }}</strong>
+                    </div>
+                    {% if expo.is_registration_open %}
+                    <span class="cal-expo-deadline-pill open" data-i18n="calendar.reg_open">Aktif</span>
                     {% else %}
-                    <button class="btn btn-warning w-100" disabled data-i18n="dashboard.registration_closed">Kayıt Süresi Doldu</button>
+                    <span class="cal-expo-deadline-pill closed" data-i18n="calendar.reg_closed">Süre Doldu</span>
                     {% endif %}
                 </div>
             </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <div class="empty-state">
-            <p class="text-muted" data-i18n="dashboard.no_upcoming_expos">Şu anda yaklaşan fuar bulunmamaktadır.</p>
-        </div>
-        {% endif %}
+
+            <!-- Footer CTA -->
+            <div class="cal-expo-footer">
+                {% if expo.id in user_signup_expo_ids %}
+                    <span class="btn-cal-disabled">
+                        <i class="fas fa-check-circle"></i>
+                        <span data-i18n="dashboard.already_registered">Kayıt Oldunuz</span>
+                    </span>
+                {% elif expo.is_registration_open %}
+                    <a href="{% url 'main:expo_signup' expo.id %}" class="btn-cal-primary gold">
+                        <i class="fas fa-handshake"></i>
+                        <span data-i18n="dashboard.register_expo">Başvuru Yap</span>
+                    </a>
+                {% else %}
+                    <span class="btn-cal-disabled">
+                        <i class="fas fa-lock"></i>
+                        <span data-i18n="dashboard.registration_closed">Kayıt Kapalı</span>
+                    </span>
+                {% endif %}
+            </div>
+        </article>
+        {% endfor %}
     </div>
+
+    {% else %}
+    <div class="cal-empty">
+        <div class="cal-empty-icon"><i class="fas fa-calendar-times"></i></div>
+        <h3 data-i18n="calendar.no_upcoming">Şu anda yaklaşan fuar bulunmamaktadır.</h3>
+        <p>Yeni fuarlar eklendiğinde burada görüntülenecektir.</p>
+    </div>
+    {% endif %}
 </div>
 
-<!-- Past Expos -->
-{% if past_expos %}
-<div class="dashboard-card">
-    <div class="card-header-styled">
-        <h3 class="mb-0"><i class="fas fa-history"></i> <span data-i18n="dashboard.past_expos">Geçmiş Fuarlar</span></h3>
-    </div>
-    <div class="card-body-styled">
-        <div class="table-responsive">
-            <table class="table custom-table">
-                <thead>
-                    <tr>
-                        <th data-i18n="dashboard.expo">Fuar</th>
-                        <th data-i18n="dashboard.date">Tarih</th>
-                        <th data-i18n="dashboard.location">Konum</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for expo in past_expos %}
-                    <tr>
-                        <td>
-                            <strong>{{ expo.title_tr }}</strong>
-                            {% if expo.image %}
-                            <br><img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}"
-                                style="max-width: 80px; margin-top: 5px; border-radius: 4px;">
-                            {% endif %}
-                        </td>
-                        <td>{{ expo.start_date|date:"d M Y" }} - {{ expo.end_date|date:"d M Y" }}</td>
-                        <td>{{ expo.location_tr }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+<!-- ─── PAST EXPOS ─── -->
+<div class="cal-db-section" id="section-past">
+    {% if past_expos %}
+    <div class="cal-past-list">
+        {% for expo in past_expos %}
+        <div class="cal-past-row">
+            <div class="cal-past-thumb">
+                {% if expo.image %}
+                <img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}">
+                {% else %}
+                <i class="fas fa-globe-europe"></i>
+                {% endif %}
+            </div>
+            <div class="cal-past-info">
+                <h4>{{ expo.title_tr }}</h4>
+                <div class="cal-past-meta">
+                    <span><i class="fas fa-calendar"></i> {{ expo.start_date|date:"d M Y" }} – {{ expo.end_date|date:"d M Y" }}</span>
+                    <span><i class="fas fa-map-marker-alt"></i> {{ expo.location_tr }}</span>
+                </div>
+            </div>
+            <span class="cal-past-badge" data-i18n="calendar.badge_past">Tamamlandı</span>
         </div>
+        {% endfor %}
     </div>
+    {% else %}
+    <div class="cal-empty">
+        <div class="cal-empty-icon"><i class="fas fa-history"></i></div>
+        <h3 data-i18n="calendar.no_past">Henüz geçmiş fuar bulunmamaktadır.</h3>
+    </div>
+    {% endif %}
 </div>
-{% endif %}
+
+<script>
+// ── Tab switch ──
+function switchCalTab(tab, btn) {
+    document.querySelectorAll('.cal-db-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.cal-db-section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('section-' + tab).classList.add('active');
+}
+
+// ── Countdown chips ──
+document.addEventListener('DOMContentLoaded', function () {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    document.querySelectorAll('[data-deadline]').forEach(chip => {
+        const parts = chip.dataset.deadline.split('-');
+        const deadline = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+        const diff = Math.round((deadline - today) / 86400000);
+        const span = chip.querySelector('span');
+
+        if (diff < 0) {
+            span.textContent = 'Süre Doldu';
+            chip.classList.add('urgent');
+        } else if (diff === 0) {
+            span.textContent = 'Son Gün!';
+            chip.classList.add('urgent');
+        } else if (diff <= 7) {
+            span.textContent = diff + ' Gün Kaldı';
+            chip.classList.add('urgent');
+        } else {
+            span.textContent = diff + ' Gün Kaldı';
+            chip.classList.add('ok');
+        }
+    });
+});
+</script>
 
 {% endblock %}

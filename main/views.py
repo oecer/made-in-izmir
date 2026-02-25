@@ -576,12 +576,14 @@ def dashboard_calendar_view(request):
     # Get user's signups
     user_signups = ExpoSignup.objects.filter(user=request.user).select_related('expo')
     user_signup_expo_ids = set(user_signups.values_list('expo_id', flat=True))
+    confirmed_count = user_signups.filter(status='confirmed').count()
     
     context = {
         'upcoming_expos': upcoming_expos,
         'past_expos': past_expos,
         'user_signups': user_signups,
         'user_signup_expo_ids': user_signup_expo_ids,
+        'confirmed_count': confirmed_count,
     }
     
     return render(request, 'user_area/dashboard_calendar.html', context)
