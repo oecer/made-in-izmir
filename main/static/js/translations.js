@@ -371,15 +371,62 @@ const translations = {
             see_all: "Tüm Fuarları Gör"
         },
         contact: {
+            // Hero
+            hero_badge: "📬 Made in İzmir",
             title: "İletişim",
-            subtitle: "Sorularınız için bizimle iletişime geçin.",
+            subtitle: "Sorularınız ve iş birliği talepleriniz için 24 saat içinde yanıt veriyoruz.",
+            // Stats / trust signals
+            stat1_num: "24s",
+            stat1_lbl: "Yanıt Süresi",
+            stat2_num: "65+",
+            stat2_lbl: "İhracat Ülkesi",
+            stat3_num: "200+",
+            stat3_lbl: "Kayıtlı Üretici",
+            // Info panel
+            info_eyebrow: "İletişim Bilgileri",
+            info_title: "Bize Ulaşın",
+            info_desc: "İş birliği, ihracat danışmanlığı veya genel sorularınız için aşağıdan ulaşabilirsiniz.",
+            address_label: "Adres",
+            address_value: "İzmir, Türkiye",
+            email_label: "E-posta",
+            phone_label: "Telefon",
+            hours_label: "Çalışma Saatleri",
+            hours_value: "Pazartesi – Cuma, 09:00 – 18:00",
             whatsapp: "WhatsApp Hattı",
+            whatsapp_note: "En hızlı yanıt için WhatsApp'ı tercih edin.",
+            follow_label: "Bizi Takip Edin",
+            // Form
+            form_eyebrow: "Mesaj Gönderin",
             form_title: "Bize Ulaşın",
-            name: "Adınız",
+            form_subtitle: "Formu doldurun, en kısa sürede dönüş yapalım.",
+            name: "Ad Soyad",
+            name_ph: "Adınız ve soyadınız",
             email: "E-posta",
+            email_ph: "ornek@eposta.com",
+            phone: "Telefon (isteğe bağlı)",
+            phone_ph: "+90 5__ ___ __ __",
             subject: "Konu",
-            message: "Mesaj",
-            send: "Gönder"
+            subject_placeholder: "Konu seçin...",
+            opt_producer: "Üretici Başvurusu (İhracat yapmak istiyorum)",
+            opt_buyer: "Alıcı Talebi (İthalat yapmak istiyorum)",
+            opt_expo: "Fuar Temsilciliği",
+            opt_general: "Genel Soru",
+            opt_other: "Diğer",
+            message: "Mesajınız",
+            message_ph: "Nasıl yardımcı olabiliriz? Lütfen detay paylaşın...",
+            privacy: "Gönderilen bilgiler gizli tutulur ve üçüncü taraflarla paylaşılmaz.",
+            send: "Mesajı Gönder",
+            // States
+            sending: "Gönderiliyor...",
+            success_title: "Mesajınız Alındı!",
+            success_desc: "En geç 24 saat içinde sizinle iletişime geçeceğiz. WhatsApp hattımızdan da ulaşabilirsiniz.",
+            success_btn: "Yeni Mesaj Gönder",
+            error_msg: "Bir hata oluştu. Lütfen tekrar deneyin veya WhatsApp üzerinden ulaşın.",
+            // Validation
+            val_name: "Ad soyad alanı zorunludur.",
+            val_email: "Geçerli bir e-posta adresi girin.",
+            val_subject: "Lütfen bir konu seçin.",
+            val_message: "Mesaj alanı zorunludur."
         },
         about: {
             // ── Hero
@@ -1046,15 +1093,62 @@ const translations = {
             see_all: "View All Expos"
         },
         contact: {
+            // Hero
+            hero_badge: "📬 Made in Izmir",
             title: "Contact",
-            subtitle: "Get in touch with us for any inquiries.",
+            subtitle: "We respond within 24 hours to all inquiries and partnership requests.",
+            // Stats / trust signals
+            stat1_num: "24h",
+            stat1_lbl: "Response Time",
+            stat2_num: "65+",
+            stat2_lbl: "Export Countries",
+            stat3_num: "200+",
+            stat3_lbl: "Registered Producers",
+            // Info panel
+            info_eyebrow: "Contact Details",
+            info_title: "Get in Touch",
+            info_desc: "For partnerships, export consulting, or general inquiries, reach us through the channels below.",
+            address_label: "Address",
+            address_value: "Izmir, Turkey",
+            email_label: "Email",
+            phone_label: "Phone",
+            hours_label: "Working Hours",
+            hours_value: "Monday – Friday, 09:00 – 18:00",
             whatsapp: "WhatsApp Line",
+            whatsapp_note: "For the fastest response, prefer WhatsApp.",
+            follow_label: "Follow Us",
+            // Form
+            form_eyebrow: "Send a Message",
             form_title: "Contact Us",
-            name: "Your Name",
+            form_subtitle: "Fill in the form and we'll get back to you as soon as possible.",
+            name: "Full Name",
+            name_ph: "Your full name",
             email: "Email",
+            email_ph: "example@email.com",
+            phone: "Phone (optional)",
+            phone_ph: "+1 ___ ___ ____",
             subject: "Subject",
-            message: "Message",
-            send: "Send"
+            subject_placeholder: "Select a subject...",
+            opt_producer: "Producer Inquiry (I want to export)",
+            opt_buyer: "Buyer Inquiry (I want to import)",
+            opt_expo: "Expo Representation",
+            opt_general: "General Inquiry",
+            opt_other: "Other",
+            message: "Your Message",
+            message_ph: "How can we help you? Please share some details...",
+            privacy: "Submitted information is kept confidential and never shared with third parties.",
+            send: "Send Message",
+            // States
+            sending: "Sending...",
+            success_title: "Message Sent!",
+            success_desc: "We'll get back to you within 24 hours. You can also reach us via WhatsApp.",
+            success_btn: "Send Another Message",
+            error_msg: "Something went wrong. Please try again or reach us via WhatsApp.",
+            // Validation
+            val_name: "Full name is required.",
+            val_email: "Please enter a valid email address.",
+            val_subject: "Please select a subject.",
+            val_message: "Message is required."
         },
         about: {
             // ── Hero

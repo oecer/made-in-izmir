@@ -50,7 +50,47 @@ def calendar(request):
 
 
 def contact(request):
-    """Contact page view"""
+    """Contact page view — handles both GET (render) and POST (form submission)"""
+    if request.method == 'POST':
+        name    = request.POST.get('name', '').strip()
+        email   = request.POST.get('email', '').strip()
+        phone   = request.POST.get('phone', '').strip()
+        subject = request.POST.get('subject', '').strip()
+        message = request.POST.get('message', '').strip()
+
+        # Basic server-side guard
+        if not name or not email or not subject or not message:
+            from django.http import HttpResponse
+            return HttpResponse(status=400)
+
+        # Try to send email; fail gracefully
+        try:
+            from django.core.mail import send_mail
+            from django.conf import settings
+
+            subject_line = f"[Made in İzmir] İletişim: {subject} — {name}"
+            body = (
+                f"Ad Soyad: {name}\n"
+                f"E-posta:  {email}\n"
+                f"Telefon:  {phone or '—'}\n"
+                f"Konu:     {subject}\n\n"
+                f"Mesaj:\n{message}"
+            )
+            send_mail(
+                subject_line,
+                body,
+                settings.DEFAULT_FROM_EMAIL,
+                [settings.DEFAULT_FROM_EMAIL],  # send to site admin email
+                fail_silently=False,
+            )
+        except Exception:
+            # Email failed — return 500 so JS shows error banner
+            from django.http import HttpResponse
+            return HttpResponse(status=500)
+
+        from django.http import HttpResponse
+        return HttpResponse(status=200)
+
     return render(request, 'contact.html')
 
 
