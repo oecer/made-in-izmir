@@ -30,7 +30,7 @@
     margin-top: 2rem;
 }
 
-/* ═══ CALENDAR STATS BAR — identical structure to buyers-stats-bar ═══ */
+/* ═══ CALENDAR STATS BAR - identical structure to buyers-stats-bar ═══ */
 .calendar-stats-bar {
     background: var(--primary-color);
     padding: 0;
@@ -404,7 +404,145 @@
 .cal-section-heading-line { flex: 1; height: 1px; background: linear-gradient(90deg, #e2e8f0, transparent); }
 .cal-section-count { background: var(--primary-color); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.65rem; border-radius: 50px; }
 
+/* ═══ HOW IT WORKS - same as buyers ═══ */
+.cal-how-section { background: var(--bg-body); }
+.cal-how-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    position: relative;
+}
+.cal-how-grid::before {
+    content: '';
+    position: absolute;
+    top: 2rem;
+    left: calc(12.5% + 0.75rem);
+    right: calc(12.5% + 0.75rem);
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-color), var(--accent-hover));
+    opacity: 0.3;
+    z-index: 0;
+}
+.cal-how-step {
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(204,164,59,0.1);
+    position: relative;
+    z-index: 1;
+    transition: var(--transition);
+}
+.cal-how-step:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: rgba(204,164,59,0.3); }
+.cal-how-num {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.1rem;
+    font-family: 'Playfair Display', serif;
+    box-shadow: 0 4px 12px rgba(204,164,59,0.3);
+}
+.cal-how-step h4 { font-size: 1rem; color: var(--primary-color); margin-bottom: 0.5rem; }
+.cal-how-step p  { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin: 0; }
+
+/* ═══ WHAT'S INCLUDED ═══ */
+.cal-included-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+}
+.cal-included-card {
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.cal-included-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: rgba(204,164,59,0.2); }
+.cal-included-icon {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; flex-shrink: 0;
+    margin-bottom: 0.25rem;
+}
+.cal-icon-blue   { background: rgba(59,130,246,0.1);  color: #3b82f6; }
+.cal-icon-gold   { background: rgba(204,164,59,0.1);  color: var(--accent-color); }
+.cal-icon-green  { background: rgba(34,197,94,0.1);   color: #22c55e; }
+.cal-icon-purple { background: rgba(139,92,246,0.1);  color: #8b5cf6; }
+.cal-icon-red    { background: rgba(239,68,68,0.1);   color: #ef4444; }
+.cal-icon-teal   { background: rgba(20,184,166,0.1);  color: #14b8a6; }
+.cal-included-card h3 { font-size: 1.1rem; margin-bottom: 0; color: var(--primary-color); }
+.cal-included-card p  { font-size: 0.9rem; color: var(--text-muted); line-height: 1.65; margin: 0; }
+.cal-included-tags { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.25rem; }
+.cal-included-tag {
+    font-size: 0.7rem; font-weight: 600;
+    padding: 0.2rem 0.6rem; border-radius: 50px;
+    background: rgba(15,23,42,0.06); color: var(--text-muted);
+}
+
+/* ═══ TRUST SECTION (dark - mirrors buyers-trust-section) ═══ */
+.cal-trust-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #1a2e4a 100%);
+    padding: 5rem 0 0;
+}
+.cal-trust-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+    margin-bottom: 4rem;
+}
+.cal-trust-card {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    backdrop-filter: blur(8px);
+    transition: var(--transition);
+}
+.cal-trust-card:hover { background: rgba(255,255,255,0.1); border-color: rgba(204,164,59,0.4); }
+.cal-trust-icon {
+    width: 50px; height: 50px; border-radius: 14px;
+    background: rgba(204,164,59,0.15); color: var(--accent-color);
+    display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+}
+.cal-trust-card h4 { font-size: 1rem; color: var(--text-light); margin: 0; }
+.cal-trust-card p  { font-size: 0.875rem; color: rgba(255,255,255,0.65); line-height: 1.65; margin: 0; }
+
+/* ═══ FINAL CTA (inside dark section) ═══ */
+.cal-final-cta {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 4rem 0;
+    text-align: center;
+}
+.cal-final-cta-eyebrow {
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent-color); margin-bottom: 0.75rem;
+}
+.cal-final-cta h2 { font-size: 2.4rem; color: var(--text-light); margin-bottom: 1rem; letter-spacing: -0.02em; }
+.cal-final-cta p  { color: rgba(255,255,255,0.7); font-size: 1rem; max-width: 520px; margin: 0 auto 2rem; }
+.cal-final-cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
 /* ═══ RESPONSIVE ═══ */
+@media (max-width: 900px) {
+    .cal-how-grid { grid-template-columns: repeat(2, 1fr); }
+    .cal-how-grid::before { display: none; }
+    .cal-included-grid { grid-template-columns: 1fr 1fr; }
+    .cal-trust-grid { grid-template-columns: 1fr; }
+}
 @media (max-width: 768px) {
     .expo-cards-grid { grid-template-columns: 1fr; }
     .past-expo-row { grid-template-columns: auto 1fr; }
@@ -413,6 +551,9 @@
     .cal-tab { border-radius: 8px; justify-content: center; }
     .cal-signup-cta { padding: 2rem 1.5rem; }
     .cal-signup-cta h3 { font-size: 1.4rem; }
+    .cal-how-grid { grid-template-columns: 1fr; }
+    .cal-included-grid { grid-template-columns: 1fr; }
+    .cal-final-cta h2 { font-size: 1.75rem; }
 }
 </style>
 {% endblock %}
@@ -635,6 +776,161 @@
             {% endif %}
         </div>
 
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTIONS FOR NON-MEMBERS & ALL VISITORS
+     ═══════════════════════════════════════════════════════ -->
+
+<!-- ─── HOW IT WORKS ─── -->
+<section class="section cal-how-section">
+    <div class="container">
+        <div class="section-title" data-animate>
+            <span class="section-eyebrow" style="font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-color);margin-bottom:.6rem;display:block;" data-i18n="calendar.how_eyebrow">Nasıl Çalışır?</span>
+            <h2 data-i18n="calendar.how_title">Fuarlarda Sizin Yerinize Biz Varız</h2>
+            <div class="section-title-bar"></div>
+            <p class="section-subtitle" data-i18n="calendar.how_subtitle">Üye olun, ürünlerinizi seçin - fuarlarda temsili bize bırakın. 4 adımda başlayın.</p>
+        </div>
+        <div class="cal-how-grid">
+            <div class="cal-how-step" data-animate>
+                <div class="cal-how-num">01</div>
+                <h4 data-i18n="calendar.how1_title">Ücretsiz Kayıt</h4>
+                <p data-i18n="calendar.how1_desc">Platforma ücretsiz kayıt olun ve üretici profilinizi oluşturun. Onay 24-48 saat içinde gerçekleşir.</p>
+            </div>
+            <div class="cal-how-step" data-animate>
+                <div class="cal-how-num">02</div>
+                <h4 data-i18n="calendar.how2_title">Ürünlerinizi Yükleyin</h4>
+                <p data-i18n="calendar.how2_desc">Ürün kataloglarnızı Türkçe ve İngilizce olarak platforma yükleyin. Fotoğraf ve açıklamalar dahil.</p>
+            </div>
+            <div class="cal-how-step" data-animate>
+                <div class="cal-how-num">03</div>
+                <h4 data-i18n="calendar.how3_title">Fuarı Seçin</h4>
+                <p data-i18n="calendar.how3_desc">Bu takvimden katılmak istediğiniz fuarı seçin ve temsil başvurunuzu yapın. Başvuru kayıt tarihinden önce tamamlanmalıdır.</p>
+            </div>
+            <div class="cal-how-step" data-animate>
+                <div class="cal-how-num">04</div>
+                <h4 data-i18n="calendar.how4_title">Biz Temsil Ederiz</h4>
+                <p data-i18n="calendar.how4_desc">Ekibimiz fuara gider, ürünlerinizi sergiler, alıcı görüşmeleri yapar ve size detaylı rapor sunar.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── WHAT'S INCLUDED ─── -->
+<section class="section" style="background-color:var(--bg-body);">
+    <div class="container">
+        <div class="section-title" data-animate>
+            <span class="section-eyebrow" style="font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-color);margin-bottom:.6rem;display:block;" data-i18n="calendar.included_eyebrow">Hizmet Kapsamı</span>
+            <h2 data-i18n="calendar.included_title">Temsil Paketine Neler Dahil?</h2>
+            <div class="section-title-bar"></div>
+            <p class="section-subtitle" data-i18n="calendar.included_subtitle">Fuar temsil hizmetimiz, ürünlerinizin en iyi şekilde sunulması için ihtiyacınız olan her şeyi kapsar.</p>
+        </div>
+        <div class="cal-included-grid">
+            <div class="cal-included-card" data-animate>
+                <div class="cal-included-icon cal-icon-blue"><i class="fas fa-store"></i></div>
+                <h3 data-i18n="calendar.inc1_title">Stand Kurulumu</h3>
+                <p data-i18n="calendar.inc1_desc">Markanızı en iyi şekilde yansıtacak profesyonel bir stand tasarımı ve kurulumu ekibimiz tarafından gerçekleştirilir.</p>
+                <div class="cal-included-tags">
+                    <span class="cal-included-tag">Tasarım</span>
+                    <span class="cal-included-tag">Kurulum</span>
+                    <span class="cal-included-tag">Söküm</span>
+                </div>
+            </div>
+            <div class="cal-included-card" data-animate>
+                <div class="cal-included-icon cal-icon-gold"><i class="fas fa-handshake"></i></div>
+                <h3 data-i18n="calendar.inc2_title">Alıcı Görüşmeleri</h3>
+                <p data-i18n="calendar.inc2_desc">Uzman ekibimiz potansiyel alıcılarla birebir görüşmeler yaparak ürünlerinizi tanıtır ve ticari bağlantılar kurar.</p>
+                <div class="cal-included-tags">
+                    <span class="cal-included-tag">B2B Toplantı</span>
+                    <span class="cal-included-tag">Çeviri</span>
+                    <span class="cal-included-tag">Negosiyasyon</span>
+                </div>
+            </div>
+            <div class="cal-included-card" data-animate>
+                <div class="cal-included-icon cal-icon-green"><i class="fas fa-file-alt"></i></div>
+                <h3 data-i18n="calendar.inc3_title">Detaylı Fuar Raporu</h3>
+                <p data-i18n="calendar.inc3_desc">Fuar tamamlandıktan sonra tüm görüşmeler, potansiyel alıcı bilgileri ve fırsatlar içeren kapsamlı bir rapor iletilir.</p>
+                <div class="cal-included-tags">
+                    <span class="cal-included-tag">Toplantı Notları</span>
+                    <span class="cal-included-tag">İletişim Listesi</span>
+                    <span class="cal-included-tag">Fırsat Analizi</span>
+                </div>
+            </div>
+            <div class="cal-included-card" data-animate>
+                <div class="cal-included-icon cal-icon-purple"><i class="fas fa-photo-video"></i></div>
+                <h3 data-i18n="calendar.inc4_title">Tanıtım Materyalleri</h3>
+                <p data-i18n="calendar.inc4_desc">Ürün kataloğu, broşür ve dijital tanıtım materyalleriniz profesyonel olarak hazırlanır ve fuarda dağıtılır.</p>
+                <div class="cal-included-tags">
+                    <span class="cal-included-tag">Broşür</span>
+                    <span class="cal-included-tag">Katalog</span>
+                    <span class="cal-included-tag">Dijital Sunum</span>
+                </div>
+            </div>
+            <div class="cal-included-card" data-animate>
+                <div class="cal-included-icon cal-icon-teal"><i class="fas fa-language"></i></div>
+                <h3 data-i18n="calendar.inc5_title">Çok Dilli Destek</h3>
+                <p data-i18n="calendar.inc5_desc">Ekibimiz İngilizce başta olmak üzere birden fazla dilde iletişim kurarak dil engelini ortadan kaldırır.</p>
+                <div class="cal-included-tags">
+                    <span class="cal-included-tag">İngilizce</span>
+                    <span class="cal-included-tag">Almanca</span>
+                    <span class="cal-included-tag">+Daha Fazla</span>
+                </div>
+            </div>
+            <div class="cal-included-card" data-animate>
+                <div class="cal-included-icon cal-icon-red"><i class="fas fa-chart-line"></i></div>
+                <h3 data-i18n="calendar.inc6_title">Pazar İstihbaratı</h3>
+                <p data-i18n="calendar.inc6_desc">Fuar sırasında rakip analizi, fiyat araştırması ve pazar trendleri hakkında değerli veriler toplanır.</p>
+                <div class="cal-included-tags">
+                    <span class="cal-included-tag">Rakip Analizi</span>
+                    <span class="cal-included-tag">Fiyat Araştırması</span>
+                    <span class="cal-included-tag">Trend Raporu</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── TRUST SIGNALS + FINAL CTA (dark section) ─── -->
+<section class="cal-trust-section">
+    <div class="container">
+        <div class="section-title" data-animate style="margin-bottom:3rem;">
+            <span class="section-eyebrow" style="font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-color);margin-bottom:.6rem;display:block;" data-i18n="calendar.trust_eyebrow">Güven &amp; Deneyim</span>
+            <h2 style="color:var(--text-light);" data-i18n="calendar.trust_title">Neden Bize Güvenebilirsiniz?</h2>
+            <div class="section-title-bar"></div>
+        </div>
+        <div class="cal-trust-grid">
+            <div class="cal-trust-card" data-animate>
+                <div class="cal-trust-icon"><i class="fas fa-award"></i></div>
+                <h4 data-i18n="calendar.trust1_title">Sektör Deneyimi</h4>
+                <p data-i18n="calendar.trust1_desc">Yılların getirdiği ihracat ve fuar tecrübesiyle İzmir üreticilerini küresel alıcılarla buluşturuyoruz. Her sektörde uzman ekibimiz sizin için çalışıyor.</p>
+            </div>
+            <div class="cal-trust-card" data-animate>
+                <div class="cal-trust-icon"><i class="fas fa-users"></i></div>
+                <h4 data-i18n="calendar.trust2_title">200+ Kayıtlı Üretici</h4>
+                <p data-i18n="calendar.trust2_desc">Platformumuzda 200'den fazla doğrulanmış İzmir üreticisi yer almaktadır. Her gün büyüyen ağımıza katılın ve küresel pazarlara açılın.</p>
+            </div>
+            <div class="cal-trust-card" data-animate>
+                <div class="cal-trust-icon"><i class="fas fa-globe-europe"></i></div>
+                <h4 data-i18n="calendar.trust3_title">30+ Ülke, 50+ Fuar</h4>
+                <p data-i18n="calendar.trust3_desc">Yılda 50'den fazla uluslararası fuara katılıyor, 30'dan fazla ülkedeki alıcılarla birebir görüşmeler gerçekleştiriyoruz.</p>
+            </div>
+        </div>
+
+        <!-- Final CTA inside dark section -->
+        <div class="cal-final-cta" data-animate>
+            <div class="cal-final-cta-eyebrow" data-i18n="calendar.final_eyebrow">Hazır mısınız?</div>
+            <h2 data-i18n="calendar.final_title">Ürünlerinizi Dünyaya Taşıyın</h2>
+            <p data-i18n="calendar.final_desc">Kayıt tamamen ücretsiz. Profilinizi oluşturun, fuarı seçin - gerisini bize bırakın.</p>
+            <div class="cal-final-cta-actions">
+                <a href="{% url 'main:signup' %}" class="btn btn-secondary">
+                    <i class="fas fa-user-plus"></i>&nbsp; <span data-i18n="calendar.final_signup">Ücretsiz Kayıt Ol</span>
+                </a>
+                <a href="{% url 'main:contact' %}" class="btn btn-outline-hero">
+                    <i class="fas fa-envelope"></i>&nbsp; <span data-i18n="calendar.final_contact">Bize Ulaşın</span>
+                </a>
+            </div>
+        </div>
     </div>
 </section>
 

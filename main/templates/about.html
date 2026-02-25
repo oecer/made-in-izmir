@@ -1,53 +1,529 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Made in Izmir - About Us{% endblock %}
+{% block title %}Made in İzmir - Hakkımızda / About Us{% endblock %}
+
+{% block extra_css %}
+<meta name="description" content="Made in İzmir - İzmirli üreticileri global pazarlarla buluşturan profesyonel bir ticaret ve danışmanlık platformu. Learn about our story, vision and ecosystem.">
+<style>
+/* ═══════════════════════════════════════════
+   ABOUT PAGE - SPECIFIC STYLES
+═══════════════════════════════════════════ */
+
+/* ── Hero Badge ── */
+.about-hero-badge {
+    display: inline-block;
+    background: rgba(204, 164, 59, 0.18);
+    border: 1px solid rgba(204, 164, 59, 0.5);
+    color: var(--accent-color);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 0.35rem 1rem;
+    border-radius: 50px;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(8px);
+}
+
+/* ── Stats Bar ── */
+.about-stats-bar {
+    background: var(--primary-color);
+    padding: 0;
+}
+.about-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    text-align: center;
+}
+.about-stat-item {
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    border-right: 1px solid rgba(255,255,255,0.08);
+}
+.about-stat-item:last-child { border-right: none; }
+.about-stat-num {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    font-family: 'Playfair Display', serif;
+    line-height: 1;
+}
+.about-stat-lbl {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+@media (max-width: 640px) {
+    .about-stats-grid { grid-template-columns: 1fr 1fr; }
+    .about-stat-item { border-bottom: 1px solid rgba(255,255,255,0.08); }
+}
+
+/* ── Story Section ── */
+.about-story-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    max-width: 860px;
+    margin: 0 auto;
+}
+.about-story-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+.about-story-paragraph {
+    font-size: 1.025rem;
+    color: var(--text-muted);
+    line-height: 1.85;
+}
+.about-story-paragraph:first-child {
+    font-size: 1.12rem;
+    color: var(--text-main);
+    font-weight: 500;
+    line-height: 1.75;
+}
+.about-tagline {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    font-style: italic;
+    border-left: 3px solid var(--accent-color);
+    padding-left: 1.25rem;
+    margin-top: 0.5rem;
+}
+
+/* ── Heritage Cards ── */
+.about-heritage-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+@media (max-width: 768px) {
+    .about-heritage-grid { grid-template-columns: 1fr; }
+}
+.about-heritage-card {
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    padding: 2rem 1.75rem;
+    border: 1px solid rgba(204, 164, 59, 0.12);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    text-align: center;
+}
+.about-heritage-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(204, 164, 59, 0.35);
+}
+.about-heritage-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    margin: 0 auto 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background: rgba(204, 164, 59, 0.09);
+    color: var(--accent-color);
+    transition: var(--transition);
+}
+.about-heritage-card:hover .about-heritage-icon {
+    background: var(--accent-color);
+    color: var(--primary-color);
+}
+.about-heritage-card h3 {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+    margin-bottom: 0.6rem;
+}
+.about-heritage-card p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin: 0;
+}
+
+/* ── Vision / Mission Section ── */
+.about-vision-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #1a2e4a 100%);
+    padding: 5rem 0;
+}
+.about-vision-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    margin-top: 3rem;
+}
+@media (max-width: 768px) {
+    .about-vision-grid { grid-template-columns: 1fr; }
+}
+.about-vision-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-lg);
+    padding: 2.25rem;
+    backdrop-filter: blur(8px);
+    transition: var(--transition);
+}
+.about-vision-card:hover {
+    background: rgba(255,255,255,0.09);
+    border-color: rgba(204,164,59,0.35);
+}
+.about-vision-card-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: rgba(204, 164, 59, 0.15);
+    color: var(--accent-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 1.25rem;
+}
+.about-vision-card h3 {
+    color: var(--text-light);
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+.about-vision-card p {
+    font-size: 0.925rem;
+    color: rgba(255,255,255,0.68);
+    line-height: 1.75;
+    margin: 0;
+}
+
+/* ── Ecosystem Pills ── */
+.about-ecosystem-section { padding: 5rem 0; }
+.about-ecosystem-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+}
+@media (max-width: 900px) {
+    .about-ecosystem-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 540px) {
+    .about-ecosystem-grid { grid-template-columns: 1fr; }
+}
+.eco-card {
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.eco-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(204,164,59,0.2);
+}
+.eco-card-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-color);
+}
+.eco-card h3 {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+    margin: 0;
+}
+.eco-card p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin: 0;
+    flex: 1;
+}
+.eco-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    margin-bottom: 0.25rem;
+}
+.eco-icon-gold   { background: rgba(204,164,59,0.1);  color: var(--accent-color); }
+.eco-icon-blue   { background: rgba(59,130,246,0.1);  color: #3b82f6; }
+.eco-icon-purple { background: rgba(139,92,246,0.1);  color: #8b5cf6; }
+
+/* ── Final CTA ── */
+.about-cta-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    padding: 5rem 0;
+    text-align: center;
+}
+.about-cta-eyebrow {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-color);
+    margin-bottom: 0.75rem;
+}
+.about-cta-section h2 {
+    font-size: 2.5rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+}
+.about-cta-section p {
+    color: rgba(255,255,255,0.7);
+    font-size: 1.05rem;
+    margin-bottom: 2.5rem;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.about-cta-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+@media (max-width: 768px) {
+    .about-cta-section h2 { font-size: 1.75rem; }
+}
+
+/* ── Section eyebrow shared ── */
+.section-eyebrow {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-color);
+    margin-bottom: 0.6rem;
+    display: block;
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
+
+<!-- ═══ HERO ═══ -->
 <div class="page-header header-about">
-    <div class="container">
-        <h1 data-i18n="about.title">Hakkımızda</h1>
+    <div class="container animate-fade-up" style="z-index:1; position:relative;">
+        <div class="about-hero-badge" data-i18n="about.hero_badge">🏙️ Made in İzmir</div>
+        <h1 data-i18n="about.hero_title">Hakkımızda</h1>
+        <p data-i18n="about.hero_subtitle" style="font-size:1.15rem; opacity:0.9; max-width:660px; margin:1rem auto 0; font-weight:300; line-height:1.7;">
+            İzmirli üreticileri global pazarlarla buluşturan profesyonel bir ticaret ve danışmanlık platformu.
+        </p>
     </div>
 </div>
 
-<!-- Bio Section -->
-<section class="section">
-    <div class="container about-content animate-fade-up">
-        <div class="about-img">
-            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                alt="Founder">
+<!-- ═══ STATS BAR ═══ -->
+<div class="about-stats-bar">
+    <div class="container about-stats-grid">
+        <div class="about-stat-item" data-animate>
+            <span class="about-stat-num" data-i18n="about.stat1_num">65+</span>
+            <span class="about-stat-lbl" data-i18n="about.stat1_lbl">İhracat Ülkesi</span>
         </div>
-        <div class="about-text">
-            <h2 data-i18n="about.bio_title">Kurucu & Vizyon</h2>
-            <p data-i18n="about.bio_text" style="font-size: 1.1rem; margin-bottom: 2rem;">Yılların getirdiği ihracat
-                tecrübesi ile İzmir'in potansiyelini dünyaya taşıyoruz.</p>
-            <p>Made in Izmir, yerel üreticileri global pazarlara entegre etmek ve uluslararası alıcıların
-                Türkiye'deki en güvenilir tedarik partneri olmak amacıyla kurulmuştur.</p>
+        <div class="about-stat-item" data-animate>
+            <span class="about-stat-num" data-i18n="about.stat2_num">200+</span>
+            <span class="about-stat-lbl" data-i18n="about.stat2_lbl">Kayıtlı Üretici</span>
+        </div>
+        <div class="about-stat-item" data-animate>
+            <span class="about-stat-num" data-i18n="about.stat3_num">8.500</span>
+            <span class="about-stat-lbl" data-i18n="about.stat3_lbl">Yıllık Ticaret Mirası</span>
+        </div>
+        <div class="about-stat-item" data-animate>
+            <span class="about-stat-num" data-i18n="about.stat4_num">30+</span>
+            <span class="about-stat-lbl" data-i18n="about.stat4_lbl">Hedef Pazar</span>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ OUR STORY ═══ -->
+<section class="section">
+    <div class="container">
+        <div class="section-title" data-animate>
+            <span class="section-eyebrow" data-i18n="about.story_eyebrow">Hikayemiz</span>
+            <h2 data-i18n="about.story_title">Güven Üzerine Kurulu Bir Platform</h2>
+            <div class="section-title-bar"></div>
+            <p class="section-subtitle" data-i18n="about.story_subtitle">
+                Yılların ihracat deneyimini, modern iş birliği anlayışıyla birleştiriyoruz.
+            </p>
+        </div>
+        <div class="about-story-grid" data-animate>
+            <div class="about-story-content">
+                <p class="about-story-paragraph" data-i18n="about.story_p1">
+                    Madeinİzmir.com, ilk etapta İzmirli üreticileri ve tedarikçileri global pazarlarla buluşturmak amacıyla yola çıkmış; zamanla Türkiye genelindeki güvenilir üreticileri de kapsayarak uluslararası ticarette güçlü, sürdürülebilir ve uzun vadeli iş bağlantıları kurmayı hedefleyen profesyonel bir ticaret ve danışmanlık platformudur.
+                </p>
+                <p class="about-story-paragraph" data-i18n="about.story_p2">
+                    Uzun yıllara dayanan dış ticaret deneyimiyle 65'ten fazla ülkeye ihracat gerçekleştirilmiş, farklı sektörlerde çok sayıda uluslararası ticari proje başarıyla tamamlanmıştır. Elde edilen bu birikim ve saha tecrübesi, Made in İzmir'in güvene dayalı ticaret anlayışının ve sürdürülebilir iş modeli vizyonunun temelini oluşturmaktadır.
+                </p>
+                <p class="about-story-paragraph" data-i18n="about.story_p3">
+                    Bu tecrübe aynı zamanda göstermektedir ki; birçok nitelikli ve değerli üretici firma yüksek kalite standartlarında üretim yapmasına rağmen uluslararası pazarlarda doğru alıcıya ulaşma ve küresel ölçekte güçlü bir görünürlük oluşturma konusunda daha organize ve ortak bir yapıya ihtiyaç duymaktadır.
+                </p>
+                <p class="about-story-paragraph" data-i18n="about.story_p4">
+                    Made in İzmir; üreticilerin tek başına değil, ortak bir güç ve ortak bir vizyon ile global pazarlarda yer almasını hedefleyen bir ticaret ve iş birliği platformudur. Ortak akıl, ortak güven ve ortak sorumluluk anlayışıyla hareket eden bu yapı; üreticilerin küresel pazarlarda daha görünür, daha güçlü ve daha sürdürülebilir bir konuma ulaşmasını amaçlamaktadır.
+                </p>
+                <p class="about-tagline" data-i18n="about.tagline">Made in İzmir - Bir Şehirden Daha Fazlası.</p>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- Why Izmir -->
-<section class="section" style="background-color: var(--bg-color);">
+<!-- ═══ WHY IZMIR ═══ -->
+<section class="section" style="background-color: var(--bg-body);">
     <div class="container">
-        <h2 style="text-align: center; margin-bottom: 2rem;" data-i18n="about.why_izmir_title">Neden İzmir?</h2>
-        <div class="card-grid">
-            <div class="card">
-                <i class="fas fa-ship fa-2x" style="color: var(--primary-color);"></i>
-                <h3>Stratejik Liman</h3>
-                <p>Avrupa, Asya ve Afrika'nın kesişim noktasında güçlü lojistik ağı.</p>
+        <div class="section-title" data-animate>
+            <span class="section-eyebrow" data-i18n="about.heritage_eyebrow">Neden İzmir?</span>
+            <h2 data-i18n="about.heritage_title">8.500 Yıllık Ticaret Kenti</h2>
+            <div class="section-title-bar"></div>
+            <p class="section-subtitle" data-i18n="about.heritage_subtitle">
+                İzmir'in köklü mirası ve modern potansiyeli, Made in İzmir'in temel gücünü oluşturuyor.
+            </p>
+        </div>
+        <div class="about-heritage-grid">
+            <div class="about-heritage-card" data-animate>
+                <div class="about-heritage-icon"><i class="fas fa-ship"></i></div>
+                <h3 data-i18n="about.heritage1_title">Stratejik Liman</h3>
+                <p data-i18n="about.heritage1_desc">Avrupa, Asya ve Afrika'nın kesişim noktasında yer alan güçlü lojistik altyapısı ile Türkiye'nin en önemli ihracat kapısı.</p>
             </div>
-            <div class="card">
-                <i class="fas fa-industry fa-2x" style="color: var(--primary-color);"></i>
-                <h3>Üretim Gücü</h3>
-                <p>Tekstilden gıdaya, otomotivden mermere geniş üretim yelpazesi.</p>
+            <div class="about-heritage-card" data-animate>
+                <div class="about-heritage-icon"><i class="fas fa-industry"></i></div>
+                <h3 data-i18n="about.heritage2_title">Üretim Gücü</h3>
+                <p data-i18n="about.heritage2_desc">Tekstilden gıdaya, otomotivden mermere uzanan geniş üretim yelpazesiyle İzmir, güvenilir tedarikçilerin merkezi.</p>
             </div>
-            <div class="card">
-                <i class="fas fa-history fa-2x" style="color: var(--primary-color);"></i>
-                <h3>Ticaret Kültürü</h3>
-                <p>8500 yıllık ticaret geçmişi ile güvenilir iş ortaklığı.</p>
+            <div class="about-heritage-card" data-animate>
+                <div class="about-heritage-icon"><i class="fas fa-landmark"></i></div>
+                <h3 data-i18n="about.heritage3_title">Ticaret Mirası</h3>
+                <p data-i18n="about.heritage3_desc">8.500 yıllık köklü ticaret geçmişi ve Akdeniz ticaret geleneğinin önemli duraklarından biri olma özelliğiyle güvenilir ortak.</p>
             </div>
         </div>
     </div>
 </section>
+
+<!-- ═══ VISION ═══ -->
+<section class="about-vision-section">
+    <div class="container">
+        <div class="section-title" data-animate style="margin-bottom: 0;">
+            <span class="section-eyebrow" style="color: var(--accent-color);" data-i18n="about.vision_eyebrow">Vizyonumuz</span>
+            <h2 style="color: var(--text-light);" data-i18n="about.vision_title">Sürdürülebilir Bir Ticaret Ekosistemi</h2>
+            <div class="section-title-bar"></div>
+            <p style="color: rgba(255,255,255,0.68); max-width: 680px; margin: 0 auto; font-size: 1rem; line-height: 1.75;" data-i18n="about.vision_desc">
+                Made in İzmir, yalnızca bir ticaret platformu oluşturmayı değil; üretim, ticaret ve şehir değerlerini bir araya getiren sürdürülebilir ve güçlü bir iş ekosistemi kurmayı hedeflemektedir.
+            </p>
+        </div>
+        <div class="about-vision-grid">
+            <div class="about-vision-card" data-animate>
+                <div class="about-vision-card-icon"><i class="fas fa-eye"></i></div>
+                <h3 data-i18n="about.vision_card1_title">Küresel Görünürlük</h3>
+                <p data-i18n="about.vision_card1_desc">
+                    İzmir'den başlayarak Türkiye geneline yayılan bu yapı; üreticilerin daha organize, daha görünür ve daha güçlü bir şekilde ulusal ve uluslararası pazarlarda yer almasına katkı sağlamayı amaçlamaktadır.
+                </p>
+            </div>
+            <div class="about-vision-card" data-animate>
+                <div class="about-vision-card-icon"><i class="fas fa-handshake"></i></div>
+                <h3 data-i18n="about.vision_card2_title">Ortak Güç Birliği</h3>
+                <p data-i18n="about.vision_card2_desc">
+                    Üreticilerin, iş insanlarının ve girişimcilerin bir araya geldiği; tecrübenin paylaşıldığı, iş birliklerinin geliştiği ve üretimin desteklendiği bütüncül bir yapı olarak konumlandırılmaktadır.
+                </p>
+            </div>
+            <div class="about-vision-card" data-animate>
+                <div class="about-vision-card-icon"><i class="fas fa-female"></i></div>
+                <h3 data-i18n="about.vision_card3_title">Mrs. İzmir</h3>
+                <p data-i18n="about.vision_card3_desc">
+                    Üretimde, tasarımda, girişimcilikte ve ticarette değer üreten başarılı kadınlarımızın temsil edildiği marka yüzü. Kadın girişimcilerin başarı hikayelerini dünyaya taşıyoruz.
+                </p>
+            </div>
+            <div class="about-vision-card" data-animate>
+                <div class="about-vision-card-icon"><i class="fas fa-male"></i></div>
+                <h3 data-i18n="about.vision_card4_title">Mr. İzmir</h3>
+                <p data-i18n="about.vision_card4_desc">
+                    Üretimde, ticarette ve girişimcilikte değer üreten deneyimli iş insanlarımızın bir araya geldiği; tecrübelerin paylaşılacağı ve yeni iş birliklerinin gelişeceği güçlü bir buluşma noktası.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ ECOSYSTEM (Sotooly) ═══ -->
+<section class="about-ecosystem-section">
+    <div class="container">
+        <div class="section-title" data-animate>
+            <span class="section-eyebrow" data-i18n="about.eco_eyebrow">Ekosistem</span>
+            <h2 data-i18n="about.eco_title">Made in İzmir Ekosistemi</h2>
+            <div class="section-title-bar"></div>
+            <p class="section-subtitle" data-i18n="about.eco_subtitle">
+                Üretimi destekleyen, gerektiğinde dijital araçlarla güçlendiren entegre bir yapı.
+            </p>
+        </div>
+        <div class="about-ecosystem-grid">
+            <!-- Sotooly Platform -->
+            <div class="eco-card" data-animate>
+                <div class="eco-card-icon eco-icon-gold"><i class="fas fa-store"></i></div>
+                <span class="eco-card-label">Dijital Platform</span>
+                <h3 data-i18n="about.eco1_title">Sotooly</h3>
+                <p data-i18n="about.eco1_desc">Made in İzmir ekosisteminin ürün markası ve dijital ticaret platformu. Üreticilerin ürünleri ortak bir marka çatısı altında sergilenir, katalogları tanıtılır ve satış süreçleri desteklenir.</p>
+            </div>
+            <!-- Sotooly Marketplace -->
+            <div class="eco-card" data-animate>
+                <div class="eco-card-icon eco-icon-blue"><i class="fas fa-shopping-bag"></i></div>
+                <span class="eco-card-label">Mağazalaşma</span>
+                <h3 data-i18n="about.eco2_title">Ortak Mağaza</h3>
+                <p data-i18n="about.eco2_desc">Dijital alışveriş platformlarında ve fiziksel mağaza konseptlerinde ortak bir marka çatısı altında daha geniş kitlelere ulaşmayı hedefleyen ölçeklenebilir bir mağazalaşma yapısı.</p>
+            </div>
+            <!-- Sotooly Token -->
+            <div class="eco-card" data-animate>
+                <div class="eco-card-icon eco-icon-purple"><i class="fas fa-coins"></i></div>
+                <span class="eco-card-label">Dijital Değer</span>
+                <h3 data-i18n="about.eco3_title">Sotooly Token</h3>
+                <p data-i18n="about.eco3_desc">Ekosistem içinde üyelik, bağlılık ve etkileşim mekanizmasını güçlendiren dijital değer yapısı. Üreticiler, mağazalar ve kullanıcılar arasında sürdürülebilir ve karşılıklı fayda esasına dayalı bir ekosistem.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ FINAL CTA ═══ -->
+<section class="about-cta-section">
+    <div class="container" data-animate>
+        <div class="about-cta-eyebrow" data-i18n="about.cta_eyebrow">Birlikte Büyüyelim</div>
+        <h2 data-i18n="about.cta_title">İzmir'den Dünyaya</h2>
+        <p data-i18n="about.cta_desc">Made in İzmir ekosistemi büyümeye devam ediyor. Üretici veya alıcı olarak bu güçlü ağa katılın.</p>
+        <div class="about-cta-actions">
+            <a href="{% url 'main:signup' %}" class="btn btn-secondary" data-i18n="about.cta_signup">Platforma Katılın</a>
+            <a href="{% url 'main:contact' %}" class="btn btn-outline-hero" data-i18n="about.cta_contact">Bize Ulaşın</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // IntersectionObserver for scroll animations
+    (function() {
+        const items = document.querySelectorAll('[data-animate]');
+        if (!items.length) return;
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.style.opacity = '1';
+                    e.target.style.transform = 'translateY(0)';
+                    observer.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.12 });
+        items.forEach(el => observer.observe(el));
+    })();
+</script>
 {% endblock %}
