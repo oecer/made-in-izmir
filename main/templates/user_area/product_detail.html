@@ -16,6 +16,17 @@
 {% endblock %}
 
 {% block dashboard_header_actions %}
+{% if is_owner %}
+<a href="{% url 'main:producer_dashboard' %}" class="dashboard-back-btn">
+    <i class="fas fa-arrow-left"></i>
+    <span data-i18n="dashboard.back">Panele Dön</span>
+</a>
+{% else %}
+<a href="{% url 'main:buyer_dashboard' %}" class="dashboard-back-btn">
+    <i class="fas fa-arrow-left"></i>
+    <span data-i18n="dashboard.back_to_products">Ürünlere Dön</span>
+</a>
+{% endif %}
 {% endblock %}
 
 {% block dashboard_content %}
@@ -107,22 +118,25 @@
         </div>
         {% endif %}
 
+        {% if product.description_tr %}
         <div class="product-description">
-            <h3><i class="fas fa-align-left"></i> Açıklama (Türkçe)</h3>
-            <p>{{ product.description_tr|default:"Türkçe açıklama bulunmuyor." }}</p>
+            <h3><i class="fas fa-align-left"></i> <span data-i18n="dashboard.description_tr">Açıklama (Türkçe)</span></h3>
+            <p>{{ product.description_tr }}</p>
         </div>
+        {% endif %}
 
         {% if product.description_en %}
         <div class="product-description">
-            <h3><i class="fas fa-align-left"></i> Description (English)</h3>
+            <h3><i class="fas fa-align-left"></i> <span data-i18n="dashboard.description_en">Açıklama (İngilizce)</span></h3>
             <p>{{ product.description_en }}</p>
         </div>
         {% endif %}
 
-        <div class="product-meta">
-            <p><i class="fas fa-calendar"></i> Eklenme Tarihi: {{ product.created_at|date:"d.m.Y H:i" }}</p>
-            <p><i class="fas fa-clock"></i> Son Güncelleme: {{ product.updated_at|date:"d.m.Y H:i" }}</p>
+        {% if not product.description_tr and not product.description_en %}
+        <div class="product-description">
+            <p class="text-muted" data-i18n="dashboard.no_description">Ürün açıklaması bulunmuyor.</p>
         </div>
+        {% endif %}
 
         {% if is_owner %}
         <div class="owner-actions">

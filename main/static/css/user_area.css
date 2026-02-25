@@ -503,12 +503,16 @@
 }
 
 .product-producer {
-    color: #667eea;
+    color: #334155;
     font-weight: 500;
     margin-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 5px;
+}
+
+.product-producer i {
+    color: #cca43b;
 }
 
 .product-sector {
@@ -556,6 +560,108 @@
     background: rgba(245, 158, 11, 0.05);
     border-radius: 8px;
     border: 1px dashed #f59e0b;
+}
+
+/* ============================================
+   PRODUCT DESCRIPTION SNIPPET (Buyer Cards)
+   ============================================ */
+
+.product-desc-snippet {
+    color: #64748b;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ============================================
+   RESULTS META BAR (search/filter result count + chips)
+   ============================================ */
+
+.results-meta-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.results-count {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #475569;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.results-count i {
+    color: #cca43b;
+}
+
+.results-count strong {
+    color: #0f172a;
+    font-size: 1rem;
+}
+
+.active-filters-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background: #e2e8f0;
+    color: #334155;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* ============================================
+   SEARCH FORM WRAPPER (buyer dashboard)
+   ============================================ */
+
+.search-form-wrapper {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .search-form-wrapper {
+        flex-direction: column;
+    }
+
+    .search-form-wrapper .search-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .results-meta-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ============================================
+   PRODUCT DETAIL — VIEW BUTTON FULL WIDTH
+   ============================================ */
+
+.product-detail-btn {
+    width: 100%;
+    justify-content: center;
 }
 
 /* ============================================

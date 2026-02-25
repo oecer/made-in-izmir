@@ -23,34 +23,34 @@
 <div class="stats-grid">
     <div class="stat-card">
         <div class="stat-icon">
+            <i class="fas fa-industry"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ total_producers }}</h3>
+            <p data-i18n="dashboard.total_producers">Üretici</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-th-large"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ total_sectors }}</h3>
+            <p data-i18n="dashboard.total_sectors">Sektör</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">
             <i class="fas fa-box"></i>
         </div>
         <div class="stat-info">
-            <h3 data-label="total_products">{{ total_products }}</h3>
+            <h3>{{ total_products }}</h3>
             <p data-i18n="dashboard.total_products">Mevcut Ürün</p>
-        </div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon">
-            <i class="fas fa-building"></i>
-        </div>
-        <div class="stat-info">
-            <h3 data-label="company_name" class="stat-text-value">{{ profile.company_name }}</h3>
-            <p data-i18n="dashboard.company">Firma</p>
-        </div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon">
-            <i class="fas fa-globe"></i>
-        </div>
-        <div class="stat-info">
-            <h3 data-label="country" class="stat-text-value">{{ profile.country }}</h3>
-            <p data-i18n="dashboard.country">Ülke</p>
         </div>
     </div>
 </div>
 
-<!-- Secondary Actions (Quick Links) -->
+<!-- Quick Links -->
 <div class="quick-links-title mb-2">
     <h3 data-i18n="dashboard.quick_links" class="quick-links-label">Hızlı Bağlantılar</h3>
 </div>
@@ -58,14 +58,24 @@
     <a href="{% url 'main:profile' %}" class="btn btn-secondary">
         <i class="fas fa-user"></i> <span data-i18n="dashboard.view_profile">Profili Görüntüle</span>
     </a>
+    <a href="{% url 'main:dashboard_calendar' %}" class="btn btn-secondary">
+        <i class="fas fa-calendar-alt"></i> <span data-i18n="dashboard.expo_calendar">Fuar Takvimi</span>
+    </a>
 </div>
 
 <!-- Products Browse -->
 <div class="products-section dashboard-card">
+    <!-- Section Header + Filter Toolbar -->
     <div class="section-title-area animate-fade-up">
         <h2 data-i18n="dashboard.available_products">Mevcut Ürünler</h2>
         <div class="filter-toolbar">
+            <!-- All filters live inside ONE form so everything is submitted together -->
             <form id="filter-form" method="GET" class="filter-form-inline">
+                <!-- Hidden: preserve current search query when a filter changes -->
+                {% if search_query %}
+                <input type="hidden" name="search" value="{{ search_query }}">
+                {% endif %}
+
                 <!-- Sector Multiselect -->
                 <div class="filter-group ms-dropdown" id="sector-ms">
                     <div class="filter-icon"><i class="fas fa-industry"></i></div>
@@ -82,7 +92,7 @@
                         {% endfor %}
                     </div>
                 </div>
-                
+
                 <!-- Tag Multiselect -->
                 <div class="filter-group ms-dropdown" id="tag-ms">
                     <div class="filter-icon"><i class="fas fa-tags"></i></div>
@@ -99,7 +109,7 @@
                         {% endfor %}
                     </div>
                 </div>
-                
+
                 <!-- Producer Multiselect -->
                 <div class="filter-group ms-dropdown" id="producer-ms">
                     <div class="filter-icon"><i class="fas fa-user-tie"></i></div>
@@ -116,61 +126,78 @@
                         {% endfor %}
                     </div>
                 </div>
-                
-                {% if current_filters.sector or current_filters.tag or current_filters.producer %}
-                <a href="{% url 'main:buyer_dashboard' %}" class="filter-reset" title="Temizle">
+
+                {% if current_filters.sector or current_filters.tag or current_filters.producer or search_query %}
+                <a href="{% url 'main:buyer_dashboard' %}" class="filter-reset" title="Filtreleri Temizle">
                     <i class="fas fa-times-circle"></i>
                 </a>
                 {% endif %}
             </form>
         </div>
     </div>
-    {% comment %} <p class="section-description" data-i18n="dashboard.explore">Üreticilerin sunduğu ürünlere göz atın</p> {% endcomment %}
 
-    <!-- Search Bar -->
+    <!-- Search Bar — shares the same form via JS submit -->
     <div class="search-bar-container">
-        <form method="GET" class="search-form">
-            <!-- Preserve existing filters -->
-            {% for tag in current_filters.tag %}
-            <input type="hidden" name="tag" value="{{ tag }}">
-            {% endfor %}
-            {% for sector in current_filters.sector %}
-            <input type="hidden" name="sector" value="{{ sector }}">
-            {% endfor %}
-            {% for producer in current_filters.producer %}
-            <input type="hidden" name="producer" value="{{ producer }}">
-            {% endfor %}
-            
+        <div class="search-form-wrapper">
             <div class="search-input-wrapper">
                 <i class="fas fa-search search-icon"></i>
-                <input 
-                    type="text" 
-                    name="search" 
-                    class="search-input" 
-                    placeholder="Ürün ara..." 
+                <input
+                    type="text"
+                    id="search-input"
+                    class="search-input"
+                    placeholder="Ürün veya üretici ara..."
                     value="{{ search_query }}"
                     data-i18n-placeholder="dashboard.search_products"
+                    autocomplete="off"
                 >
                 {% if search_query %}
-                <a href="?{% for tag in current_filters.tag %}tag={{ tag }}&{% endfor %}{% for sector in current_filters.sector %}sector={{ sector }}&{% endfor %}{% for producer in current_filters.producer %}producer={{ producer }}&{% endfor %}" class="clear-search" title="Aramayı Temizle">
+                <button type="button" id="clear-search" class="clear-search" title="Aramayı Temizle">
                     <i class="fas fa-times"></i>
-                </a>
+                </button>
                 {% endif %}
             </div>
-            <button type="submit" class="search-button">
+            <button type="button" id="search-btn" class="search-button">
                 <i class="fas fa-search"></i>
                 <span data-i18n="dashboard.search">Ara</span>
             </button>
-        </form>
+        </div>
     </div>
 
+    <!-- Active Filters & Result Count Bar -->
+    {% if current_filters.sector or current_filters.tag or current_filters.producer or search_query %}
+    <div class="results-meta-bar">
+        <div class="results-count">
+            <i class="fas fa-filter"></i>
+            <strong>{{ products|length }}</strong>
+            <span data-i18n="dashboard.results_found">sonuç bulundu</span>
+        </div>
+        <div class="active-filters-chips">
+            {% if search_query %}
+            <span class="filter-chip">
+                <i class="fas fa-search"></i> "{{ search_query }}"
+            </span>
+            {% endif %}
+            {% for sid in current_filters.sector %}
+            {% for s in available_sectors %}{% if s.id|stringformat:"i" == sid %}<span class="filter-chip">{{ s.name_tr }}</span>{% endif %}{% endfor %}
+            {% endfor %}
+            {% for tid in current_filters.tag %}
+            {% for t in available_tags %}{% if t.id|stringformat:"i" == tid %}<span class="filter-chip">{{ t.name_tr }}</span>{% endif %}{% endfor %}
+            {% endfor %}
+            {% for pid in current_filters.producer %}
+            {% for p in available_producers %}{% if p.id|stringformat:"i" == pid %}<span class="filter-chip">{{ p.profile.company_name }}</span>{% endif %}{% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Products Grid -->
     {% if products %}
     <div class="products-grid">
         {% for product in products %}
         <div class="product-card">
             <div class="product-image">
                 {% if product.photo1 %}
-                <img src="{{ product.photo1.url }}" alt="{{ product.title_tr|default:product.title_en }}">
+                <img src="{{ product.photo1.url }}" alt="{{ product.title_tr|default:product.title_en }}" loading="lazy">
                 {% else %}
                 <div class="no-image">
                     <i class="fas fa-image"></i>
@@ -180,17 +207,22 @@
             <div class="product-info">
                 <h3>{{ product.title_tr|default:product.title_en }}</h3>
                 <p class="product-producer">
-                    <i class="fas fa-user-tie"></i> <span data-i18n="dashboard.producer">Üretici</span>:
+                    <i class="fas fa-user-tie"></i>
                     {{ product.producer.profile.company_name }}
                 </p>
                 {% if product.sector %}
                 <div class="product-sector">
                     <i class="fas fa-industry"></i>
-                    <span class="sector-name" data-tr="{{ product.sector.name_tr }}"
-                        data-en="{{ product.sector.name_en }}">
+                    <span class="sector-name" data-tr="{{ product.sector.name_tr }}" data-en="{{ product.sector.name_en }}">
                         {{ product.sector.name_tr }}
                     </span>
                 </div>
+                {% endif %}
+
+                {% if product.description_tr %}
+                <p class="product-desc-snippet">{{ product.description_tr|truncatechars:100 }}</p>
+                {% elif product.description_en %}
+                <p class="product-desc-snippet">{{ product.description_en|truncatechars:100 }}</p>
                 {% endif %}
 
                 <div class="product-tags">
@@ -202,22 +234,81 @@
                 </div>
 
                 <div class="product-actions">
-                    <a href="{% url 'main:product_detail' product.id %}" class="btn btn-sm btn-dashboard-primary">
-                        <i class="fas fa-eye"></i> <span data-i18n="dashboard.view_details">Detayları
-                            Görüntüle</span>
+                    <a href="{% url 'main:product_detail' product.id %}" class="btn btn-sm btn-dashboard-primary product-detail-btn">
+                        <i class="fas fa-eye"></i> <span data-i18n="dashboard.view_details">Detayları Görüntüle</span>
                     </a>
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
+
     {% else %}
+    <!-- Empty State — differentiate between filtered and unfiltered -->
     <div class="empty-state">
+        {% if current_filters.sector or current_filters.tag or current_filters.producer or search_query %}
+        <i class="fas fa-search"></i>
+        <h3 data-i18n="dashboard.no_results">Sonuç bulunamadı</h3>
+        <p data-i18n="dashboard.no_results_desc">Seçili filtrelerle eşleşen ürün bulunamadı. Filtreleri değiştirmeyi veya temizlemeyi deneyin.</p>
+        <a href="{% url 'main:buyer_dashboard' %}" class="btn btn-dashboard-primary mt-3">
+            <i class="fas fa-times"></i>
+            <span data-i18n="dashboard.clear_filters">Filtreleri Temizle</span>
+        </a>
+        {% else %}
         <i class="fas fa-box-open"></i>
         <h3 data-i18n="dashboard.no_products">Henüz ürün bulunmuyor</h3>
         <p data-i18n="dashboard.no_products_desc">Üreticiler ürün ekledikçe burada görünecektir.</p>
+        {% endif %}
     </div>
     {% endif %}
 </div>
+
+<script>
+// Search form integration — submits to the shared filter form
+(function () {
+    var searchInput = document.getElementById('search-input');
+    var searchBtn = document.getElementById('search-btn');
+    var clearBtn = document.getElementById('clear-search');
+    var filterForm = document.getElementById('filter-form');
+
+    function submitSearch() {
+        // Remove any existing search hidden input to avoid duplicates
+        var existing = filterForm.querySelector('input[name="search"]');
+        if (existing) existing.remove();
+
+        var val = searchInput.value.trim();
+        if (val) {
+            var hidden = document.createElement('input');
+            hidden.type = 'hidden';
+            hidden.name = 'search';
+            hidden.value = val;
+            filterForm.appendChild(hidden);
+        }
+        filterForm.submit();
+    }
+
+    if (searchBtn) {
+        searchBtn.addEventListener('click', submitSearch);
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                submitSearch();
+            }
+        });
+    }
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            // Remove search from filter form and submit
+            var existing = filterForm.querySelector('input[name="search"]');
+            if (existing) existing.remove();
+            filterForm.submit();
+        });
+    }
+})();
+</script>
 
 {% endblock %}

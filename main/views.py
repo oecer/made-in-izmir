@@ -428,6 +428,8 @@ def buyer_dashboard_view(request):
             'profile': profile,
             'products': products_qs,
             'total_products': all_active_products.count(),
+            'total_producers': available_producers.count(),
+            'total_sectors': available_sectors.count(),
             'available_tags': available_tags,
             'available_sectors': available_sectors,
             'available_producers': available_producers,
