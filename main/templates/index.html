@@ -337,6 +337,66 @@
     </div>
 </section>
 
+
+<!-- ═══ UPCOMING EXPOS PREVIEW ═══ -->
+<section class="section expo-preview-section" id="fuarlar">
+    <div class="container">
+        <div class="section-title">
+            <h2 data-i18n="expo_preview.title">Yaklaşan Fuarlar</h2>
+            <div class="section-title-bar"></div>
+            <p class="section-subtitle" data-i18n="expo_preview.subtitle">Katılacağımız yaklaşan uluslararası fuarlar. Ürünlerinizin temsil edilmesi için başvurun.</p>
+        </div>
+
+        {% if upcoming_expos %}
+        <div class="expo-preview-grid">
+            {% for expo in upcoming_expos %}
+            <div class="expo-preview-card" data-animate>
+                <div class="expo-preview-img">
+                    {% if expo.image %}
+                    <img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}">
+                    {% else %}
+                    <div class="expo-preview-img-placeholder">
+                        <i class="fas fa-globe-europe"></i>
+                    </div>
+                    {% endif %}
+                    {% if expo.is_registration_open %}
+                    <span class="expo-preview-badge open">Kayıt Açık</span>
+                    {% else %}
+                    <span class="expo-preview-badge closed">Kayıt Kapalı</span>
+                    {% endif %}
+                </div>
+                <div class="expo-preview-body">
+                    <h3>{{ expo.title_tr }}</h3>
+                    <div class="expo-preview-meta">
+                        <span><i class="fas fa-calendar-alt"></i> {{ expo.start_date|date:"d M Y" }} – {{ expo.end_date|date:"d M Y" }}</span>
+                        <span><i class="fas fa-map-marker-alt"></i> {{ expo.location_tr }}</span>
+                    </div>
+                    {% if expo.description_tr %}
+                    <p class="expo-preview-desc">{{ expo.description_tr|truncatewords:15 }}</p>
+                    {% endif %}
+                    <div class="expo-preview-deadline">
+                        <i class="fas fa-clock"></i>
+                        <span>Son Başvuru: <strong>{{ expo.registration_deadline|date:"d M Y" }}</strong></span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="expo-preview-empty">
+            <i class="fas fa-calendar-plus"></i>
+            <p>Yeni fuarlar yakında eklenecektir.</p>
+        </div>
+        {% endif %}
+
+        <div class="expo-preview-footer" data-animate>
+            <a href="{% url 'main:calendar' %}" class="btn btn-primary" data-i18n="expo_preview.see_all">
+                <i class="fas fa-calendar-alt"></i>&nbsp; Tüm Fuarları Gör
+            </a>
+        </div>
+    </div>
+</section>
+
 <!-- ═══ CTA BANNER ═══ -->
 <section class="cta-banner">
     <div class="container cta-banner-inner">
@@ -350,6 +410,7 @@
         </div>
     </div>
 </section>
+
 
 {% endblock %}
 

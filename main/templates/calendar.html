@@ -1,89 +1,693 @@
 {% extends 'base.html' %}
 
-{% block title %}Made in Izmir - Expo Calendar{% endblock %}
+{% block title %}Made in İzmir - Fuar Takvimi | Expo Calendar{% endblock %}
+
+{% block extra_css %}
+<meta name="description" content="Made in İzmir'in katılacağı uluslararası fuarları keşfedin. Fuar tarihleri, lokasyonlar ve kayıt bilgileri için Fuar Takvimi sayfamızı ziyaret edin.">
+<style>
+/* ═══ CALENDAR HERO BADGE (same pattern as buyers-hero-badge) ═══ */
+.calendar-hero-badge {
+    display: inline-block;
+    background: rgba(204, 164, 59, 0.18);
+    border: 1px solid rgba(204, 164, 59, 0.5);
+    color: var(--accent-color);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 0.35rem 1rem;
+    border-radius: 50px;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(8px);
+}
+
+/* Hero CTA group (same pattern as buyers-hero-actions) */
+.calendar-hero-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+/* ═══ CALENDAR STATS BAR — identical structure to buyers-stats-bar ═══ */
+.calendar-stats-bar {
+    background: var(--primary-color);
+    padding: 0;
+}
+.calendar-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    text-align: center;
+}
+.calendar-stat-item {
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    border-right: 1px solid rgba(255,255,255,0.08);
+}
+.calendar-stat-item:last-child { border-right: none; }
+.calendar-stat-num {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    font-family: 'Playfair Display', serif;
+    line-height: 1;
+}
+.calendar-stat-lbl {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+@media (max-width: 640px) {
+    .calendar-stats-grid { grid-template-columns: 1fr 1fr; }
+    .calendar-stat-item { border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .calendar-stat-item:nth-child(even) { border-right: none; }
+    .calendar-stat-item:nth-last-child(-n+2) { border-bottom: none; }
+}
+
+/* ═══ AUTH ALERT BANNER ═══ */
+.cal-auth-banner {
+    background: linear-gradient(90deg, rgba(204,164,59,0.1), rgba(204,164,59,0.05));
+    border: 1px solid rgba(204,164,59,0.25);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+}
+.cal-auth-banner-text {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-main);
+}
+.cal-auth-banner-text i { color: var(--accent-color); font-size: 1.1rem; flex-shrink: 0; }
+.cal-auth-link { font-weight: 600; color: var(--accent-color); text-decoration: underline; }
+
+/* ═══ SECTION TABS ═══ */
+.calendar-tabs {
+    display: flex;
+    gap: 0;
+    background: #f1f5f9;
+    border-radius: 50px;
+    padding: 4px;
+    width: fit-content;
+    margin-bottom: 2.5rem;
+}
+.cal-tab {
+    padding: 0.6rem 1.75rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.cal-tab.active {
+    background: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 2px 10px rgba(15,23,42,0.2);
+}
+.cal-tab .tab-count {
+    font-size: 0.72rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 50px;
+    font-weight: 700;
+    background: rgba(255,255,255,0.2);
+}
+.cal-tab:not(.active) .tab-count { background: rgba(15,23,42,0.08); }
+
+/* ═══ EXPO SECTIONS ═══ */
+.expos-section { display: none; }
+.expos-section.active { display: block; }
+
+/* ═══ EXPO CARDS GRID ═══ */
+.expo-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 1.75rem;
+}
+
+/* ─── Upcoming Expo Card ─── */
+.expo-card-pub {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(15,23,42,0.07);
+    border: 1px solid #e8edf4;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+.expo-card-pub:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(15,23,42,0.12);
+}
+
+.expo-card-image {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0f172a, #334155);
+    flex-shrink: 0;
+}
+.expo-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+.expo-card-pub:hover .expo-card-image img { transform: scale(1.05); }
+.expo-card-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+}
+.expo-card-image-placeholder i { font-size: 3rem; color: rgba(204,164,59,0.4); }
+
+/* Badges on image */
+.expo-status-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    padding: 0.3rem 0.85rem;
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    backdrop-filter: blur(8px);
+}
+.expo-status-badge.open  { background: rgba(34, 197, 94, 0.85); color: #fff; }
+.expo-status-badge.closed { background: rgba(100,116,139,0.85); color: #fff; }
+
+.expo-days-chip {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(15,23,42,0.75);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    padding: 0.3rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.expo-days-chip.urgent { background: rgba(220,38,38,0.8); }
+
+/* Card body */
+.expo-card-body {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.expo-card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.6rem;
+    line-height: 1.35;
+    font-family: 'Playfair Display', serif;
+}
+.expo-card-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+    flex: 1;
+}
+.expo-meta-grid { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.25rem; }
+.expo-meta-row { display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; color: var(--text-muted); }
+.expo-meta-row i { width: 16px; color: var(--accent-color); flex-shrink: 0; }
+.expo-meta-row strong { color: var(--text-main); font-weight: 600; }
+
+.expo-deadline-bar {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.expo-deadline-bar.urgent { background: rgba(220,38,38,0.05); border-color: rgba(220,38,38,0.2); }
+.expo-deadline-text { font-size: 0.8rem; color: var(--text-muted); }
+.expo-deadline-text strong { display: block; font-size: 0.9rem; color: var(--text-main); font-weight: 700; }
+.expo-deadline-text.urgent strong { color: #dc2626; }
+.expo-deadline-countdown {
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    border-radius: 50px;
+    white-space: nowrap;
+}
+.expo-deadline-countdown.open   { background: rgba(34,197,94,0.1);  color: #16a34a; }
+.expo-deadline-countdown.closed { background: rgba(100,116,139,0.1); color: #64748b; }
+
+/* Card footer */
+.expo-card-footer {
+    padding: 1rem 1.5rem 1.5rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+.btn-expo-primary {
+    flex: 1;
+    padding: 0.7rem 1.25rem;
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    text-decoration: none;
+}
+.btn-expo-primary:hover {
+    background: var(--primary-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(15,23,42,0.2);
+    color: #fff;
+}
+.btn-expo-primary.gold {
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+    color: var(--primary-color);
+}
+.btn-expo-primary.gold:hover { box-shadow: 0 4px 12px rgba(204,164,59,0.35); }
+.btn-expo-secondary {
+    padding: 0.7rem 1rem;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1.5px solid #e2e8f0;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.btn-expo-secondary:hover { border-color: var(--accent-color); color: var(--accent-color); }
+
+/* ═══ PAST EXPOS LIST ═══ */
+.past-expos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: #e8edf4;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(15,23,42,0.06);
+}
+.past-expo-row {
+    background: #fff;
+    padding: 1.25rem 1.75rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1.25rem;
+    align-items: center;
+    transition: background 0.2s ease;
+}
+.past-expo-row:hover { background: #f8fafc; }
+.past-expo-image {
+    width: 64px;
+    height: 64px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #1e3a5f, #334155);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.past-expo-image img { width: 100%; height: 100%; object-fit: cover; }
+.past-expo-image i { color: rgba(204,164,59,0.4); font-size: 1.5rem; }
+.past-expo-info h4 { font-size: 1rem; color: var(--primary-color); font-weight: 600; margin-bottom: 0.3rem; }
+.past-expo-meta { display: flex; flex-wrap: wrap; gap: 0.75rem; font-size: 0.8rem; color: var(--text-muted); }
+.past-expo-meta span { display: flex; align-items: center; gap: 0.3rem; }
+.past-expo-meta i { color: var(--accent-color); width: 12px; }
+.past-expo-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.25rem 0.7rem;
+    border-radius: 50px;
+    background: #f1f5f9;
+    color: var(--text-muted);
+    border: 1px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+/* ═══ EMPTY STATE ═══ */
+.cal-empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-muted); }
+.cal-empty-state i { font-size: 3rem; color: #cbd5e1; margin-bottom: 1rem; display: block; }
+.cal-empty-state h3 { font-size: 1.25rem; color: #94a3b8; margin-bottom: 0.5rem; }
+
+/* ═══ NON-AUTH CTA BOX ═══ */
+.cal-signup-cta {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #1e3a5f 100%);
+    border-radius: 20px;
+    padding: 3rem;
+    text-align: center;
+    margin-top: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+.cal-signup-cta::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: rgba(204,164,59,0.06);
+    pointer-events: none;
+}
+.cal-signup-cta h3 { font-size: 1.75rem; color: #fff; margin-bottom: 0.75rem; }
+.cal-signup-cta p { color: rgba(255,255,255,0.7); font-size: 1rem; max-width: 480px; margin: 0 auto 1.75rem; }
+.cal-signup-cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+/* ═══ SECTION HEADING ═══ */
+.cal-section-heading { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.75rem; }
+.cal-section-heading h2 { font-size: 1.6rem; color: var(--primary-color); white-space: nowrap; }
+.cal-section-heading-line { flex: 1; height: 1px; background: linear-gradient(90deg, #e2e8f0, transparent); }
+.cal-section-count { background: var(--primary-color); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.65rem; border-radius: 50px; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 768px) {
+    .expo-cards-grid { grid-template-columns: 1fr; }
+    .past-expo-row { grid-template-columns: auto 1fr; }
+    .past-expo-badge { display: none; }
+    .calendar-tabs { flex-direction: column; align-items: stretch; border-radius: 12px; }
+    .cal-tab { border-radius: 8px; justify-content: center; }
+    .cal-signup-cta { padding: 2rem 1.5rem; }
+    .cal-signup-cta h3 { font-size: 1.4rem; }
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
+
+<!-- ═══ HERO (exact same pattern as buyers & producers) ═══ -->
 <div class="page-header header-calendar">
-    <div class="container">
+    <div class="container animate-fade-up" style="z-index:1; position:relative;">
+        <div class="calendar-hero-badge" data-i18n="calendar.eyebrow">🌍 Uluslararası Fuar Programı</div>
         <h1 data-i18n="calendar.title">Fuar Takvimi</h1>
-        <p data-i18n="calendar.subtitle">Katılacağımız uluslararası fuarlar.</p>
+        <p data-i18n="calendar.subtitle" style="font-size:1.15rem; opacity:0.9; max-width:620px; margin:1rem auto 0; font-weight:300;">
+            Katılacağımız uluslararası fuarları keşfedin ve bizi kiralayarak markanızı dünyaya tanıtın.
+        </p>
+        <div class="calendar-hero-actions">
+            <a href="{% url 'main:signup' %}" class="btn btn-secondary" data-i18n="calendar.hire_btn">Bizi Kiralayın</a>
+            <a href="{% url 'main:contact' %}" class="btn btn-outline-hero" data-i18n="calendar.cta_contact">Bize Ulaşın</a>
+        </div>
     </div>
 </div>
 
-<!-- Calendar Section -->
-<section class="section">
-    <div class="container animate-fade-up">
+<!-- ═══ STATS BAR (exact same pattern as buyers-stats-bar) ═══ -->
+<div class="calendar-stats-bar">
+    <div class="container calendar-stats-grid">
+        <div class="calendar-stat-item" data-animate>
+            <span class="calendar-stat-num">{{ upcoming_expos.count }}</span>
+            <span class="calendar-stat-lbl" data-i18n="calendar.stat_upcoming">Yaklaşan Fuar</span>
+        </div>
+        <div class="calendar-stat-item" data-animate>
+            <span class="calendar-stat-num">50+</span>
+            <span class="calendar-stat-lbl" data-i18n="calendar.stat_total">Yıllık Fuar</span>
+        </div>
+        <div class="calendar-stat-item" data-animate>
+            <span class="calendar-stat-num">30+</span>
+            <span class="calendar-stat-lbl" data-i18n="calendar.stat_countries">Ülke</span>
+        </div>
+        <div class="calendar-stat-item" data-animate>
+            <span class="calendar-stat-num">{{ past_expos.count }}</span>
+            <span class="calendar-stat-lbl" data-i18n="calendar.stat_past">Geçmiş Fuar</span>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ CALENDAR CONTENT ═══ -->
+<section class="section" style="padding-top: 3rem;">
+    <div class="container">
+
+        <!-- Auth alert -->
         {% if user.is_authenticated %}
-        <div class="alert alert-info mb-4">
-            <p>Fuarlara kayıt olmak için <a href="{% url 'main:dashboard_calendar' %}" class="alert-link">Dashboard
-                    Takvim</a> sayfasını ziyaret edin.</p>
+        <div class="cal-auth-banner">
+            <div class="cal-auth-banner-text">
+                <i class="fas fa-info-circle"></i>
+                <span>Bir fuara kaydolmak istiyorsanız <a href="{% url 'main:dashboard_calendar' %}" class="cal-auth-link">Dashboard Takvim</a> sayfasını ziyaret edin.</span>
+            </div>
+            <a href="{% url 'main:dashboard_calendar' %}" class="btn btn-secondary btn-sm">
+                <i class="fas fa-calendar-check"></i>&nbsp; Fuarlara Kayıt Ol
+            </a>
         </div>
         {% endif %}
 
-        <h2 class="mb-4">Yaklaşan Fuarlar</h2>
-        {% if upcoming_expos %}
-        <div style="overflow-x: auto;">
-            <table class="calendar-table">
-                <thead>
-                    <tr>
-                        <th data-i18n="calendar.col_event">Etkinlik</th>
-                        <th data-i18n="calendar.col_date">Tarih</th>
-                        <th data-i18n="calendar.col_location">Konum</th>
-                        <th data-i18n="calendar.col_registration">Kayıt Son Tarihi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for expo in upcoming_expos %}
-                    <tr>
-                        <td>
-                            <strong>{{ expo.title_tr }}</strong>
-                            {% if expo.image %}
-                            <br><img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}"
-                                style="max-width: 100px; margin-top: 5px;">
-                            {% endif %}
-                        </td>
-                        <td>{{ expo.start_date|date:"d M Y" }} - {{ expo.end_date|date:"d M Y" }}</td>
-                        <td>{{ expo.location_tr }}</td>
-                        <td>{{ expo.registration_deadline|date:"d M Y" }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <!-- Tabs -->
+        <div class="calendar-tabs" role="tablist">
+            <button class="cal-tab active" role="tab" id="tab-upcoming" onclick="switchTab('upcoming', this)">
+                <i class="fas fa-calendar-alt"></i>
+                <span data-i18n="calendar.tab_upcoming">Yaklaşan Fuarlar</span>
+                <span class="tab-count">{{ upcoming_expos.count }}</span>
+            </button>
+            <button class="cal-tab" role="tab" id="tab-past" onclick="switchTab('past', this)">
+                <i class="fas fa-history"></i>
+                <span data-i18n="calendar.tab_past">Geçmiş Fuarlar</span>
+                <span class="tab-count">{{ past_expos.count }}</span>
+            </button>
         </div>
-        {% else %}
-        <p class="text-muted">Şu anda yaklaşan fuar bulunmamaktadır.</p>
-        {% endif %}
 
-        {% if past_expos %}
-        <h2 class="mt-5 mb-4">Geçmiş Fuarlar</h2>
-        <div style="overflow-x: auto;">
-            <table class="calendar-table">
-                <thead>
-                    <tr>
-                        <th data-i18n="calendar.col_event">Etkinlik</th>
-                        <th data-i18n="calendar.col_date">Tarih</th>
-                        <th data-i18n="calendar.col_location">Konum</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for expo in past_expos %}
-                    <tr>
-                        <td>
-                            <strong>{{ expo.title_tr }}</strong>
-                            {% if expo.image %}
-                            <br><img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}"
-                                style="max-width: 100px; margin-top: 5px;">
+        <!-- ─── UPCOMING EXPOS ─── -->
+        <div class="expos-section active" id="section-upcoming">
+            {% if upcoming_expos %}
+            <div class="expo-cards-grid">
+                {% for expo in upcoming_expos %}
+                <article class="expo-card-pub" data-animate>
+                    <div class="expo-card-image">
+                        {% if expo.image %}
+                        <img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}" loading="lazy">
+                        {% else %}
+                        <div class="expo-card-image-placeholder">
+                            <i class="fas fa-globe-europe"></i>
+                        </div>
+                        {% endif %}
+
+                        {% if expo.is_registration_open %}
+                        <span class="expo-status-badge open" data-i18n="calendar.badge_open">Kayıt Açık</span>
+                        {% else %}
+                        <span class="expo-status-badge closed" data-i18n="calendar.badge_closed">Kayıt Kapalı</span>
+                        {% endif %}
+
+                        <span class="expo-days-chip" id="countdown-{{ expo.id }}"
+                              data-deadline="{{ expo.registration_deadline|date:'Y-m-d' }}">
+                            <i class="fas fa-clock"></i>
+                            <span>…</span>
+                        </span>
+                    </div>
+
+                    <div class="expo-card-body">
+                        <h3 class="expo-card-title">{{ expo.title_tr }}</h3>
+                        {% if expo.description_tr %}
+                        <p class="expo-card-desc">{{ expo.description_tr|truncatewords:22 }}</p>
+                        {% endif %}
+
+                        <div class="expo-meta-grid">
+                            <div class="expo-meta-row">
+                                <i class="fas fa-calendar"></i>
+                                <span><strong>{{ expo.start_date|date:"d M Y" }}</strong> – {{ expo.end_date|date:"d M Y" }}</span>
+                            </div>
+                            <div class="expo-meta-row">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>{{ expo.location_tr }}</span>
+                            </div>
+                        </div>
+
+                        <div class="expo-deadline-bar {% if not expo.is_registration_open %}urgent{% endif %}">
+                            <div class="expo-deadline-text {% if not expo.is_registration_open %}urgent{% endif %}">
+                                <span data-i18n="calendar.reg_deadline">Kayıt Son Tarihi</span>
+                                <strong>{{ expo.registration_deadline|date:"d M Y" }}</strong>
+                            </div>
+                            {% if expo.is_registration_open %}
+                            <span class="expo-deadline-countdown open" data-i18n="calendar.reg_open">Aktif</span>
+                            {% else %}
+                            <span class="expo-deadline-countdown closed" data-i18n="calendar.reg_closed">Süre Doldu</span>
                             {% endif %}
-                        </td>
-                        <td>{{ expo.start_date|date:"d M Y" }} - {{ expo.end_date|date:"d M Y" }}</td>
-                        <td>{{ expo.location_tr }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        </div>
+                    </div>
+
+                    <div class="expo-card-footer">
+                        {% if user.is_authenticated %}
+                            {% if expo.is_registration_open %}
+                            <a href="{% url 'main:dashboard_calendar' %}" class="btn-expo-primary gold">
+                                <i class="fas fa-handshake"></i>
+                                <span data-i18n="calendar.hire_btn">Bizi Kiralayın</span>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'main:dashboard_calendar' %}" class="btn-expo-primary">
+                                <i class="fas fa-eye"></i>
+                                <span>Detayı Gör</span>
+                            </a>
+                            {% endif %}
+                        {% else %}
+                            {% if expo.is_registration_open %}
+                            <a href="{% url 'main:signup' %}" class="btn-expo-primary gold">
+                                <i class="fas fa-handshake"></i>
+                                <span data-i18n="calendar.hire_btn">Bizi Kiralayın</span>
+                            </a>
+                            <a href="{% url 'main:login' %}" class="btn-expo-secondary">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span data-i18n="calendar.login_btn">Giriş</span>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'main:signup' %}" class="btn-expo-primary">
+                                <i class="fas fa-user-plus"></i>
+                                <span data-i18n="calendar.register_cta">Kayıt Ol</span>
+                            </a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="cal-empty-state">
+                <i class="fas fa-calendar-times"></i>
+                <h3 data-i18n="calendar.no_upcoming">Şu anda yaklaşan fuar bulunmamaktadır.</h3>
+                <p>Yeni fuarlar eklendiğinde burada görüntülenecektir.</p>
+            </div>
+            {% endif %}
+
+            {% if not user.is_authenticated %}
+            <div class="cal-signup-cta" data-animate>
+                <h3 data-i18n="calendar.cta_title">Ürünlerinizi Fuarlarda Sergileyin</h3>
+                <p data-i18n="calendar.cta_desc">Made in İzmir üyesi olun; fuarlara ürünlerinizi gönderin, biz sizin yerinize temsil edelim. Kayıt tamamen ücretsizdir.</p>
+                <div class="cal-signup-cta-btns">
+                    <a href="{% url 'main:signup' %}" class="btn btn-secondary">
+                        <i class="fas fa-user-plus"></i>&nbsp; Ücretsiz Kayıt Ol
+                    </a>
+                    <a href="{% url 'main:contact' %}" class="btn btn-outline-light">
+                        <i class="fas fa-envelope"></i>&nbsp; Bize Ulaşın
+                    </a>
+                </div>
+            </div>
+            {% endif %}
         </div>
-        {% endif %}
+
+        <!-- ─── PAST EXPOS ─── -->
+        <div class="expos-section" id="section-past">
+            {% if past_expos %}
+            <div class="past-expos-list">
+                {% for expo in past_expos %}
+                <div class="past-expo-row" data-animate>
+                    <div class="past-expo-image">
+                        {% if expo.image %}
+                        <img src="{{ expo.image.url }}" alt="{{ expo.title_tr }}">
+                        {% else %}
+                        <i class="fas fa-globe-europe"></i>
+                        {% endif %}
+                    </div>
+                    <div class="past-expo-info">
+                        <h4>{{ expo.title_tr }}</h4>
+                        <div class="past-expo-meta">
+                            <span><i class="fas fa-calendar"></i> {{ expo.start_date|date:"d M Y" }} – {{ expo.end_date|date:"d M Y" }}</span>
+                            <span><i class="fas fa-map-marker-alt"></i> {{ expo.location_tr }}</span>
+                        </div>
+                    </div>
+                    <span class="past-expo-badge" data-i18n="calendar.badge_past">Tamamlandı</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="cal-empty-state">
+                <i class="fas fa-history"></i>
+                <h3 data-i18n="calendar.no_past">Henüz geçmiş fuar bulunmamaktadır.</h3>
+            </div>
+            {% endif %}
+        </div>
+
     </div>
 </section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ── Tab switching ──
+function switchTab(tab, btn) {
+    document.querySelectorAll('.cal-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.expos-section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('section-' + tab).classList.add('active');
+}
+
+// ── Countdown chips ──
+function renderCountdown() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    document.querySelectorAll('[data-deadline]').forEach(chip => {
+        const parts = chip.dataset.deadline.split('-');
+        const deadline = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        const diff = Math.round((deadline - today) / (1000 * 60 * 60 * 24));
+        const span = chip.querySelector('span');
+
+        if (diff < 0) {
+            span.textContent = 'Süre Doldu';
+            chip.classList.add('urgent');
+        } else if (diff === 0) {
+            span.textContent = 'Son Gün!';
+            chip.classList.add('urgent');
+        } else if (diff <= 7) {
+            span.textContent = diff + ' Gün Kaldı';
+            chip.classList.add('urgent');
+        } else {
+            span.textContent = diff + ' Gün Kaldı';
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', renderCountdown);
+
+// ── Scroll-triggered fade-in ──
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add('is-visible'), i * 80);
+            observer.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
+</script>
 {% endblock %}

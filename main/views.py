@@ -7,8 +7,11 @@ from .models import Product, ProductTag, ProductRequest, Expo, ExpoSignup, UserP
 
 
 def index(request):
-    """Home page view"""
-    return render(request, 'index.html')
+    """Home page view - includes upcoming expos preview"""
+    from django.utils import timezone as tz
+    today = tz.now().date()
+    upcoming_expos = Expo.objects.filter(is_active=True, start_date__gte=today).order_by('start_date')[:3]
+    return render(request, 'index.html', {'upcoming_expos': upcoming_expos})
 
 
 def about(request):

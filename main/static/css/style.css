@@ -580,6 +580,185 @@ header.scrolled .lang-btn.active {
     border-bottom: none;
 }
 
+/* ── Homepage: Expo Preview Section ── */
+.expo-preview-section {
+    background: #f8fafc;
+}
+
+.expo-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.expo-preview-card {
+    background: var(--bg-surface);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+    border: 1px solid #e8edf4;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.expo-preview-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.11);
+}
+
+.expo-preview-img {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0f172a, #1e3a5f);
+    flex-shrink: 0;
+}
+
+.expo-preview-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.expo-preview-card:hover .expo-preview-img img {
+    transform: scale(1.05);
+}
+
+.expo-preview-img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.expo-preview-img-placeholder i {
+    font-size: 2.5rem;
+    color: rgba(204, 164, 59, 0.35);
+}
+
+.expo-preview-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.65rem;
+    border-radius: 50px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.expo-preview-badge.open {
+    background: rgba(34, 197, 94, 0.85);
+    color: #fff;
+}
+
+.expo-preview-badge.closed {
+    background: rgba(100, 116, 139, 0.8);
+    color: #fff;
+}
+
+.expo-preview-body {
+    padding: 1.25rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.expo-preview-body h3 {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    line-height: 1.35;
+}
+
+.expo-preview-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.expo-preview-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.expo-preview-meta i {
+    color: var(--accent-color);
+    width: 14px;
+    flex-shrink: 0;
+}
+
+.expo-preview-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin-top: 0.25rem;
+    flex: 1;
+}
+
+.expo-preview-deadline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    padding-top: 0.75rem;
+    border-top: 1px solid #f1f5f9;
+    margin-top: auto;
+}
+
+.expo-preview-deadline i {
+    color: var(--accent-color);
+    flex-shrink: 0;
+}
+
+.expo-preview-deadline strong {
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.expo-preview-footer {
+    text-align: center;
+    padding-top: 1rem;
+}
+
+.expo-preview-empty {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #94a3b8;
+    margin-bottom: 1.5rem;
+}
+
+.expo-preview-empty i {
+    font-size: 2.5rem;
+    color: #cbd5e1;
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+.expo-preview-empty p {
+    font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+    .expo-preview-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
 /* Footer */
 footer {
     background-color: var(--primary-color);
