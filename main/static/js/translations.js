@@ -589,8 +589,11 @@ const translations = {
             edit_profile: "Profili Düzenle",
             edit_profile_title: "Profili Düzenle",
             edit_profile_desc: "Profil bilgilerinizi güncelleyin. Değişiklikler yönetici onayından sonra aktif olacaktır.",
-            edit_note: "Not: Ad, soyad, kullanıcı adı ve e-posta adresi değiştirilemez. Diğer bilgilerinizi güncelleyebilirsiniz.",
+            edit_note: "Firma bilgileri ve sektör tercihlerinizi güncelleyebilirsiniz. Değişiklikler yönetici onayından sonra aktif olur.",
+            edit_note_title: "Bilgi Güncelleme",
             cannot_change: "Değiştirilemez",
+            editable_note: "Düzenlenebilir",
+            personal_info_subtitle: "Bu bilgiler değiştirilemez.",
             save_changes: "Değişiklikleri Kaydet"
         },
         dashboard: {
@@ -1310,8 +1313,11 @@ const translations = {
             edit_profile: "Edit Profile",
             edit_profile_title: "Edit Profile",
             edit_profile_desc: "Update your profile information. Changes will be active after admin approval.",
-            edit_note: "Note: First name, last name, username and email address cannot be changed. You can update your other information.",
+            edit_note: "You can update your company info and sector preferences. Changes will be active after admin approval.",
+            edit_note_title: "Update Information",
             cannot_change: "Cannot be changed",
+            editable_note: "Editable",
+            personal_info_subtitle: "These fields cannot be changed.",
             save_changes: "Save Changes"
         },
         dashboard: {
