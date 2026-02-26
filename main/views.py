@@ -19,9 +19,9 @@ def about(request):
     return render(request, 'about.html')
 
 
-def neden_izmir(request):
+def why_izmir(request):
     """Why Izmir page view"""
-    return render(request, 'neden_izmir.html')
+    return render(request, 'why_izmir.html')
 
 
 def producers(request):
