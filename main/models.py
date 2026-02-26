@@ -24,7 +24,10 @@ class SignupRequest(models.Model):
     phone_number = models.CharField(max_length=20)
     country = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
-    
+    open_address = models.TextField(blank=True, null=True)
+    website = models.URLField(max_length=255, blank=True, null=True)
+    about_company = models.TextField(blank=True, null=True)
+
     # User type
     is_buyer = models.BooleanField(default=False)
     is_producer = models.BooleanField(default=False)
@@ -215,7 +218,10 @@ class UserProfile(models.Model):
     phone_number = models.CharField(max_length=20, verbose_name="Telefon Numarası")
     country = models.CharField(max_length=100, verbose_name="Ülke")
     city = models.CharField(max_length=100, verbose_name="Şehir")
-    
+    open_address = models.TextField(blank=True, null=True, verbose_name="Açık Adres")
+    website = models.URLField(max_length=255, blank=True, null=True, verbose_name="Web Sitesi")
+    about_company = models.TextField(blank=True, null=True, verbose_name="Firma Hakkında")
+
     # User type (can be both)
     is_buyer = models.BooleanField(default=False, verbose_name="Alıcı")
     is_producer = models.BooleanField(default=False, verbose_name="Üretici")

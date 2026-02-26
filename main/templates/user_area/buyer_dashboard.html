@@ -136,7 +136,7 @@
         </div>
     </div>
 
-    <!-- Search Bar — shares the same form via JS submit -->
+    <!-- Search Bar - shares the same form via JS submit -->
     <div class="search-bar-container">
         <div class="search-form-wrapper">
             <div class="search-input-wrapper">
@@ -244,7 +244,7 @@
     </div>
 
     {% else %}
-    <!-- Empty State — differentiate between filtered and unfiltered -->
+    <!-- Empty State - differentiate between filtered and unfiltered -->
     <div class="empty-state">
         {% if current_filters.sector or current_filters.tag or current_filters.producer or search_query %}
         <i class="fas fa-search"></i>
@@ -264,7 +264,7 @@
 </div>
 
 <script>
-// Search form integration — submits to the shared filter form
+// Search form integration - submits to the shared filter form
 (function () {
     var searchInput = document.getElementById('search-input');
     var searchBtn = document.getElementById('search-btn');

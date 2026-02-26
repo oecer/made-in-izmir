@@ -1644,6 +1644,7 @@ header.scrolled .btn-signup-nav {
 
 .conditional-fields.active {
     display: block;
+    margin-bottom: 1.5rem;
     animation: slideDown 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

@@ -168,12 +168,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.country.id_for_label }}">
-                        <span data-i18n="signup.country">Ülke</span> <span class="required">*</span>
+                    <label for="{{ form.open_address.id_for_label }}">
+                        <span data-i18n="signup.open_address">Açık Adres</span>
                     </label>
-                    {{ form.country }}
-                    {% if form.country.errors %}
-                    <div class="error-message">{{ form.country.errors.0 }}</div>
+                    {{ form.open_address }}
+                    {% if form.open_address.errors %}
+                    <div class="error-message">{{ form.open_address.errors.0 }}</div>
                     {% endif %}
                 </div>
 
@@ -184,6 +184,36 @@
                     {{ form.city }}
                     {% if form.city.errors %}
                     <div class="error-message">{{ form.city.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.country.id_for_label }}">
+                        <span data-i18n="signup.country">Ülke</span> <span class="required">*</span>
+                    </label>
+                    {{ form.country }}
+                    {% if form.country.errors %}
+                    <div class="error-message">{{ form.country.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.website.id_for_label }}">
+                        <span data-i18n="signup.website">Web Sitesi</span>
+                    </label>
+                    {{ form.website }}
+                    {% if form.website.errors %}
+                    <div class="error-message">{{ form.website.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.about_company.id_for_label }}">
+                        <span data-i18n="signup.about_company">Firma Hakkında</span>
+                    </label>
+                    {{ form.about_company }}
+                    {% if form.about_company.errors %}
+                    <div class="error-message">{{ form.about_company.errors.0 }}</div>
                     {% endif %}
                 </div>
             </div>
@@ -202,6 +232,32 @@
                     </label>
                 </div>
 
+                <!-- Buyer-specific fields -->
+                <div id="buyerFields" class="conditional-fields">
+                    <h4 style="margin-bottom: 1rem;" data-i18n="signup.buyer_info">Alıcı Bilgileri</h4>
+
+                    <div class="form-group">
+                        <label for="{{ form.buyer_interested_sectors.id_for_label }}">
+                            <span data-i18n="signup.buyer_sectors">İlgilenilen Sektörler</span> <span class="required">*</span>
+                        </label>
+                        {{ form.buyer_interested_sectors }}
+                        <small style="color: #666;" data-i18n="signup.buyer_sectors_help">Virgülle ayırarak yazın (örn: Tekstil, Gıda, Mermer)</small>
+                        {% if form.buyer_interested_sectors.errors %}
+                        <div class="error-message">{{ form.buyer_interested_sectors.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.buyer_quarterly_volume.id_for_label }}">
+                            <span data-i18n="signup.buyer_volume">Çeyreklik Alım Hacmi (USD)</span> <span class="required">*</span>
+                        </label>
+                        {{ form.buyer_quarterly_volume }}
+                        {% if form.buyer_quarterly_volume.errors %}
+                        <div class="error-message">{{ form.buyer_quarterly_volume.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
                 <div class="form-check user-type-box">
                     {{ form.is_producer }}
                     <label class="form-check-label" for="{{ form.is_producer.id_for_label }}">
@@ -209,75 +265,44 @@
                     </label>
                 </div>
 
+                <!-- Producer-specific fields -->
+                <div id="producerFields" class="conditional-fields">
+                    <h4 style="margin-bottom: 1rem;" data-i18n="signup.producer_info">Üretici Bilgileri</h4>
+
+                    <div class="form-group">
+                        <label for="{{ form.producer_sectors.id_for_label }}">
+                            <span data-i18n="signup.producer_sector">Sektörler</span> <span class="required">*</span>
+                        </label>
+                        {{ form.producer_sectors }}
+                        {% if form.producer_sectors.errors %}
+                        <div class="error-message">{{ form.producer_sectors.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.producer_quarterly_sales.id_for_label }}">
+                            <span data-i18n="signup.producer_sales">Çeyreklik Satış Hacmi (USD)</span> <span class="required">*</span>
+                        </label>
+                        {{ form.producer_quarterly_sales }}
+                        {% if form.producer_quarterly_sales.errors %}
+                        <div class="error-message">{{ form.producer_quarterly_sales.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.producer_product_count.id_for_label }}">
+                            <span data-i18n="signup.producer_products">Yaklaşık Ürün Sayısı</span> <span class="required">*</span>
+                        </label>
+                        {{ form.producer_product_count }}
+                        {% if form.producer_product_count.errors %}
+                        <div class="error-message">{{ form.producer_product_count.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
                 {% if form.non_field_errors %}
                 <div class="non-field-error">{{ form.non_field_errors.0 }}</div>
                 {% endif %}
-            </div>
-
-            <!-- Buyer-specific fields -->
-            <div id="buyerFields" class="conditional-fields">
-                <h4 style="margin-bottom: 1rem;" data-i18n="signup.buyer_info">Alıcı Bilgileri</h4>
-
-                <div class="form-group">
-                    <label for="{{ form.buyer_interested_sectors.id_for_label }}">
-                        <span data-i18n="signup.buyer_sectors">İlgilenilen Sektörler</span> <span
-                            class="required">*</span>
-                    </label>
-                    {{ form.buyer_interested_sectors }}
-                    <small style="color: #666;" data-i18n="signup.buyer_sectors_help">Virgülle ayırarak yazın (örn:
-                        Tekstil, Gıda, Mermer)</small>
-                    {% if form.buyer_interested_sectors.errors %}
-                    <div class="error-message">{{ form.buyer_interested_sectors.errors.0 }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.buyer_quarterly_volume.id_for_label }}">
-                        <span data-i18n="signup.buyer_volume">Çeyreklik Alım Hacmi (USD)</span> <span
-                            class="required">*</span>
-                    </label>
-                    {{ form.buyer_quarterly_volume }}
-                    {% if form.buyer_quarterly_volume.errors %}
-                    <div class="error-message">{{ form.buyer_quarterly_volume.errors.0 }}</div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Producer-specific fields -->
-            <div id="producerFields" class="conditional-fields">
-                <h4 style="margin-bottom: 1rem;" data-i18n="signup.producer_info">Üretici Bilgileri</h4>
-
-                <div class="form-group">
-                    <label for="{{ form.producer_sectors.id_for_label }}">
-                        <span data-i18n="signup.producer_sector">Sektörler</span> <span class="required">*</span>
-                    </label>
-                    {{ form.producer_sectors }}
-                    {% if form.producer_sectors.errors %}
-                    <div class="error-message">{{ form.producer_sectors.errors.0 }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.producer_quarterly_sales.id_for_label }}">
-                        <span data-i18n="signup.producer_sales">Çeyreklik Satış Hacmi (USD)</span> <span
-                            class="required">*</span>
-                    </label>
-                    {{ form.producer_quarterly_sales }}
-                    {% if form.producer_quarterly_sales.errors %}
-                    <div class="error-message">{{ form.producer_quarterly_sales.errors.0 }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.producer_product_count.id_for_label }}">
-                        <span data-i18n="signup.producer_products">Yaklaşık Ürün Sayısı</span> <span
-                            class="required">*</span>
-                    </label>
-                    {{ form.producer_product_count }}
-                    {% if form.producer_product_count.errors %}
-                    <div class="error-message">{{ form.producer_product_count.errors.0 }}</div>
-                    {% endif %}
-                </div>
             </div>
 
             {% if consent_text %}

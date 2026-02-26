@@ -51,7 +51,7 @@
                     </label>
                     <div class="field-readonly">
                         <i class="fas fa-lock field-lock-icon"></i>
-                        <span class="field-readonly-value">{{ user.first_name|default:"—" }}</span>
+                        <span class="field-readonly-value">{{ user.first_name|default:"-" }}</span>
                     </div>
                 </div>
                 <div class="field-group">
@@ -60,7 +60,7 @@
                     </label>
                     <div class="field-readonly">
                         <i class="fas fa-lock field-lock-icon"></i>
-                        <span class="field-readonly-value">{{ user.last_name|default:"—" }}</span>
+                        <span class="field-readonly-value">{{ user.last_name|default:"-" }}</span>
                     </div>
                 </div>
                 <div class="field-group">
@@ -496,7 +496,7 @@
         font-size: 0.92rem;
     }
 
-    /* Editable form controls — override Django-rendered */
+    /* Editable form controls - override Django-rendered */
     .profile-edit-form .form-control,
     .profile-edit-form input[type="text"],
     .profile-edit-form input[type="email"],

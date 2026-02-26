@@ -81,7 +81,37 @@ class SignUpForm(UserCreationForm):
         }),
         label='Şehir'
     )
-    
+    open_address = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'placeholder': 'Sokak, Mahalle, Posta Kodu…',
+            'data-i18n-placeholder': 'signup.open_address',
+            'rows': 3,
+        }),
+        label='Açık Adres'
+    )
+    website = forms.URLField(
+        max_length=255,
+        required=False,
+        widget=forms.URLInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'https://firmaniz.com',
+            'data-i18n-placeholder': 'signup.website'
+        }),
+        label='Web Sitesi'
+    )
+    about_company = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'placeholder': 'Firmanız hakkında kısa bir açıklama…',
+            'data-i18n-placeholder': 'signup.about_company',
+            'rows': 4,
+        }),
+        label='Firma Hakkında'
+    )
+
     # User type
     is_buyer = forms.BooleanField(
         required=False,
@@ -226,6 +256,9 @@ class SignUpForm(UserCreationForm):
                 phone_number=self.cleaned_data['phone_number'],
                 country=self.cleaned_data['country'],
                 city=self.cleaned_data['city'],
+                open_address=self.cleaned_data.get('open_address') or '',
+                website=self.cleaned_data.get('website') or '',
+                about_company=self.cleaned_data.get('about_company') or '',
                 is_buyer=self.cleaned_data['is_buyer'],
                 is_producer=self.cleaned_data['is_producer'],
                 buyer_interested_sectors_ids=buyer_sector_ids,
