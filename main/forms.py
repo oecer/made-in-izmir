@@ -390,48 +390,48 @@ class ProfileEditForm(forms.Form):
         self.fields['buyer_interested_sectors'].label_from_instance = lambda obj: f"{obj.name_tr} | {obj.name_en}"
         self.fields['producer_sectors'].label_from_instance = lambda obj: f"{obj.name_tr} | {obj.name_en}"
         
-        # Pre-populate fields with current user data if available
-        if self.user and hasattr(self.user, 'profile'):
-            profile = self.user.profile
+        # Pre-populate fields with current tenant data if available
+        if self.user and hasattr(self.user, 'profile') and self.user.profile.tenant:
+            tenant = self.user.profile.tenant
             if not self.is_bound:  # Only set initial values if form is not bound
-                self.fields['company_name'].initial = profile.company_name
-                self.fields['phone_number'].initial = profile.phone_number
-                self.fields['country'].initial = profile.country
-                self.fields['city'].initial = profile.city
-                
-                if profile.is_buyer:
-                    self.fields['buyer_interested_sectors'].initial = profile.buyer_interested_sectors.all()
-                    self.fields['buyer_quarterly_volume'].initial = profile.buyer_quarterly_volume
-                
-                if profile.is_producer:
-                    self.fields['producer_sectors'].initial = profile.producer_sectors.all()
-                    self.fields['producer_quarterly_sales'].initial = profile.producer_quarterly_sales
-                    self.fields['producer_product_count'].initial = profile.producer_product_count
+                self.fields['company_name'].initial = tenant.company_name
+                self.fields['phone_number'].initial = tenant.phone_number
+                self.fields['country'].initial = tenant.country
+                self.fields['city'].initial = tenant.city
+
+                if tenant.is_buyer:
+                    self.fields['buyer_interested_sectors'].initial = tenant.buyer_interested_sectors.all()
+                    self.fields['buyer_quarterly_volume'].initial = tenant.buyer_quarterly_volume
+
+                if tenant.is_producer:
+                    self.fields['producer_sectors'].initial = tenant.producer_sectors.all()
+                    self.fields['producer_quarterly_sales'].initial = tenant.producer_quarterly_sales
+                    self.fields['producer_product_count'].initial = tenant.producer_product_count
     
     def clean(self):
         cleaned_data = super().clean()
-        
-        if not self.user or not hasattr(self.user, 'profile'):
+
+        if not self.user or not hasattr(self.user, 'profile') or not self.user.profile.tenant:
             raise forms.ValidationError("Kullanıcı profili bulunamadı.")
-        
-        profile = self.user.profile
-        
-        # Validate buyer fields if user is a buyer
-        if profile.is_buyer:
+
+        tenant = self.user.profile.tenant
+
+        # Validate buyer fields if tenant is a buyer
+        if tenant.is_buyer:
             if not cleaned_data.get('buyer_interested_sectors'):
                 self.add_error('buyer_interested_sectors', 'Alıcı olarak bu alan zorunludur.')
             if not cleaned_data.get('buyer_quarterly_volume'):
                 self.add_error('buyer_quarterly_volume', 'Alıcı olarak bu alan zorunludur.')
-        
-        # Validate producer fields if user is a producer
-        if profile.is_producer:
+
+        # Validate producer fields if tenant is a producer
+        if tenant.is_producer:
             if not cleaned_data.get('producer_sectors'):
                 self.add_error('producer_sectors', 'Üretici olarak bu alan zorunludur.')
             if not cleaned_data.get('producer_quarterly_sales'):
                 self.add_error('producer_quarterly_sales', 'Üretici olarak bu alan zorunludur.')
             if not cleaned_data.get('producer_product_count'):
                 self.add_error('producer_product_count', 'Üretici olarak bu alan zorunludur.')
-        
+
         return cleaned_data
     
     def save(self, commit=True):
@@ -549,9 +549,9 @@ class ProductForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         
-        # Filter sectors based on user's profile
-        if user and hasattr(user, 'profile'):
-            self.fields['sector'].queryset = user.profile.producer_sectors.all()
+        # Filter sectors based on user's tenant
+        if user and hasattr(user, 'profile') and user.profile.tenant:
+            self.fields['sector'].queryset = user.profile.tenant.producer_sectors.all()
         else:
             # Fallback to all sectors if no user provided
             from .models import Sector
@@ -643,10 +643,10 @@ class ExpoSignupForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         
-        # Filter products to only show user's own products
-        if user:
+        # Filter products to show all tenant products
+        if user and hasattr(user, 'profile') and user.profile.tenant:
             self.fields['selected_products'].queryset = Product.objects.filter(
-                producer=user,
+                tenant=user.profile.tenant,
                 is_active=True
             )
         else:

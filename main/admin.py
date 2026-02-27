@@ -2,8 +2,57 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib import messages
-from django.utils.html import format_html
-from .models import UserProfile, SignupRequest, Sector, ProductTag, Product, ProductRequest, Expo, ExpoSignup, ProfileEditRequest, MembershipConsent, ConsentText
+from django.utils.html import format_html, mark_safe
+from .models import Tenant, UserProfile, SignupRequest, SignupRequestHistory, Sector, ProductTag, Product, ProductRequest, Expo, ExpoSignup, ProfileEditRequest, MembershipConsent, ConsentText
+
+
+class SignupRequestHistoryInline(admin.TabularInline):
+    """Read-only inline showing field-level change history for a SignupRequest."""
+    model = SignupRequestHistory
+    extra = 0
+    can_delete = False
+    show_change_link = False
+    readonly_fields = ('changed_at', 'changed_by', 'changes_display')
+    fields = ('changed_at', 'changed_by', 'changes_display')
+    ordering = ('-changed_at',)
+    verbose_name = "Değişiklik Kaydı"
+    verbose_name_plural = "Değişiklik Geçmişi"
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def changes_display(self, obj):
+        if not obj.changes:
+            return '-'
+        rows = []
+        for entry in obj.changes:
+            label = entry.get('label') or entry.get('field', '')
+            old_val = entry.get('old', '')
+            new_val = entry.get('new', '')
+            rows.append(
+                format_html(
+                    '<tr>'
+                    '<td style="padding:4px 10px;font-weight:600;color:#374151;">{}</td>'
+                    '<td style="padding:4px 10px;color:#dc2626;text-decoration:line-through;">{}</td>'
+                    '<td style="padding:4px 10px;color:#374151;">→</td>'
+                    '<td style="padding:4px 10px;color:#16a34a;">{}</td>'
+                    '</tr>',
+                    label, old_val, new_val,
+                )
+            )
+        header = mark_safe(
+            '<table style="border-collapse:collapse;font-size:0.88rem;">'
+            '<thead><tr>'
+            '<th style="padding:4px 10px;text-align:left;color:#6b7280;">Alan</th>'
+            '<th style="padding:4px 10px;text-align:left;color:#6b7280;">Eski Değer</th>'
+            '<th style="padding:4px 10px;"></th>'
+            '<th style="padding:4px 10px;text-align:left;color:#6b7280;">Yeni Değer</th>'
+            '</tr></thead><tbody>'
+        )
+        footer = mark_safe('</tbody></table>')
+        return header + mark_safe('').join(rows) + footer
+
+    changes_display.short_description = "Değişiklikler"
 
 
 @admin.register(SignupRequest)
@@ -18,6 +67,7 @@ class SignupRequestAdmin(admin.ModelAdmin):
         'created_at', 'updated_at', 'reviewed_by', 'reviewed_at', 'password_hash',
         'buyer_interested_sectors_display', 'producer_sectors_display',
         'consent_given', 'consent_timestamp', 'consent_ip',
+        'username', 'email',
     )
     
     fieldsets = (
@@ -28,7 +78,7 @@ class SignupRequestAdmin(admin.ModelAdmin):
             'fields': ('username', 'email', 'first_name', 'last_name', 'password_hash')
         }),
         ('Company Information', {
-            'fields': ('company_name', 'phone_number', 'country', 'city')
+            'fields': ('company_name', 'phone_number', 'country', 'city', 'open_address', 'website', 'about_company')
         }),
         ('User Type', {
             'fields': ('is_buyer', 'is_producer')
@@ -48,8 +98,31 @@ class SignupRequestAdmin(admin.ModelAdmin):
         }),
     )
     
+    inlines = [SignupRequestHistoryInline]
     actions = ['approve_signups', 'reject_signups']
-    
+
+    # Human-readable labels for tracked fields
+    _TRACKED_FIELDS = {
+        'first_name': 'Ad',
+        'last_name': 'Soyad',
+        'company_name': 'Firma Adı',
+        'phone_number': 'Telefon',
+        'country': 'Ülke',
+        'city': 'Şehir',
+        'open_address': 'Açık Adres',
+        'website': 'Web Sitesi',
+        'about_company': 'Firma Hakkında',
+        'is_buyer': 'Alıcı',
+        'is_producer': 'Üretici',
+        'buyer_interested_sectors_ids': 'İlgilenilen Sektör ID\'leri',
+        'buyer_quarterly_volume': 'Çeyreklik Alım Hacmi',
+        'producer_sectors_ids': 'Sektör ID\'leri',
+        'producer_quarterly_sales': 'Çeyreklik Satış Hacmi',
+        'producer_product_count': 'Ürün Sayısı',
+        'status': 'Durum',
+        'rejection_reason': 'Red Nedeni',
+    }
+
     def buyer_interested_sectors_display(self, obj):
         """Display buyer interested sectors"""
         sectors = obj.get_buyer_sectors()
@@ -67,28 +140,28 @@ class SignupRequestAdmin(admin.ModelAdmin):
     producer_sectors_display.short_description = 'Sektörler'
     
     def get_readonly_fields(self, request, obj=None):
-        """Make all fields readonly except status and rejection_reason for pending requests"""
-        if obj and obj.status == 'pending':
-            return ('created_at', 'updated_at', 'reviewed_by', 'reviewed_at', 'password_hash',
-                    'username', 'email', 'first_name', 'last_name', 'company_name', 
-                    'phone_number', 'country', 'city', 'is_buyer', 'is_producer',
-                    'buyer_interested_sectors_ids', 'buyer_interested_sectors_display', 'buyer_quarterly_volume',
-                    'producer_sectors_ids', 'producer_sectors_display', 'producer_quarterly_sales', 'producer_product_count')
-        return ('created_at', 'updated_at', 'reviewed_by', 'reviewed_at', 'password_hash',
-                'buyer_interested_sectors_display', 'producer_sectors_display',
-                'username', 'email', 'first_name', 'last_name', 'company_name', 
-                'phone_number', 'country', 'city', 'is_buyer', 'is_producer',
-                'buyer_interested_sectors_ids', 'buyer_quarterly_volume',
-                'producer_sectors_ids', 'producer_quarterly_sales', 'producer_product_count')
+        """Keep metadata/consent/audit fields readonly; everything else is editable"""
+        return (
+            'created_at', 'updated_at', 'reviewed_by', 'reviewed_at', 'password_hash',
+            'username', 'email',
+            'buyer_interested_sectors_display', 'producer_sectors_display',
+            'consent_given', 'consent_timestamp', 'consent_ip',
+        )
     
     def save_model(self, request, obj, form, change):
-        """Handle status changes from the admin change form"""
+        """Handle status changes from the admin change form and record field-level history."""
+        # Capture old values before saving (only for existing objects)
+        old_instance = None
+        if change and obj.pk:
+            try:
+                old_instance = SignupRequest.objects.get(pk=obj.pk)
+            except SignupRequest.DoesNotExist:
+                pass
+
         # If status is changing to approved, run approval logic
         if change and 'status' in form.changed_data and obj.status == 'approved':
             try:
-                # Check previous status from DB
-                old_instance = SignupRequest.objects.get(pk=obj.pk)
-                if old_instance.status == 'pending':
+                if old_instance and old_instance.status == 'pending':
                     self._process_approval(request, obj)
             except Exception as e:
                 # Revert status if failed
@@ -96,32 +169,48 @@ class SignupRequestAdmin(admin.ModelAdmin):
                 obj.reviewed_by = None
                 obj.reviewed_at = None
                 messages.error(request, f"Onay işlemi başarısız oldu: {str(e)}")
-        
+
         super().save_model(request, obj, form, change)
 
+        # Record history for any changed tracked fields
+        if change and old_instance and form.changed_data:
+            changed_entries = []
+            for field in form.changed_data:
+                if field not in self._TRACKED_FIELDS:
+                    continue
+                label = self._TRACKED_FIELDS[field]
+                old_val = getattr(old_instance, field, '')
+                new_val = getattr(obj, field, '')
+                # Normalize None / empty
+                old_str = str(old_val) if old_val not in (None, '') else '—'
+                new_str = str(new_val) if new_val not in (None, '') else '—'
+                if old_str != new_str:
+                    changed_entries.append({
+                        'field': field,
+                        'label': label,
+                        'old': old_str,
+                        'new': new_str,
+                    })
+            if changed_entries:
+                SignupRequestHistory.objects.create(
+                    signup_request=obj,
+                    changed_by=request.user,
+                    changes=changed_entries,
+                )
+
     def _process_approval(self, request, signup_request):
-        """Helper to create User and Profile - NO SAVE"""
+        """Helper to create Tenant, User and Profile - NO SAVE"""
         from django.db import transaction
-        
+
         # Check uniqueness
         if User.objects.filter(username=signup_request.username).exists():
             raise ValueError(f"Username '{signup_request.username}' already exists")
-        
+
         if User.objects.filter(email=signup_request.email).exists():
             raise ValueError(f"Email '{signup_request.email}' already exists")
-            
-        # Create user
-        user = User.objects.create(
-            username=signup_request.username,
-            email=signup_request.email,
-            first_name=signup_request.first_name,
-            last_name=signup_request.last_name,
-            password=signup_request.password_hash
-        )
-        
-        # Create user profile
-        profile = UserProfile.objects.create(
-            user=user,
+
+        # Create tenant
+        tenant = Tenant.objects.create(
             company_name=signup_request.company_name,
             phone_number=signup_request.phone_number,
             country=signup_request.country,
@@ -133,20 +222,32 @@ class SignupRequestAdmin(admin.ModelAdmin):
             is_producer=signup_request.is_producer,
             buyer_quarterly_volume=signup_request.buyer_quarterly_volume,
             producer_quarterly_sales=signup_request.producer_quarterly_sales,
-            producer_product_count=signup_request.producer_product_count
+            producer_product_count=signup_request.producer_product_count,
         )
-        
-        # Add sectors
+
+        # Set M2M sectors on tenant
         if signup_request.buyer_interested_sectors_ids:
             buyer_sectors = signup_request.get_buyer_sectors()
             if buyer_sectors.exists():
-                profile.buyer_interested_sectors.set(buyer_sectors)
-        
+                tenant.buyer_interested_sectors.set(buyer_sectors)
+
         if signup_request.producer_sectors_ids:
             producer_sectors = signup_request.get_producer_sectors()
             if producer_sectors.exists():
-                profile.producer_sectors.set(producer_sectors)
-        
+                tenant.producer_sectors.set(producer_sectors)
+
+        # Create user
+        user = User.objects.create(
+            username=signup_request.username,
+            email=signup_request.email,
+            first_name=signup_request.first_name,
+            last_name=signup_request.last_name,
+            password=signup_request.password_hash
+        )
+
+        # Create user profile linked to tenant
+        UserProfile.objects.create(user=user, tenant=tenant)
+
         # Update request fields
         signup_request.reviewed_by = request.user
         signup_request.reviewed_at = timezone.now()
@@ -197,22 +298,19 @@ class SectorAdmin(admin.ModelAdmin):
     search_fields = ('name_tr', 'name_en')
 
 
-@admin.register(UserProfile)
-class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'company_name', 'country', 'city', 'is_buyer', 'is_producer', 'created_at')
-    list_filter = ('is_buyer', 'is_producer', 'country', 'created_at')
-    search_fields = ('user__username', 'user__email', 'company_name', 'phone_number')
+@admin.register(Tenant)
+class TenantAdmin(admin.ModelAdmin):
+    list_display = ('company_name', 'country', 'city', 'is_buyer', 'is_producer', 'member_count', 'created_at')
+    list_filter = ('is_buyer', 'is_producer', 'country')
+    search_fields = ('company_name', 'phone_number', 'city')
     readonly_fields = ('created_at', 'updated_at')
     filter_horizontal = ('buyer_interested_sectors', 'producer_sectors')
-    
+
     fieldsets = (
-        ('User', {
-            'fields': ('user',)
-        }),
         ('Company Information', {
-            'fields': ('company_name', 'phone_number', 'country', 'city')
+            'fields': ('company_name', 'phone_number', 'country', 'city', 'open_address', 'website', 'about_company')
         }),
-        ('User Type', {
+        ('Tenant Type', {
             'fields': ('is_buyer', 'is_producer')
         }),
         ('Buyer Information', {
@@ -228,6 +326,32 @@ class UserProfileAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+    def member_count(self, obj):
+        return obj.members.count()
+    member_count.short_description = 'Üye Sayısı'
+
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'get_tenant_name', 'created_at')
+    search_fields = ('user__username', 'user__email', 'tenant__company_name')
+    readonly_fields = ('created_at', 'updated_at')
+    raw_id_fields = ('tenant',)
+
+    fieldsets = (
+        ('User', {
+            'fields': ('user', 'tenant')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def get_tenant_name(self, obj):
+        return obj.tenant.company_name if obj.tenant else '-'
+    get_tenant_name.short_description = 'Firma'
 
 
 @admin.register(ProfileEditRequest)
@@ -270,8 +394,8 @@ class ProfileEditRequestAdmin(admin.ModelAdmin):
     
     def get_user_company(self, obj):
         """Display user's current company name"""
-        if hasattr(obj.user, 'profile'):
-            return obj.user.profile.company_name
+        if hasattr(obj.user, 'profile') and obj.user.profile.tenant:
+            return obj.user.profile.tenant.company_name
         return '-'
     get_user_company.short_description = 'Mevcut Firma'
     
@@ -327,35 +451,33 @@ class ProfileEditRequestAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
     
     def _process_approval(self, request, edit_request):
-        """Helper to update User and Profile"""
+        """Helper to update Tenant (company-level data)"""
         from django.db import transaction
-        
+
         user = edit_request.user
-        profile = user.profile
-        
-        # Note: first_name and last_name are not updated as they are not editable
-        
-        # Update Profile model
-        profile.company_name = edit_request.company_name
-        profile.phone_number = edit_request.phone_number
-        profile.country = edit_request.country
-        profile.city = edit_request.city
-        profile.buyer_quarterly_volume = edit_request.buyer_quarterly_volume
-        profile.producer_quarterly_sales = edit_request.producer_quarterly_sales
-        profile.producer_product_count = edit_request.producer_product_count
-        profile.save()
-        
-        # Update sectors
-        if profile.is_buyer and edit_request.buyer_interested_sectors_ids:
+        tenant = user.profile.tenant
+
+        # Update Tenant model (company-level data)
+        tenant.company_name = edit_request.company_name
+        tenant.phone_number = edit_request.phone_number
+        tenant.country = edit_request.country
+        tenant.city = edit_request.city
+        tenant.buyer_quarterly_volume = edit_request.buyer_quarterly_volume
+        tenant.producer_quarterly_sales = edit_request.producer_quarterly_sales
+        tenant.producer_product_count = edit_request.producer_product_count
+        tenant.save()
+
+        # Update sectors on tenant
+        if tenant.is_buyer and edit_request.buyer_interested_sectors_ids:
             buyer_sectors = edit_request.get_buyer_sectors()
             if buyer_sectors.exists():
-                profile.buyer_interested_sectors.set(buyer_sectors)
-        
-        if profile.is_producer and edit_request.producer_sectors_ids:
+                tenant.buyer_interested_sectors.set(buyer_sectors)
+
+        if tenant.is_producer and edit_request.producer_sectors_ids:
             producer_sectors = edit_request.get_producer_sectors()
             if producer_sectors.exists():
-                profile.producer_sectors.set(producer_sectors)
-        
+                tenant.producer_sectors.set(producer_sectors)
+
         # Update request fields
         edit_request.reviewed_by = request.user
         edit_request.reviewed_at = timezone.now()
@@ -405,7 +527,7 @@ class ProductRequestAdmin(admin.ModelAdmin):
         'get_title', 'producer', 'get_producer_company', 'status', 'created_at'
     )
     list_filter = ('status', 'created_at', 'is_active')
-    search_fields = ('title_tr', 'title_en', 'description_tr', 'description_en', 'producer__username', 'producer__profile__company_name')
+    search_fields = ('title_tr', 'title_en', 'description_tr', 'description_en', 'producer__username', 'tenant__company_name')
     readonly_fields = (
         'created_at', 'updated_at', 'reviewed_by', 'reviewed_at', 'tags_display',
         'photo1_preview', 'photo2_preview', 'photo3_preview'
@@ -447,8 +569,8 @@ class ProductRequestAdmin(admin.ModelAdmin):
     
     def get_producer_company(self, obj):
         """Display producer company name"""
-        if hasattr(obj.producer, 'profile'):
-            return obj.producer.profile.company_name
+        if hasattr(obj.producer, 'profile') and obj.producer.profile.tenant:
+            return obj.producer.profile.tenant.company_name
         return '-'
     get_producer_company.short_description = 'Firma'
     
@@ -508,10 +630,11 @@ class ProductRequestAdmin(admin.ModelAdmin):
     def _process_approval(self, request, product_request):
         """Helper to create Product from ProductRequest"""
         from django.db import transaction
-        
+
         # Create product
         product = Product.objects.create(
             producer=product_request.producer,
+            tenant=product_request.tenant,
             sector=product_request.sector,
             title_tr=product_request.title_tr,
             title_en=product_request.title_en,
@@ -660,7 +783,7 @@ class ExpoAdmin(admin.ModelAdmin):
 class ExpoSignupAdmin(admin.ModelAdmin):
     list_display = ('user', 'get_user_company', 'expo', 'product_count', 'uses_listed_products', 'status', 'created_at')
     list_filter = ('status', 'uses_listed_products', 'expo', 'created_at')
-    search_fields = ('user__username', 'user__email', 'user__profile__company_name', 'expo__title_tr', 'expo__title_en')
+    search_fields = ('user__username', 'user__email', 'tenant__company_name', 'expo__title_tr', 'expo__title_en')
     readonly_fields = ('created_at', 'updated_at', 'selected_products_display')
     filter_horizontal = ('selected_products',)
     
@@ -682,8 +805,10 @@ class ExpoSignupAdmin(admin.ModelAdmin):
     
     def get_user_company(self, obj):
         """Display user's company name"""
-        if hasattr(obj.user, 'profile'):
-            return obj.user.profile.company_name
+        if obj.tenant:
+            return obj.tenant.company_name
+        if hasattr(obj.user, 'profile') and obj.user.profile.tenant:
+            return obj.user.profile.tenant.company_name
         return '-'
     get_user_company.short_description = 'Firma'
     

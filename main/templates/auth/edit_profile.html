@@ -157,7 +157,7 @@
         </div>
 
         <!-- Buyer Information (if applicable) -->
-        {% if profile.is_buyer %}
+        {% if profile.tenant.is_buyer %}
         <div class="form-section editable-section buyer-section">
             <div class="section-header">
                 <div class="section-icon icon-buyer">
@@ -209,7 +209,7 @@
         {% endif %}
 
         <!-- Producer Information (if applicable) -->
-        {% if profile.is_producer %}
+        {% if profile.tenant.is_producer %}
         <div class="form-section editable-section producer-section">
             <div class="section-header">
                 <div class="section-icon icon-producer">

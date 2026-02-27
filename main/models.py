@@ -99,6 +99,35 @@ class SignupRequest(models.Model):
 
 
 
+class SignupRequestHistory(models.Model):
+    """Records field-level changes made by admins to SignupRequest objects."""
+
+    signup_request = models.ForeignKey(
+        'SignupRequest',
+        on_delete=models.CASCADE,
+        related_name='history',
+        verbose_name="Kayıt Talebi"
+    )
+    changed_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Değiştiren"
+    )
+    changed_at = models.DateTimeField(auto_now_add=True, verbose_name="Değiştirilme Tarihi")
+    # JSON list of {"field": ..., "label": ..., "old": ..., "new": ...}
+    changes = models.JSONField(verbose_name="Değişiklikler")
+
+    class Meta:
+        verbose_name = "Kayıt Talebi Geçmişi"
+        verbose_name_plural = "Kayıt Talebi Geçmişi"
+        ordering = ['-changed_at']
+
+    def __str__(self):
+        return f"#{self.signup_request_id} – {self.changed_at.strftime('%d.%m.%Y %H:%M')} – {self.changed_by}"
+
+
 class ConsentText(models.Model):
     """Singleton model – stores the editable membership consent text shown during signup."""
 
@@ -208,12 +237,10 @@ class Sector(models.Model):
         return self.name_tr
 
 
-class UserProfile(models.Model):
-    """Extended user profile for buyers and producers"""
-    
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    
-    # Common fields
+class Tenant(models.Model):
+    """Company/organization entity - the multi-tenancy unit"""
+
+    # Company information
     company_name = models.CharField(max_length=200, verbose_name="Firma Adı")
     phone_number = models.CharField(max_length=20, verbose_name="Telefon Numarası")
     country = models.CharField(max_length=100, verbose_name="Ülke")
@@ -222,63 +249,84 @@ class UserProfile(models.Model):
     website = models.URLField(max_length=255, blank=True, null=True, verbose_name="Web Sitesi")
     about_company = models.TextField(blank=True, null=True, verbose_name="Firma Hakkında")
 
-    # User type (can be both)
+    # Tenant type (can be both)
     is_buyer = models.BooleanField(default=False, verbose_name="Alıcı")
     is_producer = models.BooleanField(default=False, verbose_name="Üretici")
-    
+
     # Buyer-specific fields
     buyer_interested_sectors = models.ManyToManyField(
         Sector,
         blank=True,
-        related_name='interested_buyers',
+        related_name='interested_buyer_tenants',
         verbose_name="İlgilenilen Sektörler"
     )
     buyer_quarterly_volume = models.DecimalField(
-        max_digits=15, 
-        decimal_places=2, 
-        blank=True, 
+        max_digits=15,
+        decimal_places=2,
+        blank=True,
         null=True,
         verbose_name="Çeyreklik Alım Hacmi (USD)"
     )
-    
+
     # Producer-specific fields
     producer_sectors = models.ManyToManyField(
         Sector,
         blank=True,
-        related_name='producers',
+        related_name='producer_tenants',
         verbose_name="Sektörler"
     )
     producer_quarterly_sales = models.DecimalField(
-        max_digits=15, 
-        decimal_places=2, 
-        blank=True, 
+        max_digits=15,
+        decimal_places=2,
+        blank=True,
         null=True,
         verbose_name="Çeyreklik Satış Hacmi (USD)"
     )
     producer_product_count = models.IntegerField(
-        blank=True, 
+        blank=True,
         null=True,
         verbose_name="Yaklaşık Ürün Sayısı"
     )
-    
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
-        verbose_name = "Kullanıcı Profili"
-        verbose_name_plural = "Kullanıcı Profilleri"
-    
+        verbose_name = "Firma (Tenant)"
+        verbose_name_plural = "Firmalar (Tenants)"
+        ordering = ['company_name']
+
     def __str__(self):
-        return f"{self.user.get_full_name()} - {self.company_name}"
-    
-    def get_user_types(self):
-        """Return user types as a list"""
+        return self.company_name
+
+    def get_tenant_types(self):
         types = []
         if self.is_buyer:
             types.append("Alıcı")
         if self.is_producer:
             types.append("Üretici")
         return ", ".join(types) if types else "Belirtilmemiş"
+
+
+class UserProfile(models.Model):
+    """Extended user profile - linked to a Tenant"""
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    tenant = models.ForeignKey(
+        Tenant, on_delete=models.CASCADE, related_name='members',
+        null=True, blank=True, verbose_name="Firma"
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Kullanıcı Profili"
+        verbose_name_plural = "Kullanıcı Profilleri"
+
+    def __str__(self):
+        tenant_name = self.tenant.company_name if self.tenant else '-'
+        return f"{self.user.get_full_name()} - {tenant_name}"
 
 
 class ProfileEditRequest(models.Model):
@@ -385,19 +433,27 @@ class ProductTag(models.Model):
 
 class ProductRequest(models.Model):
     """Pending product requests awaiting admin approval"""
-    
+
     STATUS_CHOICES = [
         ('pending', 'Pending'),
         ('approved', 'Approved'),
         ('rejected', 'Rejected'),
     ]
-    
-    # Producer
+
+    # Producer (who submitted)
     producer = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='product_requests',
         verbose_name="Üretici"
+    )
+    # Tenant (owner company)
+    tenant = models.ForeignKey(
+        Tenant,
+        on_delete=models.CASCADE,
+        related_name='product_requests',
+        null=True, blank=True,
+        verbose_name="Firma"
     )
     
     # Multilingual fields
@@ -485,10 +541,18 @@ class ProductRequest(models.Model):
 class Product(models.Model):
     """Products created by producers"""
     producer = models.ForeignKey(
-        User, 
-        on_delete=models.CASCADE, 
+        User,
+        on_delete=models.CASCADE,
         related_name='products',
         verbose_name="Üretici"
+    )
+    # Tenant (owner company)
+    tenant = models.ForeignKey(
+        Tenant,
+        on_delete=models.CASCADE,
+        related_name='products',
+        null=True, blank=True,
+        verbose_name="Firma"
     )
     
     # Multilingual fields
@@ -636,6 +700,14 @@ class ExpoSignup(models.Model):
         on_delete=models.CASCADE,
         related_name='expo_signups',
         verbose_name="Kullanıcı"
+    )
+    # Tenant (owner company)
+    tenant = models.ForeignKey(
+        Tenant,
+        on_delete=models.CASCADE,
+        related_name='expo_signups',
+        null=True, blank=True,
+        verbose_name="Firma"
     )
     
     # Product information

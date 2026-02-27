@@ -240,7 +240,7 @@ def dashboard_view(request):
     """Main dashboard landing page"""
     try:
         profile = request.user.profile
-        return render(request, 'user_area/dashboard.html', {'profile': profile})
+        return render(request, 'user_area/dashboard.html', {'profile': profile, 'tenant': profile.tenant})
     except:
         messages.error(request, 'Profil bilgileriniz bulunamadı.')
         return redirect('main:index')
@@ -251,19 +251,20 @@ def producer_dashboard_view(request):
     """Producer dashboard view"""
     try:
         profile = request.user.profile
-        if not profile.is_producer:
+        tenant = profile.tenant
+        if not tenant or not tenant.is_producer:
             messages.error(request, 'Bu sayfaya erişim yetkiniz yok.')
             return redirect('main:dashboard')
-        
+
         # Get filter parameters (support multiple values)
         status_filters = request.GET.getlist('status')
         tag_filters = [t for t in request.GET.getlist('tag') if t]
         sector_filters = [s for s in request.GET.getlist('sector') if s]
         search_query = request.GET.get('search', '').strip()
-        
-        # Get base querysets
-        products_qs = Product.objects.filter(producer=request.user)
-        requests_qs = ProductRequest.objects.filter(producer=request.user, status='pending')
+
+        # Get base querysets (tenant-level: all members see all tenant products)
+        products_qs = Product.objects.filter(tenant=tenant)
+        requests_qs = ProductRequest.objects.filter(tenant=tenant, status='pending')
         
         # Apply Search Filter
         if search_query:
@@ -342,8 +343,8 @@ def producer_dashboard_view(request):
         display_items.sort(key=lambda x: x.created_at, reverse=True)
         
         # Stats (unfiltered for the stats cards)
-        unfiltered_products = Product.objects.filter(producer=request.user)
-        pending_count = ProductRequest.objects.filter(producer=request.user, status='pending').count()
+        unfiltered_products = Product.objects.filter(tenant=tenant)
+        pending_count = ProductRequest.objects.filter(tenant=tenant, status='pending').count()
         
         context = {
             'profile': profile,
@@ -375,7 +376,8 @@ def buyer_dashboard_view(request):
     """Buyer dashboard view"""
     try:
         profile = request.user.profile
-        if not profile.is_buyer:
+        tenant = profile.tenant
+        if not tenant or not tenant.is_buyer:
             messages.error(request, 'Bu sayfaya erişim yetkiniz yok.')
             return redirect('main:dashboard')
         
@@ -457,23 +459,25 @@ def add_product_view(request):
     """Add new product view (producers only) - creates product request for admin approval"""
     try:
         profile = request.user.profile
-        if not profile.is_producer:
+        tenant = profile.tenant
+        if not tenant or not tenant.is_producer:
             messages.error(request, 'Bu sayfaya erişim yetkiniz yok.')
             return redirect('main:dashboard')
     except:
         messages.error(request, 'Profil bilgileriniz bulunamadı.')
         return redirect('main:index')
-    
+
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             # Get tag IDs as comma-separated string
             tags = form.cleaned_data.get('tags', [])
             tag_ids = ','.join(str(tag.id) for tag in tags) if tags else ''
-            
+
             # Create product request instead of product
             product_request = ProductRequest.objects.create(
                 producer=request.user,
+                tenant=tenant,
                 sector=form.cleaned_data.get('sector'),
                 title_tr=form.cleaned_data.get('title_tr', ''),
                 title_en=form.cleaned_data.get('title_en', ''),
@@ -502,8 +506,8 @@ def add_product_view(request):
 
 @login_required
 def edit_product_view(request, product_id):
-    """Edit product view (producers only)"""
-    product = get_object_or_404(Product, id=product_id, producer=request.user)
+    """Edit product view (producers only) - any tenant member can edit"""
+    product = get_object_or_404(Product, id=product_id, tenant=request.user.profile.tenant)
     
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES, instance=product, user=request.user)
@@ -521,8 +525,8 @@ def edit_product_view(request, product_id):
 
 @login_required
 def delete_product_view(request, product_id):
-    """Delete product view (producers only)"""
-    product = get_object_or_404(Product, id=product_id, producer=request.user)
+    """Delete product view (producers only) - any tenant member can delete"""
+    product = get_object_or_404(Product, id=product_id, tenant=request.user.profile.tenant)
     
     if request.method == 'POST':
         product.delete()
@@ -538,27 +542,28 @@ def product_detail_view(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     
     # Check if user has permission to view this product
-    # Producers can see their own products, buyers can see active products
+    # Tenant members can see their own products, buyers can see active products
     can_view = False
-    if request.user == product.producer:
+    user_tenant = getattr(getattr(request.user, 'profile', None), 'tenant', None)
+    if user_tenant and product.tenant == user_tenant:
         can_view = True
-    elif hasattr(request.user, 'profile') and request.user.profile.is_buyer and product.is_active:
+    elif user_tenant and user_tenant.is_buyer and product.is_active:
         can_view = True
-    
+
     if not can_view:
         messages.error(request, 'Bu ürünü görüntüleme yetkiniz yok.')
         return redirect('main:dashboard')
-    
-    # Fetch other products from the same seller in the same category
+
+    # Fetch other products from the same tenant in the same category
     other_products = Product.objects.filter(
-        producer=product.producer,
+        tenant=product.tenant,
         sector=product.sector,
         is_active=True
     ).exclude(id=product.id).order_by('-created_at')[:4]
-    
+
     context = {
         'product': product,
-        'is_owner': request.user == product.producer,
+        'is_owner': user_tenant == product.tenant,
         'other_products': other_products,
     }
     
@@ -578,8 +583,9 @@ def dashboard_calendar_view(request):
     upcoming_expos = expos.filter(start_date__gte=today)
     past_expos = expos.filter(start_date__lt=today)
     
-    # Get user's signups
-    user_signups = ExpoSignup.objects.filter(user=request.user).select_related('expo')
+    # Get tenant's signups (all members see all tenant signups)
+    tenant = request.user.profile.tenant
+    user_signups = ExpoSignup.objects.filter(tenant=tenant).select_related('expo') if tenant else ExpoSignup.objects.none()
     user_signup_expo_ids = set(user_signups.values_list('expo_id', flat=True))
     confirmed_count = user_signups.filter(status='confirmed').count()
     
@@ -606,18 +612,20 @@ def expo_signup_view(request, expo_id):
         messages.error(request, 'Bu fuar için kayıt süresi dolmuştur.')
         return redirect('main:dashboard_calendar')
     
-    # Check if user already signed up
-    existing_signup = ExpoSignup.objects.filter(expo=expo, user=request.user).first()
+    # Check if tenant already signed up (one signup per tenant per expo)
+    tenant = request.user.profile.tenant
+    existing_signup = ExpoSignup.objects.filter(expo=expo, tenant=tenant).first()
     if existing_signup:
-        messages.warning(request, 'Bu fuara zaten kayıt oldunuz.')
+        messages.warning(request, 'Bu fuara firmanız zaten kayıt oldu.')
         return redirect('main:dashboard_calendar')
-    
+
     if request.method == 'POST':
         form = ExpoSignupForm(request.POST, user=request.user)
         if form.is_valid():
             signup = form.save(commit=False)
             signup.expo = expo
             signup.user = request.user
+            signup.tenant = tenant
             signup.save()
             
             # If using listed products, add them to the many-to-many relationship

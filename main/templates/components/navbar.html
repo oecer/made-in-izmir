@@ -10,10 +10,10 @@
                 {% if '/dashboard' in request.path or '/profile' in request.path or '/products' in request.path or '/expo' in request.path %}
                 <!-- Dashboard Specific Navbar Items -->
                 <li><a href="{% url 'main:dashboard' %}" data-i18n="nav.main_dashboard">Ana Panel</a></li>
-                {% if user.profile.is_producer %}
+                {% if user.profile.tenant.is_producer %}
                 <li><a href="{% url 'main:producer_dashboard' %}" data-i18n="nav.producer_dashboard">Üretici Paneli</a></li>
                 {% endif %}
-                {% if user.profile.is_buyer %}
+                {% if user.profile.tenant.is_buyer %}
                 <li><a href="{% url 'main:buyer_dashboard' %}" data-i18n="nav.buyer_dashboard">Alıcı Paneli</a></li>
                 {% endif %}
                 <li><a href="{% url 'main:dashboard_calendar' %}" data-i18n="nav.dashboard_calendar">Fuar Takvimi</a></li>

@@ -18,7 +18,7 @@
     </div>
 
     <div class="dashboard-grid animate-fade-up" style="animation-delay: 0.1s;">
-        {% if profile.is_producer %}
+        {% if tenant.is_producer %}
         <div class="dashboard-main-card producer-card">
             <div class="card-icon">
                 <i class="fas fa-industry"></i>
@@ -31,7 +31,7 @@
         </div>
         {% endif %}
 
-        {% if profile.is_buyer %}
+        {% if tenant.is_buyer %}
         <div class="dashboard-main-card buyer-card">
             <div class="card-icon">
                 <i class="fas fa-shopping-bag"></i>

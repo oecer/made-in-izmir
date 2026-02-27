@@ -121,7 +121,7 @@
                         {% for producer in available_producers %}
                         <label class="ms-option">
                             <input type="checkbox" name="producer" value="{{ producer.id }}" {% if producer.id|stringformat:"i" in current_filters.producer %}checked{% endif %}>
-                            <span>{{ producer.profile.company_name }}</span>
+                            <span>{{ producer.profile.tenant.company_name }}</span>
                         </label>
                         {% endfor %}
                     </div>
@@ -184,7 +184,7 @@
             {% for t in available_tags %}{% if t.id|stringformat:"i" == tid %}<span class="filter-chip">{{ t.name_tr }}</span>{% endif %}{% endfor %}
             {% endfor %}
             {% for pid in current_filters.producer %}
-            {% for p in available_producers %}{% if p.id|stringformat:"i" == pid %}<span class="filter-chip">{{ p.profile.company_name }}</span>{% endif %}{% endfor %}
+            {% for p in available_producers %}{% if p.id|stringformat:"i" == pid %}<span class="filter-chip">{{ p.profile.tenant.company_name }}</span>{% endif %}{% endfor %}
             {% endfor %}
         </div>
     </div>
@@ -208,7 +208,7 @@
                 <h3>{{ product.title_tr|default:product.title_en }}</h3>
                 <p class="product-producer">
                     <i class="fas fa-user-tie"></i>
-                    {{ product.producer.profile.company_name }}
+                    {{ product.tenant.company_name }}
                 </p>
                 {% if product.sector %}
                 <div class="product-sector">

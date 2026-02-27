@@ -2,7 +2,14 @@
   "permissions": {
     "allow": [
       "Bash(python manage.py makemigrations)",
-      "Bash(python manage.py migrate)"
+      "Bash(python manage.py migrate)",
+      "Bash(python manage.py makemigrations main --name add_tenant_model)",
+      "Bash(python manage.py migrate main)",
+      "Bash(python manage.py makemigrations --check)",
+      "Bash(python manage.py check)",
+      "Bash(python manage.py makemigrations --check --dry-run)",
+      "Bash(python manage.py showmigrations main)",
+      "Bash(python manage.py makemigrations main --name add_signup_request_history)"
     ]
   }
 }

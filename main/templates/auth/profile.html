@@ -29,13 +29,13 @@
                 {{ user.email }}
             </p>
             <div class="profile-hero-badges">
-                {% if user.profile.is_buyer %}
+                {% if user.profile.tenant.is_buyer %}
                 <span class="user-type-badge badge-buyer">
                     <i class="fas fa-shopping-bag"></i>
                     <span data-i18n="profile.buyer">Alıcı</span>
                 </span>
                 {% endif %}
-                {% if user.profile.is_producer %}
+                {% if user.profile.tenant.is_producer %}
                 <span class="user-type-badge badge-producer">
                     <i class="fas fa-industry"></i>
                     <span data-i18n="profile.producer">Üretici</span>
@@ -101,8 +101,8 @@
                 <div class="info-row">
                     <span class="info-label" data-i18n="profile.company_name">Firma Adı</span>
                     <span class="info-value">
-                        {% if user.profile.company_name %}
-                            {{ user.profile.company_name }}
+                        {% if user.profile.tenant.company_name %}
+                            {{ user.profile.tenant.company_name }}
                         {% else %}
                             <span class="info-empty">-</span>
                         {% endif %}
@@ -111,9 +111,9 @@
                 <div class="info-row">
                     <span class="info-label" data-i18n="profile.phone">Telefon</span>
                     <span class="info-value">
-                        {% if user.profile.phone_number %}
+                        {% if user.profile.tenant.phone_number %}
                             <i class="fas fa-phone info-icon"></i>
-                            {{ user.profile.phone_number }}
+                            {{ user.profile.tenant.phone_number }}
                         {% else %}
                             <span class="info-empty">-</span>
                         {% endif %}
@@ -122,9 +122,9 @@
                 <div class="info-row">
                     <span class="info-label" data-i18n="profile.location">Konum</span>
                     <span class="info-value">
-                        {% if user.profile.city or user.profile.country %}
+                        {% if user.profile.tenant.city or user.profile.tenant.country %}
                             <i class="fas fa-map-marker-alt info-icon"></i>
-                            {{ user.profile.city }}{% if user.profile.city and user.profile.country %}, {% endif %}{{ user.profile.country }}
+                            {{ user.profile.tenant.city }}{% if user.profile.tenant.city and user.profile.tenant.country %}, {% endif %}{{ user.profile.tenant.country }}
                         {% else %}
                             <span class="info-empty">-</span>
                         {% endif %}
@@ -134,7 +134,7 @@
         </div>
 
         <!-- Buyer Information Card -->
-        {% if user.profile.is_buyer %}
+        {% if user.profile.tenant.is_buyer %}
         <div class="dashboard-card profile-card card-buyer">
             <div class="card-header-icon">
                 <div class="card-icon-circle icon-buyer">
@@ -147,7 +147,7 @@
                     <span class="info-label" data-i18n="profile.interested_sectors">İlgilenilen Sektörler</span>
                     <div class="info-value">
                         <div class="tags-container">
-                            {% for sector in user.profile.buyer_interested_sectors.all %}
+                            {% for sector in user.profile.tenant.buyer_interested_sectors.all %}
                             <span class="sector-tag tag-buyer" data-tr="{{ sector.name_tr }}" data-en="{{ sector.name_en }}">
                                 {{ sector.name_tr }}
                             </span>
@@ -160,10 +160,10 @@
                 <div class="info-row">
                     <span class="info-label" data-i18n="profile.quarterly_volume">Çeyreklik Alım Hacmi</span>
                     <span class="info-value">
-                        {% if user.profile.buyer_quarterly_volume %}
+                        {% if user.profile.tenant.buyer_quarterly_volume %}
                         <span class="highlight-value volume-buyer">
                             <i class="fas fa-dollar-sign"></i>
-                            {{ user.profile.buyer_quarterly_volume|floatformat:0 }}
+                            {{ user.profile.tenant.buyer_quarterly_volume|floatformat:0 }}
                         </span>
                         {% else %}
                         <span class="info-empty">-</span>
@@ -175,7 +175,7 @@
         {% endif %}
 
         <!-- Producer Information Card -->
-        {% if user.profile.is_producer %}
+        {% if user.profile.tenant.is_producer %}
         <div class="dashboard-card profile-card card-producer">
             <div class="card-header-icon">
                 <div class="card-icon-circle icon-producer">
@@ -188,7 +188,7 @@
                     <span class="info-label" data-i18n="profile.sector">Sektörler</span>
                     <div class="info-value">
                         <div class="tags-container">
-                            {% for sector in user.profile.producer_sectors.all %}
+                            {% for sector in user.profile.tenant.producer_sectors.all %}
                             <span class="sector-tag tag-producer" data-tr="{{ sector.name_tr }}" data-en="{{ sector.name_en }}">
                                 {{ sector.name_tr }}
                             </span>
@@ -201,10 +201,10 @@
                 <div class="info-row">
                     <span class="info-label" data-i18n="profile.quarterly_sales">Çeyreklik Satış Hacmi</span>
                     <span class="info-value">
-                        {% if user.profile.producer_quarterly_sales %}
+                        {% if user.profile.tenant.producer_quarterly_sales %}
                         <span class="highlight-value volume-producer">
                             <i class="fas fa-dollar-sign"></i>
-                            {{ user.profile.producer_quarterly_sales|floatformat:0 }}
+                            {{ user.profile.tenant.producer_quarterly_sales|floatformat:0 }}
                         </span>
                         {% else %}
                         <span class="info-empty">-</span>
@@ -214,8 +214,8 @@
                 <div class="info-row">
                     <span class="info-label" data-i18n="profile.product_count">Ürün Sayısı</span>
                     <span class="info-value">
-                        {% if user.profile.producer_product_count %}
-                        <span class="highlight-value volume-producer">~{{ user.profile.producer_product_count }}</span>
+                        {% if user.profile.tenant.producer_product_count %}
+                        <span class="highlight-value volume-producer">~{{ user.profile.tenant.producer_product_count }}</span>
                         {% else %}
                         <span class="info-empty">-</span>
                         {% endif %}
