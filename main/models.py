@@ -240,6 +240,16 @@ class Sector(models.Model):
 class Tenant(models.Model):
     """Company/organization entity - the multi-tenancy unit"""
 
+    # Owner (the primary contact / account holder)
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='owned_tenants',
+        verbose_name="Firma Sahibi"
+    )
+
     # Company information
     company_name = models.CharField(max_length=200, verbose_name="Firma Adı")
     phone_number = models.CharField(max_length=20, verbose_name="Telefon Numarası")
@@ -311,10 +321,21 @@ class Tenant(models.Model):
 class UserProfile(models.Model):
     """Extended user profile - linked to a Tenant"""
 
+    ROLE_CHOICES = [
+        ('admin', 'Admin'),
+        ('read_only', 'Read Only'),
+    ]
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     tenant = models.ForeignKey(
         Tenant, on_delete=models.CASCADE, related_name='members',
         null=True, blank=True, verbose_name="Firma"
+    )
+    tenant_role = models.CharField(
+        max_length=20,
+        choices=ROLE_CHOICES,
+        default='admin',
+        verbose_name="Firma Rolü"
     )
 
     created_at = models.DateTimeField(auto_now_add=True)

@@ -245,8 +245,12 @@ class SignupRequestAdmin(admin.ModelAdmin):
             password=signup_request.password_hash
         )
 
-        # Create user profile linked to tenant
-        UserProfile.objects.create(user=user, tenant=tenant)
+        # Set the user as the tenant owner
+        tenant.owner = user
+        tenant.save(update_fields=['owner'])
+
+        # Create user profile linked to tenant (first user gets admin role)
+        UserProfile.objects.create(user=user, tenant=tenant, tenant_role='admin')
 
         # Update request fields
         signup_request.reviewed_by = request.user
@@ -298,17 +302,40 @@ class SectorAdmin(admin.ModelAdmin):
     search_fields = ('name_tr', 'name_en')
 
 
+class TenantMemberInline(admin.TabularInline):
+    model = UserProfile
+    extra = 1
+    can_delete = True
+    verbose_name = "Üye"
+    verbose_name_plural = "Firma Üyeleri"
+    fields = ('user', 'tenant_role', 'created_at')
+    readonly_fields = ('created_at',)
+    show_change_link = True
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'user':
+            # Only show users who don't already have a profile
+            existing_profile_user_ids = UserProfile.objects.values_list('user_id', flat=True)
+            kwargs['queryset'] = User.objects.exclude(id__in=existing_profile_user_ids).order_by('username')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
 @admin.register(Tenant)
 class TenantAdmin(admin.ModelAdmin):
-    list_display = ('company_name', 'country', 'city', 'is_buyer', 'is_producer', 'member_count', 'created_at')
+    list_display = ('company_name', 'owner_display', 'country', 'city', 'is_buyer', 'is_producer', 'member_count', 'created_at')
     list_filter = ('is_buyer', 'is_producer', 'country')
-    search_fields = ('company_name', 'phone_number', 'city')
-    readonly_fields = ('created_at', 'updated_at')
+    search_fields = ('company_name', 'phone_number', 'city', 'owner__username', 'owner__email')
+    readonly_fields = ('created_at', 'updated_at', 'owner_display')
+    raw_id_fields = ('owner',)
     filter_horizontal = ('buyer_interested_sectors', 'producer_sectors')
+    inlines = [TenantMemberInline]
 
     fieldsets = (
         ('Company Information', {
             'fields': ('company_name', 'phone_number', 'country', 'city', 'open_address', 'website', 'about_company')
+        }),
+        ('Ownership', {
+            'fields': ('owner', 'owner_display'),
         }),
         ('Tenant Type', {
             'fields': ('is_buyer', 'is_producer')
@@ -327,6 +354,16 @@ class TenantAdmin(admin.ModelAdmin):
         }),
     )
 
+    def owner_display(self, obj):
+        if not obj.owner:
+            return '-'
+        return format_html(
+            '<strong>{}</strong> &lt;{}&gt;',
+            obj.owner.get_full_name() or obj.owner.username,
+            obj.owner.email,
+        )
+    owner_display.short_description = 'Firma Sahibi'
+
     def member_count(self, obj):
         return obj.members.count()
     member_count.short_description = 'Üye Sayısı'
@@ -337,7 +374,7 @@ class UserProfileInline(admin.StackedInline):
     can_delete = False
     verbose_name = "Profil / Firma Bağlantısı"
     verbose_name_plural = "Profil / Firma Bağlantısı"
-    fields = ('tenant',)
+    fields = ('tenant', 'tenant_role')
     raw_id_fields = ('tenant',)
 
 

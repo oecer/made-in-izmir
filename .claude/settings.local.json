@@ -9,7 +9,8 @@
       "Bash(python manage.py check)",
       "Bash(python manage.py makemigrations --check --dry-run)",
       "Bash(python manage.py showmigrations main)",
-      "Bash(python manage.py makemigrations main --name add_signup_request_history)"
+      "Bash(python manage.py makemigrations main --name add_signup_request_history)",
+      "Bash(python manage.py makemigrations main --name=\"add_tenant_owner_and_user_role\")"
     ]
   }
 }
