@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils import timezone
 from django.contrib import messages
 from django.utils.html import format_html, mark_safe
@@ -331,26 +332,20 @@ class TenantAdmin(admin.ModelAdmin):
     member_count.short_description = 'Üye Sayısı'
 
 
-@admin.register(UserProfile)
-class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'get_tenant_name', 'created_at')
-    search_fields = ('user__username', 'user__email', 'tenant__company_name')
-    readonly_fields = ('created_at', 'updated_at')
+class UserProfileInline(admin.StackedInline):
+    model = UserProfile
+    can_delete = False
+    verbose_name = "Profil / Firma Bağlantısı"
+    verbose_name_plural = "Profil / Firma Bağlantısı"
+    fields = ('tenant',)
     raw_id_fields = ('tenant',)
 
-    fieldsets = (
-        ('User', {
-            'fields': ('user', 'tenant')
-        }),
-        ('Timestamps', {
-            'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',)
-        }),
-    )
 
-    def get_tenant_name(self, obj):
-        return obj.tenant.company_name if obj.tenant else '-'
-    get_tenant_name.short_description = 'Firma'
+admin.site.unregister(User)
+
+@admin.register(User)
+class UserAdmin(BaseUserAdmin):
+    inlines = (UserProfileInline,)
 
 
 @admin.register(ProfileEditRequest)
