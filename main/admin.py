@@ -34,25 +34,24 @@ class SignupRequestHistoryInline(admin.TabularInline):
                     '<tr>'
                     '<td style="padding:4px 10px;font-weight:600;color:#374151;">{}</td>'
                     '<td style="padding:4px 10px;color:#dc2626;text-decoration:line-through;">{}</td>'
-                    '<td style="padding:4px 10px;color:#374151;">→</td>'
+                    '<td style="padding:4px 10px;color:#374151;">&#8594;</td>'
                     '<td style="padding:4px 10px;color:#16a34a;">{}</td>'
                     '</tr>',
                     label, old_val, new_val,
                 )
             )
-        header = mark_safe(
+        return format_html(
             '<table style="border-collapse:collapse;font-size:0.88rem;">'
             '<thead><tr>'
             '<th style="padding:4px 10px;text-align:left;color:#6b7280;">Alan</th>'
-            '<th style="padding:4px 10px;text-align:left;color:#6b7280;">Eski Değer</th>'
+            '<th style="padding:4px 10px;text-align:left;color:#6b7280;">Eski De&#287;er</th>'
             '<th style="padding:4px 10px;"></th>'
-            '<th style="padding:4px 10px;text-align:left;color:#6b7280;">Yeni Değer</th>'
-            '</tr></thead><tbody>'
+            '<th style="padding:4px 10px;text-align:left;color:#6b7280;">Yeni De&#287;er</th>'
+            '</tr></thead><tbody>{}</tbody></table>',
+            mark_safe(''.join(rows)),
         )
-        footer = mark_safe('</tbody></table>')
-        return header + mark_safe('').join(rows) + footer
 
-    changes_display.short_description = "Değişiklikler"
+    changes_display.short_description = "De&#287;i&#351;iklikler"
 
 
 @admin.register(SignupRequest)
