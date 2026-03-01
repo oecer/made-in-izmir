@@ -304,7 +304,7 @@ class SectorAdmin(admin.ModelAdmin):
 
 class TenantMemberInline(admin.TabularInline):
     model = UserProfile
-    extra = 1
+    extra = 0
     can_delete = True
     verbose_name = "Üye"
     verbose_name_plural = "Firma Üyeleri"
@@ -312,12 +312,31 @@ class TenantMemberInline(admin.TabularInline):
     readonly_fields = ('created_at',)
     show_change_link = True
 
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == 'user':
-            # Only show users who don't already have a profile
-            existing_profile_user_ids = UserProfile.objects.values_list('user_id', flat=True)
-            kwargs['queryset'] = User.objects.exclude(id__in=existing_profile_user_ids).order_by('username')
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        original_init = formset.form.__init__
+
+        def patched_init(self_form, *args, **form_kwargs):
+            original_init(self_form, *args, **form_kwargs)
+            if 'user' not in self_form.fields:
+                return
+            # Users already assigned elsewhere (exclude them from the dropdown)
+            taken = UserProfile.objects.values_list('user_id', flat=True)
+            # For an existing profile row, also include that row's own user so it
+            # displays correctly — but render it as read-only text instead.
+            instance = self_form.instance
+            if instance and instance.pk:
+                # Existing member: make the user field display-only
+                self_form.fields['user'].disabled = True
+                self_form.fields['user'].queryset = User.objects.filter(pk=instance.user_id)
+            else:
+                # New row: show only users not yet assigned to any tenant
+                self_form.fields['user'].queryset = User.objects.exclude(
+                    id__in=taken
+                ).order_by('username')
+
+        formset.form.__init__ = patched_init
+        return formset
 
 
 @admin.register(Tenant)
@@ -326,7 +345,6 @@ class TenantAdmin(admin.ModelAdmin):
     list_filter = ('is_buyer', 'is_producer', 'country')
     search_fields = ('company_name', 'phone_number', 'city', 'owner__username', 'owner__email')
     readonly_fields = ('created_at', 'updated_at', 'owner_display')
-    raw_id_fields = ('owner',)
     filter_horizontal = ('buyer_interested_sectors', 'producer_sectors')
     inlines = [TenantMemberInline]
 
@@ -354,6 +372,19 @@ class TenantAdmin(admin.ModelAdmin):
         }),
     )
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'owner':
+            # Resolve the tenant being edited from the URL
+            tenant_id = request.resolver_match.kwargs.get('object_id')
+            if tenant_id:
+                member_user_ids = UserProfile.objects.filter(
+                    tenant_id=tenant_id
+                ).values_list('user_id', flat=True)
+                kwargs['queryset'] = User.objects.filter(id__in=member_user_ids).order_by('username')
+            else:
+                kwargs['queryset'] = User.objects.none()
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
     def owner_display(self, obj):
         if not obj.owner:
             return '-'
@@ -362,7 +393,7 @@ class TenantAdmin(admin.ModelAdmin):
             obj.owner.get_full_name() or obj.owner.username,
             obj.owner.email,
         )
-    owner_display.short_description = 'Firma Sahibi'
+    owner_display.short_description = 'Firma Hesabı Sahibi'
 
     def member_count(self, obj):
         return obj.members.count()

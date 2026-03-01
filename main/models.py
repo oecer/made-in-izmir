@@ -247,7 +247,7 @@ class Tenant(models.Model):
         null=True,
         blank=True,
         related_name='owned_tenants',
-        verbose_name="Firma Sahibi"
+        verbose_name="Firma Hesabı Sahibi"
     )
 
     # Company information
