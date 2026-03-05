@@ -55,3 +55,6 @@ ssh.txt
 __pycache__
 .gemini/
 /test
+
+# Host
+*.htaccess
