@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block dashboard_header_actions %}
-<a href="{% url 'main:dashboard' %}" class="dashboard-back-btn">
+<a href="{% url 'accounts:dashboard' %}" class="dashboard-back-btn">
     <i class="fas fa-arrow-left"></i>
     <span data-i18n="dashboard.back_to_main">Ana Panel</span>
 </a>
@@ -55,13 +55,13 @@
     <h3 data-i18n="dashboard.quick_links" class="quick-links-label">Hızlı Bağlantılar</h3>
 </div>
 <div class="dashboard-actions mb-5">
-    <a href="{% url 'main:add_product' %}" class="btn btn-primary">
+    <a href="{% url 'catalog:add_product' %}" class="btn btn-primary">
         <i class="fas fa-plus"></i> <span data-i18n="dashboard.add_new_product">Yeni Ürün Ekle</span>
     </a>
-    <a href="{% url 'main:profile' %}" class="btn btn-secondary">
+    <a href="{% url 'accounts:profile' %}" class="btn btn-secondary">
         <i class="fas fa-user"></i> <span data-i18n="dashboard.view_profile">Profili Görüntüle</span>
     </a>
-    <a href="{% url 'main:dashboard_calendar' %}" class="btn btn-secondary">
+    <a href="{% url 'expos:dashboard_calendar' %}" class="btn btn-secondary">
         <i class="fas fa-calendar-alt"></i> <span data-i18n="dashboard.expo_calendar">Fuar Takvimi</span>
     </a>
 </div>
@@ -76,7 +76,7 @@
             {% endif %}
         </div>
         <div class="section-title-right">
-            <a href="{% url 'main:add_product' %}" class="btn btn-sm btn-add-inline">
+            <a href="{% url 'catalog:add_product' %}" class="btn btn-sm btn-add-inline">
                 <i class="fas fa-plus"></i>
                 <span data-i18n="dashboard.add_new_product">Yeni Ürün Ekle</span>
             </a>
@@ -144,7 +144,7 @@
                     </div>
 
                     {% if current_filters.status or current_filters.sector or current_filters.tag %}
-                    <a href="{% url 'main:producer_dashboard' %}{% if search_query %}?search={{ search_query }}{% endif %}" class="filter-reset" title="Filtreleri Temizle">
+                    <a href="{% url 'catalog:producer_dashboard' %}{% if search_query %}?search={{ search_query }}{% endif %}" class="filter-reset" title="Filtreleri Temizle">
                         <i class="fas fa-times-circle"></i>
                     </a>
                     {% endif %}
@@ -201,7 +201,7 @@
             {% endif %}
             {% if search_query %} &mdash; "<em>{{ search_query }}</em>" için{% endif %}
         </span>
-        <a href="{% url 'main:producer_dashboard' %}" class="clear-all-link">
+        <a href="{% url 'catalog:producer_dashboard' %}" class="clear-all-link">
             <i class="fas fa-times"></i> Tümünü Temizle
         </a>
     </div>
@@ -251,13 +251,13 @@
 
                 <div class="product-actions">
                     {% if not product.is_pending %}
-                        <a href="{% url 'main:product_detail' product.id %}" class="btn btn-sm btn-info" title="Görüntüle">
+                        <a href="{% url 'catalog:product_detail' product.id %}" class="btn btn-sm btn-info" title="Görüntüle">
                             <i class="fas fa-eye"></i> <span data-i18n="dashboard.details">Görüntüle</span>
                         </a>
-                        <a href="{% url 'main:edit_product' product.id %}" class="btn btn-sm btn-warning" title="Düzenle">
+                        <a href="{% url 'catalog:edit_product' product.id %}" class="btn btn-sm btn-warning" title="Düzenle">
                             <i class="fas fa-edit"></i> <span data-i18n="dashboard.edit">Düzenle</span>
                         </a>
-                        <a href="{% url 'main:delete_product' product.id %}"
+                        <a href="{% url 'catalog:delete_product' product.id %}"
                            class="btn btn-sm btn-danger-ghost"
                            title="Sil"
                            onclick="return confirm('Bu ürünü kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.')">
@@ -281,7 +281,7 @@
             <i class="fas fa-search"></i>
             <h3 data-i18n="dashboard.no_results">Aramanızla eşleşen ürün bulunamadı</h3>
             <p>Farklı arama terimleri veya filtreler deneyin.</p>
-            <a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
+            <a href="{% url 'catalog:producer_dashboard' %}" class="btn btn-secondary">
                 <i class="fas fa-times"></i> Filtreleri Temizle
             </a>
         </div>
@@ -291,7 +291,7 @@
             <i class="fas fa-box-open"></i>
             <h3 data-i18n="dashboard.no_products_yet">Henüz ürün eklemediniz</h3>
             <p data-i18n="dashboard.add_first_product_prompt">İlk ürününüzü ekleyerek başlayın!</p>
-            <a href="{% url 'main:add_product' %}" class="btn btn-primary">
+            <a href="{% url 'catalog:add_product' %}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> <span data-i18n="dashboard.add_first_product">İlk Ürünü Ekle</span>
             </a>
         </div>

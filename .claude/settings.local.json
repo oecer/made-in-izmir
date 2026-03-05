@@ -10,7 +10,15 @@
       "Bash(python manage.py makemigrations --check --dry-run)",
       "Bash(python manage.py showmigrations main)",
       "Bash(python manage.py makemigrations main --name add_signup_request_history)",
-      "Bash(python manage.py makemigrations main --name=\"add_tenant_owner_and_user_role\")"
+      "Bash(python manage.py makemigrations main --name=\"add_tenant_owner_and_user_role\")",
+      "Bash(git checkout -b feature/app-separation)",
+      "Bash(python manage.py startapp accounts)",
+      "Bash(python manage.py startapp catalog)",
+      "Bash(python manage.py startapp expos)",
+      "Bash(python manage.py migrate --plan)",
+      "Bash(python manage.py showmigrations accounts catalog expos main)",
+      "Bash(python manage.py check --deploy)",
+      "Bash(python -c \":*)"
     ]
   }
 }

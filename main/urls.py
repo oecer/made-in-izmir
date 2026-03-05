@@ -9,28 +9,5 @@ urlpatterns = [
     path('why-izmir/', views.why_izmir, name='why_izmir'),
     path('producers/', views.producers, name='producers'),
     path('buyers/', views.buyers, name='buyers'),
-    path('calendar/', views.calendar, name='calendar'),
     path('contact/', views.contact, name='contact'),
-    
-    # Authentication URLs
-    path('signup/', views.signup_view, name='signup'),
-    path('login/', views.login_view, name='login'),
-    path('logout/', views.logout_view, name='logout'),
-    path('profile/', views.profile_view, name='profile'),
-    path('profile/edit/', views.edit_profile_view, name='edit_profile'),
-    
-    # Dashboard URLs
-    path('dashboard/', views.dashboard_view, name='dashboard'),
-    path('dashboard/producer/', views.producer_dashboard_view, name='producer_dashboard'),
-    path('dashboard/buyer/', views.buyer_dashboard_view, name='buyer_dashboard'),
-    path('dashboard/calendar/', views.dashboard_calendar_view, name='dashboard_calendar'),
-    
-    # Expo URLs
-    path('expo/<int:expo_id>/signup/', views.expo_signup_view, name='expo_signup'),
-    
-    # Product management URLs (producers only)
-    path('products/add/', views.add_product_view, name='add_product'),
-    path('products/<int:product_id>/edit/', views.edit_product_view, name='edit_product'),
-    path('products/<int:product_id>/delete/', views.delete_product_view, name='delete_product'),
-    path('products/<int:product_id>/', views.product_detail_view, name='product_detail'),
 ]

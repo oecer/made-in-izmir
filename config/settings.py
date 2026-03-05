@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'accounts',
+    'catalog',
+    'expos',
     'main',
 ]
 
@@ -126,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
     {
-        'NAME': 'main.validators.StrongPasswordValidator',
+        'NAME': 'accounts.validators.StrongPasswordValidator',
     },
 ]
 
@@ -166,13 +169,13 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Authentication settings
-LOGIN_URL = 'main:login'
+LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'main:index'
 LOGOUT_REDIRECT_URL = 'main:index'
 
 # Custom authentication backends - allows login with username OR email
 AUTHENTICATION_BACKENDS = [
-    'main.backends.EmailOrUsernameBackend',
+    'accounts.backends.EmailOrUsernameBackend',
 ]
 
 # Image compression settings
@@ -210,7 +213,7 @@ if not DEBUG:
 # ──────────────────────────────────────────────
 # Email configuration (Microsoft Graph API / OAuth2)
 # ──────────────────────────────────────────────
-EMAIL_BACKEND = 'main.email_backend.MicrosoftGraphEmailBackend'
+EMAIL_BACKEND = 'accounts.email_backend.MicrosoftGraphEmailBackend'
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')          # Licensed mailbox for sending
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)  # From: noreply@
 SERVER_EMAIL = DEFAULT_FROM_EMAIL

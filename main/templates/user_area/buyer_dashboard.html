@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block dashboard_header_actions %}
-<a href="{% url 'main:dashboard' %}" class="dashboard-back-btn">
+<a href="{% url 'accounts:dashboard' %}" class="dashboard-back-btn">
     <i class="fas fa-arrow-left"></i>
     <span data-i18n="dashboard.back_to_main">Ana Panel</span>
 </a>
@@ -55,10 +55,10 @@
     <h3 data-i18n="dashboard.quick_links" class="quick-links-label">Hızlı Bağlantılar</h3>
 </div>
 <div class="dashboard-actions mb-5">
-    <a href="{% url 'main:profile' %}" class="btn btn-secondary">
+    <a href="{% url 'accounts:profile' %}" class="btn btn-secondary">
         <i class="fas fa-user"></i> <span data-i18n="dashboard.view_profile">Profili Görüntüle</span>
     </a>
-    <a href="{% url 'main:dashboard_calendar' %}" class="btn btn-secondary">
+    <a href="{% url 'expos:dashboard_calendar' %}" class="btn btn-secondary">
         <i class="fas fa-calendar-alt"></i> <span data-i18n="dashboard.expo_calendar">Fuar Takvimi</span>
     </a>
 </div>
@@ -128,7 +128,7 @@
                 </div>
 
                 {% if current_filters.sector or current_filters.tag or current_filters.producer or search_query %}
-                <a href="{% url 'main:buyer_dashboard' %}" class="filter-reset" title="Filtreleri Temizle">
+                <a href="{% url 'catalog:buyer_dashboard' %}" class="filter-reset" title="Filtreleri Temizle">
                     <i class="fas fa-times-circle"></i>
                 </a>
                 {% endif %}
@@ -234,7 +234,7 @@
                 </div>
 
                 <div class="product-actions">
-                    <a href="{% url 'main:product_detail' product.id %}" class="btn btn-sm btn-dashboard-primary product-detail-btn">
+                    <a href="{% url 'catalog:product_detail' product.id %}" class="btn btn-sm btn-dashboard-primary product-detail-btn">
                         <i class="fas fa-eye"></i> <span data-i18n="dashboard.view_details">Detayları Görüntüle</span>
                     </a>
                 </div>
@@ -250,7 +250,7 @@
         <i class="fas fa-search"></i>
         <h3 data-i18n="dashboard.no_results">Sonuç bulunamadı</h3>
         <p data-i18n="dashboard.no_results_desc">Seçili filtrelerle eşleşen ürün bulunamadı. Filtreleri değiştirmeyi veya temizlemeyi deneyin.</p>
-        <a href="{% url 'main:buyer_dashboard' %}" class="btn btn-dashboard-primary mt-3">
+        <a href="{% url 'catalog:buyer_dashboard' %}" class="btn btn-dashboard-primary mt-3">
             <i class="fas fa-times"></i>
             <span data-i18n="dashboard.clear_filters">Filtreleri Temizle</span>
         </a>

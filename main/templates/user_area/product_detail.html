@@ -17,12 +17,12 @@
 
 {% block dashboard_header_actions %}
 {% if is_owner %}
-<a href="{% url 'main:producer_dashboard' %}" class="dashboard-back-btn">
+<a href="{% url 'catalog:producer_dashboard' %}" class="dashboard-back-btn">
     <i class="fas fa-arrow-left"></i>
     <span data-i18n="dashboard.back">Panele Dön</span>
 </a>
 {% else %}
-<a href="{% url 'main:buyer_dashboard' %}" class="dashboard-back-btn">
+<a href="{% url 'catalog:buyer_dashboard' %}" class="dashboard-back-btn">
     <i class="fas fa-arrow-left"></i>
     <span data-i18n="dashboard.back_to_products">Ürünlere Dön</span>
 </a>
@@ -32,11 +32,11 @@
 {% block dashboard_content %}
 {% comment %} <div class="back-button-container">
     {% if is_owner %}
-    <a href="{% url 'main:producer_dashboard' %}" class="btn btn-secondary">
+    <a href="{% url 'catalog:producer_dashboard' %}" class="btn btn-secondary">
         <i class="fas fa-arrow-left"></i> <span data-i18n="dashboard.back">Panele Dön</span>
     </a>
     {% else %}
-    <a href="{% url 'main:buyer_dashboard' %}" class="btn btn-secondary">
+    <a href="{% url 'catalog:buyer_dashboard' %}" class="btn btn-secondary">
         <i class="fas fa-arrow-left"></i> <span data-i18n="dashboard.back">Ürünlere Dön</span>
     </a>
     {% endif %}
@@ -140,10 +140,10 @@
 
         {% if is_owner %}
         <div class="owner-actions">
-            <a href="{% url 'main:edit_product' product.id %}" class="btn btn-warning">
+            <a href="{% url 'catalog:edit_product' product.id %}" class="btn btn-warning">
                 <i class="fas fa-edit"></i> <span data-i18n="dashboard.edit">Düzenle</span>
             </a>
-            <a href="{% url 'main:delete_product' product.id %}" class="btn btn-danger">
+            <a href="{% url 'catalog:delete_product' product.id %}" class="btn btn-danger">
                 <i class="fas fa-trash"></i> <span data-i18n="dashboard.delete">Sil</span>
             </a>
         </div>
@@ -155,7 +155,7 @@
         <h3 class="section-title"><i class="fas fa-th-large"></i> <span data-i18n="dashboard.more_from_seller">Üreticinin Aynı Sektördeki Diğer Ürünleri</span></h3>
         <div class="related-products-grid">
             {% for item in other_products %}
-            <a href="{% url 'main:product_detail' item.id %}" class="related-product-card">
+            <a href="{% url 'catalog:product_detail' item.id %}" class="related-product-card">
                 <div class="related-product-image">
                     {% if item.photo1 %}
                     <img src="{{ item.photo1.url }}" alt="{{ item.title_tr|default:item.title_en }}">
