@@ -569,7 +569,7 @@
             Katılacağımız uluslararası fuarları keşfedin ve bizi kiralayarak markanızı dünyaya tanıtın.
         </p>
         <div class="calendar-hero-actions">
-            <a href="{% url 'main:signup' %}" class="btn btn-secondary" data-i18n="calendar.hire_btn">Bizi Kiralayın</a>
+            <a href="{% url 'accounts:signup' %}" class="btn btn-secondary" data-i18n="calendar.hire_btn">Bizi Kiralayın</a>
             <a href="{% url 'main:contact' %}" class="btn btn-outline-hero" data-i18n="calendar.cta_contact">Bize Ulaşın</a>
         </div>
     </div>
@@ -606,9 +606,9 @@
         <div class="cal-auth-banner">
             <div class="cal-auth-banner-text">
                 <i class="fas fa-info-circle"></i>
-                <span>Bir fuara kaydolmak istiyorsanız <a href="{% url 'main:dashboard_calendar' %}" class="cal-auth-link">Dashboard Takvim</a> sayfasını ziyaret edin.</span>
+                <span>Bir fuara kaydolmak istiyorsanız <a href="{% url 'expos:dashboard_calendar' %}" class="cal-auth-link">Dashboard Takvim</a> sayfasını ziyaret edin.</span>
             </div>
-            <a href="{% url 'main:dashboard_calendar' %}" class="btn btn-secondary btn-sm">
+            <a href="{% url 'expos:dashboard_calendar' %}" class="btn btn-secondary btn-sm">
                 <i class="fas fa-calendar-check"></i>&nbsp; Fuarlara Kayıt Ol
             </a>
         </div>
@@ -689,28 +689,28 @@
                     <div class="expo-card-footer">
                         {% if user.is_authenticated %}
                             {% if expo.is_registration_open %}
-                            <a href="{% url 'main:dashboard_calendar' %}" class="btn-expo-primary gold">
+                            <a href="{% url 'expos:dashboard_calendar' %}" class="btn-expo-primary gold">
                                 <i class="fas fa-handshake"></i>
                                 <span data-i18n="calendar.hire_btn">Bizi Kiralayın</span>
                             </a>
                             {% else %}
-                            <a href="{% url 'main:dashboard_calendar' %}" class="btn-expo-primary">
+                            <a href="{% url 'expos:dashboard_calendar' %}" class="btn-expo-primary">
                                 <i class="fas fa-eye"></i>
                                 <span>Detayı Gör</span>
                             </a>
                             {% endif %}
                         {% else %}
                             {% if expo.is_registration_open %}
-                            <a href="{% url 'main:signup' %}" class="btn-expo-primary gold">
+                            <a href="{% url 'accounts:signup' %}" class="btn-expo-primary gold">
                                 <i class="fas fa-handshake"></i>
                                 <span data-i18n="calendar.hire_btn">Bizi Kiralayın</span>
                             </a>
-                            <a href="{% url 'main:login' %}" class="btn-expo-secondary">
+                            <a href="{% url 'accounts:login' %}" class="btn-expo-secondary">
                                 <i class="fas fa-sign-in-alt"></i>
                                 <span data-i18n="calendar.login_btn">Giriş</span>
                             </a>
                             {% else %}
-                            <a href="{% url 'main:signup' %}" class="btn-expo-primary">
+                            <a href="{% url 'accounts:signup' %}" class="btn-expo-primary">
                                 <i class="fas fa-user-plus"></i>
                                 <span data-i18n="calendar.register_cta">Kayıt Ol</span>
                             </a>
@@ -733,7 +733,7 @@
                 <h3 data-i18n="calendar.cta_title">Ürünlerinizi Fuarlarda Sergileyin</h3>
                 <p data-i18n="calendar.cta_desc">Made in İzmir üyesi olun; fuarlara ürünlerinizi gönderin, biz sizin yerinize temsil edelim.</p>
                 <div class="cal-signup-cta-btns">
-                    <a href="{% url 'main:signup' %}" class="btn btn-secondary">
+                    <a href="{% url 'accounts:signup' %}" class="btn btn-secondary">
                         <i class="fas fa-user-plus"></i>&nbsp; Ücretsiz Kayıt Ol
                     </a>
                     <a href="{% url 'main:contact' %}" class="btn btn-outline-light">
@@ -923,7 +923,7 @@
             <h2 data-i18n="calendar.final_title">Ürünlerinizi Dünyaya Taşıyın</h2>
             <p data-i18n="calendar.final_desc">Kayıt tamamen ücretsiz. Profilinizi oluşturun, fuarı seçin - gerisini bize bırakın.</p>
             <div class="cal-final-cta-actions">
-                <a href="{% url 'main:signup' %}" class="btn btn-secondary">
+                <a href="{% url 'accounts:signup' %}" class="btn btn-secondary">
                     <i class="fas fa-user-plus"></i>&nbsp; <span data-i18n="calendar.final_signup">Ücretsiz Kayıt Ol</span>
                 </a>
                 <a href="{% url 'main:contact' %}" class="btn btn-outline-hero">

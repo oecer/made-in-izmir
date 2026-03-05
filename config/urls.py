@@ -1,18 +1,5 @@
 """
 URL configuration for config project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
@@ -23,6 +10,9 @@ from django.views.static import serve
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')),
+    path('', include('accounts.urls')),
+    path('', include('catalog.urls')),
+    path('', include('expos.urls')),
 
     # Password reset flow (built-in Django views with custom templates)
     path('forgot-password/',
@@ -51,10 +41,7 @@ urlpatterns = [
          name='password_reset_complete'),
 ]
 
-# Serve media files (uploaded photos, etc.) in both dev and production.
-# We use re_path + serve directly instead of static() because static() is a
-# no-op when DEBUG=False, which breaks media serving on cPanel/shared hosting
-# where there is no separate web server (nginx/Apache) handling /media/ URLs.
+# Serve media files in both dev and production.
 urlpatterns += [
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
