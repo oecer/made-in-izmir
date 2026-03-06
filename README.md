@@ -24,7 +24,7 @@ made-in-izmir/
 └── db.sqlite3           # SQLite database
 ```
 
-## Static Files Organization
+## Static Files Organization 
 
 The project uses Django's static files system:
 
