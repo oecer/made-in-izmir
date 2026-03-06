@@ -25,7 +25,8 @@
       "Bash(git add .claude/settings.local.json)",
       "Bash(git stash drop)",
       "Bash(python manage.py makemigrations accounts)",
-      "Bash(python manage.py makemigrations --merge --no-input accounts)"
+      "Bash(python manage.py makemigrations --merge --no-input accounts)",
+      "Bash(git merge development)"
     ]
   }
 }
