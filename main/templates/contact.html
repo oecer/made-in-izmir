@@ -646,6 +646,14 @@ a.contact-detail-value:hover {
 
                     <form id="contact-form" novalidate autocomplete="on">
                         {% csrf_token %}
+                        {# Honeypot — hidden from humans via CSS; bots fill every input they find #}
+                        <div style="display:none;" aria-hidden="true">
+                            <label for="contact-website">Website</label>
+                            <input type="text" id="contact-website" name="website" tabindex="-1" autocomplete="off">
+                        </div>
+                        {# Signed time tokens — verified server-side to reject instant bot submissions #}
+                        <input type="hidden" name="form_ts" value="{{ form_ts }}">
+                        <input type="hidden" name="form_tk" value="{{ form_tk }}">
 
                         <!-- Row 1: Name + Email -->
                         <div class="form-row">
@@ -921,6 +929,10 @@ a.contact-detail-value:hover {
                     successState.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 } else {
                     // Show inline error banner (keep form visible)
+                    if (res.status === 429) {
+                        document.getElementById('contact-error-text').textContent =
+                            'Çok fazla mesaj gönderdiniz. Lütfen bir süre bekleyip tekrar deneyin.';
+                    }
                     errorBanner.classList.add('visible');
                     errorBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }

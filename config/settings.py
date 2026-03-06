@@ -222,3 +222,11 @@ SERVER_EMAIL = DEFAULT_FROM_EMAIL
 AZURE_TENANT_ID = os.getenv('AZURE_TENANT_ID')
 AZURE_CLIENT_ID = os.getenv('AZURE_CLIENT_ID')
 AZURE_CLIENT_SECRET = os.getenv('AZURE_CLIENT_SECRET')
+
+# ──────────────────────────────────────────────
+# Contact form spam protection
+# ──────────────────────────────────────────────
+CONTACT_MIN_SUBMIT_SECONDS = 4     # reject submissions faster than this (bot speed)
+CONTACT_MAX_SUBMIT_SECONDS = 3600  # signed token expires after 1 hour
+CONTACT_RATE_LIMIT = 3             # max submissions per IP per window
+CONTACT_RATE_WINDOW = 3600         # rate limit window in seconds (1 hour)
