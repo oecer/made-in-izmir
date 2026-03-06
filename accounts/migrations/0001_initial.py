@@ -8,6 +8,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('catalog', '0001_initial'),
         ('main', '0017_alter_tenant_owner'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
