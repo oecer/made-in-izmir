@@ -29,7 +29,9 @@
       "Bash(python manage.py makemigrations --merge --no-input accounts)",
       "Bash(git checkout production)",
       "Bash(git cherry-pick 8ff31c3)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git merge development)",
+      "Bash(git add -f .claude/settings.local.json)"
     ]
   }
 }
