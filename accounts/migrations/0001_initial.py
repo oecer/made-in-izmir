@@ -8,7 +8,6 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('catalog', '0001_initial'),
         ('main', '0017_alter_tenant_owner'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
@@ -125,8 +124,6 @@ class Migration(migrations.Migration):
                         ('created_at', models.DateTimeField(auto_now_add=True)),
                         ('updated_at', models.DateTimeField(auto_now=True)),
                         ('owner', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='owned_tenants', to=settings.AUTH_USER_MODEL, verbose_name='Firma Hesabı Sahibi')),
-                        ('buyer_interested_sectors', models.ManyToManyField(blank=True, related_name='interested_buyer_tenants', to='catalog.sector', verbose_name='İlgilenilen Sektörler')),
-                        ('producer_sectors', models.ManyToManyField(blank=True, related_name='producer_tenants', to='catalog.sector', verbose_name='Sektörler')),
                     ],
                     options={
                         'verbose_name': 'Firma (Tenant)',
