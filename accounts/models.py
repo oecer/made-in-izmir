@@ -339,6 +339,28 @@ class UserProfile(models.Model):
         return f"{self.user.get_full_name()} - {tenant_name}"
 
 
+class ContactSubmission(models.Model):
+    """Audit log for contact form submissions that passed all spam checks."""
+
+    name    = models.CharField(max_length=200, verbose_name="Ad Soyad")
+    email   = models.EmailField(verbose_name="E-posta")
+    phone   = models.CharField(max_length=50, blank=True, verbose_name="Telefon")
+    subject = models.CharField(max_length=200, verbose_name="Konu")
+    message = models.TextField(verbose_name="Mesaj")
+    ip_address   = models.GenericIPAddressField(verbose_name="IP Adresi")
+    submitted_at = models.DateTimeField(auto_now_add=True, verbose_name="Gönderilme Zamanı")
+    email_sent   = models.BooleanField(default=False, verbose_name="E-posta Gönderildi")
+
+    class Meta:
+        verbose_name = "İletişim Formu Başvurusu"
+        verbose_name_plural = "İletişim Formu Başvuruları"
+        ordering = ['-submitted_at']
+        db_table = 'contact_submission'
+
+    def __str__(self):
+        return f"{self.name} <{self.email}> – {self.subject}"
+
+
 class ProfileEditRequest(models.Model):
     """Pending profile edit requests awaiting admin approval"""
 

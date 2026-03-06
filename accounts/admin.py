@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils import timezone
 from django.contrib import messages
 from django.utils.html import format_html, mark_safe
-from .models import Tenant, UserProfile, SignupRequest, SignupRequestHistory, ProfileEditRequest, MembershipConsent, ConsentText
+from .models import Tenant, UserProfile, SignupRequest, SignupRequestHistory, ProfileEditRequest, MembershipConsent, ConsentText, ContactSubmission
 
 
 class SignupRequestHistoryInline(admin.TabularInline):
@@ -562,6 +562,22 @@ class MembershipConsentAdmin(admin.ModelAdmin):
     class Meta:
         verbose_name = "Üyelik Onay Kaydı"
         verbose_name_plural = "Üyelik Onay Kayıtları"
+
+
+@admin.register(ContactSubmission)
+class ContactSubmissionAdmin(admin.ModelAdmin):
+    """Read-only admin for contact form submission audit records."""
+    list_display   = ('name', 'email', 'subject', 'ip_address', 'email_sent', 'submitted_at')
+    list_filter    = ('email_sent', 'submitted_at')
+    search_fields  = ('name', 'email', 'subject', 'message', 'ip_address')
+    readonly_fields = ('name', 'email', 'phone', 'subject', 'message', 'ip_address', 'submitted_at', 'email_sent')
+    ordering = ('-submitted_at',)
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(ConsentText)
