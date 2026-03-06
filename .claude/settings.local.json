@@ -18,7 +18,12 @@
       "Bash(python manage.py migrate --plan)",
       "Bash(python manage.py showmigrations accounts catalog expos main)",
       "Bash(python manage.py check --deploy)",
-      "Bash(python -c \":*)"
+      "Bash(python -c \":*)",
+      "Bash(git cherry-pick 727e5be)",
+      "Bash(git stash)",
+      "Bash(git stash pop)",
+      "Bash(git add .claude/settings.local.json)",
+      "Bash(git stash drop)"
     ]
   }
 }
