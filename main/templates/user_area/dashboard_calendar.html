@@ -507,10 +507,17 @@
                         <span data-i18n="dashboard.already_registered">Kayıt Oldunuz</span>
                     </span>
                 {% elif expo.is_registration_open %}
+                    {% if request.user.profile.tenant_role == 'read_only' %}
+                    <span class="btn-cal-primary gold disabled" aria-disabled="true" title="Salt okunur kullanıcılar fuara kayıt olamaz" style="opacity:0.5;cursor:not-allowed;pointer-events:none;">
+                        <i class="fas fa-handshake"></i>
+                        <span data-i18n="dashboard.register_expo">Başvuru Yap</span>
+                    </span>
+                    {% else %}
                     <a href="{% url 'expos:expo_signup' expo.id %}" class="btn-cal-primary gold">
                         <i class="fas fa-handshake"></i>
                         <span data-i18n="dashboard.register_expo">Başvuru Yap</span>
                     </a>
+                    {% endif %}
                 {% else %}
                     <span class="btn-cal-disabled">
                         <i class="fas fa-lock"></i>

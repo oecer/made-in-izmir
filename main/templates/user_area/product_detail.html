@@ -140,12 +140,24 @@
 
         {% if is_owner %}
         <div class="owner-actions">
+            {% if request.user.profile.tenant_role == 'read_only' %}
+            <span class="btn btn-warning disabled" aria-disabled="true" title="Salt okunur kullanıcılar ürün düzenleyemez" style="opacity:0.5;cursor:not-allowed;pointer-events:none;">
+                <i class="fas fa-edit"></i> <span data-i18n="dashboard.edit">Düzenle</span>
+            </span>
+            {% else %}
             <a href="{% url 'catalog:edit_product' product.id %}" class="btn btn-warning">
                 <i class="fas fa-edit"></i> <span data-i18n="dashboard.edit">Düzenle</span>
             </a>
+            {% endif %}
+            {% if request.user.profile.tenant_role == 'read_only' %}
+            <span class="btn btn-danger disabled" aria-disabled="true" title="Salt okunur kullanıcılar ürün silemez" style="opacity:0.5;cursor:not-allowed;pointer-events:none;">
+                <i class="fas fa-trash"></i> <span data-i18n="dashboard.delete">Sil</span>
+            </span>
+            {% else %}
             <a href="{% url 'catalog:delete_product' product.id %}" class="btn btn-danger">
                 <i class="fas fa-trash"></i> <span data-i18n="dashboard.delete">Sil</span>
             </a>
+            {% endif %}
         </div>
         {% endif %}
     </div>

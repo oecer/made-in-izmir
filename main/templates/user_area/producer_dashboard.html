@@ -55,9 +55,15 @@
     <h3 data-i18n="dashboard.quick_links" class="quick-links-label">Hızlı Bağlantılar</h3>
 </div>
 <div class="dashboard-actions mb-5">
+    {% if request.user.profile.tenant_role == 'read_only' %}
+    <span class="btn btn-primary disabled" aria-disabled="true" title="Salt okunur kullanıcılar ürün ekleyemez" style="opacity:0.5;cursor:not-allowed;pointer-events:none;">
+        <i class="fas fa-plus"></i> <span data-i18n="dashboard.add_new_product">Yeni Ürün Ekle</span>
+    </span>
+    {% else %}
     <a href="{% url 'catalog:add_product' %}" class="btn btn-primary">
         <i class="fas fa-plus"></i> <span data-i18n="dashboard.add_new_product">Yeni Ürün Ekle</span>
     </a>
+    {% endif %}
     <a href="{% url 'accounts:profile' %}" class="btn btn-secondary">
         <i class="fas fa-user"></i> <span data-i18n="dashboard.view_profile">Profili Görüntüle</span>
     </a>
@@ -76,10 +82,17 @@
             {% endif %}
         </div>
         <div class="section-title-right">
+            {% if request.user.profile.tenant_role == 'read_only' %}
+            <span class="btn btn-sm btn-add-inline disabled" aria-disabled="true" title="Salt okunur kullanıcılar ürün ekleyemez" style="opacity:0.5;cursor:not-allowed;pointer-events:none;">
+                <i class="fas fa-plus"></i>
+                <span data-i18n="dashboard.add_new_product">Yeni Ürün Ekle</span>
+            </span>
+            {% else %}
             <a href="{% url 'catalog:add_product' %}" class="btn btn-sm btn-add-inline">
                 <i class="fas fa-plus"></i>
                 <span data-i18n="dashboard.add_new_product">Yeni Ürün Ekle</span>
             </a>
+            {% endif %}
             <div class="filter-toolbar">
                 <form id="filter-form" method="GET" class="filter-form-inline">
                     {% if search_query %}
@@ -254,15 +267,27 @@
                         <a href="{% url 'catalog:product_detail' product.id %}" class="btn btn-sm btn-info" title="Görüntüle">
                             <i class="fas fa-eye"></i> <span data-i18n="dashboard.details">Görüntüle</span>
                         </a>
+                        {% if request.user.profile.tenant_role == 'read_only' %}
+                        <span class="btn btn-sm btn-warning disabled" aria-disabled="true" title="Salt okunur kullanıcılar ürün düzenleyemez" style="opacity:0.5;cursor:not-allowed;pointer-events:none;">
+                            <i class="fas fa-edit"></i> <span data-i18n="dashboard.edit">Düzenle</span>
+                        </span>
+                        {% else %}
                         <a href="{% url 'catalog:edit_product' product.id %}" class="btn btn-sm btn-warning" title="Düzenle">
                             <i class="fas fa-edit"></i> <span data-i18n="dashboard.edit">Düzenle</span>
                         </a>
+                        {% endif %}
+                        {% if request.user.profile.tenant_role == 'read_only' %}
+                        <span class="btn btn-sm btn-danger-ghost disabled" aria-disabled="true" title="Salt okunur kullanıcılar ürün silemez" style="opacity:0.5;cursor:not-allowed;pointer-events:none;">
+                            <i class="fas fa-trash"></i>
+                        </span>
+                        {% else %}
                         <a href="{% url 'catalog:delete_product' product.id %}"
                            class="btn btn-sm btn-danger-ghost"
                            title="Sil"
                            onclick="return confirm('Bu ürünü kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.')">
                             <i class="fas fa-trash"></i>
                         </a>
+                        {% endif %}
                     {% else %}
                         <div class="pending-notice">
                             <i class="fas fa-hourglass-half"></i>
@@ -291,9 +316,15 @@
             <i class="fas fa-box-open"></i>
             <h3 data-i18n="dashboard.no_products_yet">Henüz ürün eklemediniz</h3>
             <p data-i18n="dashboard.add_first_product_prompt">İlk ürününüzü ekleyerek başlayın!</p>
+            {% if request.user.profile.tenant_role == 'read_only' %}
+            <span class="btn btn-primary disabled" aria-disabled="true" title="Salt okunur kullanıcılar ürün ekleyemez" style="opacity:0.5;cursor:not-allowed;pointer-events:none;">
+                <i class="fas fa-plus"></i> <span data-i18n="dashboard.add_first_product">İlk Ürünü Ekle</span>
+            </span>
+            {% else %}
             <a href="{% url 'catalog:add_product' %}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> <span data-i18n="dashboard.add_first_product">İlk Ürünü Ekle</span>
             </a>
+            {% endif %}
         </div>
         {% endif %}
     {% endif %}

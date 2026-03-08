@@ -316,7 +316,7 @@ class TenantAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Company Information', {
-            'fields': ('company_name', 'phone_number', 'country', 'city', 'open_address', 'website', 'about_company')
+            'fields': ('company_name', 'company_username', 'phone_number', 'country', 'city', 'open_address', 'website', 'about_company')
         }),
         ('Ownership', {
             'fields': ('owner', 'owner_display'),
@@ -480,6 +480,7 @@ class ProfileEditRequestAdmin(admin.ModelAdmin):
         tenant.phone_number = edit_request.phone_number
         tenant.country = edit_request.country
         tenant.city = edit_request.city
+        tenant.open_address = edit_request.open_address
         tenant.buyer_quarterly_volume = edit_request.buyer_quarterly_volume
         tenant.producer_quarterly_sales = edit_request.producer_quarterly_sales
         tenant.producer_product_count = edit_request.producer_product_count

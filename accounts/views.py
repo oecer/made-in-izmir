@@ -111,6 +111,10 @@ def edit_profile_view(request):
         messages.error(request, 'Profil bilgileriniz bulunamadı.')
         return redirect('main:index')
 
+    if profile.tenant_role == 'read_only':
+        messages.error(request, 'Salt okunur kullanıcılar profil düzenleyemez.')
+        return redirect('accounts:profile')
+
     if request.method == 'POST':
         form = ProfileEditForm(request.POST, user=request.user)
         if form.is_valid():
