@@ -239,6 +239,14 @@ class Tenant(models.Model):
 
     # Company information
     company_name = models.CharField(max_length=200, verbose_name="Firma Adı")
+    company_username = models.SlugField(
+        max_length=150,
+        unique=True,
+        blank=True,
+        null=True,
+        verbose_name="Firma Kullanıcı Adı",
+        help_text="URL'de kullanılacak benzersiz firma tanımlayıcısı (örn. izmir-tekstil)"
+    )
     phone_number = models.CharField(max_length=20, verbose_name="Telefon Numarası")
     country = models.CharField(max_length=100, verbose_name="Ülke")
     city = models.CharField(max_length=100, verbose_name="Şehir")
@@ -385,6 +393,7 @@ class ProfileEditRequest(models.Model):
     phone_number = models.CharField(max_length=20, blank=True, verbose_name="Telefon Numarası")
     country = models.CharField(max_length=100, blank=True, verbose_name="Ülke")
     city = models.CharField(max_length=100, blank=True, verbose_name="Şehir")
+    open_address = models.TextField(blank=True, null=True, verbose_name="Açık Adres")
 
     # Buyer-specific fields (stored as JSON-like text for sectors)
     buyer_interested_sectors_ids = models.TextField(blank=True, null=True, verbose_name="İlgilenilen Sektör ID'leri")

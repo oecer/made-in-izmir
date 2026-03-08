@@ -116,6 +116,16 @@
                     </span>
                 </div>
                 <div class="info-row">
+                    <span class="info-label" data-i18n="profile.company_username">Firma Kullanıcı Adı</span>
+                    <span class="info-value">
+                        {% if user.profile.tenant.company_username %}
+                            <span class="username-chip">@{{ user.profile.tenant.company_username }}</span>
+                        {% else %}
+                            <span class="info-empty">-</span>
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="info-row">
                     <span class="info-label" data-i18n="profile.phone">Telefon</span>
                     <span class="info-value">
                         {% if user.profile.tenant.phone_number %}

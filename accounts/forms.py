@@ -252,6 +252,11 @@ class ProfileEditForm(forms.Form):
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Şehir'}),
         label='Şehir'
     )
+    open_address = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Sokak, Mahalle, Posta Kodu…', 'rows': 3}),
+        label='Açık Adres'
+    )
 
     buyer_interested_sectors = forms.ModelMultipleChoiceField(
         queryset=None,  # Set in __init__
@@ -298,6 +303,7 @@ class ProfileEditForm(forms.Form):
                 self.fields['phone_number'].initial = tenant.phone_number
                 self.fields['country'].initial = tenant.country
                 self.fields['city'].initial = tenant.city
+                self.fields['open_address'].initial = tenant.open_address
                 if tenant.is_buyer:
                     self.fields['buyer_interested_sectors'].initial = tenant.buyer_interested_sectors.all()
                     self.fields['buyer_quarterly_volume'].initial = tenant.buyer_quarterly_volume
@@ -349,6 +355,7 @@ class ProfileEditForm(forms.Form):
                 phone_number=self.cleaned_data['phone_number'],
                 country=self.cleaned_data['country'],
                 city=self.cleaned_data['city'],
+                open_address=self.cleaned_data.get('open_address') or '',
                 buyer_interested_sectors_ids=buyer_sector_ids,
                 buyer_quarterly_volume=self.cleaned_data.get('buyer_quarterly_volume'),
                 producer_sectors_ids=producer_sector_ids,
