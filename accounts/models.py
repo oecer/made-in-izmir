@@ -77,7 +77,7 @@ class SignupRequest(models.Model):
         verbose_name = "Kayıt Talebi"
         verbose_name_plural = "Kayıt Talepleri"
         ordering = ['-created_at']
-        db_table = 'main_signuprequest'
+        db_table = 'accounts_signuprequest'
 
     def __str__(self):
         return f"{self.username} - {self.company_name} ({self.get_status_display()})"
@@ -123,7 +123,7 @@ class SignupRequestHistory(models.Model):
         verbose_name = "Kayıt Talebi Geçmişi"
         verbose_name_plural = "Kayıt Talebi Geçmişi"
         ordering = ['-changed_at']
-        db_table = 'main_signuprequesthistory'
+        db_table = 'accounts_signuprequesthistory'
 
     def __str__(self):
         return f"#{self.signup_request_id} – {self.changed_at.strftime('%d.%m.%Y %H:%M')} – {self.changed_by}"
@@ -151,7 +151,7 @@ class ConsentText(models.Model):
     class Meta:
         verbose_name = "Üyelik Onay Metni"
         verbose_name_plural = "Üyelik Onay Metni"  # Intentionally singular – singleton
-        db_table = 'main_consenttext'
+        db_table = 'accounts_consenttext'
 
     def __str__(self):
         return f"Üyelik Onay Metni ({self.version}) – {self.updated_at.strftime('%d.%m.%Y')}"
@@ -218,7 +218,7 @@ class MembershipConsent(models.Model):
         verbose_name = "Üyelik Onay Kaydı"
         verbose_name_plural = "Üyelik Onay Kayıtları"
         ordering = ['-consent_given_at']
-        db_table = 'main_membershipconsent'
+        db_table = 'accounts_membershipconsent'
 
     def __str__(self):
         return f"{self.company_name} ({self.username}) – {self.consent_given_at.strftime('%d.%m.%Y %H:%M')}"
@@ -300,7 +300,7 @@ class Tenant(models.Model):
         verbose_name = "Firma (Tenant)"
         verbose_name_plural = "Firmalar (Tenants)"
         ordering = ['company_name']
-        db_table = 'main_tenant'
+        db_table = 'accounts_tenant'
 
     def __str__(self):
         return self.company_name
@@ -340,7 +340,7 @@ class UserProfile(models.Model):
     class Meta:
         verbose_name = "Kullanıcı Profili"
         verbose_name_plural = "Kullanıcı Profilleri"
-        db_table = 'main_userprofile'
+        db_table = 'accounts_userprofile'
 
     def __str__(self):
         tenant_name = self.tenant.company_name if self.tenant else '-'
@@ -363,7 +363,7 @@ class ContactSubmission(models.Model):
         verbose_name = "İletişim Formu Başvurusu"
         verbose_name_plural = "İletişim Formu Başvuruları"
         ordering = ['-submitted_at']
-        db_table = 'contact_submission'
+        db_table = 'accounts_contactsubmission'
 
     def __str__(self):
         return f"{self.name} <{self.email}> – {self.subject}"
@@ -439,7 +439,7 @@ class ProfileEditRequest(models.Model):
         verbose_name = "Profil Düzenleme Talebi"
         verbose_name_plural = "Profil Düzenleme Talepleri"
         ordering = ['-created_at']
-        db_table = 'main_profileeditrequest'
+        db_table = 'accounts_profileeditrequest'
 
     def __str__(self):
         return f"{self.user.username} - Profil Düzenleme ({self.get_status_display()})"

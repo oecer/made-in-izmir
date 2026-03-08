@@ -35,7 +35,7 @@ class Expo(models.Model):
         verbose_name = "Fuar"
         verbose_name_plural = "Fuarlar"
         ordering = ['start_date']
-        db_table = 'main_expo'
+        db_table = 'expos_expo'
 
     def __str__(self):
         return self.title_tr or self.title_en or f"Expo #{self.id}"
@@ -115,7 +115,7 @@ class ExpoSignup(models.Model):
         verbose_name_plural = "Fuar Kayıtları"
         ordering = ['-created_at']
         unique_together = ['expo', 'user']
-        db_table = 'main_exposignup'
+        db_table = 'expos_exposignup'
 
     def __str__(self):
         return f"{self.user.username} - {self.expo.title_tr} ({self.get_status_display()})"

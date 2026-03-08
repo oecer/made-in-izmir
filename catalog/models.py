@@ -11,7 +11,7 @@ class Sector(models.Model):
         verbose_name = "Sektör"
         verbose_name_plural = "Sektörler"
         ordering = ['name_tr']
-        db_table = 'main_sector'
+        db_table = 'catalog_sector'
 
     def __str__(self):
         return self.name_tr
@@ -26,7 +26,7 @@ class ProductTag(models.Model):
         verbose_name = "Ürün Etiketi"
         verbose_name_plural = "Ürün Etiketleri"
         ordering = ['name_tr']
-        db_table = 'main_producttag'
+        db_table = 'catalog_producttag'
 
     def __str__(self):
         return self.name_tr
@@ -105,7 +105,7 @@ class ProductRequest(models.Model):
         verbose_name = "Ürün Talebi"
         verbose_name_plural = "Ürün Talepleri"
         ordering = ['-created_at']
-        db_table = 'main_productrequest'
+        db_table = 'catalog_productrequest'
 
     def __str__(self):
         title = self.title_tr or self.title_en or f"Product Request #{self.id}"
@@ -194,7 +194,7 @@ class Product(models.Model):
         verbose_name = "Ürün"
         verbose_name_plural = "Ürünler"
         ordering = ['-created_at']
-        db_table = 'main_product'
+        db_table = 'catalog_product'
 
     def __str__(self):
         return self.title_tr or self.title_en or f"Product #{self.id}"
