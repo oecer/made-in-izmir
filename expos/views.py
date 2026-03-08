@@ -59,7 +59,12 @@ def expo_signup_view(request, expo_id):
         messages.error(request, 'Bu fuar için kayıt süresi dolmuştur.')
         return redirect('expos:dashboard_calendar')
 
-    tenant = request.user.profile.tenant
+    profile = request.user.profile
+    if profile.tenant_role == 'read_only':
+        messages.error(request, 'Salt okunur kullanıcılar fuara kayıt olamaz.')
+        return redirect('expos:dashboard_calendar')
+
+    tenant = profile.tenant
     existing_signup = ExpoSignup.objects.filter(expo=expo, tenant=tenant).first()
     if existing_signup:
         messages.warning(request, 'Bu fuara firmanız zaten kayıt oldu.')

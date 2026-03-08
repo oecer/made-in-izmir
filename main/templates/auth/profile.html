@@ -44,10 +44,17 @@
             </div>
         </div>
         <div class="profile-hero-actions">
+            {% if request.user.profile.tenant_role == 'read_only' %}
+            <span class="btn-hero-edit disabled" aria-disabled="true" title="Salt okunur kullanıcılar profil düzenleyemez" style="opacity:0.5;cursor:not-allowed;pointer-events:none;">
+                <i class="fas fa-edit"></i>
+                <span data-i18n="profile.edit_profile">Profili Düzenle</span>
+            </span>
+            {% else %}
             <a href="{% url 'accounts:edit_profile' %}" class="btn-hero-edit">
                 <i class="fas fa-edit"></i>
                 <span data-i18n="profile.edit_profile">Profili Düzenle</span>
             </a>
+            {% endif %}
         </div>
     </div>
 

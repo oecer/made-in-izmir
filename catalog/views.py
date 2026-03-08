@@ -196,6 +196,9 @@ def add_product_view(request):
         if not tenant or not tenant.is_producer:
             messages.error(request, 'Bu sayfaya erişim yetkiniz yok.')
             return redirect('accounts:dashboard')
+        if profile.tenant_role == 'read_only':
+            messages.error(request, 'Salt okunur kullanıcılar ürün ekleyemez.')
+            return redirect('accounts:dashboard')
     except Exception:
         messages.error(request, 'Profil bilgileriniz bulunamadı.')
         return redirect('main:index')
@@ -238,7 +241,12 @@ def add_product_view(request):
 @login_required
 def edit_product_view(request, product_id):
     """Edit product view (producers only) - any tenant member can edit"""
-    product = get_object_or_404(Product, id=product_id, tenant=request.user.profile.tenant)
+    profile = request.user.profile
+    product = get_object_or_404(Product, id=product_id, tenant=profile.tenant)
+
+    if profile.tenant_role == 'read_only':
+        messages.error(request, 'Salt okunur kullanıcılar ürün düzenleyemez.')
+        return redirect('catalog:producer_dashboard')
 
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES, instance=product, user=request.user)
@@ -257,7 +265,12 @@ def edit_product_view(request, product_id):
 @login_required
 def delete_product_view(request, product_id):
     """Delete product view (producers only) - any tenant member can delete"""
-    product = get_object_or_404(Product, id=product_id, tenant=request.user.profile.tenant)
+    profile = request.user.profile
+    product = get_object_or_404(Product, id=product_id, tenant=profile.tenant)
+
+    if profile.tenant_role == 'read_only':
+        messages.error(request, 'Salt okunur kullanıcılar ürün silemez.')
+        return redirect('catalog:producer_dashboard')
 
     if request.method == 'POST':
         product.delete()
