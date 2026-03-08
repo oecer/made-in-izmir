@@ -127,11 +127,15 @@
                     </span>
                 </div>
                 <div class="info-row">
-                    <span class="info-label" data-i18n="profile.location">Konum</span>
+                    <span class="info-label" data-i18n="profile.address">Adres</span>
                     <span class="info-value">
-                        {% if user.profile.tenant.city or user.profile.tenant.country %}
-                            <i class="fas fa-map-marker-alt info-icon"></i>
-                            {{ user.profile.tenant.city }}{% if user.profile.tenant.city and user.profile.tenant.country %}, {% endif %}{{ user.profile.tenant.country }}
+                        {% if user.profile.tenant.open_address or user.profile.tenant.city or user.profile.tenant.country %}
+                            <i class="fas fa-map-marker-alt info-icon" style="align-self:flex-start;margin-top:3px;"></i>
+                            <span class="address-text">
+                                {% if user.profile.tenant.open_address %}{{ user.profile.tenant.open_address }}{% endif %}
+                                {% if user.profile.tenant.open_address and user.profile.tenant.city %}<br>{% endif %}
+                                {{ user.profile.tenant.city }}{% if user.profile.tenant.city and user.profile.tenant.country %}, {% endif %}{{ user.profile.tenant.country }}
+                            </span>
                         {% else %}
                             <span class="info-empty">-</span>
                         {% endif %}
@@ -544,6 +548,10 @@
     /* Email value style */
     .email-value {
         word-break: break-all;
+    }
+
+    .address-text {
+        line-height: 1.5;
     }
 
     /* Highlight values */
