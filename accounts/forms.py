@@ -1,8 +1,33 @@
+import unicodedata
+import re
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from .models import SignupRequest, ProfileEditRequest
+
+
+def _slugify_name(value):
+    """Normalize a name part to lowercase ASCII letters only."""
+    value = unicodedata.normalize('NFKD', value)
+    value = value.encode('ascii', 'ignore').decode('ascii')
+    value = re.sub(r'[^a-z]', '', value.lower())
+    return value or 'user'
+
+
+def generate_unique_username(first_name, last_name):
+    """Generate username as firstname.lastname, append 1/2/3... if taken."""
+    base = f"{_slugify_name(first_name)}.{_slugify_name(last_name)}"
+    candidate = base
+    counter = 1
+    existing_users = set(User.objects.values_list('username', flat=True))
+    existing_requests = set(SignupRequest.objects.values_list('username', flat=True))
+    taken = existing_users | existing_requests
+    while candidate in taken:
+        candidate = f"{base}{counter}"
+        counter += 1
+    return candidate
 
 
 class SignUpForm(UserCreationForm):
@@ -107,13 +132,12 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Kullanıcı Adı', 'data-i18n-placeholder': 'signup.username'})
-        }
+        fields = ('first_name', 'last_name', 'email', 'password1', 'password2')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Username is auto-generated; remove it from the rendered form
+        self.fields.pop('username', None)
         from catalog.models import Sector
         self.fields['buyer_interested_sectors'].queryset = Sector.objects.all()
         self.fields['producer_sectors'].queryset = Sector.objects.all()
@@ -121,6 +145,10 @@ class SignUpForm(UserCreationForm):
         self.fields['password2'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Şifre Tekrar', 'data-i18n-placeholder': 'signup.password_confirm'})
         self.fields['buyer_interested_sectors'].label_from_instance = lambda obj: f"{obj.name_tr} | {obj.name_en}"
         self.fields['producer_sectors'].label_from_instance = lambda obj: f"{obj.name_tr} | {obj.name_en}"
+
+    def clean_username(self):
+        # Username is auto-generated; skip parent validation
+        return self.cleaned_data.get('username', '')
 
     def clean(self):
         cleaned_data = super().clean()
@@ -157,8 +185,12 @@ class SignUpForm(UserCreationForm):
         ) if self.cleaned_data.get('producer_sectors') else ''
 
         if commit:
+            username = generate_unique_username(
+                self.cleaned_data['first_name'],
+                self.cleaned_data['last_name'],
+            )
             signup_request = SignupRequest.objects.create(
-                username=self.cleaned_data['username'],
+                username=username,
                 email=self.cleaned_data['email'],
                 first_name=self.cleaned_data['first_name'],
                 last_name=self.cleaned_data['last_name'],
