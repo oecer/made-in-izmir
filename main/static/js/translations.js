@@ -747,7 +747,7 @@ const translations = {
 
             // Intro
             intro_eyebrow: "Kuresel Tedarik Ekosistemi",
-            intro_title: "Küresel Ticaret için Stratejik Bir Merkez",
+            intro_title: "Küresel Tedarik Zincirinizde Stratejik Avantaj: İzmir",
             intro_para: "İzmir; geniş ürün yelpazesi, yüksek kalite standartları ve güçlü üretim altyapısıyla uluslararası alıcılar için güvenilir bir tedarik merkezidir. Gelişmiş liman ağı sayesinde Avrupa, Afrika, Orta Doğu, Amerika ve Asya pazarlarına etkin ve hızlı erişim sağlanırken; kara yolu ile Avrupa'nın en uzak noktalarına, Rusya, Orta Asya ve Türk Cumhuriyetleri'ne ortalama 3–5 gün içinde ulaşabilen stratejik bir lojistik avantaj sunmaktadır. Bu güçlü konum, İzmir'i kaliteli üretim ile hızlı ve sürdürülebilir teslimatın buluştuğu, küresel ticaret için önemli bir merkez haline getirmektedir.",
             intro_tagline: "İzmir - Kaliteli Üretim ile Hızlı Teslimatın Buluştuğu Nokta.",
 
@@ -1577,7 +1577,7 @@ const translations = {
 
             // Intro
             intro_eyebrow: "Global Supply Ecosystem",
-            intro_title: "A Strategic Center for Global Trade",
+            intro_title: "Strategic Advantage in Your Global Supply Chain: Izmir",
             intro_para: "Izmir is a reliable sourcing hub for international buyers with its wide product range, high quality standards, and strong production infrastructure. Thanks to its well-developed port network, the city provides efficient and fast access to markets across Europe, Africa, the Middle East, the Americas, and Asia. By road, it also offers a strategic logistics advantage with delivery access to the farthest points of Europe, as well as Russia and Central Asia within an average of 3–5 days. With this strong positioning, Izmir stands as a key global trade center where quality production meets fast and sustainable delivery.",
             intro_tagline: "Izmir - Where Quality Production Meets Fast Delivery.",
 
@@ -1601,7 +1601,7 @@ const translations = {
             deep_subtitle: "The key structural advantages that make Izmir a strong sourcing hub in global trade.",
             deep1_title: "Maritime Access",
             deep1_desc: "Izmir Port is a major export hub that directly connects manufacturers to global markets through its strategic location, high handling capacity, and modern logistics infrastructure. Supported by regular shipping lines and advanced operational capabilities, it serves as a key maritime gateway for intercontinental trade, enabling fast, reliable, and sustainable sourcing for international buyers.",
-            deep2_title: "Road Network",
+            deep2_title: "Road Connectivity",
             deep2_desc: "Izmir offers fast and uninterrupted land access to Europe, as well as to the Middle East, Caucasus, and Central Asian markets through modern highway networks and established international logistics corridors. This connectivity enables flexible, timely, and reliable shipping operations between manufacturers and global buyers.",
             deep3_title: "Air Cargo Access",
             deep3_desc: "Izmir Adnan Menderes International Airport provides fast air cargo connectivity to global destinations through its extensive flight network and integrated cargo operations. It enables efficient and reliable transportation for sample shipments, urgent orders, and time-sensitive deliveries between manufacturers and international buyers.",
