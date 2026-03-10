@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import SignUpForm, CustomLoginForm, ProfileEditForm
-from .models import MembershipConsent, ConsentText
+from .forms import SignUpForm, CustomLoginForm, ProfileEditForm, TenantLogoRequestForm, TenantPhotoRequestForm
+from .models import MembershipConsent, ConsentText, TenantPhoto
 
 
 def _get_client_ip(request):
@@ -141,3 +141,118 @@ def dashboard_view(request):
     except Exception:
         messages.error(request, 'Profil bilgileriniz bulunamadı.')
         return redirect('main:index')
+
+
+def company_profile_view(request, company_username):
+    """Public company profile/showroom page."""
+    from django.shortcuts import get_object_or_404
+    from django.http import Http404
+    from catalog.models import Product
+    from .models import Tenant
+
+    tenant = get_object_or_404(Tenant, company_username=company_username)
+
+    if not tenant.show_company_profile:
+        raise Http404("Bu firma profili mevcut değil.")
+
+    is_tenant_admin = False
+    has_pending_logo = bool(tenant.logo_pending)
+    pending_photo_count = 0
+
+    if request.user.is_authenticated:
+        try:
+            profile = request.user.profile
+            if profile.tenant == tenant and profile.tenant_role == 'admin':
+                is_tenant_admin = True
+                pending_photo_count = tenant.photo_requests.filter(status='pending').count()
+        except Exception:
+            pass
+
+    gallery_photos = tenant.gallery_photos.all()
+    products = Product.objects.filter(tenant=tenant, is_active=True, in_showroom=True).order_by('-created_at')
+
+    context = {
+        'tenant': tenant,
+        'gallery_photos': gallery_photos,
+        'products': products,
+        'is_tenant_admin': is_tenant_admin,
+        'has_pending_logo': has_pending_logo,
+        'pending_photo_count': pending_photo_count,
+    }
+    return render(request, 'company_profile/company_profile.html', context)
+
+
+@login_required
+def submit_company_logo_view(request):
+    """Handles logo submission for approval."""
+    from django.http import JsonResponse
+
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Geçersiz istek.'}, status=405)
+
+    try:
+        profile = request.user.profile
+    except Exception:
+        return JsonResponse({'error': 'Profil bulunamadı.'}, status=403)
+
+    if profile.tenant_role != 'admin':
+        return JsonResponse({'error': 'Yetkiniz yok.'}, status=403)
+
+    tenant = profile.tenant
+    if not tenant:
+        return JsonResponse({'error': 'Firma bulunamadı.'}, status=403)
+
+    # Only one pending logo request at a time
+    if tenant.logo_requests.filter(status='pending').exists():
+        return JsonResponse({'error': 'Zaten onay bekleyen bir logo talebiniz var.'}, status=400)
+
+    form = TenantLogoRequestForm(request.POST, request.FILES)
+    if form.is_valid():
+        logo_request = form.save(commit=False)
+        logo_request.tenant = tenant
+        logo_request.submitted_by = request.user
+        logo_request.status = 'pending'
+        logo_request.save()
+
+        # Store pending preview on tenant
+        tenant.logo_pending = logo_request.logo
+        tenant.save(update_fields=['logo_pending'])
+
+        return JsonResponse({'success': True, 'message': 'Logonuz yönetici onayına gönderildi.'})
+
+    return JsonResponse({'error': str(form.errors)}, status=400)
+
+
+@login_required
+def submit_gallery_photo_view(request):
+    """Handles gallery photo submission for approval."""
+    from django.http import JsonResponse
+
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Geçersiz istek.'}, status=405)
+
+    try:
+        profile = request.user.profile
+    except Exception:
+        return JsonResponse({'error': 'Profil bulunamadı.'}, status=403)
+
+    if profile.tenant_role != 'admin':
+        return JsonResponse({'error': 'Yetkiniz yok.'}, status=403)
+
+    tenant = profile.tenant
+    if not tenant:
+        return JsonResponse({'error': 'Firma bulunamadı.'}, status=403)
+
+    if TenantPhoto.objects.filter(tenant=tenant).count() >= 10:
+        return JsonResponse({'error': 'Maksimum 10 galeri fotoğrafı yükleyebilirsiniz.'}, status=400)
+
+    form = TenantPhotoRequestForm(request.POST, request.FILES)
+    if form.is_valid():
+        photo_request = form.save(commit=False)
+        photo_request.tenant = tenant
+        photo_request.submitted_by = request.user
+        photo_request.status = 'pending'
+        photo_request.save()
+        return JsonResponse({'success': True, 'message': 'Fotoğrafınız yönetici onayına gönderildi.'})
+
+    return JsonResponse({'error': str(form.errors)}, status=400)

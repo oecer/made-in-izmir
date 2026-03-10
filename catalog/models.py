@@ -185,6 +185,11 @@ class Product(models.Model):
 
     # Status
     is_active = models.BooleanField(default=True, verbose_name="Aktif")
+    in_showroom = models.BooleanField(
+        default=False,
+        verbose_name="Vitrin Ürünü",
+        help_text="İşaretlenirse firma profil sayfasında görüntülenir."
+    )
 
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)

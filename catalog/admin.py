@@ -180,8 +180,8 @@ class ProductRequestAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title_tr', 'title_en', 'producer', 'sector', 'is_active', 'created_at')
-    list_filter = ('is_active', 'sector', 'created_at', 'tags')
+    list_display = ('title_tr', 'title_en', 'producer', 'sector', 'is_active', 'in_showroom', 'created_at')
+    list_filter = ('is_active', 'in_showroom', 'sector', 'created_at', 'tags')
     search_fields = ('title_tr', 'title_en', 'description_tr', 'description_en', 'producer__username')
     readonly_fields = ('created_at', 'updated_at')
     filter_horizontal = ('tags',)
@@ -203,7 +203,7 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('photo1', 'photo2', 'photo3')
         }),
         ('Tags & Status', {
-            'fields': ('tags', 'is_active')
+            'fields': ('tags', 'is_active', 'in_showroom')
         }),
         ('Timestamps', {
             'fields': ('created_at', 'updated_at'),

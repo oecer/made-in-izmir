@@ -1,0 +1,516 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ tenant.company_name }} - Made in İzmir{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/company_profile.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════════ -->
+<section class="cp-hero">
+    <div class="cp-hero-inner">
+
+        <!-- Logo -->
+        <div class="cp-logo-wrapper" id="cp-logo-wrapper">
+            {% if tenant.logo %}
+                <img src="{{ tenant.logo.url }}" alt="{{ tenant.company_name }} Logo" class="cp-logo-img" id="cp-logo-img">
+            {% else %}
+                <div class="cp-logo-placeholder" id="cp-logo-placeholder">
+                    {{ tenant.company_name|slice:":2"|upper }}
+                </div>
+            {% endif %}
+
+            {% if is_tenant_admin %}
+            <label class="cp-edit-overlay" for="logo-file-input">
+                <i class="fas fa-camera"></i>
+                <span data-i18n="company.logo_change">Logo Değiştir</span>
+            </label>
+            <input type="file" id="logo-file-input" accept="image/*" style="display:none">
+            {% endif %}
+
+            {% if has_pending_logo %}
+            <span class="cp-logo-pending-badge">
+                <i class="fas fa-clock"></i>
+                <span data-i18n="company.logo_pending">Logo onay bekliyor</span>
+            </span>
+            {% endif %}
+        </div>
+
+        <!-- Company Info -->
+        <div class="cp-hero-info">
+            <h1 class="cp-company-name">{{ tenant.company_name }}</h1>
+
+            {% if tenant.producer_sectors.all %}
+            <div class="cp-sector-badges">
+                {% for sector in tenant.producer_sectors.all %}
+                <span class="cp-sector-badge" data-tr="{{ sector.name_tr }}" data-en="{{ sector.name_en }}">
+                    {{ sector.name_tr }}
+                </span>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="cp-type-badges">
+                {% if tenant.is_producer %}
+                <span class="cp-type-badge cp-badge-producer">
+                    <i class="fas fa-industry"></i>
+                    <span data-i18n="company.producer">Üretici</span>
+                </span>
+                {% endif %}
+                {% if tenant.is_buyer %}
+                <span class="cp-type-badge cp-badge-buyer">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span data-i18n="company.buyer">Alıcı</span>
+                </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     GALLERY
+     ═══════════════════════════════════════════════════════════ -->
+{% if gallery_photos or is_tenant_admin %}
+<section class="cp-section">
+    <div class="cp-container">
+        <div class="cp-section-header">
+            <h2 data-i18n="company.gallery">Firma Galerisi</h2>
+        </div>
+
+        <div class="cp-gallery-grid">
+            {% for photo in gallery_photos %}
+            <div class="cp-gallery-item">
+                <img src="{{ photo.photo.url }}"
+                     alt="{% if photo.caption_tr %}{{ photo.caption_tr }}{% else %}{{ tenant.company_name }}{% endif %}"
+                     class="cp-gallery-img"
+                     loading="lazy"
+                     data-caption-tr="{{ photo.caption_tr }}"
+                     data-caption-en="{{ photo.caption_en }}">
+            </div>
+            {% endfor %}
+
+            {% if is_tenant_admin %}
+            <div class="cp-gallery-add-slot" id="gallery-add-slot">
+                <label class="cp-gallery-add-btn" for="gallery-file-trigger">
+                    <i class="fas fa-plus-circle"></i>
+                    <span data-i18n="company.add_photo">Fotoğraf Ekle</span>
+                    {% if pending_photo_count > 0 %}
+                    <span class="cp-pending-badge" id="cp-pending-badge">
+                        {{ pending_photo_count }} <span data-i18n="company.pending_approval">onay bekliyor</span>
+                    </span>
+                    {% endif %}
+                </label>
+                <input type="file" id="gallery-file-trigger" accept="image/*" style="display:none">
+            </div>
+            {% endif %}
+        </div>
+
+        {% if not gallery_photos and not is_tenant_admin %}
+        <div class="cp-empty">
+            <i class="fas fa-images"></i>
+            <p data-i18n="company.no_photos">Henüz galeri fotoğrafı eklenmemiş.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endif %}
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     ABOUT
+     ═══════════════════════════════════════════════════════════ -->
+{% if tenant.about_company %}
+<section class="cp-section cp-section-alt">
+    <div class="cp-container">
+        <div class="cp-section-header">
+            <h2 data-i18n="company.about">Firma Hakkında</h2>
+        </div>
+        <div class="cp-about-text">
+            {{ tenant.about_company|linebreaks }}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     CONTACT INFO
+     ═══════════════════════════════════════════════════════════ -->
+{% if tenant.phone_number or tenant.website or tenant.open_address or tenant.city %}
+<section class="cp-section {% if not tenant.about_company %}cp-section-alt{% endif %}">
+    <div class="cp-container">
+        <div class="cp-section-header">
+            <h2 data-i18n="company.contact_info">İletişim Bilgileri</h2>
+        </div>
+        <div class="cp-contact-grid">
+            {% if tenant.phone_number %}
+            <div class="cp-contact-item">
+                <i class="fas fa-phone cp-contact-icon"></i>
+                <div>
+                    <span class="cp-contact-label" data-i18n="company.phone">Telefon</span>
+                    <span class="cp-contact-value">{{ tenant.phone_number }}</span>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if tenant.website %}
+            <div class="cp-contact-item">
+                <i class="fas fa-globe cp-contact-icon"></i>
+                <div>
+                    <span class="cp-contact-label" data-i18n="company.website">Web Sitesi</span>
+                    <a href="{{ tenant.website }}" target="_blank" rel="noopener noreferrer" class="cp-contact-value cp-website-link">
+                        {{ tenant.website }}
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if tenant.open_address or tenant.city or tenant.country %}
+            <div class="cp-contact-item">
+                <i class="fas fa-map-marker-alt cp-contact-icon"></i>
+                <div>
+                    <span class="cp-contact-label" data-i18n="company.address">Adres</span>
+                    <span class="cp-contact-value">
+                        {% if tenant.open_address %}{{ tenant.open_address }}<br>{% endif %}
+                        {% if tenant.city %}{{ tenant.city }}{% endif %}{% if tenant.city and tenant.country %}, {% endif %}{% if tenant.country %}{{ tenant.country }}{% endif %}
+                    </span>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PRODUCTS
+     ═══════════════════════════════════════════════════════════ -->
+{% if products %}
+<section class="cp-section cp-section-alt">
+    <div class="cp-container">
+        <div class="cp-section-header">
+            <h2 data-i18n="company.our_products">Ürünlerimiz</h2>
+        </div>
+        <div class="cp-products-grid">
+            {% for product in products %}
+            <a href="{% url 'catalog:product_detail' product.id %}" class="cp-product-card">
+                <div class="cp-product-image">
+                    {% if product.photo1 %}
+                    <img src="{{ product.photo1.url }}"
+                         alt="{{ product.title_tr|default:product.title_en }}"
+                         loading="lazy">
+                    {% else %}
+                    <div class="cp-product-no-image">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="cp-product-info">
+                    <h3 class="cp-product-title"
+                        data-tr="{{ product.title_tr }}"
+                        data-en="{{ product.title_en }}">
+                        {{ product.title_tr|default:product.title_en }}
+                    </h3>
+                    {% if product.sector %}
+                    <span class="cp-product-sector"
+                          data-tr="{{ product.sector.name_tr }}"
+                          data-en="{{ product.sector.name_en }}">
+                        {{ product.sector.name_tr }}
+                    </span>
+                    {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     GALLERY UPLOAD MODAL (admin only)
+     ═══════════════════════════════════════════════════════════ -->
+{% if is_tenant_admin %}
+<div id="gallery-modal" class="cp-modal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="gallery-modal-title">
+    <div class="cp-modal-inner">
+        <button class="cp-modal-close" id="gallery-modal-close" aria-label="Kapat" data-i18n-aria-label="company.modal_close">&times;</button>
+        <h3 id="gallery-modal-title" data-i18n="company.add_photo">Galeri Fotoğrafı Ekle</h3>
+
+        <form id="gallery-upload-form" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            <div class="cp-form-group">
+                <label data-i18n="company.photo_label">Fotoğraf</label>
+                <div class="cp-drop-zone" id="gallery-drop-zone">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p data-i18n="company.drop_photo">Fotoğrafı buraya sürükleyin veya seçin</p>
+                    <input type="file" name="photo" id="gallery-file-input" accept="image/*">
+                </div>
+                <img id="gallery-preview" src="" alt=""
+                     style="display:none; max-width:100%; margin-top:12px; border-radius:10px; max-height:240px; object-fit:contain;">
+            </div>
+            <div class="cp-form-group">
+                <label data-i18n="company.caption_tr_label">Açıklama (TR)</label>
+                <input type="text" name="caption_tr" class="cp-input"
+                       data-i18n-placeholder="company.caption_tr_placeholder"
+                       placeholder="Fotoğraf açıklaması (isteğe bağlı)" maxlength="200">
+            </div>
+            <div class="cp-form-group">
+                <label data-i18n="company.caption_en_label">Açıklama (EN)</label>
+                <input type="text" name="caption_en" class="cp-input"
+                       data-i18n-placeholder="company.caption_en_placeholder"
+                       placeholder="Photo caption (optional)" maxlength="200">
+            </div>
+            <button type="submit" class="cp-btn-submit" id="gallery-submit-btn"
+                    data-i18n="company.submit_for_approval">Onaya Gönder</button>
+        </form>
+
+        <p class="cp-approval-note">
+            <i class="fas fa-info-circle"></i>
+            <span data-i18n="company.approval_note">Fotoğraflar yönetici onayından sonra galeride yayınlanır.</span>
+        </p>
+    </div>
+</div>
+{% endif %}
+
+<!-- Toast notification -->
+<div id="cp-toast" class="cp-toast" role="alert" aria-live="polite"></div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+(function () {
+    'use strict';
+
+    /* ── i18n helper: resolve dotted key from translations object ── */
+    function t(key) {
+        var lang = localStorage.getItem('madeInIzmirLang') || 'tr';
+        var parts = key.split('.');
+        var val = (typeof translations !== 'undefined') ? translations[lang] : null;
+        for (var i = 0; i < parts.length; i++) {
+            if (!val) break;
+            val = val[parts[i]];
+        }
+        return val || key;
+    }
+
+    /* ── Apply placeholder translations ──────────────────────────── */
+    function applyPlaceholders() {
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(function (el) {
+            el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
+        });
+    }
+
+    applyPlaceholders();
+    window.addEventListener('languageChanged', applyPlaceholders);
+
+    /* ── Toast helper ─────────────────────────────────────────────── */
+    var toastTimer;
+    function showToast(msg, type) {
+        var toast = document.getElementById('cp-toast');
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.className = 'cp-toast cp-toast-' + (type || 'success') + ' show';
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () {
+            toast.classList.remove('show');
+        }, 4000);
+    }
+
+    {% if is_tenant_admin %}
+
+    /* ── Logo upload ──────────────────────────────────────────────── */
+    var logoInput = document.getElementById('logo-file-input');
+    if (logoInput) {
+        logoInput.addEventListener('change', function () {
+            if (!this.files.length) return;
+            var formData = new FormData();
+            formData.append('logo', this.files[0]);
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+            fetch("{% url 'accounts:submit_company_logo' %}", {
+                method: 'POST',
+                body: formData,
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.success) {
+                    showToast(data.message || t('company.toast_logo_sent'), 'success');
+                    var wrapper = document.getElementById('cp-logo-wrapper');
+                    if (wrapper && !wrapper.querySelector('.cp-logo-pending-badge')) {
+                        var badge = document.createElement('span');
+                        badge.className = 'cp-logo-pending-badge';
+                        badge.innerHTML = '<i class="fas fa-clock"></i> <span data-i18n="company.logo_pending">' + t('company.logo_pending') + '</span>';
+                        wrapper.appendChild(badge);
+                    }
+                } else {
+                    showToast(data.error || t('company.toast_generic_error'), 'error');
+                }
+            })
+            .catch(function () {
+                showToast(t('company.toast_logo_error'), 'error');
+            });
+
+            this.value = '';
+        });
+    }
+
+    /* ── Gallery modal ────────────────────────────────────────────── */
+    var galleryModal     = document.getElementById('gallery-modal');
+    var galleryClose     = document.getElementById('gallery-modal-close');
+    var galleryTrigger   = document.getElementById('gallery-file-trigger');
+    var galleryFileInput = document.getElementById('gallery-file-input');
+    var galleryPreview   = document.getElementById('gallery-preview');
+    var galleryForm      = document.getElementById('gallery-upload-form');
+    var gallerySubmitBtn = document.getElementById('gallery-submit-btn');
+
+    function openGalleryModal() {
+        if (galleryModal) {
+            galleryModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeGalleryModal() {
+        if (galleryModal) {
+            galleryModal.style.display = 'none';
+            document.body.style.overflow = '';
+            if (galleryPreview) { galleryPreview.style.display = 'none'; galleryPreview.src = ''; }
+            if (galleryForm) galleryForm.reset();
+        }
+    }
+
+    if (galleryTrigger) {
+        galleryTrigger.addEventListener('change', function () {
+            if (this.files.length) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    if (galleryPreview) {
+                        galleryPreview.src = e.target.result;
+                        galleryPreview.style.display = 'block';
+                    }
+                    if (galleryFileInput) {
+                        var dt = new DataTransfer();
+                        dt.items.add(galleryTrigger.files[0]);
+                        galleryFileInput.files = dt.files;
+                    }
+                };
+                reader.readAsDataURL(this.files[0]);
+                openGalleryModal();
+            }
+        });
+    }
+
+    if (galleryClose) {
+        galleryClose.addEventListener('click', closeGalleryModal);
+    }
+
+    if (galleryModal) {
+        galleryModal.addEventListener('click', function (e) {
+            if (e.target === galleryModal) closeGalleryModal();
+        });
+    }
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && galleryModal && galleryModal.style.display !== 'none') {
+            closeGalleryModal();
+        }
+    });
+
+    if (galleryFileInput) {
+        galleryFileInput.addEventListener('change', function () {
+            if (!this.files.length) return;
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                if (galleryPreview) {
+                    galleryPreview.src = e.target.result;
+                    galleryPreview.style.display = 'block';
+                }
+            };
+            reader.readAsDataURL(this.files[0]);
+        });
+    }
+
+    var dropZone = document.getElementById('gallery-drop-zone');
+    if (dropZone) {
+        ['dragenter', 'dragover'].forEach(function (evt) {
+            dropZone.addEventListener(evt, function (e) {
+                e.preventDefault();
+                dropZone.classList.add('drag-over');
+            });
+        });
+        ['dragleave', 'drop'].forEach(function (evt) {
+            dropZone.addEventListener(evt, function () {
+                dropZone.classList.remove('drag-over');
+            });
+        });
+    }
+
+    /* Gallery form submit */
+    if (galleryForm) {
+        galleryForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            if (!galleryFileInput || !galleryFileInput.files.length) {
+                showToast(t('company.toast_select_photo'), 'error');
+                return;
+            }
+
+            if (gallerySubmitBtn) gallerySubmitBtn.disabled = true;
+
+            var formData = new FormData(this);
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+            fetch("{% url 'accounts:submit_gallery_photo' %}", {
+                method: 'POST',
+                body: formData,
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.success) {
+                    closeGalleryModal();
+                    showToast(data.message || t('company.toast_photo_sent'), 'success');
+                    // Update or create pending badge
+                    var addSlot = document.getElementById('gallery-add-slot');
+                    if (addSlot) {
+                        var badge = document.getElementById('cp-pending-badge');
+                        var pendingLabel = t('company.pending_approval');
+                        if (badge) {
+                            var countEl = badge.firstChild;
+                            var current = parseInt(countEl.textContent) || 0;
+                            badge.innerHTML = (current + 1) + ' <span data-i18n="company.pending_approval">' + pendingLabel + '</span>';
+                        } else {
+                            var newBadge = document.createElement('span');
+                            newBadge.id = 'cp-pending-badge';
+                            newBadge.className = 'cp-pending-badge';
+                            newBadge.innerHTML = '1 <span data-i18n="company.pending_approval">' + pendingLabel + '</span>';
+                            addSlot.querySelector('.cp-gallery-add-btn').appendChild(newBadge);
+                        }
+                    }
+                } else {
+                    showToast(data.error || t('company.toast_generic_error'), 'error');
+                }
+            })
+            .catch(function () {
+                showToast(t('company.toast_photo_error'), 'error');
+            })
+            .finally(function () {
+                if (gallerySubmitBtn) gallerySubmitBtn.disabled = false;
+            });
+        });
+    }
+
+    {% endif %}
+
+})();
+</script>
+{% endblock %}

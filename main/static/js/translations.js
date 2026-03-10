@@ -830,6 +830,38 @@ const translations = {
             cta_contact: "Bize Ulaşın",
             cta_signup: "Kayıt Ol",
         },
+
+        company: {
+            gallery: "Firma Galerisi",
+            about: "Firma Hakkında",
+            contact_info: "İletişim Bilgileri",
+            our_products: "Ürünlerimiz",
+            add_photo: "Fotoğraf Ekle",
+            no_photos: "Henüz galeri fotoğrafı eklenmemiş.",
+            drop_photo: "Fotoğrafı buraya sürükleyin veya seçin",
+            submit_for_approval: "Onaya Gönder",
+            phone: "Telefon",
+            website: "Web Sitesi",
+            address: "Adres",
+            producer: "Üretici",
+            buyer: "Alıcı",
+            logo_change: "Logo Değiştir",
+            logo_pending: "Logo onay bekliyor",
+            pending_approval: "onay bekliyor",
+            photo_label: "Fotoğraf",
+            caption_tr_label: "Açıklama (TR)",
+            caption_tr_placeholder: "Fotoğraf açıklaması (isteğe bağlı)",
+            caption_en_label: "Açıklama (EN)",
+            caption_en_placeholder: "Photo caption (optional)",
+            approval_note: "Fotoğraflar yönetici onayından sonra galeride yayınlanır.",
+            modal_close: "Kapat",
+            toast_logo_sent: "Logonuz onaya gönderildi.",
+            toast_photo_sent: "Fotoğrafınız onaya gönderildi.",
+            toast_select_photo: "Lütfen bir fotoğraf seçin.",
+            toast_logo_error: "Logo gönderilirken bir hata oluştu.",
+            toast_photo_error: "Fotoğraf gönderilirken bir hata oluştu.",
+            toast_generic_error: "Bir hata oluştu.",
+        },
     },
     en: {
         nav: {
@@ -1660,6 +1692,38 @@ const translations = {
             cta_contact: "Contact Us",
             cta_signup: "Sign Up",
         },
+
+        company: {
+            gallery: "Company Gallery",
+            about: "About the Company",
+            contact_info: "Contact Information",
+            our_products: "Our Products",
+            add_photo: "Add Photo",
+            no_photos: "No gallery photos have been added yet.",
+            drop_photo: "Drag a photo here or select one",
+            submit_for_approval: "Submit for Approval",
+            phone: "Phone",
+            website: "Website",
+            address: "Address",
+            producer: "Producer",
+            buyer: "Buyer",
+            logo_change: "Change Logo",
+            logo_pending: "Logo pending approval",
+            pending_approval: "pending approval",
+            photo_label: "Photo",
+            caption_tr_label: "Caption (TR)",
+            caption_tr_placeholder: "Photo caption in Turkish (optional)",
+            caption_en_label: "Caption (EN)",
+            caption_en_placeholder: "Photo caption (optional)",
+            approval_note: "Photos will be published in the gallery after admin approval.",
+            modal_close: "Close",
+            toast_logo_sent: "Your logo has been submitted for approval.",
+            toast_photo_sent: "Your photo has been submitted for approval.",
+            toast_select_photo: "Please select a photo.",
+            toast_logo_error: "An error occurred while submitting the logo.",
+            toast_photo_error: "An error occurred while submitting the photo.",
+            toast_generic_error: "An error occurred.",
+        },
     }
 };
 
@@ -1694,6 +1758,15 @@ function setLanguage(lang) {
         if (text) {
             el.textContent = text;
         }
+    });
+
+    // Update placeholder translations (data-i18n-placeholder)
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        const keys = key.split('.');
+        let value = translations[lang];
+        keys.forEach(k => { if (value) value = value[k]; });
+        if (value) el.placeholder = value;
     });
 
     // Toggle active class on language buttons if they exist
