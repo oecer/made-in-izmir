@@ -341,7 +341,7 @@ class TenantAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Company Information', {
             'fields': (
-                'company_name', 'company_username', 'phone_number',
+                'company_name', 'company_username', 'phone_number', 'company_email',
                 'country', 'city', 'open_address', 'website', 'about_company'
             )
         }),

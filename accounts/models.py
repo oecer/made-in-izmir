@@ -249,6 +249,7 @@ class Tenant(models.Model):
         help_text="URL'de kullanılacak benzersiz firma tanımlayıcısı (örn. izmir-tekstil)"
     )
     phone_number = models.CharField(max_length=20, verbose_name="Telefon Numarası")
+    company_email = models.EmailField(blank=True, null=True, verbose_name="Firma E-posta")
     country = models.CharField(max_length=100, verbose_name="Ülke")
     city = models.CharField(max_length=100, verbose_name="Şehir")
     open_address = models.TextField(blank=True, null=True, verbose_name="Açık Adres")
