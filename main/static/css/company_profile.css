@@ -143,32 +143,33 @@
     font-weight: 500;
 }
 
-.cp-type-badges {
+.cp-hero-contact {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 12px 24px;
+    margin-top: 4px;
 }
 
-.cp-type-badge {
+.cp-hero-contact-item {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 16px;
-    border-radius: 30px;
-    font-size: 0.83rem;
-    font-weight: 600;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
 }
 
-.cp-badge-producer {
-    background: rgba(251, 191, 36, 0.15);
+.cp-hero-contact-item:hover {
     color: #fbbf24;
-    border: 1px solid rgba(251, 191, 36, 0.3);
 }
 
-.cp-badge-buyer {
-    background: rgba(96, 165, 250, 0.15);
-    color: #60a5fa;
-    border: 1px solid rgba(96, 165, 250, 0.3);
+.cp-hero-contact-item i {
+    font-size: 0.85rem;
+    color: #cca43b;
+    width: 16px;
+    text-align: center;
+    flex-shrink: 0;
 }
 
 /* ── Container ───────────────────────────────────────────────── */
@@ -646,9 +647,13 @@
         font-size: 2.2rem;
     }
 
-    .cp-sector-badges,
-    .cp-type-badges {
+    .cp-sector-badges {
         justify-content: center;
+    }
+
+    .cp-hero-contact {
+        justify-content: center;
+        gap: 8px 20px;
     }
 
     .cp-section {

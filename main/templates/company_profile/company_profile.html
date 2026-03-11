@@ -55,18 +55,33 @@
             </div>
             {% endif %}
 
-            <div class="cp-type-badges">
-                {% if tenant.is_producer %}
-                <span class="cp-type-badge cp-badge-producer">
-                    <i class="fas fa-industry"></i>
-                    <span data-i18n="company.producer">Üretici</span>
-                </span>
+            <div class="cp-hero-contact">
+                {% if tenant.phone_number %}
+                <a href="tel:{{ tenant.phone_number }}" class="cp-hero-contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>{{ tenant.phone_number }}</span>
+                </a>
                 {% endif %}
-                {% if tenant.is_buyer %}
-                <span class="cp-type-badge cp-badge-buyer">
-                    <i class="fas fa-shopping-bag"></i>
-                    <span data-i18n="company.buyer">Alıcı</span>
-                </span>
+                {% if tenant.company_email %}
+                <a href="mailto:{{ tenant.company_email }}" class="cp-hero-contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>{{ tenant.company_email }}</span>
+                </a>
+                {% endif %}
+                {% if tenant.website %}
+                <a href="{{ tenant.website }}" target="_blank" rel="noopener noreferrer" class="cp-hero-contact-item">
+                    <i class="fas fa-globe"></i>
+                    <span>{{ tenant.website }}</span>
+                </a>
+                {% endif %}
+                {% if tenant.open_address or tenant.city or tenant.country %}
+                <div class="cp-hero-contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>
+                        {% if tenant.open_address %}{{ tenant.open_address }}{% if tenant.city or tenant.country %}, {% endif %}{% endif %}
+                        {% if tenant.city %}{{ tenant.city }}{% endif %}{% if tenant.city and tenant.country %}, {% endif %}{% if tenant.country %}{{ tenant.country }}{% endif %}
+                    </span>
+                </div>
                 {% endif %}
             </div>
         </div>
