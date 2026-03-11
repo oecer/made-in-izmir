@@ -35,7 +35,7 @@ class product_photo_upload_to:
         elif hasattr(instance, 'producer') and instance.producer_id:
             tenant_id = f'user{instance.producer_id}'
 
-        prefix = f'{tenant_id}' if tenant_id else 'unknown'
+        prefix = f'{tenant_id}_product' if tenant_id else 'unknown'
         return f'products/{prefix}_{short_id}{ext}'
 
     def deconstruct(self):

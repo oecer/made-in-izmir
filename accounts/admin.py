@@ -334,7 +334,7 @@ class TenantAdmin(admin.ModelAdmin):
     list_display = ('company_name', 'owner_display', 'country', 'city', 'is_buyer', 'is_producer', 'show_company_profile', 'member_count', 'created_at')
     list_filter = ('is_buyer', 'is_producer', 'show_company_profile', 'country')
     search_fields = ('company_name', 'phone_number', 'city', 'owner__username', 'owner__email')
-    readonly_fields = ('created_at', 'updated_at', 'owner_display', 'logo_preview', 'logo_pending_preview')
+    readonly_fields = ('created_at', 'updated_at', 'owner_display', 'logo_preview')
     filter_horizontal = ('buyer_interested_sectors', 'producer_sectors')
     inlines = [TenantMemberInline, TenantPhotoInline, TenantLogoRequestInline]
 
@@ -346,7 +346,7 @@ class TenantAdmin(admin.ModelAdmin):
             )
         }),
         ('Company Profile Page', {
-            'fields': ('show_company_profile', 'logo', 'logo_preview', 'logo_pending', 'logo_pending_preview'),
+            'fields': ('show_company_profile', 'logo', 'logo_preview'),
             'description': 'Firma profil sayfası ayarları. Logo yüklemek için dosyayı seçin ve kaydedin.'
         }),
         ('Ownership', {
@@ -377,16 +377,6 @@ class TenantAdmin(admin.ModelAdmin):
             )
         return '-'
     logo_preview.short_description = 'Mevcut Logo Önizleme'
-
-    def logo_pending_preview(self, obj):
-        if obj.logo_pending:
-            return format_html(
-                '<img src="{}" style="max-width:200px;max-height:200px;border-radius:8px;border:2px dashed #cca43b;" />'
-                '<br><small style="color:#92400e;">Onay bekliyor</small>',
-                obj.logo_pending.url
-            )
-        return '-'
-    logo_pending_preview.short_description = 'Bekleyen Logo Önizleme'
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'owner':
@@ -459,8 +449,7 @@ class TenantLogoRequestAdmin(admin.ModelAdmin):
     def _process_approval(self, request, logo_request):
         tenant = logo_request.tenant
         tenant.logo = logo_request.logo
-        tenant.logo_pending = None
-        tenant.save(update_fields=['logo', 'logo_pending'])
+        tenant.save(update_fields=['logo'])
         logo_request.reviewed_by = request.user
         logo_request.reviewed_at = timezone.now()
 
@@ -498,10 +487,6 @@ class TenantLogoRequestAdmin(admin.ModelAdmin):
     approve_logos.short_description = "Approve selected logo requests"
 
     def reject_logos(self, request, queryset):
-        for logo_request in queryset.filter(status='pending'):
-            tenant = logo_request.tenant
-            tenant.logo_pending = None
-            tenant.save(update_fields=['logo_pending'])
         rejected_count = queryset.filter(status='pending').update(
             status='rejected',
             reviewed_by=request.user,

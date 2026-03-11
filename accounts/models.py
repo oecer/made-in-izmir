@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from .utils import tenant_gallery_photo_upload_to, tenant_logo_upload_to
 
 
 class SignupRequest(models.Model):
@@ -300,16 +301,10 @@ class Tenant(models.Model):
         help_text="Aktif edildiğinde firmanın profil sayfası herkese açık olur."
     )
     logo = models.ImageField(
-        upload_to='tenant_logos/',
+        upload_to=tenant_logo_upload_to('logo'),
         blank=True,
         null=True,
         verbose_name="Firma Logosu"
-    )
-    logo_pending = models.ImageField(
-        upload_to='tenant_logos_pending/',
-        blank=True,
-        null=True,
-        verbose_name="Bekleyen Logo"
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -375,7 +370,7 @@ class TenantPhoto(models.Model):
         related_name='gallery_photos',
         verbose_name="Firma"
     )
-    photo = models.ImageField(upload_to='tenant_gallery/', verbose_name="Fotoğraf")
+    photo = models.ImageField(upload_to=tenant_gallery_photo_upload_to('photo'), verbose_name="Fotoğraf")
     caption_tr = models.CharField(max_length=200, blank=True, verbose_name="Açıklama (TR)")
     caption_en = models.CharField(max_length=200, blank=True, verbose_name="Açıklama (EN)")
     order = models.PositiveSmallIntegerField(default=0, verbose_name="Sıra")
@@ -422,7 +417,7 @@ class TenantPhotoRequest(models.Model):
         related_name='tenant_photo_requests',
         verbose_name="Gönderen"
     )
-    photo = models.ImageField(upload_to='tenant_gallery_requests/', verbose_name="Fotoğraf")
+    photo = models.ImageField(upload_to=tenant_gallery_photo_upload_to('photo'), verbose_name="Fotoğraf")
     caption_tr = models.CharField(max_length=200, blank=True, verbose_name="Açıklama (TR)")
     caption_en = models.CharField(max_length=200, blank=True, verbose_name="Açıklama (EN)")
     status = models.CharField(
@@ -481,7 +476,7 @@ class TenantLogoRequest(models.Model):
         related_name='tenant_logo_requests',
         verbose_name="Gönderen"
     )
-    logo = models.ImageField(upload_to='tenant_logos_requests/', verbose_name="Logo")
+    logo = models.ImageField(upload_to=tenant_logo_upload_to('logo'), verbose_name="Logo")
     status = models.CharField(
         max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name="Durum"
     )

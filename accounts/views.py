@@ -156,7 +156,7 @@ def company_profile_view(request, company_username):
         raise Http404("Bu firma profili mevcut değil.")
 
     is_tenant_admin = False
-    has_pending_logo = bool(tenant.logo_pending)
+    has_pending_logo = tenant.logo_requests.filter(status='pending').exists()
     pending_photo_count = 0
 
     if request.user.is_authenticated:
@@ -213,10 +213,6 @@ def submit_company_logo_view(request):
         logo_request.submitted_by = request.user
         logo_request.status = 'pending'
         logo_request.save()
-
-        # Store pending preview on tenant
-        tenant.logo_pending = logo_request.logo
-        tenant.save(update_fields=['logo_pending'])
 
         return JsonResponse({'success': True, 'message': 'Logonuz yönetici onayına gönderildi.'})
 
