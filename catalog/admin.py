@@ -5,6 +5,22 @@ from django.utils.html import format_html
 from .models import Sector, ProductTag, ProductRequest, Product
 
 
+def _photo_preview(field):
+    """Render a photo field as an inline image, or '-' if missing/unavailable."""
+    if not field:
+        return '-'
+    try:
+        url = field.url
+    except ValueError:
+        return '-'
+    return format_html(
+        '<a href="{url}" target="_blank">'
+        '<img src="{url}" style="max-width:300px; max-height:300px; object-fit:contain; border:1px solid #ddd; border-radius:4px; padding:4px;" />'
+        '</a>',
+        url=url,
+    )
+
+
 @admin.register(Sector)
 class SectorAdmin(admin.ModelAdmin):
     list_display = ('name_tr', 'name_en')
@@ -76,21 +92,15 @@ class ProductRequestAdmin(admin.ModelAdmin):
     tags_display.short_description = 'Etiketler'
 
     def photo1_preview(self, obj):
-        if obj.photo1:
-            return format_html('<img src="{}" style="max-width: 200px; max-height: 200px;" />', obj.photo1.url)
-        return '-'
+        return _photo_preview(obj.photo1)
     photo1_preview.short_description = 'Fotoğraf 1 Önizleme'
 
     def photo2_preview(self, obj):
-        if obj.photo2:
-            return format_html('<img src="{}" style="max-width: 200px; max-height: 200px;" />', obj.photo2.url)
-        return '-'
+        return _photo_preview(obj.photo2)
     photo2_preview.short_description = 'Fotoğraf 2 Önizleme'
 
     def photo3_preview(self, obj):
-        if obj.photo3:
-            return format_html('<img src="{}" style="max-width: 200px; max-height: 200px;" />', obj.photo3.url)
-        return '-'
+        return _photo_preview(obj.photo3)
     photo3_preview.short_description = 'Fotoğraf 3 Önizleme'
 
     def get_readonly_fields(self, request, obj=None):
@@ -119,6 +129,7 @@ class ProductRequestAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
     def _process_approval(self, request, product_request):
+        # Create product without photos first to get a PK
         product = Product.objects.create(
             producer=product_request.producer,
             tenant=product_request.tenant,
@@ -127,11 +138,19 @@ class ProductRequestAdmin(admin.ModelAdmin):
             title_en=product_request.title_en,
             description_tr=product_request.description_tr,
             description_en=product_request.description_en,
-            photo1=product_request.photo1,
-            photo2=product_request.photo2,
-            photo3=product_request.photo3,
             is_active=product_request.is_active
         )
+        # Set photo paths via QuerySet.update() — this writes the path string directly
+        # to the DB column without passing through the storage backend's save(), which
+        # would otherwise copy the file or generate a unique suffix.
+        photo_update = {
+            field: getattr(product_request, field).name
+            for field in ('photo1', 'photo2', 'photo3')
+            if getattr(product_request, field)
+        }
+        if photo_update:
+            Product.objects.filter(pk=product.pk).update(**photo_update)
+            product.refresh_from_db()
 
         if product_request.tags_ids:
             tags = product_request.get_tags()
@@ -140,6 +159,11 @@ class ProductRequestAdmin(admin.ModelAdmin):
 
         product_request.reviewed_by = request.user
         product_request.reviewed_at = timezone.now()
+        # Clear photo references on the request so the shared files aren't
+        # accidentally deleted if the ProductRequest record is cleaned up later.
+        product_request.photo1 = None
+        product_request.photo2 = None
+        product_request.photo3 = None
 
     def approve_products(self, request, queryset):
         from django.db import transaction
@@ -166,14 +190,25 @@ class ProductRequestAdmin(admin.ModelAdmin):
     approve_products.short_description = "Approve selected product requests"
 
     def reject_products(self, request, queryset):
-        rejected_count = queryset.filter(status='pending').update(
-            status='rejected',
-            reviewed_by=request.user,
-            reviewed_at=timezone.now()
-        )
+        pending = queryset.filter(status='pending')
+        rejected_count = 0
+
+        for pr in pending:
+            # Delete photo files from disk — they're no longer needed
+            for field in [pr.photo1, pr.photo2, pr.photo3]:
+                if field:
+                    field.delete(save=False)
+            pr.status = 'rejected'
+            pr.reviewed_by = request.user
+            pr.reviewed_at = timezone.now()
+            pr.photo1 = None
+            pr.photo2 = None
+            pr.photo3 = None
+            pr.save()
+            rejected_count += 1
 
         if rejected_count > 0:
-            messages.success(request, f"{rejected_count} product request(s) rejected.")
+            messages.success(request, f"{rejected_count} product request(s) rejected and photos cleaned up.")
 
     reject_products.short_description = "Reject selected product requests"
 
@@ -183,8 +218,22 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('title_tr', 'title_en', 'producer', 'sector', 'is_active', 'in_showroom', 'created_at')
     list_filter = ('is_active', 'in_showroom', 'sector', 'created_at', 'tags')
     search_fields = ('title_tr', 'title_en', 'description_tr', 'description_en', 'producer__username')
-    readonly_fields = ('created_at', 'updated_at')
+    readonly_fields = ('created_at', 'updated_at', 'photo1_preview', 'photo2_preview', 'photo3_preview')
     filter_horizontal = ('tags',)
+
+    def photo1_preview(self, obj):
+        if obj.photo1:
+            return format_html('<img src="{}" style="max-width: 200px; max-height: 200px;" />', obj.photo1.url)
+        return '-'
+    photo1_preview.short_description = 'Fotoğraf 1 Önizleme'
+
+    def photo2_preview(self, obj):
+        return _photo_preview(obj.photo2)
+    photo2_preview.short_description = 'Fotoğraf 2 Önizleme'
+
+    def photo3_preview(self, obj):
+        return _photo_preview(obj.photo3)
+    photo3_preview.short_description = 'Fotoğraf 3 Önizleme'
 
     fieldsets = (
         ('Producer', {
@@ -200,7 +249,7 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('title_en', 'description_en')
         }),
         ('Photos', {
-            'fields': ('photo1', 'photo2', 'photo3')
+            'fields': ('photo1', 'photo1_preview', 'photo2', 'photo2_preview', 'photo3', 'photo3_preview')
         }),
         ('Tags & Status', {
             'fields': ('tags', 'is_active', 'in_showroom')

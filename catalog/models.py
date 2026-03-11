@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from .utils import product_photo_upload_to
 
 
 class Sector(models.Model):
@@ -64,9 +65,9 @@ class ProductRequest(models.Model):
     description_en = models.TextField(blank=True, verbose_name="Ürün Açıklaması (EN)")
 
     # Photos (max 3)
-    photo1 = models.ImageField(upload_to='product_requests/', blank=True, null=True, verbose_name="Fotoğraf 1")
-    photo2 = models.ImageField(upload_to='product_requests/', blank=True, null=True, verbose_name="Fotoğraf 2")
-    photo3 = models.ImageField(upload_to='product_requests/', blank=True, null=True, verbose_name="Fotoğraf 3")
+    photo1 = models.ImageField(upload_to=product_photo_upload_to('photo1'), blank=True, null=True, verbose_name="Fotoğraf 1")
+    photo2 = models.ImageField(upload_to=product_photo_upload_to('photo2'), blank=True, null=True, verbose_name="Fotoğraf 2")
+    photo3 = models.ImageField(upload_to=product_photo_upload_to('photo3'), blank=True, null=True, verbose_name="Fotoğraf 3")
 
     # Tags (stored as comma-separated IDs)
     tags_ids = models.TextField(blank=True, null=True, verbose_name="Etiket ID'leri")
@@ -118,6 +119,13 @@ class ProductRequest(models.Model):
             return ProductTag.objects.filter(id__in=ids)
         return ProductTag.objects.none()
 
+    def delete(self, *args, **kwargs):
+        """Clean up photo files from storage when request is deleted"""
+        for field in [self.photo1, self.photo2, self.photo3]:
+            if field:
+                field.delete(save=False)
+        super().delete(*args, **kwargs)
+
     def save(self, *args, **kwargs):
         """Override save to compress images before saving"""
         from django.conf import settings
@@ -161,9 +169,9 @@ class Product(models.Model):
     description_en = models.TextField(blank=True, verbose_name="Ürün Açıklaması (EN)")
 
     # Photos (max 3)
-    photo1 = models.ImageField(upload_to='products/', blank=True, null=True, verbose_name="Fotoğraf 1")
-    photo2 = models.ImageField(upload_to='products/', blank=True, null=True, verbose_name="Fotoğraf 2")
-    photo3 = models.ImageField(upload_to='products/', blank=True, null=True, verbose_name="Fotoğraf 3")
+    photo1 = models.ImageField(upload_to=product_photo_upload_to('photo1'), blank=True, null=True, verbose_name="Fotoğraf 1")
+    photo2 = models.ImageField(upload_to=product_photo_upload_to('photo2'), blank=True, null=True, verbose_name="Fotoğraf 2")
+    photo3 = models.ImageField(upload_to=product_photo_upload_to('photo3'), blank=True, null=True, verbose_name="Fotoğraf 3")
 
     # Tags (max 3)
     tags = models.ManyToManyField(
@@ -226,6 +234,13 @@ class Product(models.Model):
         if self.photo3:
             photos.append(self.photo3)
         return photos
+
+    def delete(self, *args, **kwargs):
+        """Clean up photo files from storage when product is deleted"""
+        for field in [self.photo1, self.photo2, self.photo3]:
+            if field:
+                field.delete(save=False)
+        super().delete(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         """Override save to compress images before saving"""
