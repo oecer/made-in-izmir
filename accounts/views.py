@@ -152,7 +152,17 @@ def company_profile_view(request, company_username):
 
     tenant = get_object_or_404(Tenant, company_username=company_username)
 
-    if not tenant.show_company_profile:
+    # Check if the visitor is a producer (they can always see profiles as a preview)
+    visitor_is_producer = False
+    if request.user.is_authenticated:
+        try:
+            visitor_tenant = request.user.profile.tenant
+            if visitor_tenant and visitor_tenant.is_producer:
+                visitor_is_producer = True
+        except Exception:
+            pass
+
+    if not tenant.show_company_profile and not visitor_is_producer:
         raise Http404("Bu firma profili mevcut değil.")
 
     is_tenant_admin = False
@@ -171,6 +181,8 @@ def company_profile_view(request, company_username):
     gallery_photos = tenant.gallery_photos.all()
     products = Product.objects.filter(tenant=tenant, is_active=True, in_showroom=True).order_by('-created_at')
 
+    is_preview_for_producer = visitor_is_producer and not tenant.show_company_profile
+
     context = {
         'tenant': tenant,
         'gallery_photos': gallery_photos,
@@ -178,6 +190,7 @@ def company_profile_view(request, company_username):
         'is_tenant_admin': is_tenant_admin,
         'has_pending_logo': has_pending_logo,
         'pending_photo_count': pending_photo_count,
+        'is_preview_for_producer': is_preview_for_producer,
     }
     return render(request, 'company_profile/company_profile.html', context)
 

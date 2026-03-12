@@ -7,6 +7,19 @@
 <link rel="stylesheet" href="{% static 'css/company_profile.css' %}">
 {% endblock %}
 
+{% if is_preview_for_producer %}
+{% block body_class %}has-top-banner{% endblock %}
+{% endif %}
+
+{% block above_navbar %}
+{% if is_preview_for_producer %}
+<div class="producer-preview-banner">
+    <i class="fas fa-eye" style="margin-right:6px;"></i>
+    Bu profil henüz herkese açık değil. Abonelik satın aldıktan sonra profiliniz bu şekilde görünecek.
+</div>
+{% endif %}
+{% endblock %}
+
 {% block content %}
 
 <!-- ═══════════════════════════════════════════════════════════
