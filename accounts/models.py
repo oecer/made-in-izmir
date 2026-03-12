@@ -320,6 +320,18 @@ class Tenant(models.Model):
     def __str__(self):
         return self.company_name
 
+    def save(self, *args, **kwargs):
+        if not self.company_username:
+            # Set after initial save so we have the pk
+            if not self.pk:
+                super().save(*args, **kwargs)
+                self.company_username = f"firma{self.pk}"
+                kwargs.pop('force_insert', None)
+                super().save(*args, **kwargs)
+                return
+            self.company_username = f"firma{self.pk}"
+        super().save(*args, **kwargs)
+
     def get_tenant_types(self):
         types = []
         if self.is_buyer:

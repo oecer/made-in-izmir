@@ -99,7 +99,7 @@ def logout_view(request):
 @login_required
 def profile_view(request):
     """User profile view"""
-    return render(request, 'auth/profile.html')
+    return render(request, 'auth/my_account.html')
 
 
 @login_required

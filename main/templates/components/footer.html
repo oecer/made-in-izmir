@@ -30,7 +30,7 @@
                 <ul class="footer-links">
                     {% if user.is_authenticated %}
                     <li><a href="{% url 'accounts:dashboard' %}" data-i18n="nav.dashboard">Panel</a></li>
-                    <li><a href="{% url 'accounts:profile' %}" data-i18n="nav.profile">Profilim</a></li>
+                    <li><a href="{% url 'accounts:profile' %}" data-i18n="nav.my_account">Hesabım</a></li>
                     {% else %}
                     <li><a href="{% url 'accounts:login' %}" data-i18n="nav.login">Giriş Yap</a></li>
                     <li><a href="{% url 'accounts:signup' %}" data-i18n="nav.signup">Kayıt Ol</a></li>

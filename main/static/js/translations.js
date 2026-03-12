@@ -10,7 +10,7 @@ const translations = {
             contact: "İletişim",
             login: "Giriş",
             signup: "Kayıt Ol",
-            profile: "Profilim",
+            my_account: "Hesabım",
             main_dashboard: "Ana Panel",
             producer_dashboard: "Üretici Paneli",
             buyer_dashboard: "Alıcı Paneli",
@@ -570,8 +570,10 @@ const translations = {
             no_account: "Hesabınız yok mu?",
             signup_link: "Kayıt Olun"
         },
+        my_account: {
+            title: "Hesabım",
+        },
         profile: {
-            title: "Profilim",
             buyer: "Alıcı",
             producer: "Üretici",
             personal_info: "Kişisel Bilgiler",
@@ -874,7 +876,7 @@ const translations = {
             contact: "Contact",
             login: "Login",
             signup: "Sign Up",
-            profile: "My Profile",
+            my_account: "My Account",
             main_dashboard: "Main Dashboard",
             producer_dashboard: "Producer Dashboard",
             buyer_dashboard: "Buyer Dashboard",
@@ -1432,8 +1434,10 @@ const translations = {
             no_account: "Don't have an account?",
             signup_link: "Sign Up"
         },
+        my_account: {
+            title: "My Account",
+        },
         profile: {
-            title: "My Profile",
             buyer: "Buyer",
             producer: "Producer",
             personal_info: "Personal Information",
@@ -1833,5 +1837,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 mobileMenu.querySelector('i').classList.remove('fa-xmark');
             });
         });
+    }
+
+    // User dropdown
+    const userBtn = document.getElementById('userDropdownBtn');
+    const userMenu = document.getElementById('userDropdownMenu');
+
+    if (userBtn && userMenu) {
+        userBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = userMenu.classList.toggle('open');
+            userBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+
+        document.addEventListener('click', () => {
+            userMenu.classList.remove('open');
+            userBtn.setAttribute('aria-expanded', 'false');
+        });
+
+        userMenu.addEventListener('click', (e) => e.stopPropagation());
     }
 });
