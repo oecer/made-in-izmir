@@ -41,6 +41,12 @@ urlpatterns = [
          name='password_reset_complete'),
 ]
 
+# Public company profile — must be last to not shadow any named route.
+from accounts.views import company_profile_view
+urlpatterns += [
+    path('<slug:company_username>/', company_profile_view, name='company_profile'),
+]
+
 # Serve media files in both dev and production.
 urlpatterns += [
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),

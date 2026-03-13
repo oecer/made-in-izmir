@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from .utils import tenant_gallery_photo_upload_to, tenant_logo_upload_to
 
 
 class SignupRequest(models.Model):
@@ -248,6 +249,7 @@ class Tenant(models.Model):
         help_text="URL'de kullanılacak benzersiz firma tanımlayıcısı (örn. izmir-tekstil)"
     )
     phone_number = models.CharField(max_length=20, verbose_name="Telefon Numarası")
+    company_email = models.EmailField(blank=True, null=True, verbose_name="Firma E-posta")
     country = models.CharField(max_length=100, verbose_name="Ülke")
     city = models.CharField(max_length=100, verbose_name="Şehir")
     open_address = models.TextField(blank=True, null=True, verbose_name="Açık Adres")
@@ -293,6 +295,19 @@ class Tenant(models.Model):
         verbose_name="Yaklaşık Ürün Sayısı"
     )
 
+    # Company profile page
+    show_company_profile = models.BooleanField(
+        default=False,
+        verbose_name="Firma Profilini Göster",
+        help_text="Aktif edildiğinde firmanın profil sayfası herkese açık olur."
+    )
+    logo = models.ImageField(
+        upload_to=tenant_logo_upload_to('logo'),
+        blank=True,
+        null=True,
+        verbose_name="Firma Logosu"
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -304,6 +319,18 @@ class Tenant(models.Model):
 
     def __str__(self):
         return self.company_name
+
+    def save(self, *args, **kwargs):
+        if not self.company_username:
+            # Set after initial save so we have the pk
+            if not self.pk:
+                super().save(*args, **kwargs)
+                self.company_username = f"firma{self.pk}"
+                kwargs.pop('force_insert', None)
+                super().save(*args, **kwargs)
+                return
+            self.company_username = f"firma{self.pk}"
+        super().save(*args, **kwargs)
 
     def get_tenant_types(self):
         types = []
@@ -345,6 +372,157 @@ class UserProfile(models.Model):
     def __str__(self):
         tenant_name = self.tenant.company_name if self.tenant else '-'
         return f"{self.user.get_full_name()} - {tenant_name}"
+
+
+class TenantPhoto(models.Model):
+    """Approved gallery photos for a tenant's public company profile page."""
+
+    tenant = models.ForeignKey(
+        Tenant,
+        on_delete=models.CASCADE,
+        related_name='gallery_photos',
+        verbose_name="Firma"
+    )
+    photo = models.ImageField(upload_to=tenant_gallery_photo_upload_to('photo'), verbose_name="Fotoğraf")
+    caption_tr = models.CharField(max_length=200, blank=True, verbose_name="Açıklama (TR)")
+    caption_en = models.CharField(max_length=200, blank=True, verbose_name="Açıklama (EN)")
+    order = models.PositiveSmallIntegerField(default=0, verbose_name="Sıra")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Firma Galerisi Fotoğrafı"
+        verbose_name_plural = "Firma Galerisi Fotoğrafları"
+        ordering = ['order', 'created_at']
+        db_table = 'accounts_tenantphoto'
+
+    def __str__(self):
+        return f"{self.tenant.company_name} - Fotoğraf #{self.pk}"
+
+    def save(self, *args, **kwargs):
+        from django.conf import settings
+        from catalog.utils import compress_image
+        if getattr(settings, 'IMAGE_COMPRESS_ENABLED', True):
+            max_size = getattr(settings, 'IMAGE_MAX_SIZE', (1920, 1920))
+            quality = getattr(settings, 'IMAGE_QUALITY', 85)
+            if self.photo and not self.pk:
+                self.photo = compress_image(self.photo, max_size, quality)
+        super().save(*args, **kwargs)
+
+
+class TenantPhotoRequest(models.Model):
+    """Pending gallery photo requests awaiting admin approval."""
+
+    STATUS_CHOICES = [
+        ('pending', 'Beklemede'),
+        ('approved', 'Onaylandı'),
+        ('rejected', 'Reddedildi'),
+    ]
+
+    tenant = models.ForeignKey(
+        Tenant,
+        on_delete=models.CASCADE,
+        related_name='photo_requests',
+        verbose_name="Firma"
+    )
+    submitted_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='tenant_photo_requests',
+        verbose_name="Gönderen"
+    )
+    photo = models.ImageField(upload_to=tenant_gallery_photo_upload_to('photo'), verbose_name="Fotoğraf")
+    caption_tr = models.CharField(max_length=200, blank=True, verbose_name="Açıklama (TR)")
+    caption_en = models.CharField(max_length=200, blank=True, verbose_name="Açıklama (EN)")
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name="Durum"
+    )
+    reviewed_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='reviewed_tenant_photos',
+        verbose_name="İnceleyen"
+    )
+    reviewed_at = models.DateTimeField(null=True, blank=True, verbose_name="İnceleme Tarihi")
+    rejection_reason = models.TextField(blank=True, null=True, verbose_name="Red Nedeni")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Firma Fotoğraf Talebi"
+        verbose_name_plural = "Firma Fotoğraf Talepleri"
+        ordering = ['-created_at']
+        db_table = 'accounts_tenantphotorequest'
+
+    def __str__(self):
+        return f"{self.tenant.company_name} - Fotoğraf Talebi #{self.pk} ({self.get_status_display()})"
+
+    def save(self, *args, **kwargs):
+        from django.conf import settings
+        from catalog.utils import compress_image
+        if getattr(settings, 'IMAGE_COMPRESS_ENABLED', True):
+            max_size = getattr(settings, 'IMAGE_MAX_SIZE', (1920, 1920))
+            quality = getattr(settings, 'IMAGE_QUALITY', 85)
+            if self.photo and not self.pk:
+                self.photo = compress_image(self.photo, max_size, quality)
+        super().save(*args, **kwargs)
+
+
+class TenantLogoRequest(models.Model):
+    """Pending logo requests awaiting admin approval."""
+
+    STATUS_CHOICES = [
+        ('pending', 'Beklemede'),
+        ('approved', 'Onaylandı'),
+        ('rejected', 'Reddedildi'),
+    ]
+
+    tenant = models.ForeignKey(
+        Tenant,
+        on_delete=models.CASCADE,
+        related_name='logo_requests',
+        verbose_name="Firma"
+    )
+    submitted_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='tenant_logo_requests',
+        verbose_name="Gönderen"
+    )
+    logo = models.ImageField(upload_to=tenant_logo_upload_to('logo'), verbose_name="Logo")
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name="Durum"
+    )
+    reviewed_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='reviewed_tenant_logos',
+        verbose_name="İnceleyen"
+    )
+    reviewed_at = models.DateTimeField(null=True, blank=True, verbose_name="İnceleme Tarihi")
+    rejection_reason = models.TextField(blank=True, null=True, verbose_name="Red Nedeni")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Firma Logo Talebi"
+        verbose_name_plural = "Firma Logo Talepleri"
+        ordering = ['-created_at']
+        db_table = 'accounts_tenantlogorequest'
+
+    def __str__(self):
+        return f"{self.tenant.company_name} - Logo Talebi #{self.pk} ({self.get_status_display()})"
+
+    def save(self, *args, **kwargs):
+        from django.conf import settings
+        from catalog.utils import compress_image
+        if getattr(settings, 'IMAGE_COMPRESS_ENABLED', True):
+            max_size = getattr(settings, 'IMAGE_MAX_SIZE', (1920, 1920))
+            quality = getattr(settings, 'IMAGE_QUALITY', 85)
+            if self.logo and not self.pk:
+                self.logo = compress_image(self.logo, max_size, quality)
+        super().save(*args, **kwargs)
 
 
 class ContactSubmission(models.Model):

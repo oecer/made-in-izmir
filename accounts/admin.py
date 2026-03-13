@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils import timezone
 from django.contrib import messages
 from django.utils.html import format_html, mark_safe
-from .models import Tenant, UserProfile, SignupRequest, SignupRequestHistory, ProfileEditRequest, MembershipConsent, ConsentText, ContactSubmission
+from .models import Tenant, UserProfile, SignupRequest, SignupRequestHistory, ProfileEditRequest, MembershipConsent, ConsentText, ContactSubmission, TenantPhoto, TenantPhotoRequest, TenantLogoRequest
 
 
 class SignupRequestHistoryInline(admin.TabularInline):
@@ -305,18 +305,49 @@ class TenantMemberInline(admin.TabularInline):
         return formset
 
 
+class TenantPhotoInline(admin.TabularInline):
+    model = TenantPhoto
+    extra = 0
+    can_delete = True
+    verbose_name = "Galeri Fotoğrafı"
+    verbose_name_plural = "Galeri Fotoğrafları (Onaylı)"
+    fields = ('photo', 'caption_tr', 'caption_en', 'order')
+    readonly_fields = ()
+
+
+class TenantLogoRequestInline(admin.TabularInline):
+    model = TenantLogoRequest
+    extra = 0
+    can_delete = False
+    show_change_link = True
+    verbose_name = "Logo Talebi"
+    verbose_name_plural = "Logo Talepleri"
+    fields = ('logo', 'submitted_by', 'status', 'created_at')
+    readonly_fields = ('logo', 'submitted_by', 'status', 'created_at')
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+
 @admin.register(Tenant)
 class TenantAdmin(admin.ModelAdmin):
-    list_display = ('company_name', 'owner_display', 'country', 'city', 'is_buyer', 'is_producer', 'member_count', 'created_at')
-    list_filter = ('is_buyer', 'is_producer', 'country')
+    list_display = ('company_name', 'owner_display', 'country', 'city', 'is_buyer', 'is_producer', 'show_company_profile', 'member_count', 'created_at')
+    list_filter = ('is_buyer', 'is_producer', 'show_company_profile', 'country')
     search_fields = ('company_name', 'phone_number', 'city', 'owner__username', 'owner__email')
-    readonly_fields = ('created_at', 'updated_at', 'owner_display')
+    readonly_fields = ('created_at', 'updated_at', 'owner_display', 'logo_preview')
     filter_horizontal = ('buyer_interested_sectors', 'producer_sectors')
-    inlines = [TenantMemberInline]
+    inlines = [TenantMemberInline, TenantPhotoInline, TenantLogoRequestInline]
 
     fieldsets = (
         ('Company Information', {
-            'fields': ('company_name', 'company_username', 'phone_number', 'country', 'city', 'open_address', 'website', 'about_company')
+            'fields': (
+                'company_name', 'company_username', 'phone_number', 'company_email',
+                'country', 'city', 'open_address', 'website', 'about_company'
+            )
+        }),
+        ('Company Profile Page', {
+            'fields': ('show_company_profile', 'logo', 'logo_preview'),
+            'description': 'Firma profil sayfası ayarları. Logo yüklemek için dosyayı seçin ve kaydedin.'
         }),
         ('Ownership', {
             'fields': ('owner', 'owner_display'),
@@ -337,6 +368,15 @@ class TenantAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+    def logo_preview(self, obj):
+        if obj.logo:
+            return format_html(
+                '<img src="{}" style="max-width:200px;max-height:200px;border-radius:8px;border:1px solid #e2e8f0;" />',
+                obj.logo.url
+            )
+        return '-'
+    logo_preview.short_description = 'Mevcut Logo Önizleme'
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'owner':
@@ -363,6 +403,196 @@ class TenantAdmin(admin.ModelAdmin):
     def member_count(self, obj):
         return obj.members.count()
     member_count.short_description = 'Üye Sayısı'
+
+
+@admin.register(TenantLogoRequest)
+class TenantLogoRequestAdmin(admin.ModelAdmin):
+    list_display = ('tenant', 'submitted_by', 'status', 'created_at', 'logo_preview_small')
+    list_filter = ('status', 'created_at')
+    search_fields = ('tenant__company_name', 'submitted_by__username')
+    readonly_fields = ('created_at', 'updated_at', 'reviewed_by', 'reviewed_at', 'logo_preview', 'tenant', 'submitted_by', 'logo')
+    actions = ['approve_logos', 'reject_logos']
+
+    fieldsets = (
+        ('Talep Durumu', {
+            'fields': ('status', 'reviewed_by', 'reviewed_at', 'rejection_reason')
+        }),
+        ('Firma ve Kullanıcı', {
+            'fields': ('tenant', 'submitted_by')
+        }),
+        ('Logo', {
+            'fields': ('logo', 'logo_preview')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+        }),
+    )
+
+    def logo_preview(self, obj):
+        if obj.logo:
+            return format_html(
+                '<img src="{}" style="max-width:300px;max-height:300px;border-radius:8px;" />',
+                obj.logo.url
+            )
+        return '-'
+    logo_preview.short_description = 'Logo Önizleme'
+
+    def logo_preview_small(self, obj):
+        if obj.logo:
+            return format_html(
+                '<img src="{}" style="max-width:60px;max-height:60px;border-radius:4px;" />',
+                obj.logo.url
+            )
+        return '-'
+    logo_preview_small.short_description = 'Logo'
+
+    def _process_approval(self, request, logo_request):
+        tenant = logo_request.tenant
+        tenant.logo = logo_request.logo
+        tenant.save(update_fields=['logo'])
+        logo_request.reviewed_by = request.user
+        logo_request.reviewed_at = timezone.now()
+
+    def save_model(self, request, obj, form, change):
+        if change and 'status' in form.changed_data and obj.status == 'approved':
+            try:
+                old = TenantLogoRequest.objects.get(pk=obj.pk)
+                if old.status == 'pending':
+                    self._process_approval(request, obj)
+            except Exception as e:
+                obj.status = 'pending'
+                obj.reviewed_by = None
+                obj.reviewed_at = None
+                messages.error(request, f"Onay işlemi başarısız oldu: {str(e)}")
+        super().save_model(request, obj, form, change)
+
+    def approve_logos(self, request, queryset):
+        from django.db import transaction
+        approved_count = 0
+        error_count = 0
+        for logo_request in queryset.filter(status='pending'):
+            try:
+                with transaction.atomic():
+                    self._process_approval(request, logo_request)
+                    logo_request.status = 'approved'
+                    logo_request.save()
+                    approved_count += 1
+            except Exception as e:
+                error_count += 1
+                messages.error(request, f"Error ({logo_request.tenant}): {str(e)}")
+        if approved_count:
+            messages.success(request, f"✓ {approved_count} logo request(s) approved!")
+        if error_count:
+            messages.warning(request, f"⚠ {error_count} request(s) failed.")
+    approve_logos.short_description = "Approve selected logo requests"
+
+    def reject_logos(self, request, queryset):
+        rejected_count = queryset.filter(status='pending').update(
+            status='rejected',
+            reviewed_by=request.user,
+            reviewed_at=timezone.now()
+        )
+        if rejected_count:
+            messages.success(request, f"{rejected_count} logo request(s) rejected.")
+    reject_logos.short_description = "Reject selected logo requests"
+
+
+@admin.register(TenantPhotoRequest)
+class TenantPhotoRequestAdmin(admin.ModelAdmin):
+    list_display = ('tenant', 'submitted_by', 'status', 'created_at', 'photo_preview_small')
+    list_filter = ('status', 'created_at')
+    search_fields = ('tenant__company_name', 'submitted_by__username')
+    readonly_fields = ('created_at', 'updated_at', 'reviewed_by', 'reviewed_at', 'photo_preview', 'tenant', 'submitted_by', 'photo', 'caption_tr', 'caption_en')
+    actions = ['approve_photos', 'reject_photos']
+
+    fieldsets = (
+        ('Talep Durumu', {
+            'fields': ('status', 'reviewed_by', 'reviewed_at', 'rejection_reason')
+        }),
+        ('Firma ve Kullanıcı', {
+            'fields': ('tenant', 'submitted_by')
+        }),
+        ('Fotoğraf', {
+            'fields': ('photo', 'photo_preview', 'caption_tr', 'caption_en')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+        }),
+    )
+
+    def photo_preview(self, obj):
+        if obj.photo:
+            return format_html(
+                '<img src="{}" style="max-width:300px;max-height:300px;border-radius:8px;" />',
+                obj.photo.url
+            )
+        return '-'
+    photo_preview.short_description = 'Fotoğraf Önizleme'
+
+    def photo_preview_small(self, obj):
+        if obj.photo:
+            return format_html(
+                '<img src="{}" style="max-width:60px;max-height:60px;border-radius:4px;" />',
+                obj.photo.url
+            )
+        return '-'
+    photo_preview_small.short_description = 'Fotoğraf'
+
+    def _process_approval(self, request, photo_request):
+        current_count = TenantPhoto.objects.filter(tenant=photo_request.tenant).count()
+        if current_count >= 10:
+            raise ValueError("Bu firma için maksimum 10 galeri fotoğrafı sınırına ulaşıldı.")
+        TenantPhoto.objects.create(
+            tenant=photo_request.tenant,
+            photo=photo_request.photo,
+            caption_tr=photo_request.caption_tr,
+            caption_en=photo_request.caption_en,
+        )
+        photo_request.reviewed_by = request.user
+        photo_request.reviewed_at = timezone.now()
+
+    def save_model(self, request, obj, form, change):
+        if change and 'status' in form.changed_data and obj.status == 'approved':
+            try:
+                old = TenantPhotoRequest.objects.get(pk=obj.pk)
+                if old.status == 'pending':
+                    self._process_approval(request, obj)
+            except Exception as e:
+                obj.status = 'pending'
+                obj.reviewed_by = None
+                obj.reviewed_at = None
+                messages.error(request, f"Onay işlemi başarısız oldu: {str(e)}")
+        super().save_model(request, obj, form, change)
+
+    def approve_photos(self, request, queryset):
+        from django.db import transaction
+        approved_count = 0
+        error_count = 0
+        for photo_request in queryset.filter(status='pending'):
+            try:
+                with transaction.atomic():
+                    self._process_approval(request, photo_request)
+                    photo_request.status = 'approved'
+                    photo_request.save()
+                    approved_count += 1
+            except Exception as e:
+                error_count += 1
+                messages.error(request, f"Error ({photo_request.tenant}): {str(e)}")
+        if approved_count:
+            messages.success(request, f"✓ {approved_count} photo request(s) approved!")
+        if error_count:
+            messages.warning(request, f"⚠ {error_count} request(s) failed.")
+    approve_photos.short_description = "Approve selected photo requests"
+
+    def reject_photos(self, request, queryset):
+        rejected_count = queryset.filter(status='pending').update(
+            status='rejected',
+            reviewed_by=request.user,
+            reviewed_at=timezone.now()
+        )
+        if rejected_count:
+            messages.success(request, f"{rejected_count} photo request(s) rejected.")
+    reject_photos.short_description = "Reject selected photo requests"
 
 
 class UserProfileInline(admin.StackedInline):

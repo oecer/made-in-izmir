@@ -1,10 +1,56 @@
 """
 Utility functions for the catalog app
 """
+import uuid
+import os
 from io import BytesIO
 from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import sys
+
+
+class product_photo_upload_to:
+    """
+    Serializable callable for ImageField upload_to.
+
+    Generates a standardized, human-readable filename:
+        products/tenant-{id}_photo{n}_{short_uuid}.jpg
+    Example:
+        products/tenant-42_photo1_a3f9b2c1.jpg
+
+    Implemented as a class (not a closure) so Django's migration framework
+    can serialize and deconstruct it correctly.
+    """
+
+    def __init__(self, field_name):
+        self.field_name = field_name
+
+    def __call__(self, instance, filename):
+        ext = os.path.splitext(filename)[1].lower() or '.jpg'
+        short_id = uuid.uuid4().hex[:8]
+
+        tenant_id = None
+        if hasattr(instance, 'tenant') and instance.tenant_id:
+            tenant_id = instance.tenant_id
+        elif hasattr(instance, 'producer') and instance.producer_id:
+            tenant_id = f'user{instance.producer_id}'
+
+        prefix = f'{tenant_id}' if tenant_id else 'unknown'
+        return f'products/{prefix}_product_{short_id}{ext}'
+
+    def deconstruct(self):
+        """Required for Django migration serialization."""
+        return (
+            'catalog.utils.product_photo_upload_to',
+            [self.field_name],
+            {},
+        )
+
+    def __eq__(self, other):
+        return isinstance(other, product_photo_upload_to) and self.field_name == other.field_name
+
+    def __hash__(self):
+        return hash(self.field_name)
 
 
 def compress_image(image_file, max_size=(1920, 1920), quality=85):
