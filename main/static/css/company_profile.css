@@ -10,7 +10,8 @@
     text-align: center;
     padding: 12px 16px;
     font-weight: 600;
-    position: relative;
+    position: sticky;
+    top: 0;
     z-index: 1001; /* above the fixed header (z-index: 1000) */
 }
 

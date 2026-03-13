@@ -7,9 +7,7 @@
 <link rel="stylesheet" href="{% static 'css/company_profile.css' %}">
 {% endblock %}
 
-{% if is_preview_for_producer %}
-{% block body_class %}has-top-banner{% endblock %}
-{% endif %}
+{% block body_class %}{% if is_preview_for_producer %}has-top-banner{% endif %}{% endblock %}
 
 {% block above_navbar %}
 {% if is_preview_for_producer %}
