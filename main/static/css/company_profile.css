@@ -64,9 +64,9 @@ body.has-top-banner header {
     height: 160px;
     border-radius: 20px;
     object-fit: contain;
-    background: #ffffff;
+    background: transparent;
     padding: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    box-shadow: none;
     display: block;
 }
 
