@@ -252,8 +252,8 @@ def submit_gallery_photo_view(request):
     if not tenant:
         return JsonResponse({'error': 'Firma bulunamadı.'}, status=403)
 
-    if TenantPhoto.objects.filter(tenant=tenant).count() >= 10:
-        return JsonResponse({'error': 'Maksimum 10 galeri fotoğrafı yükleyebilirsiniz.'}, status=400)
+    if TenantPhoto.objects.filter(tenant=tenant).count() >= 1:
+        return JsonResponse({'error': 'Maksimum 1 galeri fotoğrafı yükleyebilirsiniz.'}, status=400)
 
     form = TenantPhotoRequestForm(request.POST, request.FILES)
     if form.is_valid():

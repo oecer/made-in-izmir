@@ -101,74 +101,6 @@
 
 
 <!-- ═══════════════════════════════════════════════════════════
-     GALLERY
-     ═══════════════════════════════════════════════════════════ -->
-{% if gallery_photos or is_tenant_admin %}
-<section class="cp-section">
-    <div class="cp-container">
-        <div class="cp-section-header">
-            <h2 data-i18n="company.gallery">Firma Galerisi</h2>
-        </div>
-
-        <div class="cp-gallery-grid">
-            {% for photo in gallery_photos %}
-            <div class="cp-gallery-item">
-                <img src="{{ photo.photo.url }}"
-                     alt="{% if photo.caption_tr %}{{ photo.caption_tr }}{% else %}{{ tenant.company_name }}{% endif %}"
-                     class="cp-gallery-img"
-                     loading="lazy"
-                     data-caption-tr="{{ photo.caption_tr }}"
-                     data-caption-en="{{ photo.caption_en }}">
-            </div>
-            {% endfor %}
-
-            {% if is_tenant_admin %}
-            <div class="cp-gallery-add-slot" id="gallery-add-slot">
-                <label class="cp-gallery-add-btn" for="gallery-file-trigger">
-                    <i class="fas fa-plus-circle"></i>
-                    <span data-i18n="company.add_photo">Fotoğraf Ekle</span>
-                    {% if pending_photo_count > 0 %}
-                    <span class="cp-pending-badge" id="cp-pending-badge">
-                        {{ pending_photo_count }} <span data-i18n="company.pending_approval">onay bekliyor</span>
-                    </span>
-                    {% endif %}
-                </label>
-                <input type="file" id="gallery-file-trigger" accept="image/*" style="display:none">
-            </div>
-            {% endif %}
-        </div>
-
-        {% if not gallery_photos and not is_tenant_admin %}
-        <div class="cp-empty">
-            <i class="fas fa-images"></i>
-            <p data-i18n="company.no_photos">Henüz galeri fotoğrafı eklenmemiş.</p>
-        </div>
-        {% endif %}
-    </div>
-</section>
-{% endif %}
-
-
-<!-- ═══════════════════════════════════════════════════════════
-     ABOUT
-     ═══════════════════════════════════════════════════════════ -->
-{% if tenant.about_company %}
-<section class="cp-section cp-section-alt">
-    <div class="cp-container">
-        <div class="cp-section-header">
-            <h2 data-i18n="company.about">Firma Hakkında</h2>
-        </div>
-        <div class="cp-about-text">
-            {{ tenant.about_company|linebreaks }}
-        </div>
-    </div>
-</section>
-{% endif %}
-
-
-
-
-<!-- ═══════════════════════════════════════════════════════════
      PRODUCTS
      ═══════════════════════════════════════════════════════════ -->
 {% if products %}
@@ -207,6 +139,62 @@
                 </div>
             </a>
             {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     ABOUT + GALLERY (combined)
+     ═══════════════════════════════════════════════════════════ -->
+{% if tenant.about_company or gallery_photos or is_tenant_admin %}
+<section class="cp-section cp-section-alt">
+    <div class="cp-container">
+        <div class="cp-section-header">
+            <h2 data-i18n="company.about">Firma Hakkında</h2>
+        </div>
+
+        <div class="cp-about-gallery-layout">
+
+            <!-- Left: gallery image / add slot -->
+            <div class="cp-about-gallery-left">
+                {% if gallery_photos %}
+                {% with photo=gallery_photos.0 %}
+                <div class="cp-gallery-item">
+                    <img src="{{ photo.photo.url }}"
+                         alt="{% if photo.caption_tr %}{{ photo.caption_tr }}{% else %}{{ tenant.company_name }}{% endif %}"
+                         class="cp-gallery-img"
+                         loading="lazy"
+                         data-caption-tr="{{ photo.caption_tr }}"
+                         data-caption-en="{{ photo.caption_en }}">
+                </div>
+                {% endwith %}
+                {% elif is_tenant_admin %}
+                <div class="cp-gallery-add-slot" id="gallery-add-slot">
+                    <label class="cp-gallery-add-btn" for="gallery-file-trigger">
+                        <i class="fas fa-plus-circle"></i>
+                        <span data-i18n="company.add_photo">Fotoğraf Ekle</span>
+                        {% if pending_photo_count > 0 %}
+                        <span class="cp-pending-badge" id="cp-pending-badge">
+                            {{ pending_photo_count }} <span data-i18n="company.pending_approval">onay bekliyor</span>
+                        </span>
+                        {% endif %}
+                    </label>
+                    <input type="file" id="gallery-file-trigger" accept="image/*" style="display:none">
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Right: about text -->
+            <div class="cp-about-gallery-right">
+                {% if tenant.about_company %}
+                <div class="cp-about-text">
+                    {{ tenant.about_company|linebreaks }}
+                </div>
+                {% endif %}
+            </div>
+
         </div>
     </div>
 </section>
