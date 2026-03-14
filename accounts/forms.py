@@ -378,8 +378,8 @@ class TenantLogoRequestForm(forms.ModelForm):
 
     def clean_logo(self):
         logo = self.cleaned_data.get('logo')
-        if logo and hasattr(logo, 'size') and logo.size > 10 * 1024 * 1024:
-            raise forms.ValidationError("Dosya boyutu 10MB'dan küçük olmalıdır.")
+        if logo and hasattr(logo, 'size') and logo.size > 2 * 1024 * 1024:
+            raise forms.ValidationError("Dosya boyutu 2MB'dan küçük olmalıdır.")
         return logo
 
 

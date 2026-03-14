@@ -518,10 +518,9 @@ class TenantLogoRequest(models.Model):
         from django.conf import settings
         from catalog.utils import compress_image
         if getattr(settings, 'IMAGE_COMPRESS_ENABLED', True):
-            max_size = getattr(settings, 'IMAGE_MAX_SIZE', (1920, 1920))
             quality = getattr(settings, 'IMAGE_QUALITY', 85)
             if self.logo and not self.pk:
-                self.logo = compress_image(self.logo, max_size, quality)
+                self.logo = compress_image(self.logo, (800, 800), quality)
         super().save(*args, **kwargs)
 
 
