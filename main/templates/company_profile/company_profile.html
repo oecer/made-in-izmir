@@ -95,6 +95,25 @@
                 </div>
                 {% endif %}
             </div>
+
+            <div class="cp-hero-cta">
+                {% if products or available_sectors or available_tags %}
+                <a href="#section-products" class="cp-hero-btn cp-hero-btn--primary">
+                    <i class="fas fa-box-open"></i>
+                    <span data-i18n="company.products">Ürünler</span>
+                </a>
+                {% endif %}
+                {% if tenant.about_company or gallery_photos or is_tenant_admin %}
+                <a href="#section-about" class="cp-hero-btn cp-hero-btn--outline">
+                    <i class="fas fa-info-circle"></i>
+                    <span data-i18n="company.about_company">Firma Hakkında</span>
+                </a>
+                {% endif %}
+                <a href="#section-contact" class="cp-hero-btn cp-hero-btn--outline">
+                    <i class="fas fa-envelope"></i>
+                    <span data-i18n="company.get_in_touch">İletişime Geçin</span>
+                </a>
+            </div>
         </div>
     </div>
 </section>
@@ -104,10 +123,10 @@
      PRODUCTS
      ═══════════════════════════════════════════════════════════ -->
 {% if products or available_sectors or available_tags %}
-<section class="cp-section cp-section-alt">
+<section id="section-products" class="cp-section cp-section-alt">
     <div class="cp-container">
         <div class="cp-section-header">
-            <h2 data-i18n="company.our_products">Ürünlerimiz</h2>
+            <h2 data-i18n="company.our_products">Ürünler</h2>
         </div>
         <div class="cp-products-layout">
 
@@ -213,7 +232,7 @@
      ABOUT + GALLERY (combined)
      ═══════════════════════════════════════════════════════════ -->
 {% if tenant.about_company or gallery_photos or is_tenant_admin %}
-<section class="cp-section cp-section-alt">
+<section id="section-about" class="cp-section cp-section-alt">
     <div class="cp-container">
         <div class="cp-section-header">
             <h2 data-i18n="company.about">Firma Hakkında</h2>
@@ -235,7 +254,7 @@
                     {% if is_tenant_admin %}
                     <label class="cp-gallery-edit-overlay" for="gallery-file-trigger">
                         <i class="fas fa-camera"></i>
-                        <span data-i18n="company.add_photo">Fotoğraf Değiştir</span>
+                        <span data-i18n="company.logo_change_photo">Fotoğraf Değiştir</span>
                     </label>
                     <input type="file" id="gallery-file-trigger" accept="image/*" style="display:none">
                     {% endif %}
@@ -270,6 +289,149 @@
     </div>
 </section>
 {% endif %}
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     GET IN TOUCH
+     ═══════════════════════════════════════════════════════════ -->
+<section id="section-contact" class="cp-section cp-contact-section">
+    <div class="cp-container">
+
+        <div class="cp-section-header">
+            <h2 data-i18n="company.get_in_touch">İletişime Geçin</h2>
+            <p class="cp-section-subtitle" data-i18n="company.get_in_touch_subtitle">Sizi doğru kişilerle buluşturmaktan memnuniyet duyarız.</p>
+        </div>
+
+        <div class="cp-contact-layout">
+
+            <!-- Left: direct contact details -->
+            <div class="cp-contact-direct">
+                <h3 class="cp-contact-direct-title">
+                    <span data-i18n="company.reach_directly">Doğrudan İletişime Geçin</span>
+                </h3>
+                <p class="cp-contact-direct-desc">
+                    <span data-i18n="company.reach_directly_desc">Acil sorularınız için aşağıdaki kanallar aracılığıyla doğrudan iletişime geçebilirsiniz.</span>
+                </p>
+
+                <ul class="cp-contact-detail-list">
+                    {% if tenant.phone_number %}
+                    <li>
+                        <span class="cp-contact-detail-icon"><i class="fas fa-phone"></i></span>
+                        <div>
+                            <span class="cp-contact-detail-label" data-i18n="company.contact_phone">Telefon</span>
+                            <a href="tel:{{ tenant.phone_number }}" class="cp-contact-detail-value">{{ tenant.phone_number }}</a>
+                        </div>
+                    </li>
+                    {% endif %}
+                    {% if tenant.company_email %}
+                    <li>
+                        <span class="cp-contact-detail-icon"><i class="fas fa-envelope"></i></span>
+                        <div>
+                            <span class="cp-contact-detail-label" data-i18n="company.contact_email">E-posta</span>
+                            <a href="mailto:{{ tenant.company_email }}" class="cp-contact-detail-value">{{ tenant.company_email }}</a>
+                        </div>
+                    </li>
+                    {% endif %}
+                    {% if tenant.website %}
+                    <li>
+                        <span class="cp-contact-detail-icon"><i class="fas fa-globe"></i></span>
+                        <div>
+                            <span class="cp-contact-detail-label" data-i18n="company.contact_website">Web Sitesi</span>
+                            <a href="{{ tenant.website }}" target="_blank" rel="noopener noreferrer" class="cp-contact-detail-value">{{ tenant.website }}</a>
+                        </div>
+                    </li>
+                    {% endif %}
+                    {% if tenant.open_address or tenant.city or tenant.country %}
+                    <li>
+                        <span class="cp-contact-detail-icon"><i class="fas fa-map-marker-alt"></i></span>
+                        <div>
+                            <span class="cp-contact-detail-label" data-i18n="company.contact_address">Adres</span>
+                            <span class="cp-contact-detail-value">
+                                {% if tenant.open_address %}{{ tenant.open_address }}{% if tenant.city or tenant.country %}, {% endif %}{% endif %}
+                                {% if tenant.city %}{{ tenant.city }}{% endif %}{% if tenant.city and tenant.country %}, {% endif %}{% if tenant.country %}{{ tenant.country }}{% endif %}
+                            </span>
+                        </div>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <!-- Divider -->
+            <div class="cp-contact-divider">
+                <span data-i18n="company.or_divider">veya</span>
+            </div>
+
+            <!-- Right: enquiry form -->
+            <div class="cp-contact-form-wrap">
+                <h3 class="cp-contact-direct-title">
+                    <span data-i18n="company.enquiry_via_mii">Made in İzmir Üzerinden Mesaj Gönderin</span>
+                </h3>
+                <p class="cp-contact-direct-desc">
+                    <span data-i18n="company.enquiry_via_mii_desc_1">Biz aracılığıyla iletişim kurmayı tercih ediyor musunuz? Aşağıdaki formu doldurun;</span>
+                    <strong>Made in İzmir</strong>
+                    <span data-i18n="company.enquiry_via_mii_desc_2">ekibimiz sizi üreticiyle şahsen buluşturacaktır.</span>
+                </p>
+
+                <form class="cp-enquiry-form" id="cp-enquiry-form" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="producer" value="{{ tenant.schema_name }}">
+
+                    <div class="cp-contact-form-row">
+                        <div class="cp-form-group">
+                            <label for="eq-name">
+                                <span data-i18n="company.eq_name_label">Ad Soyad</span>
+                                <span class="cp-required" data-i18n="company.eq_name_required">*</span>
+                            </label>
+                            <input type="text" id="eq-name" name="name" class="cp-input"
+                                   data-i18n-placeholder="company.eq_name_ph" placeholder="Ayşe Yılmaz" required>
+                        </div>
+                        <div class="cp-form-group">
+                            <label for="eq-company">
+                                <span data-i18n="company.eq_company_label">Firma / Kuruluş</span>
+                            </label>
+                            <input type="text" id="eq-company" name="company" class="cp-input"
+                                   data-i18n-placeholder="company.eq_company_ph" placeholder="Firma adınız">
+                        </div>
+                    </div>
+
+                    <div class="cp-contact-form-row">
+                        <div class="cp-form-group">
+                            <label for="eq-email">
+                                <span data-i18n="company.eq_email_label">E-posta Adresi</span>
+                                <span class="cp-required" data-i18n="company.eq_name_required">*</span>
+                            </label>
+                            <input type="email" id="eq-email" name="email" class="cp-input"
+                                   data-i18n-placeholder="company.eq_email_ph" placeholder="ayse@ornek.com" required>
+                        </div>
+                        <div class="cp-form-group">
+                            <label for="eq-phone">
+                                <span data-i18n="company.eq_phone_label">Telefon Numarası</span>
+                            </label>
+                            <input type="tel" id="eq-phone" name="phone" class="cp-input"
+                                   data-i18n-placeholder="company.eq_phone_ph" placeholder="+90 555 000 00 00">
+                        </div>
+                    </div>
+
+                    <div class="cp-form-group">
+                        <label for="eq-message">
+                            <span data-i18n="company.eq_message_label">Mesajınız</span>
+                            <span class="cp-required" data-i18n="company.eq_name_required">*</span>
+                        </label>
+                        <textarea id="eq-message" name="message" class="cp-input cp-textarea" rows="5"
+                                  data-i18n-placeholder="company.eq_message_ph"
+                                  placeholder="Lütfen talebinizi, ilgilendiğiniz ürünleri veya sorularınızı belirtin…" required></textarea>
+                    </div>
+
+                    <button type="submit" class="cp-btn-submit" id="cp-enquiry-submit">
+                        <i class="fas fa-paper-plane" style="margin-right:8px;"></i>
+                        <span data-i18n="company.eq_submit">Mesaj Gönder</span>
+                    </button>
+                </form>
+            </div>
+
+        </div><!-- /.cp-contact-layout -->
+    </div>
+</section>
 
 
 <!-- ═══════════════════════════════════════════════════════════
@@ -547,6 +709,47 @@
     }
 
     {% endif %}
+
+    /* ── Enquiry form ── */
+    const enquiryForm = document.getElementById('cp-enquiry-form');
+    if (enquiryForm) {
+        enquiryForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('cp-enquiry-submit');
+            const lang = localStorage.getItem('madeInIzmirLang') || 'tr';
+            const t = (key) => {
+                const keys = ('company.' + key).split('.');
+                let v = translations[lang];
+                keys.forEach(k => { if (v) v = v[k]; });
+                return v || key;
+            };
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>' + t('eq_sending');
+
+            try {
+                const data = new FormData(enquiryForm);
+                const resp = await fetch('/enquiry/submit/', {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': data.get('csrfmiddlewaretoken') },
+                    body: data,
+                });
+                if (resp.ok) {
+                    enquiryForm.innerHTML = `
+                        <div style="text-align:center;padding:40px 0;">
+                            <i class="fas fa-check-circle" style="font-size:3rem;color:#16a34a;margin-bottom:16px;display:block;"></i>
+                            <h4 style="margin:0 0 8px;color:#0f172a;">${t('eq_success_title')}</h4>
+                            <p style="color:#64748b;margin:0;">${t('eq_success_desc')}</p>
+                        </div>`;
+                } else {
+                    throw new Error('server error');
+                }
+            } catch {
+                showToast(t('eq_error'), 'error');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:8px;"></i>' + t('eq_submit');
+            }
+        });
+    }
 
 })();
 </script>
