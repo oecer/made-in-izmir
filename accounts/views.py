@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import SignUpForm, CustomLoginForm, ProfileEditForm, TenantLogoRequestForm, TenantPhotoRequestForm
-from .models import MembershipConsent, ConsentText, TenantPhoto
+from .models import MembershipConsent, ConsentText, TenantPhoto, TenantPhotoRequest
 
 
 def _get_client_ip(request):
@@ -78,8 +78,13 @@ def login_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, f'Hoş geldiniz, {user.get_full_name() or user.username}!')
-            next_url = request.GET.get('next', 'accounts:dashboard')
-            return redirect(next_url)
+            next_url = request.GET.get('next', '')
+            from urllib.parse import urlparse
+            if next_url:
+                parsed = urlparse(next_url)
+                if parsed.netloc or parsed.scheme:
+                    next_url = ''
+            return redirect(next_url or 'accounts:dashboard')
         else:
             messages.error(request, 'Kullanıcı adı/e-posta veya şifre hatalı.')
             form = CustomLoginForm()
@@ -152,12 +157,16 @@ def company_profile_view(request, company_username):
 
     tenant = get_object_or_404(Tenant, company_username=company_username)
 
-    # Check if the visitor is a producer (they can always see profiles as a preview)
+    # Company profiles are only for producer tenants
+    if not tenant.is_producer:
+        raise Http404("Bu firma profili mevcut değil.")
+
+    # Check if the visitor is the tenant admin (producer previewing their own profile)
     visitor_is_producer = False
     if request.user.is_authenticated:
         try:
             visitor_tenant = request.user.profile.tenant
-            if visitor_tenant and visitor_tenant.is_producer:
+            if visitor_tenant and visitor_tenant == tenant and visitor_tenant.is_producer:
                 visitor_is_producer = True
         except Exception:
             pass
@@ -179,9 +188,44 @@ def company_profile_view(request, company_username):
             pass
 
     gallery_photos = tenant.gallery_photos.all()
-    products = Product.objects.filter(tenant=tenant, is_active=True, in_showroom=True).order_by('-created_at')
+
+    # Base showroom products for this tenant
+    base_products = Product.objects.filter(tenant=tenant, is_active=True, in_showroom=True)
+
+    # Collect available sectors and tags from this tenant's showroom products
+    from catalog.models import Sector, ProductTag
+    available_sectors = Sector.objects.filter(products__in=base_products).distinct().order_by('name_tr')
+    available_tags = ProductTag.objects.filter(products__in=base_products).distinct().order_by('name_tr')
+
+    # Apply filters from query string
+    selected_sector_ids = request.GET.getlist('sector')
+    selected_tag_ids = request.GET.getlist('tag')
+
+    products = base_products
+    if selected_sector_ids:
+        try:
+            selected_sector_ids = [int(i) for i in selected_sector_ids]
+            products = products.filter(sector__id__in=selected_sector_ids)
+        except (ValueError, TypeError):
+            selected_sector_ids = []
+    if selected_tag_ids:
+        try:
+            selected_tag_ids = [int(i) for i in selected_tag_ids]
+            products = products.filter(tags__id__in=selected_tag_ids)
+        except (ValueError, TypeError):
+            selected_tag_ids = []
+
+    products = products.distinct().order_by('-created_at')
 
     is_preview_for_producer = visitor_is_producer and not tenant.show_company_profile
+
+    is_madeinizmir_user = False
+    if request.user.is_authenticated:
+        try:
+            _ = request.user.profile
+            is_madeinizmir_user = True
+        except Exception:
+            pass
 
     context = {
         'tenant': tenant,
@@ -191,6 +235,11 @@ def company_profile_view(request, company_username):
         'has_pending_logo': has_pending_logo,
         'pending_photo_count': pending_photo_count,
         'is_preview_for_producer': is_preview_for_producer,
+        'is_madeinizmir_user': is_madeinizmir_user,
+        'available_sectors': available_sectors,
+        'available_tags': available_tags,
+        'selected_sector_ids': selected_sector_ids,
+        'selected_tag_ids': selected_tag_ids,
     }
     return render(request, 'company_profile/company_profile.html', context)
 
@@ -214,6 +263,9 @@ def submit_company_logo_view(request):
     tenant = profile.tenant
     if not tenant:
         return JsonResponse({'error': 'Firma bulunamadı.'}, status=403)
+
+    if not tenant.is_producer:
+        return JsonResponse({'error': 'Yalnızca üretici firmalar logo yükleyebilir.'}, status=403)
 
     # Only one pending logo request at a time
     if tenant.logo_requests.filter(status='pending').exists():
@@ -252,8 +304,12 @@ def submit_gallery_photo_view(request):
     if not tenant:
         return JsonResponse({'error': 'Firma bulunamadı.'}, status=403)
 
-    if TenantPhoto.objects.filter(tenant=tenant).count() >= 10:
-        return JsonResponse({'error': 'Maksimum 10 galeri fotoğrafı yükleyebilirsiniz.'}, status=400)
+    if not tenant.is_producer:
+        return JsonResponse({'error': 'Yalnızca üretici firmalar fotoğraf yükleyebilir.'}, status=403)
+
+    has_pending_request = TenantPhotoRequest.objects.filter(tenant=tenant, status='pending').exists()
+    if has_pending_request:
+        return JsonResponse({'error': 'Zaten onay bekleyen bir fotoğraf talebiniz var.'}, status=400)
 
     form = TenantPhotoRequestForm(request.POST, request.FILES)
     if form.is_valid():

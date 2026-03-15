@@ -7,7 +7,7 @@
 
             <ul class="nav-links" id="nav-links">
                 {% if user.is_authenticated %}
-                {% if '/dashboard' in request.path or '/my-account' in request.path or '/products' in request.path or '/expo' in request.path %}
+                {% if '/dashboard' in request.path or '/my-account' in request.path or '/products' in request.path or '/expo' in request.path or is_madeinizmir_user %}
                 <!-- Dashboard Specific Navbar Items -->
                 <li><a href="{% url 'accounts:dashboard' %}" data-i18n="nav.main_dashboard">Ana Panel</a></li>
                 {% if user.profile.tenant.is_producer %}
@@ -17,7 +17,7 @@
                 <li><a href="{% url 'catalog:buyer_dashboard' %}" data-i18n="nav.buyer_dashboard">Alıcı Paneli</a></li>
                 {% endif %}
                 <li><a href="{% url 'expos:dashboard_calendar' %}" data-i18n="nav.dashboard_calendar">Fuar Takvimi</a></li>
-                {% if user.profile.tenant.company_username %}
+                {% if user.profile.tenant.company_username and user.profile.tenant.is_producer %}
                 <li><a href="/{{ user.profile.tenant.company_username }}/" data-i18n="nav.company_profile">Firma Profilim</a></li>
                 {% endif %}
                 <li class="nav-user-dropdown">

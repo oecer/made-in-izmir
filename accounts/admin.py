@@ -448,6 +448,9 @@ class TenantLogoRequestAdmin(admin.ModelAdmin):
 
     def _process_approval(self, request, logo_request):
         tenant = logo_request.tenant
+        # Delete old logo file from storage before replacing
+        if tenant.logo:
+            tenant.logo.delete(save=False)
         tenant.logo = logo_request.logo
         tenant.save(update_fields=['logo'])
         logo_request.reviewed_by = request.user
@@ -539,10 +542,12 @@ class TenantPhotoRequestAdmin(admin.ModelAdmin):
     photo_preview_small.short_description = 'Fotoğraf'
 
     def _process_approval(self, request, photo_request):
-        current_count = TenantPhoto.objects.filter(tenant=photo_request.tenant).count()
-        if current_count >= 10:
-            raise ValueError("Bu firma için maksimum 10 galeri fotoğrafı sınırına ulaşıldı.")
-        TenantPhoto.objects.create(
+        # Delete existing gallery photo(s) and their files before adding the new one
+        for existing in TenantPhoto.objects.filter(tenant=photo_request.tenant):
+            if existing.photo:
+                existing.photo.delete(save=False)
+            existing.delete()
+        approved_photo = TenantPhoto.objects.create(
             tenant=photo_request.tenant,
             photo=photo_request.photo,
             caption_tr=photo_request.caption_tr,

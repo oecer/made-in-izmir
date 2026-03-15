@@ -64,9 +64,9 @@ body.has-top-banner header {
     height: 160px;
     border-radius: 20px;
     object-fit: contain;
-    background: #ffffff;
+    background: transparent;
     padding: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    box-shadow: none;
     display: block;
 }
 
@@ -261,6 +261,36 @@ body.has-top-banner header {
     transform: scale(1.04);
 }
 
+.cp-gallery-edit-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.50);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    opacity: 0;
+    cursor: pointer;
+    transition: opacity 0.25s ease;
+}
+
+.cp-gallery-item:hover .cp-gallery-edit-overlay {
+    opacity: 1;
+}
+
+.cp-gallery-edit-overlay i {
+    color: #fff;
+    font-size: 1.8rem;
+}
+
+.cp-gallery-edit-overlay span {
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
 /* Add-photo slot */
 .cp-gallery-add-slot {
     border: 2px dashed #cca43b;
@@ -308,12 +338,36 @@ body.has-top-banner header {
     border: 1px solid #fde68a;
 }
 
+/* ── About + Gallery combined layout ─────────────────────────── */
+.cp-about-gallery-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+}
+
+.cp-about-gallery-left .cp-gallery-item {
+    aspect-ratio: 4 / 3;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #e2e8f0;
+}
+
+.cp-about-gallery-left .cp-gallery-add-slot {
+    aspect-ratio: 4 / 3;
+}
+
+.cp-about-gallery-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 /* ── About ───────────────────────────────────────────────────── */
 .cp-about-text {
     font-size: 1.05rem;
     color: #334155;
     line-height: 1.85;
-    max-width: 820px;
 }
 
 .cp-about-text p {
@@ -373,10 +427,105 @@ body.has-top-banner header {
     text-decoration: underline;
 }
 
+/* ── Products layout (sidebar + grid) ───────────────────────── */
+.cp-products-layout {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+}
+
+.cp-products-main {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ── Filter Sidebar ──────────────────────────────────────────── */
+.cp-filter-sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 20px;
+    position: sticky;
+    top: 88px; /* below fixed header */
+}
+
+.cp-filter-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.cp-filter-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: #0f172a;
+}
+
+.cp-filter-clear {
+    font-size: 0.75rem;
+    color: #cca43b;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.cp-filter-clear:hover {
+    color: #b8922e;
+    text-decoration: underline;
+}
+
+.cp-filter-group {
+    margin-bottom: 20px;
+}
+
+.cp-filter-group:last-child {
+    margin-bottom: 0;
+}
+
+.cp-filter-group-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #94a3b8;
+    margin-bottom: 10px;
+}
+
+.cp-filter-option {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 5px 0;
+    cursor: pointer;
+}
+
+.cp-filter-option input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: #cca43b;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.cp-filter-option-text {
+    font-size: 0.875rem;
+    color: #334155;
+    line-height: 1.3;
+}
+
+.cp-filter-option:hover .cp-filter-option-text {
+    color: #0f172a;
+}
+
 /* ── Products ────────────────────────────────────────────────── */
 .cp-products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 24px;
 }
 
@@ -686,9 +835,42 @@ body.has-top-banner header {
         font-size: 1.6rem;
     }
 
+    .cp-about-gallery-layout {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
     .cp-gallery-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
+    }
+
+    .cp-products-layout {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .cp-filter-sidebar {
+        width: 100%;
+        position: static;
+    }
+
+    .cp-filter-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 12px;
+    }
+
+    .cp-filter-group-label {
+        width: 100%;
+        margin-bottom: 4px;
+    }
+
+    .cp-filter-option {
+        background: #f1f5f9;
+        border-radius: 20px;
+        padding: 4px 12px;
     }
 
     .cp-products-grid {
