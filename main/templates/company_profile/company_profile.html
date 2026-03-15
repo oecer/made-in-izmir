@@ -168,6 +168,13 @@
                          loading="lazy"
                          data-caption-tr="{{ photo.caption_tr }}"
                          data-caption-en="{{ photo.caption_en }}">
+                    {% if is_tenant_admin %}
+                    <label class="cp-gallery-edit-overlay" for="gallery-file-trigger">
+                        <i class="fas fa-camera"></i>
+                        <span data-i18n="company.add_photo">Fotoğraf Değiştir</span>
+                    </label>
+                    <input type="file" id="gallery-file-trigger" accept="image/*" style="display:none">
+                    {% endif %}
                 </div>
                 {% endwith %}
                 {% elif is_tenant_admin %}

@@ -400,11 +400,14 @@ class TenantPhoto(models.Model):
 
     def save(self, *args, **kwargs):
         from django.conf import settings
+        from django.core.files.uploadedfile import UploadedFile
         from catalog.utils import compress_image
         if getattr(settings, 'IMAGE_COMPRESS_ENABLED', True):
             max_size = getattr(settings, 'IMAGE_MAX_SIZE', (1920, 1920))
             quality = getattr(settings, 'IMAGE_QUALITY', 85)
-            if self.photo and not self.pk:
+            # Only compress new uploads; skip if the photo is an already-stored file
+            # (e.g. when transferring a reference from TenantPhotoRequest on approval).
+            if self.photo and not self.pk and isinstance(getattr(self.photo, 'file', None), UploadedFile):
                 self.photo = compress_image(self.photo, max_size, quality)
         super().save(*args, **kwargs)
 

@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import SignUpForm, CustomLoginForm, ProfileEditForm, TenantLogoRequestForm, TenantPhotoRequestForm
-from .models import MembershipConsent, ConsentText, TenantPhoto
+from .models import MembershipConsent, ConsentText, TenantPhoto, TenantPhotoRequest
 
 
 def _get_client_ip(request):
@@ -152,12 +152,16 @@ def company_profile_view(request, company_username):
 
     tenant = get_object_or_404(Tenant, company_username=company_username)
 
-    # Check if the visitor is a producer (they can always see profiles as a preview)
+    # Company profiles are only for producer tenants
+    if not tenant.is_producer:
+        raise Http404("Bu firma profili mevcut değil.")
+
+    # Check if the visitor is the tenant admin (producer previewing their own profile)
     visitor_is_producer = False
     if request.user.is_authenticated:
         try:
             visitor_tenant = request.user.profile.tenant
-            if visitor_tenant and visitor_tenant.is_producer:
+            if visitor_tenant and visitor_tenant == tenant and visitor_tenant.is_producer:
                 visitor_is_producer = True
         except Exception:
             pass
@@ -215,6 +219,9 @@ def submit_company_logo_view(request):
     if not tenant:
         return JsonResponse({'error': 'Firma bulunamadı.'}, status=403)
 
+    if not tenant.is_producer:
+        return JsonResponse({'error': 'Yalnızca üretici firmalar logo yükleyebilir.'}, status=403)
+
     # Only one pending logo request at a time
     if tenant.logo_requests.filter(status='pending').exists():
         return JsonResponse({'error': 'Zaten onay bekleyen bir logo talebiniz var.'}, status=400)
@@ -252,8 +259,12 @@ def submit_gallery_photo_view(request):
     if not tenant:
         return JsonResponse({'error': 'Firma bulunamadı.'}, status=403)
 
-    if TenantPhoto.objects.filter(tenant=tenant).count() >= 1:
-        return JsonResponse({'error': 'Maksimum 1 galeri fotoğrafı yükleyebilirsiniz.'}, status=400)
+    if not tenant.is_producer:
+        return JsonResponse({'error': 'Yalnızca üretici firmalar fotoğraf yükleyebilir.'}, status=403)
+
+    has_pending_request = TenantPhotoRequest.objects.filter(tenant=tenant, status='pending').exists()
+    if has_pending_request:
+        return JsonResponse({'error': 'Zaten onay bekleyen bir fotoğraf talebiniz var.'}, status=400)
 
     form = TenantPhotoRequestForm(request.POST, request.FILES)
     if form.is_valid():
