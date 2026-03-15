@@ -103,43 +103,107 @@
 <!-- ═══════════════════════════════════════════════════════════
      PRODUCTS
      ═══════════════════════════════════════════════════════════ -->
-{% if products %}
+{% if products or available_sectors or available_tags %}
 <section class="cp-section cp-section-alt">
     <div class="cp-container">
         <div class="cp-section-header">
             <h2 data-i18n="company.our_products">Ürünlerimiz</h2>
         </div>
-        <div class="cp-products-grid">
-            {% for product in products %}
-            <a href="{% url 'catalog:product_detail' product.id %}" class="cp-product-card">
-                <div class="cp-product-image">
-                    {% if product.photo1 %}
-                    <img src="{{ product.photo1.url }}"
-                         alt="{{ product.title_tr|default:product.title_en }}"
-                         loading="lazy">
-                    {% else %}
-                    <div class="cp-product-no-image">
-                        <i class="fas fa-image"></i>
+        <div class="cp-products-layout">
+
+            <!-- ── Filter Sidebar ── -->
+            {% if available_sectors or available_tags %}
+            <aside class="cp-filter-sidebar">
+                <form method="get" id="cp-filter-form">
+                    <div class="cp-filter-header">
+                        <span class="cp-filter-title" data-i18n="filter.title">Filtrele</span>
+                        {% if selected_sector_ids or selected_tag_ids %}
+                        <a href="?" class="cp-filter-clear" data-i18n="filter.clear">Temizle</a>
+                        {% endif %}
+                    </div>
+
+                    {% if available_sectors %}
+                    <div class="cp-filter-group">
+                        <div class="cp-filter-group-label" data-i18n="filter.sector">Sektör</div>
+                        {% for sector in available_sectors %}
+                        <label class="cp-filter-option">
+                            <input type="checkbox"
+                                   name="sector"
+                                   value="{{ sector.id }}"
+                                   {% if sector.id in selected_sector_ids %}checked{% endif %}
+                                   onchange="document.getElementById('cp-filter-form').submit()">
+                            <span class="cp-filter-option-text"
+                                  data-tr="{{ sector.name_tr }}"
+                                  data-en="{{ sector.name_en }}">{{ sector.name_tr }}</span>
+                        </label>
+                        {% endfor %}
                     </div>
                     {% endif %}
-                </div>
-                <div class="cp-product-info">
-                    <h3 class="cp-product-title"
-                        data-tr="{{ product.title_tr }}"
-                        data-en="{{ product.title_en }}">
-                        {{ product.title_tr|default:product.title_en }}
-                    </h3>
-                    {% if product.sector %}
-                    <span class="cp-product-sector"
-                          data-tr="{{ product.sector.name_tr }}"
-                          data-en="{{ product.sector.name_en }}">
-                        {{ product.sector.name_tr }}
-                    </span>
+
+                    {% if available_tags %}
+                    <div class="cp-filter-group">
+                        <div class="cp-filter-group-label" data-i18n="filter.tag">Etiket</div>
+                        {% for tag in available_tags %}
+                        <label class="cp-filter-option">
+                            <input type="checkbox"
+                                   name="tag"
+                                   value="{{ tag.id }}"
+                                   {% if tag.id in selected_tag_ids %}checked{% endif %}
+                                   onchange="document.getElementById('cp-filter-form').submit()">
+                            <span class="cp-filter-option-text"
+                                  data-tr="{{ tag.name_tr }}"
+                                  data-en="{{ tag.name_en }}">{{ tag.name_tr }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
                     {% endif %}
+                </form>
+            </aside>
+            {% endif %}
+
+            <!-- ── Product Grid ── -->
+            <div class="cp-products-main">
+                {% if products %}
+                <div class="cp-products-grid">
+                    {% for product in products %}
+                    <a href="{% url 'catalog:product_detail' product.id %}" class="cp-product-card">
+                        <div class="cp-product-image">
+                            {% if product.photo1 %}
+                            <img src="{{ product.photo1.url }}"
+                                 alt="{{ product.title_tr|default:product.title_en }}"
+                                 loading="lazy">
+                            {% else %}
+                            <div class="cp-product-no-image">
+                                <i class="fas fa-image"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="cp-product-info">
+                            <h3 class="cp-product-title"
+                                data-tr="{{ product.title_tr }}"
+                                data-en="{{ product.title_en }}">
+                                {{ product.title_tr|default:product.title_en }}
+                            </h3>
+                            {% if product.sector %}
+                            <span class="cp-product-sector"
+                                  data-tr="{{ product.sector.name_tr }}"
+                                  data-en="{{ product.sector.name_en }}">
+                                {{ product.sector.name_tr }}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </a>
+                    {% endfor %}
                 </div>
-            </a>
-            {% endfor %}
-        </div>
+                {% else %}
+                <div class="cp-empty">
+                    <i class="fas fa-box-open"></i>
+                    <p data-i18n="filter.no_results">Seçilen filtrelere uygun ürün bulunamadı.</p>
+                </div>
+                {% endif %}
+            </div>
+
+        </div><!-- /.cp-products-layout -->
     </div>
 </section>
 {% endif %}

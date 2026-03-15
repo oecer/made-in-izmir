@@ -183,7 +183,34 @@ def company_profile_view(request, company_username):
             pass
 
     gallery_photos = tenant.gallery_photos.all()
-    products = Product.objects.filter(tenant=tenant, is_active=True, in_showroom=True).order_by('-created_at')
+
+    # Base showroom products for this tenant
+    base_products = Product.objects.filter(tenant=tenant, is_active=True, in_showroom=True)
+
+    # Collect available sectors and tags from this tenant's showroom products
+    from catalog.models import Sector, ProductTag
+    available_sectors = Sector.objects.filter(products__in=base_products).distinct().order_by('name_tr')
+    available_tags = ProductTag.objects.filter(products__in=base_products).distinct().order_by('name_tr')
+
+    # Apply filters from query string
+    selected_sector_ids = request.GET.getlist('sector')
+    selected_tag_ids = request.GET.getlist('tag')
+
+    products = base_products
+    if selected_sector_ids:
+        try:
+            selected_sector_ids = [int(i) for i in selected_sector_ids]
+            products = products.filter(sector__id__in=selected_sector_ids)
+        except (ValueError, TypeError):
+            selected_sector_ids = []
+    if selected_tag_ids:
+        try:
+            selected_tag_ids = [int(i) for i in selected_tag_ids]
+            products = products.filter(tags__id__in=selected_tag_ids)
+        except (ValueError, TypeError):
+            selected_tag_ids = []
+
+    products = products.distinct().order_by('-created_at')
 
     is_preview_for_producer = visitor_is_producer and not tenant.show_company_profile
 
@@ -204,6 +231,10 @@ def company_profile_view(request, company_username):
         'pending_photo_count': pending_photo_count,
         'is_preview_for_producer': is_preview_for_producer,
         'is_madeinizmir_user': is_madeinizmir_user,
+        'available_sectors': available_sectors,
+        'available_tags': available_tags,
+        'selected_sector_ids': selected_sector_ids,
+        'selected_tag_ids': selected_tag_ids,
     }
     return render(request, 'company_profile/company_profile.html', context)
 
