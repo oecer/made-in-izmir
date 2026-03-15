@@ -125,9 +125,12 @@ def buyer_dashboard_view(request):
             messages.error(request, 'Bu sayfaya erişim yetkiniz yok.')
             return redirect('accounts:dashboard')
 
-        tag_filters = [t for t in request.GET.getlist('tag') if t]
-        sector_filters = [s for s in request.GET.getlist('sector') if s]
-        producer_filters = [p for p in request.GET.getlist('producer') if p]
+        try:
+            tag_filters = [int(t) for t in request.GET.getlist('tag') if t]
+            sector_filters = [int(s) for s in request.GET.getlist('sector') if s]
+            producer_filters = [int(p) for p in request.GET.getlist('producer') if p]
+        except ValueError:
+            tag_filters = sector_filters = producer_filters = []
         search_query = request.GET.get('search', '').strip()
 
         products_qs = Product.objects.filter(is_active=True)
@@ -283,16 +286,13 @@ def delete_product_view(request, product_id):
 @login_required
 def product_detail_view(request, product_id):
     """Product detail view"""
-    product = get_object_or_404(Product, id=product_id)
-
-    can_view = False
     user_tenant = getattr(getattr(request.user, 'profile', None), 'tenant', None)
-    if user_tenant and product.tenant == user_tenant:
-        can_view = True
-    elif user_tenant and user_tenant.is_buyer and product.is_active:
-        can_view = True
 
-    if not can_view:
+    if user_tenant and user_tenant.is_buyer:
+        product = get_object_or_404(Product, id=product_id, is_active=True)
+    elif user_tenant:
+        product = get_object_or_404(Product, id=product_id, tenant=user_tenant)
+    else:
         messages.error(request, 'Bu ürünü görüntüleme yetkiniz yok.')
         return redirect('accounts:dashboard')
 

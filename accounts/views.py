@@ -78,8 +78,13 @@ def login_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, f'Hoş geldiniz, {user.get_full_name() or user.username}!')
-            next_url = request.GET.get('next', 'accounts:dashboard')
-            return redirect(next_url)
+            next_url = request.GET.get('next', '')
+            from urllib.parse import urlparse
+            if next_url:
+                parsed = urlparse(next_url)
+                if parsed.netloc or parsed.scheme:
+                    next_url = ''
+            return redirect(next_url or 'accounts:dashboard')
         else:
             messages.error(request, 'Kullanıcı adı/e-posta veya şifre hatalı.')
             form = CustomLoginForm()
