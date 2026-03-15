@@ -244,6 +244,33 @@ def company_profile_view(request, company_username):
     return render(request, 'company_profile/company_profile.html', context)
 
 
+def business_card_view(request, company_username):
+    """Printable bilingual business card for a producer."""
+    from django.shortcuts import get_object_or_404
+    from django.http import Http404
+    from .models import Tenant
+
+    tenant = get_object_or_404(Tenant, company_username=company_username)
+
+    if not tenant.is_producer:
+        raise Http404("Bu firma profili mevcut değil.")
+
+    visitor_is_producer = False
+    if request.user.is_authenticated:
+        try:
+            visitor_tenant = request.user.profile.tenant
+            if visitor_tenant and visitor_tenant == tenant and visitor_tenant.is_producer:
+                visitor_is_producer = True
+        except Exception:
+            pass
+
+    if not tenant.show_company_profile and not visitor_is_producer:
+        raise Http404("Bu firma profili mevcut değil.")
+
+    context = {'tenant': tenant}
+    return render(request, 'company_profile/business_card.html', context)
+
+
 @login_required
 def submit_company_logo_view(request):
     """Handles logo submission for approval."""

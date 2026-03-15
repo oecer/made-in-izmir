@@ -42,9 +42,10 @@ urlpatterns = [
 ]
 
 # Public company profile — must be last to not shadow any named route.
-from accounts.views import company_profile_view
+from accounts.views import company_profile_view, business_card_view
 urlpatterns += [
     path('<slug:company_username>/', company_profile_view, name='company_profile'),
+    path('<slug:company_username>/business-card/', business_card_view, name='business_card'),
 ]
 
 # Serve media files in both dev and production.
