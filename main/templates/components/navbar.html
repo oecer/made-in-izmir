@@ -7,7 +7,7 @@
 
             <ul class="nav-links" id="nav-links">
                 {% if user.is_authenticated %}
-                {% if '/dashboard' in request.path or '/my-account' in request.path or '/products' in request.path or '/expo' in request.path %}
+                {% if '/dashboard' in request.path or '/my-account' in request.path or '/products' in request.path or '/expo' in request.path or is_madeinizmir_user %}
                 <!-- Dashboard Specific Navbar Items -->
                 <li><a href="{% url 'accounts:dashboard' %}" data-i18n="nav.main_dashboard">Ana Panel</a></li>
                 {% if user.profile.tenant.is_producer %}

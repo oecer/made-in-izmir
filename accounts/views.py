@@ -187,6 +187,14 @@ def company_profile_view(request, company_username):
 
     is_preview_for_producer = visitor_is_producer and not tenant.show_company_profile
 
+    is_madeinizmir_user = False
+    if request.user.is_authenticated:
+        try:
+            _ = request.user.profile
+            is_madeinizmir_user = True
+        except Exception:
+            pass
+
     context = {
         'tenant': tenant,
         'gallery_photos': gallery_photos,
@@ -195,6 +203,7 @@ def company_profile_view(request, company_username):
         'has_pending_logo': has_pending_logo,
         'pending_photo_count': pending_photo_count,
         'is_preview_for_producer': is_preview_for_producer,
+        'is_madeinizmir_user': is_madeinizmir_user,
     }
     return render(request, 'company_profile/company_profile.html', context)
 
