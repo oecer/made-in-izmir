@@ -540,7 +540,7 @@
             formData.append('logo', this.files[0]);
             formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
 
-            fetch("{% url 'accounts:submit_company_logo' %}", {
+            fetch("{% url 'profiles:submit_company_logo' %}", {
                 method: 'POST',
                 body: formData,
             })
@@ -673,7 +673,7 @@
             var formData = new FormData(this);
             formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
 
-            fetch("{% url 'accounts:submit_gallery_photo' %}", {
+            fetch("{% url 'profiles:submit_gallery_photo' %}", {
                 method: 'POST',
                 body: formData,
             })
