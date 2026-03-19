@@ -549,6 +549,39 @@ class ContactSubmission(models.Model):
         return f"{self.name} <{self.email}> – {self.subject}"
 
 
+class ProducerEnquiry(models.Model):
+    """Enquiry sent through Made in İzmir to a specific producer (optionally about a product)."""
+
+    producer   = models.ForeignKey(
+        'Tenant',
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='enquiries',
+        verbose_name="Üretici",
+    )
+    product_id = models.IntegerField(null=True, blank=True, verbose_name="Ürün ID")
+    product_title = models.CharField(max_length=500, blank=True, verbose_name="Ürün Başlığı")
+
+    name    = models.CharField(max_length=200, verbose_name="Ad Soyad")
+    company = models.CharField(max_length=200, blank=True, verbose_name="Firma")
+    email   = models.EmailField(verbose_name="E-posta")
+    phone   = models.CharField(max_length=50, blank=True, verbose_name="Telefon")
+    message = models.TextField(verbose_name="Mesaj")
+
+    ip_address   = models.GenericIPAddressField(null=True, blank=True, verbose_name="IP Adresi")
+    submitted_at = models.DateTimeField(auto_now_add=True, verbose_name="Gönderilme Zamanı")
+    email_sent   = models.BooleanField(default=False, verbose_name="E-posta Gönderildi")
+
+    class Meta:
+        verbose_name = "Üretici Sorgu Formu"
+        verbose_name_plural = "Üretici Sorgu Formları"
+        ordering = ['-submitted_at']
+        db_table = 'accounts_producerenquiry'
+
+    def __str__(self):
+        return f"{self.name} → {self.producer_id} ({self.submitted_at:%Y-%m-%d})"
+
+
 class ProfileEditRequest(models.Model):
     """Pending profile edit requests awaiting admin approval"""
 

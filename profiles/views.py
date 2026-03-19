@@ -114,6 +114,95 @@ def business_card_view(request, company_username):
     return render(request, 'company_profile/business_card.html', context)
 
 
+def submit_enquiry_view(request):
+    """Handles producer enquiry form submissions from company profile and product detail pages."""
+    from django.http import JsonResponse
+    from accounts.models import Tenant, ProducerEnquiry
+    from django.core.mail import send_mail
+    from django.conf import settings
+
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Geçersiz istek.'}, status=405)
+
+    # Identify the producer from schema_name
+    producer_schema = request.POST.get('producer', '').strip()
+    if not producer_schema:
+        return JsonResponse({'error': 'Üretici belirtilmedi.'}, status=400)
+
+    try:
+        producer = Tenant.objects.get(schema_name=producer_schema, is_producer=True)
+    except Tenant.DoesNotExist:
+        return JsonResponse({'error': 'Üretici bulunamadı.'}, status=404)
+
+    name    = request.POST.get('name', '').strip()
+    company = request.POST.get('company', '').strip()
+    email   = request.POST.get('email', '').strip()
+    phone   = request.POST.get('phone', '').strip()
+    message = request.POST.get('message', '').strip()
+
+    if not name or not email or not message:
+        return JsonResponse({'error': 'Lütfen zorunlu alanları doldurun.'}, status=400)
+
+    # Optional product context
+    product_id    = request.POST.get('product_id', '').strip()
+    product_title = request.POST.get('product_title', '').strip()
+
+    # IP
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0].strip()
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+
+    # Build email body
+    product_line = ''
+    if product_title:
+        product_line = f"Ürün:     {product_title}\n"
+    if product_id:
+        product_line += f"Ürün ID:  {product_id}\n"
+
+    subject_line = f"[Made in İzmir] Sorgu: {producer.company_name} — {name}"
+    body = (
+        f"Üretici:  {producer.company_name}\n"
+        f"{product_line}"
+        f"Ad Soyad: {name}\n"
+        f"Firma:    {company or '-'}\n"
+        f"E-posta:  {email}\n"
+        f"Telefon:  {phone or '-'}\n\n"
+        f"Mesaj:\n{message}"
+    )
+
+    email_ok = True
+    try:
+        send_mail(
+            subject_line,
+            body,
+            settings.DEFAULT_FROM_EMAIL,
+            [settings.DEFAULT_FROM_EMAIL],
+            fail_silently=False,
+        )
+    except Exception:
+        email_ok = False
+
+    ProducerEnquiry.objects.create(
+        producer=producer,
+        product_id=int(product_id) if product_id and product_id.isdigit() else None,
+        product_title=product_title,
+        name=name,
+        company=company,
+        email=email,
+        phone=phone,
+        message=message,
+        ip_address=ip,
+        email_sent=email_ok,
+    )
+
+    if not email_ok:
+        return JsonResponse({'error': 'E-posta gönderilemedi.'}, status=500)
+
+    return JsonResponse({'success': True})
+
+
 @login_required
 def submit_company_logo_view(request):
     """Handles logo submission for approval."""
