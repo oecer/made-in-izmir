@@ -110,6 +110,11 @@ def business_card_view(request, company_username):
     if not tenant.is_producer and not tenant.is_buyer:
         raise Http404("Bu firma profili mevcut değil.")
 
+    # Check subscription: business card requires has_business_card feature
+    plan = tenant.get_active_plan()
+    if plan and not plan.has_business_card:
+        raise Http404("Bu firma için dijital kartvizit özelliği aktif değil.")
+
     context = {'tenant': tenant}
     return render(request, 'company_profile/business_card.html', context)
 

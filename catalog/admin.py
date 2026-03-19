@@ -129,6 +129,16 @@ class ProductRequestAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
     def _process_approval(self, request, product_request):
+        # Enforce subscription product limit if the approved product will be active
+        if product_request.is_active and product_request.tenant:
+            if not product_request.tenant.can_activate_product():
+                plan = product_request.tenant.get_active_plan()
+                limit = plan.max_active_products if plan else '?'
+                raise ValueError(
+                    f"'{product_request.tenant.company_name}' firması aktif ürün limitine "
+                    f"ulaştı ({limit} ürün). Abonelik yükseltilmeden ürün onaylanamaz."
+                )
+
         # Create product without photos first to get a PK
         product = Product.objects.create(
             producer=product_request.producer,

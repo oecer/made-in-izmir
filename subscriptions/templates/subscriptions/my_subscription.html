@@ -1,0 +1,267 @@
+{% extends 'user_area/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Aboneliğim - Made in İzmir{% endblock %}
+
+{% block dashboard_title %}Aboneliğim{% endblock %}
+{% block dashboard_desc %}Mevcut abonelik planınız ve özellikleriniz{% endblock %}
+
+{% block dashboard_header_actions %}
+<a href="{% url 'subscriptions:pricing' %}" class="btn btn-primary btn-sm">
+    <i class="fas fa-arrow-up"></i> Planları İncele
+</a>
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="my-subscription-wrap">
+
+    <!-- Current plan summary -->
+    <div class="sub-current-card">
+        <div class="sub-current-header">
+            <div>
+                <span class="sub-plan-badge">
+                    <i class="fas fa-crown"></i> {{ plan.name_tr }}
+                </span>
+                {% if subscription %}
+                    {% if subscription.is_currently_active %}
+                    <span class="sub-status-chip active">Aktif</span>
+                    {% else %}
+                    <span class="sub-status-chip inactive">{{ subscription.get_status_display }}</span>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="sub-price-display">
+                {% if plan.monthly_price %}
+                    {{ plan.monthly_price|floatformat:0 }} TRY<small>/ay</small>
+                {% else %}
+                    Ücretsiz
+                {% endif %}
+            </div>
+        </div>
+
+        {% if subscription %}
+        <div class="sub-dates">
+            <span><i class="fas fa-calendar-check"></i> Başlangıç: <strong>{{ subscription.started_at|date:"d.m.Y" }}</strong></span>
+            <span>
+                <i class="fas fa-calendar-times"></i> Bitiş:
+                {% if subscription.expires_at %}
+                    <strong>{{ subscription.expires_at|date:"d.m.Y" }}</strong>
+                {% else %}
+                    <strong>Süresiz</strong>
+                {% endif %}
+            </span>
+        </div>
+        {% endif %}
+
+        <!-- Active product usage (producers only) -->
+        {% if tenant.is_producer and active_product_count is not None %}
+        <div class="sub-product-usage">
+            <div class="sub-usage-label">
+                <span><i class="fas fa-box-open"></i> Aktif Ürünler</span>
+                <strong>
+                    {{ active_product_count }}
+                    {% if plan.max_active_products %}/ {{ plan.max_active_products }}{% else %}/ Sınırsız{% endif %}
+                </strong>
+            </div>
+            {% if plan.max_active_products %}
+            {% with pct=active_product_count|floatformat:0 %}
+            <div class="product-limit-bar">
+                <div class="product-limit-fill
+                    {% if active_product_count >= plan.max_active_products %}at-limit
+                    {% elif active_product_count >= plan.max_active_products|add:"-2" %}near-limit{% endif %}"
+                    style="width: {% widthratio active_product_count plan.max_active_products 100 %}%;">
+                </div>
+            </div>
+            {% endwith %}
+            {% if active_product_count >= plan.max_active_products %}
+            <p class="sub-limit-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                Aktif ürün limitinize ulaştınız.
+                <a href="{% url 'subscriptions:pricing' %}">Aboneliğinizi yükseltin</a> veya bir ürünü pasife alın.
+            </p>
+            {% endif %}
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Feature detail -->
+    <div class="sub-feature-section">
+        <h2>Plan Özellikleri</h2>
+        <div class="sub-feature-grid">
+            <div class="sub-feature-item {% if plan.display_city %}enabled{% else %}disabled{% endif %}">
+                <i class="fas fa-{% if plan.display_city %}check-circle{% else %}times-circle{% endif %}"></i>
+                <span>Şehir Görünürlüğü</span>
+            </div>
+            <div class="sub-feature-item {% if plan.display_company_name %}enabled{% else %}disabled{% endif %}">
+                <i class="fas fa-{% if plan.display_company_name %}check-circle{% else %}times-circle{% endif %}"></i>
+                <span>Firma Adı Görünürlüğü</span>
+            </div>
+            <div class="sub-feature-item {% if plan.display_phone %}enabled{% else %}disabled{% endif %}">
+                <i class="fas fa-{% if plan.display_phone %}check-circle{% else %}times-circle{% endif %}"></i>
+                <span>Telefon Görünürlüğü</span>
+            </div>
+            <div class="sub-feature-item {% if plan.display_email %}enabled{% else %}disabled{% endif %}">
+                <i class="fas fa-{% if plan.display_email %}check-circle{% else %}times-circle{% endif %}"></i>
+                <span>E-posta Görünürlüğü</span>
+            </div>
+            <div class="sub-feature-item {% if plan.display_website %}enabled{% else %}disabled{% endif %}">
+                <i class="fas fa-{% if plan.display_website %}check-circle{% else %}times-circle{% endif %}"></i>
+                <span>Web Sitesi Görünürlüğü</span>
+            </div>
+            <div class="sub-feature-item {% if plan.display_open_address %}enabled{% else %}disabled{% endif %}">
+                <i class="fas fa-{% if plan.display_open_address %}check-circle{% else %}times-circle{% endif %}"></i>
+                <span>Açık Adres Görünürlüğü</span>
+            </div>
+            <div class="sub-feature-item {% if plan.show_company_profile %}enabled{% else %}disabled{% endif %}">
+                <i class="fas fa-{% if plan.show_company_profile %}check-circle{% else %}times-circle{% endif %}"></i>
+                <span>Firma Profil Sayfası</span>
+            </div>
+            <div class="sub-feature-item {% if plan.has_business_card %}enabled{% else %}disabled{% endif %}">
+                <i class="fas fa-{% if plan.has_business_card %}check-circle{% else %}times-circle{% endif %}"></i>
+                <span>Dijital Kartvizit</span>
+            </div>
+            <div class="sub-feature-item {% if plan.company_username_editable %}enabled{% else %}disabled{% endif %}">
+                <i class="fas fa-{% if plan.company_username_editable %}check-circle{% else %}times-circle{% endif %}"></i>
+                <span>Firma URL'si Özelleştirme</span>
+            </div>
+            <div class="sub-feature-item enabled">
+                <i class="fas fa-box-open"></i>
+                <span>Maks. Aktif Ürün: <strong>{% if plan.max_active_products %}{{ plan.max_active_products }}{% else %}Sınırsız{% endif %}</strong></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upgrade prompt -->
+    <div class="sub-upgrade-section">
+        <h2>Planınızı Yükseltmek İster Misiniz?</h2>
+        <p>Daha fazla özellik ve görünürlük için bir üst plana geçebilirsiniz. Yükseltmek için bizimle iletişime geçin.</p>
+        <div class="sub-upgrade-actions">
+            <a href="{% url 'subscriptions:pricing' %}" class="btn btn-outline-primary">
+                <i class="fas fa-list"></i> Tüm Planları Gör
+            </a>
+            <a href="{% url 'main:contact' %}" class="btn btn-primary">
+                <i class="fas fa-envelope"></i> İletişime Geç
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_dashboard_css %}
+<style>
+    .my-subscription-wrap { max-width: 860px; }
+
+    .sub-current-card {
+        background: white;
+        border-radius: 12px;
+        padding: 28px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        border: 2px solid #3b82f6;
+        margin-bottom: 28px;
+    }
+    .sub-current-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    .sub-plan-badge {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #1e3a5f;
+        margin-right: 10px;
+    }
+    .sub-plan-badge i { color: #cca43b; margin-right: 4px; }
+    .sub-status-chip {
+        display: inline-block;
+        padding: 3px 12px;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        vertical-align: middle;
+    }
+    .sub-status-chip.active { background: #d1fae5; color: #065f46; }
+    .sub-status-chip.inactive { background: #fee2e2; color: #991b1b; }
+    .sub-price-display {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #1e3a5f;
+    }
+    .sub-price-display small { font-size: 0.9rem; font-weight: 400; color: #64748b; }
+    .sub-dates {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        font-size: 0.9rem;
+        color: #64748b;
+        margin-bottom: 20px;
+    }
+    .sub-dates i { margin-right: 5px; color: #94a3b8; }
+    .sub-product-usage { margin-top: 8px; }
+    .sub-usage-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #374151;
+        margin-bottom: 6px;
+    }
+    .sub-usage-label i { color: #6b7280; margin-right: 5px; }
+    .sub-limit-warning {
+        font-size: 0.85rem;
+        color: #b45309;
+        margin-top: 8px;
+    }
+    .sub-limit-warning a { color: #d97706; font-weight: 600; }
+
+    .sub-feature-section { margin-bottom: 32px; }
+    .sub-feature-section h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 16px;
+    }
+    .sub-feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 10px;
+    }
+    .sub-feature-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    .sub-feature-item.enabled {
+        background: #f0fdf4;
+        color: #166534;
+    }
+    .sub-feature-item.enabled i { color: #16a34a; font-size: 1.1rem; }
+    .sub-feature-item.disabled {
+        background: #f8fafc;
+        color: #94a3b8;
+    }
+    .sub-feature-item.disabled i { color: #cbd5e1; font-size: 1.1rem; }
+
+    .sub-upgrade-section {
+        background: linear-gradient(135deg, #f0f7ff 0%, #e8f4fd 100%);
+        border-radius: 12px;
+        padding: 28px;
+        text-align: center;
+    }
+    .sub-upgrade-section h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1e3a5f;
+        margin-bottom: 8px;
+    }
+    .sub-upgrade-section p { color: #64748b; font-size: 0.9rem; margin-bottom: 20px; }
+    .sub-upgrade-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+</style>
+{% endblock %}

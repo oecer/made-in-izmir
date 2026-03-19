@@ -69,6 +69,7 @@
         {% endif %}
 
         {% if tenant.is_producer or tenant.is_buyer %}
+        {% if sub_features.has_business_card %}
         <div class="dashboard-main-card">
             <div class="card-icon">
                 <i class="fas fa-id-card"></i>
@@ -79,6 +80,18 @@
                 Kartviziti Görüntüle
             </a>
         </div>
+        {% else %}
+        <div class="dashboard-main-card" style="opacity:0.65;">
+            <div class="card-icon">
+                <i class="fas fa-id-card"></i>
+            </div>
+            <h3>Kartvizitim</h3>
+            <p>Bu özellik mevcut abonelik planınızda bulunmuyor.</p>
+            <a href="{% url 'subscriptions:pricing' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-up"></i> Planları İncele
+            </a>
+        </div>
+        {% endif %}
         {% endif %}
 
         <div class="dashboard-main-card profile-card">
@@ -89,6 +102,24 @@
             <p data-i18n="dashboard.profile_card_desc">Firma bilgilerinizi ve iletişim detaylarınızı güncelleyin.</p>
             <a href="{% url 'accounts:edit_profile' %}" class="btn btn-secondary">
                 Hesabımı Düzenle
+            </a>
+        </div>
+
+        <div class="dashboard-main-card">
+            <div class="card-icon">
+                <i class="fas fa-crown"></i>
+            </div>
+            <h3>Aboneliğim</h3>
+            <p>
+                Mevcut planınız: <strong>{{ sub_features.plan_name_tr }}</strong>
+                {% if sub_features.monthly_price %}
+                    ({{ sub_features.monthly_price|floatformat:0 }} TRY/ay)
+                {% else %}
+                    (Ücretsiz)
+                {% endif %}
+            </p>
+            <a href="{% url 'subscriptions:my_subscription' %}" class="btn btn-secondary">
+                Aboneliğimi Görüntüle
             </a>
         </div>
     </div>

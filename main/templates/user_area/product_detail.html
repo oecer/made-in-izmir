@@ -91,7 +91,12 @@
             <div>
                 <p class="info-item">
                     <strong data-i18n="dashboard.producer">Üretici</strong>:
-                    {{ product.tenant.company_name }}
+                    {% if producer_plan and producer_plan.display_company_name %}
+                        {{ product.tenant.company_name }}
+                    {% else %}
+                        <span class="sub-blurred">{{ product.tenant.company_name }}</span>
+                        <span class="sub-upgrade-hint"><i class="fas fa-lock"></i></span>
+                    {% endif %}
                 </p>
                 {% if product.sector %}
                 <p class="info-item">
@@ -102,10 +107,16 @@
                     </span>
                 </p>
                 {% endif %}
+                {% if product.tenant.city or product.tenant.country %}
                 <small class="location">
                     <i class="fas fa-map-marker-alt"></i>
-                    {{ product.producer.profile.city }}, {{ product.producer.profile.country }}
+                    {% if producer_plan and producer_plan.display_city %}
+                        {% if product.tenant.city %}{{ product.tenant.city }}{% endif %}{% if product.tenant.city and product.tenant.country %}, {% endif %}{% if product.tenant.country %}{{ product.tenant.country }}{% endif %}
+                    {% else %}
+                        <span class="sub-blurred">{% if product.tenant.city %}{{ product.tenant.city }}{% endif %}{% if product.tenant.city and product.tenant.country %}, {% endif %}{% if product.tenant.country %}{{ product.tenant.country }}{% endif %}</span>
+                    {% endif %}
                 </small>
+                {% endif %}
             </div>
         </div>
 
@@ -191,7 +202,12 @@
                         <span class="cp-contact-detail-icon"><i class="fas fa-phone"></i></span>
                         <div>
                             <span class="cp-contact-detail-label" data-i18n="dashboard.contact_phone">Telefon</span>
-                            <a href="tel:{{ product.tenant.phone_number }}" class="cp-contact-detail-value">{{ product.tenant.phone_number }}</a>
+                            {% if producer_plan and producer_plan.display_phone %}
+                                <a href="tel:{{ product.tenant.phone_number }}" class="cp-contact-detail-value">{{ product.tenant.phone_number }}</a>
+                            {% else %}
+                                <span class="cp-contact-detail-value sub-blurred">{{ product.tenant.phone_number }}</span>
+                                <span class="sub-upgrade-hint"><i class="fas fa-lock"></i> <a href="{% url 'subscriptions:pricing' %}">Görüntülemek için yükselt</a></span>
+                            {% endif %}
                         </div>
                     </li>
                     {% endif %}
@@ -200,7 +216,12 @@
                         <span class="cp-contact-detail-icon"><i class="fas fa-envelope"></i></span>
                         <div>
                             <span class="cp-contact-detail-label" data-i18n="dashboard.contact_email">E-posta</span>
-                            <a href="mailto:{{ product.tenant.company_email }}" class="cp-contact-detail-value">{{ product.tenant.company_email }}</a>
+                            {% if producer_plan and producer_plan.display_email %}
+                                <a href="mailto:{{ product.tenant.company_email }}" class="cp-contact-detail-value">{{ product.tenant.company_email }}</a>
+                            {% else %}
+                                <span class="cp-contact-detail-value sub-blurred">{{ product.tenant.company_email }}</span>
+                                <span class="sub-upgrade-hint"><i class="fas fa-lock"></i> <a href="{% url 'subscriptions:pricing' %}">Görüntülemek için yükselt</a></span>
+                            {% endif %}
                         </div>
                     </li>
                     {% endif %}
@@ -209,7 +230,12 @@
                         <span class="cp-contact-detail-icon"><i class="fas fa-globe"></i></span>
                         <div>
                             <span class="cp-contact-detail-label" data-i18n="dashboard.contact_website">Web Sitesi</span>
-                            <a href="{{ product.tenant.website }}" target="_blank" rel="noopener noreferrer" class="cp-contact-detail-value">{{ product.tenant.website }}</a>
+                            {% if producer_plan and producer_plan.display_website %}
+                                <a href="{{ product.tenant.website }}" target="_blank" rel="noopener noreferrer" class="cp-contact-detail-value">{{ product.tenant.website }}</a>
+                            {% else %}
+                                <span class="cp-contact-detail-value sub-blurred">{{ product.tenant.website }}</span>
+                                <span class="sub-upgrade-hint"><i class="fas fa-lock"></i> <a href="{% url 'subscriptions:pricing' %}">Görüntülemek için yükselt</a></span>
+                            {% endif %}
                         </div>
                     </li>
                     {% endif %}
@@ -219,8 +245,16 @@
                         <div>
                             <span class="cp-contact-detail-label" data-i18n="dashboard.contact_address">Adres</span>
                             <span class="cp-contact-detail-value">
-                                {% if product.tenant.open_address %}{{ product.tenant.open_address }}{% if product.tenant.city or product.tenant.country %}, {% endif %}{% endif %}
-                                {% if product.tenant.city %}{{ product.tenant.city }}{% endif %}{% if product.tenant.city and product.tenant.country %}, {% endif %}{% if product.tenant.country %}{{ product.tenant.country }}{% endif %}
+                                {% if producer_plan and producer_plan.display_open_address %}
+                                    {% if product.tenant.open_address %}{{ product.tenant.open_address }}{% if product.tenant.city or product.tenant.country %}, {% endif %}{% endif %}
+                                {% elif product.tenant.open_address %}
+                                    <span class="sub-blurred">{{ product.tenant.open_address }}</span>{% if product.tenant.city or product.tenant.country %}, {% endif %}
+                                {% endif %}
+                                {% if producer_plan and producer_plan.display_city %}
+                                    {% if product.tenant.city %}{{ product.tenant.city }}{% endif %}{% if product.tenant.city and product.tenant.country %}, {% endif %}{% if product.tenant.country %}{{ product.tenant.country }}{% endif %}
+                                {% elif product.tenant.city %}
+                                    <span class="sub-blurred">{{ product.tenant.city }}</span>{% if product.tenant.country %}, {{ product.tenant.country }}{% endif %}
+                                {% endif %}
                             </span>
                         </div>
                     </li>

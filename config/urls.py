@@ -14,6 +14,7 @@ urlpatterns = [
     path('', include('profiles.urls')),
     path('', include('catalog.urls')),
     path('', include('expos.urls')),
+    path('', include('subscriptions.urls')),
 
     # Password reset flow (built-in Django views with custom templates)
     path('forgot-password/',

@@ -340,6 +340,23 @@ class Tenant(models.Model):
             types.append("Üretici")
         return ", ".join(types) if types else "Belirtilmemiş"
 
+    def get_active_plan(self):
+        """Return the active SubscriptionPlan, or the Standard (free) fallback."""
+        from subscriptions.models import SubscriptionPlan
+        try:
+            return self.subscription.get_effective_plan()
+        except Exception:
+            return SubscriptionPlan.objects.filter(
+                is_active=True, monthly_price=0
+            ).order_by('display_order').first()
+
+    def can_activate_product(self):
+        """Return True if the tenant hasn't reached their max_active_products limit."""
+        plan = self.get_active_plan()
+        if plan is None or plan.max_active_products is None:
+            return True
+        return self.products.filter(is_active=True).count() < plan.max_active_products
+
 
 class UserProfile(models.Model):
     """Extended user profile - linked to a Tenant"""
