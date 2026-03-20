@@ -8,7 +8,7 @@ class SubscriptionPlanAdmin(admin.ModelAdmin):
     list_display = (
         'name_tr', 'monthly_price', 'show_company_profile',
         'display_company_name', 'display_city', 'has_business_card',
-        'max_active_products_display', 'display_order', 'is_active',
+        'viewer_sees_all', 'max_active_products_display', 'display_order', 'is_active',
         'subscriber_count',
     )
     list_editable = ('display_order', 'is_active')
@@ -31,6 +31,7 @@ class SubscriptionPlanAdmin(admin.ModelAdmin):
                 'display_phone',
                 'display_email',
                 'display_website',
+                'viewer_sees_all',
             ),
             'description': 'Bu özellikler bu plana sahip firmaların erişebileceği işlevleri belirler.',
         }),

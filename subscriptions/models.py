@@ -64,6 +64,11 @@ class SubscriptionPlan(models.Model):
         verbose_name="Web Sitesi Görünürlüğü",
         help_text="Web sitesinin ürün detay sayfasındaki iletişim formunda görüntülenip görüntülenmeyeceği."
     )
+    viewer_sees_all = models.BooleanField(
+        default=False,
+        verbose_name="Tüm Üretici Bilgilerini Gör",
+        help_text="Bu plana sahip kullanıcı, diğer üreticilerin abonelik planından bağımsız olarak tüm firma adı, adres, şehir, telefon, e-posta ve web sitesi bilgilerini görebilir."
+    )
 
     # --- Limits ---
     max_active_products = models.PositiveIntegerField(

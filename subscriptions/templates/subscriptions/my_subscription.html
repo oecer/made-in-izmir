@@ -113,6 +113,10 @@
                 <i class="fas fa-{% if plan.display_open_address %}check-circle{% else %}times-circle{% endif %}"></i>
                 <span>Açık Adres Görünürlüğü</span>
             </div>
+            <div class="sub-feature-item {% if plan.viewer_sees_all %}enabled{% else %}disabled{% endif %}">
+                <i class="fas fa-{% if plan.viewer_sees_all %}check-circle{% else %}times-circle{% endif %}"></i>
+                <span>Tüm Üretici Bilgilerini Gör</span>
+            </div>
             <div class="sub-feature-item {% if plan.show_company_profile %}enabled{% else %}disabled{% endif %}">
                 <i class="fas fa-{% if plan.show_company_profile %}check-circle{% else %}times-circle{% endif %}"></i>
                 <span>Firma Profil Sayfası</span>

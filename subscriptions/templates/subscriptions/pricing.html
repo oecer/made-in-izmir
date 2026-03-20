@@ -250,6 +250,10 @@
                     Açık Adres Görünürlüğü
                 </li>
                 <li>
+                    {% if plan.viewer_sees_all %}<i class="fas fa-check plan-feature-check"></i>{% else %}<i class="fas fa-times plan-feature-cross"></i>{% endif %}
+                    Tüm Üretici Bilgilerini Gör
+                </li>
+                <li>
                     {% if plan.show_company_profile %}<i class="fas fa-check plan-feature-check"></i>{% else %}<i class="fas fa-times plan-feature-cross"></i>{% endif %}
                     Firma Profil Sayfası
                 </li>

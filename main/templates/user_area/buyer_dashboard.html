@@ -209,7 +209,7 @@
                 <p class="product-producer">
                     <i class="fas fa-user-tie"></i>
                     {% with producer_plan=product.tenant.get_active_plan %}
-                    {% if producer_plan and producer_plan.display_company_name %}
+                    {% if sub_features.viewer_sees_all or producer_plan and producer_plan.display_company_name %}
                         {{ product.tenant.company_name }}
                     {% else %}
                         <span class="sub-blurred">{{ product.tenant.company_name }}</span>
