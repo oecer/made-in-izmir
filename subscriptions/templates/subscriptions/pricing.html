@@ -466,6 +466,371 @@
         .pricing-trust-inner { gap: 20px; }
         .faq-grid { grid-template-columns: 1fr; }
     }
+
+    /* ═══ SUBSCRIPTION CONTACT SECTION ═══ */
+    .sub-contact-section {
+        padding: 80px 0;
+        background: var(--bg-body);
+        border-top: 1px solid #e2e8f0;
+    }
+    .sub-contact-layout {
+        display: grid;
+        grid-template-columns: 5fr 7fr;
+        gap: 48px;
+        align-items: start;
+        max-width: 1040px;
+        margin: 0 auto;
+    }
+
+    /* Info panel */
+    .sub-contact-info {
+        position: sticky;
+        top: calc(var(--header-height) + 2rem);
+    }
+    .sub-contact-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(204,164,59,0.12);
+        border: 1px solid rgba(204,164,59,0.3);
+        color: var(--accent-color);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 5px 14px;
+        border-radius: 50px;
+        margin-bottom: 20px;
+    }
+    .sub-contact-info h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.5rem, 2.5vw, 2rem);
+        color: var(--primary-color);
+        line-height: 1.25;
+        margin-bottom: 14px;
+    }
+    .sub-contact-info > p {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        line-height: 1.7;
+        margin-bottom: 28px;
+    }
+    .sub-contact-detail-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+    .sub-contact-detail-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .sub-contact-detail-icon {
+        width: 42px; height: 42px;
+        border-radius: 10px;
+        background: rgba(204,164,59,0.08);
+        color: var(--accent-color);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+        transition: var(--transition);
+    }
+    .sub-contact-detail-item:hover .sub-contact-detail-icon {
+        background: var(--accent-color);
+        color: #fff;
+    }
+    .sub-contact-detail-label {
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 2px;
+    }
+    .sub-contact-detail-value {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--primary-color);
+    }
+    .sub-whatsapp-btn {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        text-decoration: none;
+        padding: 10px 16px;
+        background: linear-gradient(135deg, #25D366, #1ebe5b);
+        border-radius: 10px;
+        transition: var(--transition);
+        box-shadow: 0 4px 12px rgba(37,211,102,0.22);
+        width: 100%;
+    }
+    .sub-whatsapp-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(37,211,102,0.32);
+    }
+    .sub-whatsapp-btn .fab {
+        color: #fff;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+    }
+    .sub-whatsapp-btn .sub-contact-detail-label { color: rgba(255,255,255,0.75); }
+    .sub-whatsapp-btn .sub-contact-detail-value { color: #fff; }
+    .sub-contact-mysub-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        text-decoration: none;
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 2px;
+        transition: color 0.2s, border-color 0.2s;
+    }
+    .sub-contact-mysub-link:hover { color: var(--accent-color); border-color: var(--accent-color); }
+
+    /* Form panel */
+    .sub-contact-form-panel {
+        background: var(--bg-surface);
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+        padding: 36px;
+        box-shadow: var(--shadow-md);
+    }
+    .sub-form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+    .sub-form-group {
+        margin-bottom: 18px;
+        position: relative;
+    }
+    .sub-form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.83rem;
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+    .sub-req-star { color: #e53e3e; margin-left: 1px; }
+    .sub-input,
+    .sub-select,
+    .sub-textarea {
+        width: 100%;
+        padding: 11px 14px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 10px;
+        background: #f8fafc;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        color: var(--text-main);
+        transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        outline: none;
+        appearance: none;
+        -webkit-appearance: none;
+    }
+    .sub-input:focus, .sub-select:focus, .sub-textarea:focus {
+        border-color: var(--primary-color);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(15,23,42,0.07);
+    }
+    .sub-input:hover, .sub-select:hover, .sub-textarea:hover { border-color: #cbd5e1; }
+    .sub-input.is-invalid, .sub-select.is-invalid { border-color: #e53e3e; box-shadow: 0 0 0 3px rgba(229,62,62,0.08); }
+    .sub-input.is-valid, .sub-select.is-valid { border-color: #22c55e; }
+    .sub-textarea { resize: vertical; min-height: 90px; }
+    .sub-select-wrap { position: relative; }
+    .sub-select-wrap::after {
+        content: '\f078';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        right: 14px; top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        font-size: 0.7rem;
+        pointer-events: none;
+    }
+    .sub-select { padding-right: 36px; cursor: pointer; }
+    .sub-field-error {
+        font-size: 0.75rem;
+        color: #e53e3e;
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        opacity: 0;
+        transform: translateY(-3px);
+        transition: opacity 0.2s, transform 0.2s;
+    }
+    .sub-field-error.visible { opacity: 1; transform: translateY(0); }
+
+    /* Identity strip */
+    .sub-identity-strip {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin-bottom: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .sub-identity-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+    }
+    .sub-identity-item i { color: var(--accent-color); width: 14px; text-align: center; flex-shrink: 0; }
+    .sub-identity-item strong { color: var(--primary-color); }
+    .sub-identity-id {
+        font-size: 0.72rem;
+        color: #94a3b8;
+        background: #e2e8f0;
+        padding: 1px 6px;
+        border-radius: 4px;
+        margin-left: 4px;
+        font-family: monospace;
+    }
+
+    /* Privacy */
+    .sub-privacy-note {
+        display: flex;
+        align-items: flex-start;
+        gap: 7px;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        line-height: 1.5;
+        margin-top: 4px;
+        margin-bottom: 18px;
+    }
+    .sub-privacy-note i { color: var(--accent-color); flex-shrink: 0; margin-top: 1px; }
+
+    /* Submit button */
+    .sub-submit-btn {
+        width: 100%;
+        padding: 14px 24px;
+        background: var(--primary-color);
+        color: #fff;
+        border: none;
+        border-radius: 50px;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: var(--shadow-md);
+    }
+    .sub-submit-btn:hover:not(:disabled) {
+        background: var(--primary-light);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+    .sub-submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+    .sub-btn-spinner {
+        display: none;
+        width: 17px; height: 17px;
+        border: 2px solid rgba(255,255,255,0.35);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: sub-spin 0.7s linear infinite;
+    }
+    .sub-submit-btn.loading .sub-btn-spinner { display: block; }
+    .sub-submit-btn.loading .sub-btn-icon { display: none; }
+    @keyframes sub-spin { to { transform: rotate(360deg); } }
+
+    /* Error banner */
+    .sub-form-error-banner {
+        display: none;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #b91c1c;
+        border-radius: 10px;
+        padding: 11px 14px;
+        font-size: 0.83rem;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+    .sub-form-error-banner.visible { display: flex; }
+
+    /* Success */
+    .sub-success-state {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 14px;
+        padding: 40px 20px;
+    }
+    .sub-success-state.visible { display: flex; }
+    .sub-success-icon {
+        width: 68px; height: 68px;
+        border-radius: 50%;
+        background: rgba(34,197,94,0.1);
+        border: 2px solid rgba(34,197,94,0.3);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.6rem;
+        color: #22c55e;
+    }
+    .sub-success-state h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        margin: 0;
+    }
+    .sub-success-state p {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        max-width: 360px;
+        line-height: 1.65;
+        margin: 0;
+    }
+    .sub-whatsapp-success-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #25D366, #1ebe5b);
+        color: #fff;
+        padding: 11px 24px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: var(--transition);
+    }
+    .sub-whatsapp-success-btn:hover { transform: translateY(-2px); color: #fff; }
+    .sub-reset-btn {
+        background: transparent;
+        border: 1.5px solid #e2e8f0;
+        color: var(--text-muted);
+        padding: 9px 22px;
+        border-radius: 50px;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    .sub-reset-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
+
+    /* Responsive contact */
+    @media (max-width: 860px) {
+        .sub-contact-layout { grid-template-columns: 1fr; gap: 32px; }
+        .sub-contact-info { position: static; }
+        .sub-contact-form-panel { padding: 24px; }
+    }
+    @media (max-width: 540px) {
+        .sub-form-row { grid-template-columns: 1fr; }
+    }
 </style>
 {% endblock %}
 
@@ -664,13 +1029,13 @@
                             <i class="fas fa-check-circle"></i> Mevcut Planınız
                         </span>
                     {% elif plan.monthly_price == 5000 %}
-                        <a href="{% url 'main:contact' %}" class="btn-plan btn-plan-featured">
+                        <button type="button" class="btn-plan btn-plan-featured" data-plan-select="{{ plan.name_tr }}">
                             <i class="fas fa-star"></i> Bu Planı Seç
-                        </a>
+                        </button>
                     {% else %}
-                        <a href="{% url 'main:contact' %}" class="btn-plan btn-plan-default">
+                        <button type="button" class="btn-plan btn-plan-default" data-plan-select="{{ plan.name_tr }}">
                             Bu Planı Seç <i class="fas fa-arrow-right"></i>
-                        </a>
+                        </button>
                     {% endif %}
                 </div>
 
@@ -709,22 +1074,371 @@
     </div>
 </section>
 
-<!-- ═══ CTA BANNER ═══ -->
-<section class="pricing-cta-banner">
-    <div class="container pricing-cta-banner-inner">
-        <h2>Doğru Planı Bulmak İçin<br>Bize Danışın</h2>
-        <p>Hangi planın size uygun olduğundan emin değil misiniz? Uzman ekibimiz size özel en iyi çözümü bulmak için hazır.</p>
-        <div class="pricing-cta-banner-actions">
-            <a href="{% url 'main:contact' %}" class="btn btn-secondary">
-                <i class="fas fa-envelope"></i> İletişime Geç
-            </a>
-            {% if request.user.is_authenticated %}
-            <a href="{% url 'subscriptions:my_subscription' %}" class="btn" style="background:rgba(255,255,255,0.08);color:#fff;border:1.5px solid rgba(255,255,255,0.2);">
-                <i class="fas fa-user-circle"></i> Aboneliğimi Görüntüle
-            </a>
-            {% endif %}
+<!-- ═══ SUBSCRIPTION REQUEST CONTACT ═══ -->
+<section class="sub-contact-section" id="sub-contact">
+    <div class="container">
+        <div class="sub-contact-layout">
+
+            <!-- Left: info panel -->
+            <div class="sub-contact-info">
+                <span class="sub-contact-eyebrow"><i class="fas fa-paper-plane"></i> Plan Talebi</span>
+                <h2>Planınızı Seçin,<br>Bize Bildirin</h2>
+                <p>Abonelik başlatmak veya mevcut planınızı değiştirmek için aşağıdaki formu doldurun. Ekibimiz 24 saat içinde sizinle iletişime geçer.</p>
+
+                <div class="sub-contact-detail-list">
+                    <div class="sub-contact-detail-item">
+                        <div class="sub-contact-detail-icon"><i class="fas fa-clock"></i></div>
+                        <div>
+                            <span class="sub-contact-detail-label">Yanıt Süresi</span>
+                            <span class="sub-contact-detail-value">24 saat içinde</span>
+                        </div>
+                    </div>
+                    <div class="sub-contact-detail-item">
+                        <div class="sub-contact-detail-icon"><i class="fas fa-sync-alt"></i></div>
+                        <div>
+                            <span class="sub-contact-detail-label">Plan Değişikliği</span>
+                            <span class="sub-contact-detail-value">İstediğiniz zaman</span>
+                        </div>
+                    </div>
+                    <div class="sub-contact-detail-item">
+                        <div class="sub-contact-detail-icon"><i class="fas fa-university"></i></div>
+                        <div>
+                            <span class="sub-contact-detail-label">Ödeme Yöntemi</span>
+                            <span class="sub-contact-detail-value">Banka havalesi / EFT</span>
+                        </div>
+                    </div>
+                    <div class="sub-contact-detail-item">
+                        <a href="https://wa.me/905335567888" target="_blank" rel="noopener noreferrer" class="sub-whatsapp-btn">
+                            <i class="fab fa-whatsapp"></i>
+                            <div>
+                                <span class="sub-contact-detail-label">Hızlı İletişim</span>
+                                <span class="sub-contact-detail-value">WhatsApp Hattı</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                {% if request.user.is_authenticated %}
+                <a href="{% url 'subscriptions:my_subscription' %}" class="sub-contact-mysub-link">
+                    <i class="fas fa-user-circle"></i> Mevcut aboneliğimi görüntüle
+                </a>
+                {% endif %}
+            </div>
+
+            <!-- Right: form panel -->
+            <div class="sub-contact-form-panel">
+                <div id="sub-form-wrapper">
+                    <span class="sub-contact-eyebrow" style="color:var(--accent-color);"><i class="fas fa-layer-group"></i> Abonelik Talebi</span>
+                    <h2 style="font-size:1.6rem; margin-bottom:6px; margin-top:6px;">Formu Doldurun</h2>
+                    <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:24px; line-height:1.6;">
+                        Bilgilerinizi ve seçtiğiniz planı girin, ekibimiz sizi arasın.
+                    </p>
+
+                    <div class="sub-form-error-banner" id="sub-error-banner" role="alert">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span id="sub-error-text">Bir hata oluştu. Lütfen tekrar deneyin veya WhatsApp üzerinden ulaşın.</span>
+                    </div>
+
+                    <form id="sub-contact-form" novalidate autocomplete="on">
+                        {% csrf_token %}
+                        <div style="display:none;" aria-hidden="true">
+                            <input type="text" name="website" tabindex="-1" autocomplete="off">
+                        </div>
+                        <input type="hidden" name="form_ts" value="{{ form_ts }}">
+                        <input type="hidden" name="form_tk" value="{{ form_tk }}">
+
+                        <!-- Hidden identity fields (auto-filled if logged in) -->
+                        <input type="hidden" name="username" value="{% if request.user.is_authenticated %}{{ request.user.username }}{% endif %}">
+                        <input type="hidden" name="user_id" value="{% if request.user.is_authenticated %}{{ request.user.id }}{% endif %}">
+                        <input type="hidden" name="tenant_name" value="{% if pricing_tenant %}{{ pricing_tenant.company_name }}{% endif %}">
+                        <input type="hidden" name="tenant_id" value="{% if pricing_tenant %}{{ pricing_tenant.id }}{% endif %}">
+
+                        <!-- Row: Name + Surname -->
+                        <div class="sub-form-row">
+                            <div class="sub-form-group">
+                                <label for="sub-first-name">Ad <span class="sub-req-star">*</span></label>
+                                <input type="text" id="sub-first-name" name="_first_name" class="sub-input"
+                                    placeholder="Adınız" autocomplete="given-name" required
+                                    {% if request.user.is_authenticated %}value="{{ request.user.first_name }}"{% endif %}>
+                                <div class="sub-field-error" id="sub-first-name-error">
+                                    <i class="fas fa-exclamation-circle"></i> Ad alanı zorunludur.
+                                </div>
+                            </div>
+                            <div class="sub-form-group">
+                                <label for="sub-last-name">Soyad <span class="sub-req-star">*</span></label>
+                                <input type="text" id="sub-last-name" name="_last_name" class="sub-input"
+                                    placeholder="Soyadınız" autocomplete="family-name" required
+                                    {% if request.user.is_authenticated %}value="{{ request.user.last_name }}"{% endif %}>
+                                <div class="sub-field-error" id="sub-last-name-error">
+                                    <i class="fas fa-exclamation-circle"></i> Soyad alanı zorunludur.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- If logged in: show username + tenant as read-only info strip -->
+                        {% if request.user.is_authenticated %}
+                        <div class="sub-identity-strip">
+                            <div class="sub-identity-item">
+                                <i class="fas fa-user"></i>
+                                <span>
+                                    <strong>Kullanıcı:</strong>
+                                    {{ request.user.username }}
+                                    <span class="sub-identity-id">#{{ request.user.id }}</span>
+                                </span>
+                            </div>
+                            {% if pricing_tenant %}
+                            <div class="sub-identity-item">
+                                <i class="fas fa-building"></i>
+                                <span>
+                                    <strong>Firma:</strong>
+                                    {{ pricing_tenant.company_name }}
+                                    <span class="sub-identity-id">#{{ pricing_tenant.id }}</span>
+                                </span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        <!-- Row: Email + Phone -->
+                        <div class="sub-form-row">
+                            <div class="sub-form-group">
+                                <label for="sub-email">E-posta <span class="sub-req-star">*</span></label>
+                                <input type="email" id="sub-email" name="email" class="sub-input"
+                                    placeholder="ornek@eposta.com" autocomplete="email" required
+                                    {% if request.user.is_authenticated %}value="{{ request.user.email }}"{% endif %}>
+                                <div class="sub-field-error" id="sub-email-error">
+                                    <i class="fas fa-exclamation-circle"></i> Geçerli bir e-posta girin.
+                                </div>
+                            </div>
+                            <div class="sub-form-group">
+                                <label for="sub-phone">Telefon</label>
+                                <input type="tel" id="sub-phone" name="phone" class="sub-input"
+                                    placeholder="+90 5__ ___ __ __" autocomplete="tel">
+                            </div>
+                        </div>
+
+                        <!-- Plan selector -->
+                        <div class="sub-form-group">
+                            <label for="sub-plan-select">Seçilen Plan <span class="sub-req-star">*</span></label>
+                            <div class="sub-select-wrap">
+                                <select id="sub-plan-select" name="plan_name" class="sub-select" required>
+                                    <option value="">Plan seçin...</option>
+                                    {% for plan in plans %}
+                                    <option value="{{ plan.name_tr }}"
+                                        data-price="{% if plan.monthly_price %}{{ plan.monthly_price|floatformat:0 }} TRY/ay{% else %}Ücretsiz{% endif %}">
+                                        {{ plan.name_tr }}{% if plan.monthly_price %} — {{ plan.monthly_price|floatformat:0 }} TRY/ay{% else %} — Ücretsiz{% endif %}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="sub-field-error" id="sub-plan-error">
+                                <i class="fas fa-exclamation-circle"></i> Lütfen bir plan seçin.
+                            </div>
+                        </div>
+
+                        <!-- Hidden full name field assembled by JS -->
+                        <input type="hidden" name="name" id="sub-full-name">
+
+                        <!-- Message -->
+                        <div class="sub-form-group">
+                            <label for="sub-message">Notunuz <span style="font-size:0.75rem;font-weight:400;color:var(--text-muted);">(isteğe bağlı)</span></label>
+                            <textarea id="sub-message" name="message" class="sub-textarea" rows="3"
+                                placeholder="Eklemek istediğiniz bir not varsa buraya yazabilirsiniz..."></textarea>
+                        </div>
+
+                        <div class="sub-privacy-note">
+                            <i class="fas fa-lock"></i>
+                            Gönderilen bilgiler gizli tutulur ve üçüncü taraflarla paylaşılmaz.
+                        </div>
+
+                        <button type="submit" class="sub-submit-btn" id="sub-submit-btn">
+                            <span class="sub-btn-spinner"></span>
+                            <i class="fas fa-paper-plane sub-btn-icon"></i>
+                            <span class="sub-btn-text">Talep Gönder</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Success state -->
+                <div class="sub-success-state" id="sub-success-state">
+                    <div class="sub-success-icon"><i class="fas fa-check"></i></div>
+                    <h3>Talebiniz Alındı!</h3>
+                    <p>En geç 24 saat içinde sizinle iletişime geçeceğiz. WhatsApp hattımızdan da ulaşabilirsiniz.</p>
+                    <a href="https://wa.me/905335567888" target="_blank" rel="noopener noreferrer" class="sub-whatsapp-success-btn">
+                        <i class="fab fa-whatsapp"></i> WhatsApp'tan Yaz
+                    </a>
+                    <button class="sub-reset-btn" id="sub-reset-btn">Yeni Talep Gönder</button>
+                </div>
+            </div>
+
         </div>
     </div>
 </section>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    'use strict';
+
+    /* ── Scroll to contact & pre-select plan ── */
+    document.querySelectorAll('[data-plan-select]').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            var planName = btn.getAttribute('data-plan-select');
+            var section  = document.getElementById('sub-contact');
+            var select   = document.getElementById('sub-plan-select');
+
+            if (select && planName) {
+                for (var i = 0; i < select.options.length; i++) {
+                    if (select.options[i].value === planName) {
+                        select.value = planName;
+                        select.classList.add('is-valid');
+                        select.classList.remove('is-invalid');
+                        break;
+                    }
+                }
+            }
+
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Small offset for fixed header
+                setTimeout(function () { window.scrollBy(0, -90); }, 400);
+            }
+        });
+    });
+
+    /* ── Helpers ── */
+    function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+
+    function showErr(inputId, errId) {
+        var el  = document.getElementById(inputId);
+        var err = document.getElementById(errId);
+        if (el)  { el.classList.add('is-invalid'); el.classList.remove('is-valid'); }
+        if (err) { err.classList.add('visible'); }
+    }
+    function clearErr(inputId, errId) {
+        var el  = document.getElementById(inputId);
+        var err = document.getElementById(errId);
+        if (el)  { el.classList.remove('is-invalid'); }
+        if (err) { err.classList.remove('visible'); }
+    }
+    function markValid(inputId) {
+        var el = document.getElementById(inputId);
+        if (el) { el.classList.add('is-valid'); el.classList.remove('is-invalid'); }
+    }
+
+    /* ── Live blur validation ── */
+    function attachBlur(inputId, errId, fn) {
+        var el = document.getElementById(inputId);
+        if (!el) return;
+        el.addEventListener('blur', function () {
+            if (!fn(el.value)) { showErr(inputId, errId); }
+            else { clearErr(inputId, errId); markValid(inputId); }
+        });
+        el.addEventListener('input', function () {
+            if (el.classList.contains('is-invalid') && fn(el.value)) {
+                clearErr(inputId, errId); markValid(inputId);
+            }
+        });
+    }
+    attachBlur('sub-first-name', 'sub-first-name-error', function (v) { return v.trim().length >= 1; });
+    attachBlur('sub-last-name',  'sub-last-name-error',  function (v) { return v.trim().length >= 1; });
+    attachBlur('sub-email',      'sub-email-error',      isValidEmail);
+    attachBlur('sub-plan-select','sub-plan-error',        function (v) { return v !== ''; });
+
+    /* ── Form submission ── */
+    var form       = document.getElementById('sub-contact-form');
+    var submitBtn  = document.getElementById('sub-submit-btn');
+    var errBanner  = document.getElementById('sub-error-banner');
+    var successEl  = document.getElementById('sub-success-state');
+    var wrapperEl  = document.getElementById('sub-form-wrapper');
+    var resetBtn   = document.getElementById('sub-reset-btn');
+
+    function validateAll() {
+        var ok = true;
+        var checks = [
+            { id: 'sub-first-name', errId: 'sub-first-name-error', fn: function (v) { return v.trim().length >= 1; } },
+            { id: 'sub-last-name',  errId: 'sub-last-name-error',  fn: function (v) { return v.trim().length >= 1; } },
+            { id: 'sub-email',      errId: 'sub-email-error',      fn: isValidEmail },
+            { id: 'sub-plan-select',errId: 'sub-plan-error',        fn: function (v) { return v !== ''; } },
+        ];
+        checks.forEach(function (c) {
+            var el = document.getElementById(c.id);
+            if (!el) return;
+            if (!c.fn(el.value)) { showErr(c.id, c.errId); ok = false; }
+            else { clearErr(c.id, c.errId); markValid(c.id); }
+        });
+        return ok;
+    }
+
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            errBanner.classList.remove('visible');
+
+            // Assemble full name into hidden field
+            var fn = document.getElementById('sub-first-name');
+            var ln = document.getElementById('sub-last-name');
+            var fullName = document.getElementById('sub-full-name');
+            if (fn && ln && fullName) {
+                fullName.value = (fn.value.trim() + ' ' + ln.value.trim()).trim();
+            }
+
+            if (!validateAll()) {
+                var firstInvalid = form.querySelector('.is-invalid');
+                if (firstInvalid) { firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' }); firstInvalid.focus(); }
+                return;
+            }
+
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+
+            var data = new FormData(form);
+
+            fetch(window.location.pathname, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': data.get('csrfmiddlewaretoken') },
+                body: data,
+            })
+            .then(function (res) {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+                if (res.ok) {
+                    wrapperEl.style.display = 'none';
+                    successEl.classList.add('visible');
+                    successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else if (res.status === 429) {
+                    document.getElementById('sub-error-text').textContent = 'Çok fazla istek gönderildi. Lütfen bir süre bekleyin.';
+                    errBanner.classList.add('visible');
+                } else if (res.status === 400) {
+                    res.text().then(function (t) {
+                        document.getElementById('sub-error-text').textContent = t || 'Bir hata oluştu. Lütfen tekrar deneyin.';
+                        errBanner.classList.add('visible');
+                    });
+                } else {
+                    errBanner.classList.add('visible');
+                }
+            })
+            .catch(function () {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+                errBanner.classList.add('visible');
+            });
+        });
+    }
+
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+            successEl.classList.remove('visible');
+            wrapperEl.style.display = '';
+            form.reset();
+            form.querySelectorAll('.is-valid, .is-invalid').forEach(function (el) {
+                el.classList.remove('is-valid', 'is-invalid');
+            });
+        });
+    }
+})();
+</script>
 {% endblock %}
