@@ -11,8 +11,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')),
     path('', include('accounts.urls')),
+    path('', include('profiles.urls')),
     path('', include('catalog.urls')),
     path('', include('expos.urls')),
+    path('', include('subscriptions.urls')),
 
     # Password reset flow (built-in Django views with custom templates)
     path('forgot-password/',
@@ -42,7 +44,7 @@ urlpatterns = [
 ]
 
 # Public company profile — must be last to not shadow any named route.
-from accounts.views import company_profile_view, business_card_view
+from profiles.views import company_profile_view, business_card_view
 urlpatterns += [
     path('<slug:company_username>/', company_profile_view, name='company_profile'),
     path('<slug:company_username>/business-card/', business_card_view, name='business_card'),

@@ -63,7 +63,7 @@ body.bc-page {
 
 /* ── Card shell ─────────────────────────────────────────────── */
 .bc-card {
-    width: 360px;
+    width: 480px;
     border-radius: 24px;
     overflow: hidden;
     box-shadow:
@@ -79,7 +79,7 @@ body.bc-page {
 /* ── Card header band ───────────────────────────────────────── */
 .bc-header {
     background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
-    padding: 32px 28px 24px;
+    padding: 48px 32px 28px;
     position: relative;
     overflow: hidden;
 }
@@ -118,24 +118,24 @@ body.bc-page {
 }
 
 .bc-logo-img {
-    width: 80px;
-    height: 80px;
-    border-radius: 14px;
+    width: 96px;
+    height: 96px;
+    border-radius: 16px;
     object-fit: contain;
     background: rgba(255, 255, 255, 0.07);
-    padding: 8px;
+    padding: 10px;
     border: 1px solid rgba(204, 164, 59, 0.3);
 }
 
 .bc-logo-placeholder {
-    width: 80px;
-    height: 80px;
-    border-radius: 14px;
+    width: 96px;
+    height: 96px;
+    border-radius: 16px;
     background: linear-gradient(135deg, #cca43b 0%, #b8922e 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 800;
     color: #fff;
     letter-spacing: -0.5px;
@@ -148,12 +148,12 @@ body.bc-page {
 }
 
 .bc-company-name {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 800;
     color: #fff;
     letter-spacing: -0.3px;
-    line-height: 1.2;
-    margin-bottom: 8px;
+    line-height: 1.25;
+    margin-bottom: 12px;
 }
 
 /* ── Sector badges ──────────────────────────────────────────── */
@@ -209,20 +209,20 @@ body.bc-page {
 /* ── Body ───────────────────────────────────────────────────── */
 .bc-body {
     flex: 1;
-    padding: 24px 28px;
+    padding: 28px 32px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
     background: #fff;
 }
 
 /* ── About snippet ──────────────────────────────────────────── */
 .bc-about {
-    font-size: 13px;
-    line-height: 1.65;
+    font-size: 14px;
+    line-height: 1.7;
     color: #475569;
     border-left: 3px solid #cca43b;
-    padding-left: 12px;
+    padding-left: 14px;
     display: -webkit-box;
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
@@ -242,19 +242,19 @@ body.bc-page {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 14px;
 }
 
 .bc-contact-item {
     display: flex;
     align-items: flex-start;
-    gap: 11px;
+    gap: 14px;
 }
 
 .bc-contact-icon {
-    width: 30px;
-    height: 30px;
-    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
     background: #f1f5f9;
     border: 1px solid #e2e8f0;
     display: flex;
@@ -264,7 +264,7 @@ body.bc-page {
 }
 
 .bc-contact-icon i {
-    font-size: 12px;
+    font-size: 14px;
     color: #1e3a5f;
 }
 
@@ -282,16 +282,16 @@ body.bc-page {
     text-transform: uppercase;
     color: #94a3b8;
     line-height: 1;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
 }
 
 .bc-contact-value {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     color: #1e293b;
     text-decoration: none;
     word-break: break-all;
-    line-height: 1.3;
+    line-height: 1.4;
     transition: color 0.15s;
 }
 
@@ -303,7 +303,7 @@ a.bc-contact-value:hover {
 /* ── Footer band ────────────────────────────────────────────── */
 .bc-footer {
     background: #0f172a;
-    padding: 12px 28px;
+    padding: 14px 32px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -416,19 +416,19 @@ a.bc-contact-value:hover {
     }
 
     .bc-header {
-        padding: 6mm 6mm 5mm;
+        padding: 8mm 7mm 6mm;
     }
 
     .bc-body {
-        padding: 5mm 6mm;
-        gap: 4mm;
+        padding: 6mm 7mm;
+        gap: 5mm;
     }
 
     .bc-logo-img,
     .bc-logo-placeholder {
-        width: 18mm;
-        height: 18mm;
-        font-size: 6mm;
+        width: 20mm;
+        height: 20mm;
+        font-size: 7mm;
     }
 
     .bc-company-name {
@@ -464,7 +464,7 @@ a.bc-contact-value:hover {
 <div class="bc-stage" id="bc-stage" data-bc-lang="tr">
 
     <!-- ── TURKISH CARD ───────────────────────────────────────── -->
-    <div class="bc-wrap">
+    <div class="bc-wrap" id="bc-wrap-tr">
         <div class="bc-card" id="bc-card-tr">
 
             <!-- Header -->
@@ -565,7 +565,7 @@ a.bc-contact-value:hover {
 
 
     <!-- ── ENGLISH CARD ───────────────────────────────────────── -->
-    <div class="bc-wrap">
+    <div class="bc-wrap" id="bc-wrap-en" style="display:none">
         <div class="bc-card" id="bc-card-en">
 
             <!-- Header -->
@@ -697,23 +697,16 @@ a.bc-contact-value:hover {
         document.getElementById('bc-btn-en').classList.toggle('active', lang === 'en');
 
         /* show/hide cards */
-        var trCard  = document.getElementById('bc-card-tr').parentElement;
-        var enCard  = document.getElementById('bc-card-en').parentElement;
-        trCard.style.display = (lang === 'tr' || lang === 'both') ? '' : 'none';
-        enCard.style.display = (lang === 'en' || lang === 'both') ? '' : 'none';
+        document.getElementById('bc-wrap-tr').style.display = lang === 'en' ? 'none' : '';
+        document.getElementById('bc-wrap-en').style.display = lang === 'tr' ? 'none' : '';
 
         /* update action button labels */
         document.getElementById('bc-print-label').textContent = UI[lang].print;
         document.getElementById('bc-back-label').textContent  = UI[lang].back;
     };
 
-    /* on load, init to stored preference but always show both cards */
-    (function init() {
-        /* both cards always visible — lang toggle only affects UI chrome */
-        document.getElementById('bc-print-label').textContent = UI[currentLang].print;
-        document.getElementById('bc-back-label').textContent  = UI[currentLang].back;
-        document.getElementById('bc-btn-' + currentLang).classList.add('active');
-    })();
+    /* on load, apply stored language preference */
+    setLang(currentLang);
 
 })();
 </script>

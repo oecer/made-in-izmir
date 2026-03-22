@@ -93,11 +93,14 @@ def producer_dashboard_view(request):
         unfiltered_products = Product.objects.filter(tenant=tenant)
         pending_count = ProductRequest.objects.filter(tenant=tenant, status='pending').count()
 
+        active_count = unfiltered_products.filter(is_active=True).count()
+        active_plan = tenant.get_active_plan()
+
         context = {
             'profile': profile,
             'products': display_items,
             'total_products': unfiltered_products.count() + pending_count,
-            'active_products': unfiltered_products.filter(is_active=True).count(),
+            'active_products': active_count,
             'pending_products_count': pending_count,
             'available_tags': available_tags,
             'available_sectors': available_sectors,
@@ -107,6 +110,9 @@ def producer_dashboard_view(request):
                 'sector': sector_filters,
             },
             'search_query': search_query,
+            'active_product_count': active_count,
+            'max_active_products': active_plan.max_active_products if active_plan else None,
+            'can_add_product': tenant.can_activate_product(),
         }
 
         return render(request, 'user_area/producer_dashboard.html', context)
@@ -202,6 +208,15 @@ def add_product_view(request):
         if profile.tenant_role == 'read_only':
             messages.error(request, 'Salt okunur kullanıcılar ürün ekleyemez.')
             return redirect('accounts:dashboard')
+        if not tenant.can_activate_product():
+            plan = tenant.get_active_plan()
+            limit = plan.max_active_products if plan else '?'
+            messages.error(
+                request,
+                f'Aktif ürün limitinize ({limit} ürün) ulaştınız. '
+                f'Daha fazla ürün eklemek için aboneliğinizi yükseltin.'
+            )
+            return redirect('catalog:producer_dashboard')
     except Exception:
         messages.error(request, 'Profil bilgileriniz bulunamadı.')
         return redirect('main:index')
@@ -306,6 +321,7 @@ def product_detail_view(request, product_id):
         'product': product,
         'is_owner': user_tenant == product.tenant,
         'other_products': other_products,
+        'producer_plan': product.tenant.get_active_plan() if product.tenant else None,
     }
 
     return render(request, 'user_area/product_detail.html', context)

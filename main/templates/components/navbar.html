@@ -7,7 +7,7 @@
 
             <ul class="nav-links" id="nav-links">
                 {% if user.is_authenticated %}
-                {% if '/dashboard' in request.path or '/my-account' in request.path or '/products' in request.path or '/expo' in request.path or is_madeinizmir_user %}
+                {% if '/dashboard' in request.path or '/my-account' in request.path or '/products' in request.path or '/expo' in request.path or '/user/subscription' in request.path or is_madeinizmir_user %}
                 <!-- Dashboard Specific Navbar Items -->
                 <li><a href="{% url 'accounts:dashboard' %}" data-i18n="nav.main_dashboard">Ana Panel</a></li>
                 {% if user.profile.tenant.is_producer %}
@@ -33,6 +33,12 @@
                                 Hesabım
                             </a>
                         </li>
+                        <li role="none">
+                            <a href="{% url 'subscriptions:my_subscription' %}" role="menuitem" data-i18n="nav.my_subscription">
+                                <i class="fas fa-crown"></i>
+                                Aboneliğim
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 {% else %}
@@ -44,6 +50,7 @@
                 <li><a href="{% url 'expos:calendar' %}" data-i18n="nav.calendar">Fuar Takvimi</a></li>
                 <li><a href="{% url 'main:about' %}" data-i18n="nav.about">Hakkımızda</a></li>
                 <li><a href="{% url 'main:contact' %}" data-i18n="nav.contact">İletişim</a></li>
+                <li><a href="{% url 'subscriptions:pricing' %}" data-i18n="nav.subscription" class="btn-subscription-nav"><i class="fas fa-crown" aria-hidden="true"></i> <span data-i18n="nav.subscription">Abonelik</span></a></li>
                 <li><a href="{% url 'accounts:dashboard' %}" data-i18n="nav.dashboard" class="btn-dashboard-nav">Panel</a></li>
                 {% endif %}
                 {% else %}
@@ -55,8 +62,8 @@
                 <li><a href="{% url 'expos:calendar' %}" data-i18n="nav.calendar">Fuar Takvimi</a></li>
                 <li><a href="{% url 'main:about' %}" data-i18n="nav.about">Hakkımızda</a></li>
                 <li><a href="{% url 'main:contact' %}" data-i18n="nav.contact">İletişim</a></li>
-                <li><a href="{% url 'accounts:login' %}" data-i18n="nav.login">Giriş</a></li>
-                <li><a href="{% url 'accounts:signup' %}" data-i18n="nav.signup" class="btn-signup-nav">Kayıt Ol</a></li>
+                <li><a href="{% url 'subscriptions:pricing' %}" data-i18n="nav.subscription" class="btn-subscription-nav"><i class="fas fa-crown" aria-hidden="true"></i> <span data-i18n="nav.subscription">Abonelik</span></a></li>
+                <li><a href="{% url 'accounts:login' %}" data-i18n="nav.login" class="btn-login-nav">Giriş</a></li>
                 {% endif %}
             </ul>
 

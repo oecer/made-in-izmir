@@ -208,7 +208,14 @@
                 <h3>{{ product.title_tr|default:product.title_en }}</h3>
                 <p class="product-producer">
                     <i class="fas fa-user-tie"></i>
-                    {{ product.tenant.company_name }}
+                    {% with producer_plan=product.tenant.get_active_plan %}
+                    {% if sub_features.viewer_sees_all or producer_plan and producer_plan.display_company_name %}
+                        {{ product.tenant.company_name }}
+                    {% else %}
+                        <span class="sub-blurred">{{ product.tenant.company_name }}</span>
+                        <span class="sub-upgrade-hint"><i class="fas fa-lock"></i></span>
+                    {% endif %}
+                    {% endwith %}
                 </p>
                 {% if product.sector %}
                 <div class="product-sector">

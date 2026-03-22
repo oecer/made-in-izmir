@@ -3,6 +3,10 @@
 
 {% block title %}{{ product.title_tr|default:product.title_en }} - Made in Izmir{% endblock %}
 
+{% block extra_dashboard_css %}
+<link rel="stylesheet" href="{% static 'css/company_profile.css' %}">
+{% endblock %}
+
 {% block dashboard_title %}
 {{ product.title_tr|default:product.title_en }}
 {% endblock %}
@@ -87,7 +91,12 @@
             <div>
                 <p class="info-item">
                     <strong data-i18n="dashboard.producer">Üretici</strong>:
-                    {{ product.tenant.company_name }}
+                    {% if sub_features.viewer_sees_all or producer_plan and producer_plan.display_company_name %}
+                        {{ product.tenant.company_name }}
+                    {% else %}
+                        <span class="sub-blurred">{{ product.tenant.company_name }}</span>
+                        <span class="sub-upgrade-hint"><i class="fas fa-lock"></i></span>
+                    {% endif %}
                 </p>
                 {% if product.sector %}
                 <p class="info-item">
@@ -98,10 +107,16 @@
                     </span>
                 </p>
                 {% endif %}
+                {% if product.tenant.city or product.tenant.country %}
                 <small class="location">
                     <i class="fas fa-map-marker-alt"></i>
-                    {{ product.producer.profile.city }}, {{ product.producer.profile.country }}
+                    {% if sub_features.viewer_sees_all or producer_plan and producer_plan.display_city %}
+                        {% if product.tenant.city %}{{ product.tenant.city }}{% endif %}{% if product.tenant.city and product.tenant.country %}, {% endif %}{% if product.tenant.country %}{{ product.tenant.country }}{% endif %}
+                    {% else %}
+                        <span class="sub-blurred">{% if product.tenant.city %}{{ product.tenant.city }}{% endif %}{% if product.tenant.city and product.tenant.country %}, {% endif %}{% if product.tenant.country %}{{ product.tenant.country }}{% endif %}</span>
+                    {% endif %}
                 </small>
+                {% endif %}
             </div>
         </div>
 
@@ -162,6 +177,178 @@
         {% endif %}
     </div>
 
+    {% if not is_owner %}
+    <!-- ── Get in Touch Section ── -->
+    <div class="pd-contact-section">
+        <div class="pd-contact-section-header">
+            <h3 data-i18n="dashboard.product_interested">Bu ürünle ilgileniyor musunuz?</h3>
+            <p data-i18n="dashboard.product_interested_desc">Üreticiyle doğrudan iletişime geçin veya Made in İzmir üzerinden mesaj gönderin.</p>
+        </div>
+
+        <div class="cp-contact-layout">
+
+            <!-- Left: direct contact -->
+            <div class="cp-contact-direct">
+                <h3 class="cp-contact-direct-title">
+                    <span data-i18n="dashboard.reach_directly">Doğrudan İletişime Geçin</span>
+                </h3>
+                <p class="cp-contact-direct-desc">
+                    <span data-i18n="dashboard.reach_directly_desc">Acil sorularınız için aşağıdaki kanallar aracılığıyla doğrudan iletişime geçebilirsiniz.</span>
+                </p>
+
+                <ul class="cp-contact-detail-list">
+                    {% if product.tenant.phone_number %}
+                    <li>
+                        <span class="cp-contact-detail-icon"><i class="fas fa-phone"></i></span>
+                        <div>
+                            <span class="cp-contact-detail-label" data-i18n="dashboard.contact_phone">Telefon</span>
+                            {% if sub_features.viewer_sees_all or producer_plan and producer_plan.display_phone %}
+                                <a href="tel:{{ product.tenant.phone_number }}" class="cp-contact-detail-value">{{ product.tenant.phone_number }}</a>
+                            {% else %}
+                                <span class="cp-contact-detail-value sub-blurred">{{ product.tenant.phone_number }}</span>
+                                <span class="sub-upgrade-hint"><i class="fas fa-lock"></i> <a href="{% url 'subscriptions:pricing' %}">Görüntülemek için yükselt</a></span>
+                            {% endif %}
+                        </div>
+                    </li>
+                    {% endif %}
+                    {% if product.tenant.company_email %}
+                    <li>
+                        <span class="cp-contact-detail-icon"><i class="fas fa-envelope"></i></span>
+                        <div>
+                            <span class="cp-contact-detail-label" data-i18n="dashboard.contact_email">E-posta</span>
+                            {% if sub_features.viewer_sees_all or producer_plan and producer_plan.display_email %}
+                                <a href="mailto:{{ product.tenant.company_email }}" class="cp-contact-detail-value">{{ product.tenant.company_email }}</a>
+                            {% else %}
+                                <span class="cp-contact-detail-value sub-blurred">{{ product.tenant.company_email }}</span>
+                                <span class="sub-upgrade-hint"><i class="fas fa-lock"></i> <a href="{% url 'subscriptions:pricing' %}">Görüntülemek için yükselt</a></span>
+                            {% endif %}
+                        </div>
+                    </li>
+                    {% endif %}
+                    {% if product.tenant.website %}
+                    <li>
+                        <span class="cp-contact-detail-icon"><i class="fas fa-globe"></i></span>
+                        <div>
+                            <span class="cp-contact-detail-label" data-i18n="dashboard.contact_website">Web Sitesi</span>
+                            {% if sub_features.viewer_sees_all or producer_plan and producer_plan.display_website %}
+                                <a href="{{ product.tenant.website }}" target="_blank" rel="noopener noreferrer" class="cp-contact-detail-value">{{ product.tenant.website }}</a>
+                            {% else %}
+                                <span class="cp-contact-detail-value sub-blurred">{{ product.tenant.website }}</span>
+                                <span class="sub-upgrade-hint"><i class="fas fa-lock"></i> <a href="{% url 'subscriptions:pricing' %}">Görüntülemek için yükselt</a></span>
+                            {% endif %}
+                        </div>
+                    </li>
+                    {% endif %}
+                    {% if product.tenant.open_address or product.tenant.city or product.tenant.country %}
+                    <li>
+                        <span class="cp-contact-detail-icon"><i class="fas fa-map-marker-alt"></i></span>
+                        <div>
+                            <span class="cp-contact-detail-label" data-i18n="dashboard.contact_address">Adres</span>
+                            <span class="cp-contact-detail-value">
+                                {% if sub_features.viewer_sees_all or producer_plan and producer_plan.display_open_address %}
+                                    {% if product.tenant.open_address %}{{ product.tenant.open_address }}{% if product.tenant.city or product.tenant.country %}, {% endif %}{% endif %}
+                                {% elif product.tenant.open_address %}
+                                    <span class="sub-blurred">{{ product.tenant.open_address }}</span>{% if product.tenant.city or product.tenant.country %}, {% endif %}
+                                {% endif %}
+                                {% if sub_features.viewer_sees_all or producer_plan and producer_plan.display_city %}
+                                    {% if product.tenant.city %}{{ product.tenant.city }}{% endif %}{% if product.tenant.city and product.tenant.country %}, {% endif %}{% if product.tenant.country %}{{ product.tenant.country }}{% endif %}
+                                {% elif product.tenant.city %}
+                                    <span class="sub-blurred">{{ product.tenant.city }}</span>{% if product.tenant.country %}, {{ product.tenant.country }}{% endif %}
+                                {% endif %}
+                            </span>
+                        </div>
+                    </li>
+                    {% endif %}
+                    {% if not product.tenant.phone_number and not product.tenant.company_email and not product.tenant.website and not product.tenant.open_address and not product.tenant.city %}
+                    <li>
+                        <span class="cp-contact-detail-icon"><i class="fas fa-info-circle"></i></span>
+                        <div>
+                            <span class="cp-contact-detail-value" data-i18n="dashboard.contact_via_mii_only">Üreticiye Made in İzmir üzerinden ulaşabilirsiniz.</span>
+                        </div>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <!-- Divider -->
+            <div class="cp-contact-divider">
+                <span data-i18n="dashboard.or_divider">veya</span>
+            </div>
+
+            <!-- Right: enquiry form -->
+            <div class="cp-contact-form-wrap">
+                <h3 class="cp-contact-direct-title">
+                    <span data-i18n="dashboard.enquiry_via_mii">Made in İzmir Üzerinden Mesaj Gönderin</span>
+                </h3>
+                <p class="cp-contact-direct-desc">
+                    <span data-i18n="dashboard.enquiry_via_mii_desc_1">Biz aracılığıyla iletişim kurmayı tercih ediyor musunuz? Aşağıdaki formu doldurun;</span>
+                    <strong>Made in İzmir</strong>
+                    <span data-i18n="dashboard.enquiry_via_mii_desc_2">ekibimiz sizi üreticiyle şahsen buluşturacaktır.</span>
+                </p>
+
+                <form id="pd-enquiry-form" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="producer" value="{{ product.tenant.schema_name }}">
+                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                    <input type="hidden" name="product_title" value="{{ product.title_tr|default:product.title_en }}">
+
+                    <div class="cp-contact-form-row">
+                        <div class="cp-form-group">
+                            <label for="pd-name">
+                                <span data-i18n="dashboard.eq_name_label">Ad Soyad</span>
+                                <span class="cp-required">*</span>
+                            </label>
+                            <input type="text" id="pd-name" name="name" class="cp-input"
+                                   data-i18n-placeholder="dashboard.eq_name_ph" placeholder="Ayşe Yılmaz" required>
+                        </div>
+                        <div class="cp-form-group">
+                            <label for="pd-company">
+                                <span data-i18n="dashboard.eq_company_label">Firma / Kuruluş</span>
+                            </label>
+                            <input type="text" id="pd-company" name="company" class="cp-input"
+                                   data-i18n-placeholder="dashboard.eq_company_ph" placeholder="Firma adınız">
+                        </div>
+                    </div>
+
+                    <div class="cp-contact-form-row">
+                        <div class="cp-form-group">
+                            <label for="pd-email">
+                                <span data-i18n="dashboard.eq_email_label">E-posta Adresi</span>
+                                <span class="cp-required">*</span>
+                            </label>
+                            <input type="email" id="pd-email" name="email" class="cp-input"
+                                   data-i18n-placeholder="dashboard.eq_email_ph" placeholder="ayse@ornek.com" required>
+                        </div>
+                        <div class="cp-form-group">
+                            <label for="pd-phone">
+                                <span data-i18n="dashboard.eq_phone_label">Telefon Numarası</span>
+                            </label>
+                            <input type="tel" id="pd-phone" name="phone" class="cp-input"
+                                   data-i18n-placeholder="dashboard.eq_phone_ph" placeholder="+90 555 000 00 00">
+                        </div>
+                    </div>
+
+                    <div class="cp-form-group">
+                        <label for="pd-message">
+                            <span data-i18n="dashboard.eq_message_label">Mesajınız</span>
+                            <span class="cp-required">*</span>
+                        </label>
+                        <textarea id="pd-message" name="message" class="cp-input cp-textarea" rows="5"
+                                  data-i18n-placeholder="dashboard.eq_message_ph"
+                                  placeholder="Bu ürün hakkında sorularınızı veya talebinizi belirtin…" required></textarea>
+                    </div>
+
+                    <button type="submit" class="cp-btn-submit" id="pd-enquiry-submit">
+                        <i class="fas fa-paper-plane" style="margin-right:8px;"></i>
+                        <span data-i18n="dashboard.eq_submit">Mesaj Gönder</span>
+                    </button>
+                </form>
+            </div>
+
+        </div><!-- /.cp-contact-layout -->
+    </div>
+    {% endif %}
+
     {% if other_products %}
     <div class="other-products-section">
         <h3 class="section-title"><i class="fas fa-th-large"></i> <span data-i18n="dashboard.more_from_seller">Üreticinin Aynı Sektördeki Diğer Ürünleri</span></h3>
@@ -210,6 +397,51 @@
             }
         });
     }
+
+    // Product enquiry form
+    (function () {
+        const form = document.getElementById('pd-enquiry-form');
+        if (!form) return;
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('pd-enquiry-submit');
+
+            // Simple client-side validation
+            const name    = form.querySelector('#pd-name').value.trim();
+            const email   = form.querySelector('#pd-email').value.trim();
+            const message = form.querySelector('#pd-message').value.trim();
+            if (!name || !email || !message) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Gönderiliyor…';
+
+            try {
+                const data = new FormData(form);
+                const resp = await fetch('/enquiry/submit/', {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': data.get('csrfmiddlewaretoken') },
+                    body: data,
+                });
+                const json = await resp.json();
+                if (resp.ok && json.success) {
+                    // Replace only the form wrap content, keeping the layout intact
+                    form.closest('.cp-contact-form-wrap').innerHTML = `
+                        <div style="text-align:center;padding:40px 0;">
+                            <i class="fas fa-check-circle" style="font-size:3rem;color:#16a34a;margin-bottom:16px;display:block;"></i>
+                            <h4 style="margin:0 0 8px;color:#0f172a;">Mesajınız İletildi!</h4>
+                            <p style="color:#64748b;margin:0;">Teşekkürler. Made in İzmir ekibi kısa süre içinde sizinle iletişime geçecektir.</p>
+                        </div>`;
+                } else {
+                    throw new Error(json.error || 'error');
+                }
+            } catch {
+                alert('Bir sorun oluştu. Lütfen tekrar deneyin.');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:8px;"></i>Mesaj Gönder';
+            }
+        });
+    })();
 </script>
 
 <style>
@@ -407,6 +639,33 @@
     .btn-secondary:hover { background: #5a6268; }
     .btn-warning { background: #ffc107; color: #333; }
     .btn-danger { background: #dc3545; color: white; }
+
+    /* ── Product Contact Section ── */
+    .pd-contact-section {
+        grid-column: 1 / -1;
+        margin-top: 40px;
+        padding: 40px;
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .pd-contact-section-header {
+        margin-bottom: 36px;
+    }
+
+    .pd-contact-section-header h3 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 8px;
+    }
+
+    .pd-contact-section-header p {
+        color: #64748b;
+        margin: 0;
+        font-size: 0.95rem;
+    }
 
     /* Related Products Section */
     .other-products-section {

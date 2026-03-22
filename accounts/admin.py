@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.contrib import messages
 from django.utils.html import format_html, mark_safe
 from .models import Tenant, UserProfile, SignupRequest, SignupRequestHistory, ProfileEditRequest, MembershipConsent, ConsentText, ContactSubmission, TenantPhoto, TenantPhotoRequest, TenantLogoRequest
+from subscriptions.models import SubscriptionPlan, TenantSubscription
 
 
 class SignupRequestHistoryInline(admin.TabularInline):
@@ -233,6 +234,20 @@ class SignupRequestAdmin(admin.ModelAdmin):
 
         UserProfile.objects.create(user=user, tenant=tenant, tenant_role='admin')
 
+        # Auto-assign Standard (free) subscription to new tenants
+        from datetime import date as _date
+        standard_plan = SubscriptionPlan.objects.filter(
+            monthly_price=0, is_active=True
+        ).order_by('display_order').first()
+        if standard_plan:
+            TenantSubscription.objects.create(
+                tenant=tenant,
+                plan=standard_plan,
+                status='active',
+                started_at=_date.today(),
+                assigned_by=request.user,
+            )
+
         signup_request.reviewed_by = request.user
         signup_request.reviewed_at = timezone.now()
 
@@ -329,6 +344,25 @@ class TenantLogoRequestInline(admin.TabularInline):
         return False
 
 
+class TenantSubscriptionInline(admin.StackedInline):
+    """Inline to view/assign subscription directly from the Tenant admin page."""
+    model = TenantSubscription
+    can_delete = False
+    extra = 0
+    max_num = 1
+    verbose_name = "Abonelik"
+    verbose_name_plural = "Abonelik"
+    fields = ('plan', 'status', 'started_at', 'expires_at', 'notes')
+
+    def get_readonly_fields(self, request, obj=None):
+        return ('assigned_by',) if obj else ()
+
+    def save_model(self, request, obj, form, change):
+        if not obj.assigned_by_id:
+            obj.assigned_by = request.user
+        super().save_model(request, obj, form, change)
+
+
 @admin.register(Tenant)
 class TenantAdmin(admin.ModelAdmin):
     list_display = ('company_name', 'owner_display', 'country', 'city', 'is_buyer', 'is_producer', 'show_company_profile', 'member_count', 'created_at')
@@ -336,7 +370,7 @@ class TenantAdmin(admin.ModelAdmin):
     search_fields = ('company_name', 'phone_number', 'city', 'owner__username', 'owner__email')
     readonly_fields = ('created_at', 'updated_at', 'owner_display', 'logo_preview')
     filter_horizontal = ('buyer_interested_sectors', 'producer_sectors')
-    inlines = [TenantMemberInline, TenantPhotoInline, TenantLogoRequestInline]
+    inlines = [TenantMemberInline, TenantPhotoInline, TenantLogoRequestInline, TenantSubscriptionInline]
 
     fieldsets = (
         ('Company Information', {

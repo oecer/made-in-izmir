@@ -1697,3 +1697,97 @@ textarea.form-control {
         align-items: flex-start;
     }
 }
+
+/* ============================================
+   SUBSCRIPTION FEATURE BLUR
+   Applied when a feature is not included in
+   the tenant's subscription plan.
+   ============================================ */
+
+.sub-blurred {
+    filter: blur(5px);
+    user-select: none;
+    pointer-events: none;
+    -webkit-filter: blur(5px);
+    display: inline-block;
+}
+
+.sub-upgrade-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.72rem;
+    color: #94a3b8;
+    margin-left: 5px;
+    white-space: nowrap;
+}
+
+.sub-upgrade-hint a {
+    color: #cca43b;
+    text-decoration: none;
+}
+
+.sub-upgrade-hint a:hover {
+    text-decoration: underline;
+}
+
+.sub-upgrade-hint i {
+    color: #cca43b;
+    font-size: 0.7rem;
+}
+
+/* Subscription plan feature list */
+.plan-feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.plan-feature-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.plan-feature-list li:last-child {
+    border-bottom: none;
+}
+
+.plan-feature-check {
+    color: #16a34a;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.plan-feature-cross {
+    color: #dc2626;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+/* Product limit bar */
+.product-limit-bar {
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 4px;
+}
+
+.product-limit-fill {
+    height: 100%;
+    background: #3b82f6;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.product-limit-fill.near-limit {
+    background: #f59e0b;
+}
+
+.product-limit-fill.at-limit {
+    background: #ef4444;
+}
