@@ -57,8 +57,7 @@
                 <li><a href="{% url 'main:about' %}" data-i18n="nav.about">Hakkımızda</a></li>
                 <li><a href="{% url 'main:contact' %}" data-i18n="nav.contact">İletişim</a></li>
                 <li><a href="{% url 'subscriptions:pricing' %}" data-i18n="nav.subscription" class="btn-subscription-nav"><i class="fas fa-crown" aria-hidden="true"></i> <span data-i18n="nav.subscription">Abonelik</span></a></li>
-                <li><a href="{% url 'accounts:login' %}" data-i18n="nav.login">Giriş</a></li>
-                <li><a href="{% url 'accounts:signup' %}" data-i18n="nav.signup" class="btn-signup-nav">Kayıt Ol</a></li>
+                <li><a href="{% url 'accounts:login' %}" data-i18n="nav.login" class="btn-login-nav">Giriş</a></li>
                 {% endif %}
             </ul>
 

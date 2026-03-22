@@ -1204,6 +1204,27 @@ footer {
     }
 }
 
+/* btn-login-nav (Giriş in navbar, unauthenticated) */
+.btn-login-nav {
+    background: var(--accent-color) !important;
+    color: var(--primary-color) !important;
+    padding: 0.4rem 1.25rem !important;
+    border-radius: 50px !important;
+    font-weight: 600 !important;
+    transition: background 0.2s, box-shadow 0.2s !important;
+}
+
+.btn-login-nav:hover {
+    background: var(--accent-hover) !important;
+    box-shadow: var(--shadow-glow) !important;
+    color: var(--primary-color) !important;
+}
+
+header.scrolled .btn-login-nav {
+    background: var(--accent-color) !important;
+    color: var(--primary-color) !important;
+}
+
 /* btn-signup-nav (Kayıt Ol in navbar) */
 .btn-signup-nav {
     border: 2px solid var(--accent-color) !important;
