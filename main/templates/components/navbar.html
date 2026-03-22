@@ -7,7 +7,7 @@
 
             <ul class="nav-links" id="nav-links">
                 {% if user.is_authenticated %}
-                {% if '/dashboard' in request.path or '/my-account' in request.path or '/products' in request.path or '/expo' in request.path or is_madeinizmir_user %}
+                {% if '/dashboard' in request.path or '/my-account' in request.path or '/products' in request.path or '/expo' in request.path or '/user/subscription' in request.path or is_madeinizmir_user %}
                 <!-- Dashboard Specific Navbar Items -->
                 <li><a href="{% url 'accounts:dashboard' %}" data-i18n="nav.main_dashboard">Ana Panel</a></li>
                 {% if user.profile.tenant.is_producer %}
@@ -31,6 +31,12 @@
                             <a href="{% url 'accounts:profile' %}" role="menuitem" data-i18n="nav.my_account">
                                 <i class="fas fa-user"></i>
                                 Hesabım
+                            </a>
+                        </li>
+                        <li role="none">
+                            <a href="{% url 'subscriptions:my_subscription' %}" role="menuitem" data-i18n="nav.my_subscription">
+                                <i class="fas fa-crown"></i>
+                                Aboneliğim
                             </a>
                         </li>
                     </ul>

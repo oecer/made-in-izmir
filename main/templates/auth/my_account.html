@@ -266,6 +266,109 @@
 
     </div>
 
+    <!-- ═══════════════════════════════════════════════
+         SECTION 3: SUBSCRIPTION
+         ═══════════════════════════════════════════════ -->
+    {% with sub=user.profile.tenant.subscription plan=user.profile.tenant.get_active_plan %}
+    <div class="profile-section profile-section-subscription">
+        <div class="section-header">
+            <div class="section-icon icon-subscription">
+                <i class="fas fa-crown"></i>
+            </div>
+            <div class="section-title-group">
+                <h3 class="section-title" data-i18n="profile.subscription">Abonelik</h3>
+                <p class="section-subtitle" data-i18n="profile.subscription_desc">Mevcut plan ve abonelik durumunuz</p>
+            </div>
+            <a href="{% url 'subscriptions:my_subscription' %}" class="btn-section-link">
+                <i class="fas fa-external-link-alt"></i>
+                <span data-i18n="profile.manage_subscription">Yönet</span>
+            </a>
+        </div>
+        <div class="section-body">
+            {% if plan %}
+            <div class="subscription-overview">
+                <div class="sub-plan-badge">
+                    <i class="fas fa-crown sub-plan-icon"></i>
+                    <div class="sub-plan-info">
+                        <span class="sub-plan-name">{{ plan.name_tr }}</span>
+                        <span class="sub-plan-price">{{ plan.get_price_display }}</span>
+                    </div>
+                    {% if sub %}
+                    <span class="sub-status-chip {% if sub.is_currently_active %}chip-active{% else %}chip-expired{% endif %}">
+                        {{ sub.get_status_display }}
+                    </span>
+                    {% endif %}
+                </div>
+
+                {% if sub %}
+                <div class="info-grid sub-dates-grid">
+                    <div class="info-cell">
+                        <span class="info-label" data-i18n="profile.sub_started">Başlangıç Tarihi</span>
+                        <span class="info-value">
+                            <i class="fas fa-calendar-check info-icon"></i>
+                            {{ sub.started_at|date:"d.m.Y" }}
+                        </span>
+                    </div>
+                    <div class="info-cell">
+                        <span class="info-label" data-i18n="profile.sub_expires">Bitiş Tarihi</span>
+                        <span class="info-value">
+                            {% if sub.expires_at %}
+                            <i class="fas fa-calendar-times info-icon"></i>
+                            {{ sub.expires_at|date:"d.m.Y" }}
+                            {% else %}
+                            <span class="sub-unlimited"><i class="fas fa-infinity"></i> Süresiz</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Key features of the current plan -->
+                <div class="sub-features">
+                    <span class="sub-features-label" data-i18n="profile.plan_features">Plan Özellikleri</span>
+                    <div class="sub-features-list">
+                        <span class="sub-feature {% if plan.show_company_profile %}feature-on{% else %}feature-off{% endif %}">
+                            <i class="fas {% if plan.show_company_profile %}fa-check{% else %}fa-times{% endif %}"></i>
+                            Firma Profil Sayfası
+                        </span>
+                        <span class="sub-feature {% if plan.has_business_card %}feature-on{% else %}feature-off{% endif %}">
+                            <i class="fas {% if plan.has_business_card %}fa-check{% else %}fa-times{% endif %}"></i>
+                            Dijital Kartvizit
+                        </span>
+                        <span class="sub-feature {% if plan.display_company_name %}feature-on{% else %}feature-off{% endif %}">
+                            <i class="fas {% if plan.display_company_name %}fa-check{% else %}fa-times{% endif %}"></i>
+                            Firma Adı Görünürlüğü
+                        </span>
+                        <span class="sub-feature {% if plan.display_phone %}feature-on{% else %}feature-off{% endif %}">
+                            <i class="fas {% if plan.display_phone %}fa-check{% else %}fa-times{% endif %}"></i>
+                            Telefon Görünürlüğü
+                        </span>
+                        <span class="sub-feature {% if plan.viewer_sees_all %}feature-on{% else %}feature-off{% endif %}">
+                            <i class="fas {% if plan.viewer_sees_all %}fa-check{% else %}fa-times{% endif %}"></i>
+                            Tüm Üretici Bilgilerini Gör
+                        </span>
+                        <span class="sub-feature {% if not plan.max_active_products %}feature-on{% else %}feature-off{% endif %}">
+                            <i class="fas {% if not plan.max_active_products %}fa-check{% else %}fa-times{% endif %}"></i>
+                            {% if plan.max_active_products %}Maks. {{ plan.max_active_products }} Ürün{% else %}Sınırsız Ürün{% endif %}
+                        </span>
+                    </div>
+                </div>
+
+            {% else %}
+            <div class="sub-empty">
+                <i class="fas fa-crown sub-empty-icon"></i>
+                <p data-i18n="profile.no_plan">Aktif bir abonelik planınız bulunmuyor.</p>
+                <a href="{% url 'subscriptions:pricing' %}" class="btn-upgrade">
+                    <i class="fas fa-arrow-up"></i>
+                    Planları İncele
+                </a>
+            </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endwith %}
+
     <!-- Actions -->
     <div class="profile-actions mt-5">
         <a href="{% url 'accounts:logout' %}" class="btn-logout">
@@ -677,6 +780,182 @@
         background: #f1f5f9;
         color: #475569;
         border: 1px solid #e2e8f0;
+    }
+
+    /* ── Subscription Section ── */
+    .section-icon.icon-subscription {
+        background: linear-gradient(135deg, #92400e 0%, #cca43b 100%);
+    }
+
+    .btn-section-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 16px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #64748b;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .btn-section-link:hover {
+        border-color: #cca43b;
+        color: #cca43b;
+        background: rgba(204, 164, 59, 0.06);
+    }
+
+    .subscription-overview { display: flex; flex-direction: column; gap: 24px; }
+
+    .sub-plan-badge {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: linear-gradient(135deg, #fefce8 0%, #fef9e7 100%);
+        border: 1px solid #fde68a;
+        border-radius: 14px;
+        padding: 18px 22px;
+    }
+
+    .sub-plan-icon {
+        font-size: 1.5rem;
+        color: #cca43b;
+        flex-shrink: 0;
+    }
+
+    .sub-plan-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .sub-plan-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .sub-plan-price {
+        font-size: 0.85rem;
+        color: #92400e;
+        font-weight: 600;
+    }
+
+    .sub-status-chip {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        flex-shrink: 0;
+    }
+
+    .chip-active {
+        background: #dcfce7;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
+    }
+
+    .chip-expired {
+        background: #fee2e2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+    }
+
+    .sub-dates-grid {
+        padding-top: 4px;
+    }
+
+    .sub-unlimited {
+        color: #16a34a;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .sub-features { display: flex; flex-direction: column; gap: 10px; }
+
+    .sub-features-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: #94a3b8;
+        font-weight: 700;
+    }
+
+    .sub-features-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .sub-feature {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 12px;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        font-weight: 500;
+    }
+
+    .feature-on {
+        background: #f0fdf4;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
+    }
+
+    .feature-on i { color: #16a34a; }
+
+    .feature-off {
+        background: #f8fafc;
+        color: #94a3b8;
+        border: 1px solid #e2e8f0;
+    }
+
+    .feature-off i { color: #cbd5e1; }
+
+    .sub-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        padding: 32px;
+        text-align: center;
+        color: #94a3b8;
+    }
+
+    .sub-empty-icon {
+        font-size: 2.5rem;
+        color: #e2e8f0;
+    }
+
+    .sub-empty p { margin: 0; font-size: 0.95rem; }
+
+    .btn-upgrade {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 22px;
+        background: linear-gradient(135deg, #cca43b 0%, #b8922e 100%);
+        color: white;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.88rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(204, 164, 59, 0.25);
+    }
+
+    .btn-upgrade:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(204, 164, 59, 0.4);
+        color: white;
     }
 
     /* ── Actions ── */
