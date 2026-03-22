@@ -1224,6 +1224,52 @@ header.scrolled .btn-signup-nav {
     color: var(--accent-color) !important;
 }
 
+/* btn-subscription-nav (Abonelik in navbar) */
+.btn-subscription-nav {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.35rem;
+    background: linear-gradient(135deg, rgba(204, 164, 59, 0.15), rgba(204, 164, 59, 0.08)) !important;
+    border: 1.5px solid rgba(204, 164, 59, 0.55) !important;
+    color: var(--accent-color) !important;
+    padding: 0.4rem 1rem !important;
+    border-radius: 50px !important;
+    font-size: 0.88rem !important;
+    font-weight: 600 !important;
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, color 0.2s !important;
+}
+
+.btn-subscription-nav i {
+    font-size: 0.78rem;
+}
+
+.btn-subscription-nav:hover {
+    background: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+    color: var(--primary-color) !important;
+    box-shadow: 0 0 12px rgba(204, 164, 59, 0.4) !important;
+}
+
+.btn-subscription-nav::after {
+    display: none !important;
+}
+
+header.scrolled .btn-subscription-nav {
+    background: linear-gradient(135deg, rgba(204, 164, 59, 0.12), rgba(204, 164, 59, 0.05)) !important;
+    border-color: rgba(204, 164, 59, 0.6) !important;
+    color: var(--accent-color) !important;
+}
+
+header.scrolled .btn-subscription-nav:hover {
+    background: var(--accent-color) !important;
+    color: #fff !important;
+}
+
+/* Mobile drawer: subscription button */
+.nav-links .btn-subscription-nav {
+    border-color: rgba(204, 164, 59, 0.5) !important;
+}
+
 /* ── User Dropdown ── */
 .nav-user-dropdown {
     position: relative;
