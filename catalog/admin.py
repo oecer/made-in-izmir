@@ -225,11 +225,19 @@ class ProductRequestAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title_tr', 'title_en', 'producer', 'sector', 'is_active', 'created_at')
+    list_display = ('title_tr', 'title_en', 'producer', 'get_producer_company', 'sector', 'is_active', 'created_at')
     list_filter = ('is_active', 'sector', 'created_at', 'tags')
-    search_fields = ('title_tr', 'title_en', 'description_tr', 'description_en', 'producer__username')
+    search_fields = ('title_tr', 'title_en', 'description_tr', 'description_en', 'producer__username', 'tenant__company_name')
     readonly_fields = ('created_at', 'updated_at', 'photo1_preview', 'photo2_preview', 'photo3_preview')
     filter_horizontal = ('tags',)
+
+    def get_producer_company(self, obj):
+        if obj.tenant:
+            return obj.tenant.company_name
+        if hasattr(obj.producer, 'profile') and obj.producer.profile.tenant:
+            return obj.producer.profile.tenant.company_name
+        return '-'
+    get_producer_company.short_description = 'Firma'
 
     def photo1_preview(self, obj):
         if obj.photo1:
@@ -247,7 +255,7 @@ class ProductAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Producer', {
-            'fields': ('producer',)
+            'fields': ('producer', 'tenant')
         }),
         ('Sector', {
             'fields': ('sector',)
