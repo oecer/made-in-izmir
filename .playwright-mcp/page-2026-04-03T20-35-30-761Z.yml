@@ -1,0 +1,317 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - navigation "Ana navigasyon" [ref=e3]:
+      - link "Made in İzmir" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img "Made in İzmir" [ref=e6]
+      - list [ref=e7]:
+        - listitem [ref=e8]:
+          - link "Ana Sayfa" [ref=e9] [cursor=pointer]:
+            - /url: /
+        - listitem [ref=e10]:
+          - link "Neden İzmir?" [ref=e11] [cursor=pointer]:
+            - /url: /why-izmir/
+        - listitem [ref=e12]:
+          - link "Üreticiler İçin" [ref=e13] [cursor=pointer]:
+            - /url: /producers/
+        - listitem [ref=e14]:
+          - link "Alıcılar İçin" [ref=e15] [cursor=pointer]:
+            - /url: /buyers/
+        - listitem [ref=e16]:
+          - link "Fuar Takvimi" [ref=e17] [cursor=pointer]:
+            - /url: /calendar/
+        - listitem [ref=e18]:
+          - link "Hakkımızda" [ref=e19] [cursor=pointer]:
+            - /url: /about/
+        - listitem [ref=e20]:
+          - link "İletişim" [ref=e21] [cursor=pointer]:
+            - /url: /contact/
+        - listitem [ref=e22]:
+          - link "Abonelik" [ref=e23] [cursor=pointer]:
+            - /url: /subscription/
+            - generic [ref=e24]: 
+            - generic [ref=e25]: Abonelik
+        - listitem [ref=e26]:
+          - link "Giriş" [ref=e27] [cursor=pointer]:
+            - /url: /login/
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - button "Türkçe" [ref=e30] [cursor=pointer]: TR
+          - button "English" [ref=e31] [cursor=pointer]: EN
+        - button "Menüyü aç/kapat" [expanded] [active] [ref=e364] [cursor=pointer]:
+          - generic [ref=e365]: 
+  - generic [ref=e32]:
+    - generic [ref=e33]:
+      - generic [ref=e34]: 🌍 Global Ticaret Ortağınız
+      - heading "İzmir'in En Seçkin Üreticilerini Dünyayla Buluşturuyoruz" [level=1] [ref=e35]
+      - paragraph [ref=e36]: Siz işinize odaklanın, fuarları ve ihracatı bize bırakın.
+      - generic [ref=e37]:
+        - link "Hizmetlerimizi Keşfedin" [ref=e38] [cursor=pointer]:
+          - /url: "#platform"
+        - link "Bize Ulaşın" [ref=e39] [cursor=pointer]:
+          - /url: /contact/
+    - generic [ref=e41] [cursor=pointer]: 
+  - generic [ref=e43]:
+    - generic [ref=e44]:
+      - generic [ref=e45]: 500+
+      - generic [ref=e46]: Kayıtlı Ürün
+    - generic [ref=e48]:
+      - generic [ref=e49]: 200+
+      - generic [ref=e50]: Kayıtlı Üretici
+    - generic [ref=e52]:
+      - generic [ref=e53]: 50+
+      - generic [ref=e54]: Uluslararası Fuar
+    - generic [ref=e56]:
+      - generic [ref=e57]: 30+
+      - generic [ref=e58]: Hedef Ülke
+  - generic [ref=e60]:
+    - generic [ref=e61]:
+      - heading "Nasıl Çalışır?" [level=2] [ref=e62]
+      - paragraph [ref=e64]: Made in İzmir, Türkiye kaliteli üreticileri ile dünyanın dört bir yanındaki alicilari tek bir dijital cati altinda bulusturan entegre bir B2B ticaret platformudur.
+    - generic [ref=e65]:
+      - generic [ref=e66]:
+        - generic [ref=e67]: "01"
+        - generic [ref=e68]:
+          - heading "Üreticiler Katılır" [level=3] [ref=e69]
+          - paragraph [ref=e70]: Türk üreticiler platforma uye olur ve ürünlerini, hikayelerini ve iletişim bilgilerini kendi dijital profillerine ekler.
+      - generic [ref=e71]:
+        - generic [ref=e72]: "02"
+        - generic [ref=e73]:
+          - heading "Alicilar Keşfeder" [level=3] [ref=e74]
+          - paragraph [ref=e75]: Küresel alicilar platforma uye olur, sektore ve urune gore tedarikci arar ve ureticilerle dogrudan iletisime gecer.
+      - generic [ref=e76]:
+        - generic [ref=e77]: "03"
+        - generic [ref=e78]:
+          - heading "Made in İzmir Destekler" [level=3] [ref=e79]
+          - paragraph [ref=e80]: Fuar temsilciligi, lojistik danismanligı ve pazar arastirmasi hizmetleriyle her iki tarafin basarisini destekliyoruz.
+  - generic [ref=e82]:
+    - generic [ref=e84]:
+      - generic [ref=e89]: Alıcı Paneli
+      - generic [ref=e90]:
+        - generic [ref=e91]:
+          - generic [ref=e92]: 
+          - generic [ref=e93]: Ürün veya sektör ara…
+        - generic [ref=e94]:
+          - generic [ref=e100]: ✓ Onaylı
+          - generic [ref=e106]: ✓ Onaylı
+          - generic [ref=e112]: ✓ Onaylı
+    - generic [ref=e113]:
+      - generic [ref=e114]: Alıcılar İçin
+      - heading "Doğru Üreticiyi Saniyeler İçinde Bulun" [level=2] [ref=e115]
+      - paragraph [ref=e116]: Made in İzmir alıcı paneli sayesinde Türkiye'nin en kaliteli üreticilerine sektöre, ürüne ve kapasiteye göre kolayca ulaşabilirsiniz.
+      - list [ref=e117]:
+        - listitem [ref=e118]:
+          - generic [ref=e119]: 
+          - generic [ref=e120]: Sektör ve ürün tipi bazlı filtreleme
+        - listitem [ref=e121]:
+          - generic [ref=e122]: 
+          - generic [ref=e123]: Üretici profillerini ve ürün kataloglarını görüntüleme
+        - listitem [ref=e124]:
+          - generic [ref=e125]: 
+          - generic [ref=e126]: Onaylı ve güvenilir tedarikçi ağı
+        - listitem [ref=e127]:
+          - generic [ref=e128]: 
+          - generic [ref=e129]: Talepte bulunma ve numune isteme
+      - link "Alıcı Panelini Keşfet" [ref=e130] [cursor=pointer]:
+        - /url: /buyers/
+  - generic [ref=e132]:
+    - generic [ref=e133]:
+      - generic [ref=e134]: Üreticiler İçin
+      - heading "Ürünlerinizi Dünyaya Listeleyin" [level=2] [ref=e135]
+      - paragraph [ref=e136]: Made in İzmir üretici paneli ile ürünlerinizi yükleyin, fiyat ve stok bilgilerinizi güncelleyin, küresel alıcıların taleplerini yönetin.
+      - list [ref=e137]:
+        - listitem [ref=e138]:
+          - generic [ref=e139]: 
+          - generic [ref=e140]: Ürün kataloğu oluşturma ve yönetme
+        - listitem [ref=e141]:
+          - generic [ref=e142]: 
+          - generic [ref=e143]: Alıcı taleplerini ve teklifleri görüntüleme
+        - listitem [ref=e144]:
+          - generic [ref=e145]: 
+          - generic [ref=e146]: Fuar takvimi ve temsil hizmeti takibi
+        - listitem [ref=e147]:
+          - generic [ref=e148]: 
+          - generic [ref=e149]: İstatistik ve görüntülenme raporları
+      - link "Üretici Panelini Keşfet" [ref=e150] [cursor=pointer]:
+        - /url: /producers/
+    - generic [ref=e152]:
+      - generic [ref=e157]: Üretici Paneli
+      - generic [ref=e158]:
+        - generic [ref=e159]:
+          - generic [ref=e160]:
+            - generic [ref=e161]: "24"
+            - generic [ref=e162]: Ürün
+          - generic [ref=e163]:
+            - generic [ref=e164]: "138"
+            - generic [ref=e165]: Görüntülenme
+          - generic [ref=e166]:
+            - generic [ref=e167]: "7"
+            - generic [ref=e168]: Talep
+        - generic [ref=e169]:
+          - generic [ref=e175]: Aktif
+          - generic [ref=e181]: Aktif
+  - generic [ref=e183]:
+    - generic [ref=e184]:
+      - heading "Kendi E-Ticaret Sayfanız - Ücretsiz" [level=2] [ref=e185]
+      - paragraph [ref=e187]: Made in İzmir'e üye olan her üretici, kendi özel URL'sine sahip profesyonel bir dijital vitrin kazanır. Web sitesi kurmanıza gerek yok.
+    - generic [ref=e188]:
+      - generic [ref=e189]:
+        - generic [ref=e195]:
+          - generic [ref=e196]: 
+          - generic [ref=e197]: madeinizmir.com/ege-gida
+        - generic [ref=e204]: ✓ Onaylı Üretici
+      - generic [ref=e215]:
+        - generic [ref=e216]:
+          - generic [ref=e218]: 
+          - generic [ref=e219]:
+            - heading "Kişisel URL" [level=4] [ref=e220]
+            - paragraph [ref=e221]: madeinizmir.com/firma-adiniz adresinde profesyonel profiliniz anında hazır. Kartvizitinize, e-postanıza ve sosyal medyanıza ekleyin.
+        - generic [ref=e222]:
+          - generic [ref=e224]: 
+          - generic [ref=e225]:
+            - heading "Ürün Kataloğu" [level=4] [ref=e226]
+            - paragraph [ref=e227]: Ürünlerinizi fotoğraf, açıklama ve fiyat bilgisiyle sergileyin. Türkçe ve İngilizce içerik desteği ile iki dilde yayın yapın.
+        - generic [ref=e228]:
+          - generic [ref=e230]: 
+          - generic [ref=e231]:
+            - heading "Küresel Görünürlük" [level=4] [ref=e232]
+            - paragraph [ref=e233]: Profiliniz, Made in İzmir'i ziyaret eden tüm küresel alıcılara görünürdür. Ekstra pazarlama maliyeti sıfır.
+        - generic [ref=e234]:
+          - generic [ref=e236]: 
+          - generic [ref=e237]:
+            - heading "Kurulum Kolay" [level=4] [ref=e238]
+            - paragraph [ref=e239]: Kayıt olun, profilinizi doldurun - dijital vitrine sahip olun. Kod bilgisi, teknik kurulum veya aylık ücret gerekmez.
+  - generic [ref=e241]:
+    - generic [ref=e242]:
+      - heading "Sizin Yerinize Fuardayız" [level=2] [ref=e243]
+      - paragraph [ref=e245]: Dünyanın dört bir yanındaki fuarlara sizin adınıza katılıyoruz, ürünlerinizi sergiliyoruz ve doğrudan müşterilerle görüşüyoruz.
+    - generic [ref=e246]:
+      - generic [ref=e247]:
+        - generic [ref=e249]: 
+        - heading "Temsil" [level=3] [ref=e250]
+        - paragraph [ref=e251]: Profesyonel ekibimizle markanızı küresel arenada temsil ediyoruz. Stand kurulumu, müşteri görüşmeleri ve raporlama dahil.
+        - link "Daha Fazla →" [ref=e252] [cursor=pointer]:
+          - /url: /producers/
+      - generic [ref=e253]:
+        - generic [ref=e255]: 
+        - heading "Tedarik" [level=3] [ref=e256]
+        - paragraph [ref=e257]: İzmir'in en kaliteli üreticilerinden doğrudan tedarik sağlıyoruz. Kalite kontrol ve lojistik danışmanlığıyla birlikte.
+        - link "Daha Fazla →" [ref=e258] [cursor=pointer]:
+          - /url: /buyers/
+      - generic [ref=e259]:
+        - generic [ref=e261]: 
+        - heading "Global Ağ" [level=3] [ref=e262]
+        - paragraph [ref=e263]: Sürekli genişleyen fuar takvimimizle fırsatları yakalayın. 50'den fazla uluslararası fuar kapsamındayız.
+        - link "Daha Fazla →" [ref=e264] [cursor=pointer]:
+          - /url: /calendar/
+  - generic [ref=e266]:
+    - generic [ref=e267]:
+      - heading "Yaklaşan Fuarlar" [level=2] [ref=e268]
+      - paragraph [ref=e270]: Katılacağımız yaklaşan uluslararası fuarlar. Ürünlerinizin temsil edilmesi için başvurun.
+    - generic [ref=e271]:
+      - generic [ref=e272]:
+        - generic [ref=e273]:
+          - generic [ref=e275]: 
+          - generic [ref=e276]: Kayıt Açık
+        - generic [ref=e277]:
+          - heading "İzmir Enternasyonal Fuarı" [level=3] [ref=e278]
+          - generic [ref=e279]:
+            - generic [ref=e280]:
+              - generic [ref=e281]: 
+              - text: 05 May 2026 – 15 May 2026
+            - generic [ref=e282]:
+              - generic [ref=e283]: 
+              - text: İzmir Fuar Alanı, Kültürpark, Konak/İzmir
+          - paragraph [ref=e284]: Türkiye'nin en köklü fuar organizasyonu olan İzmir Enternasyonal Fuarı, yerli ve yabancı üreticileri alıcılarla buluşturmaktadır. …
+          - generic [ref=e285]:
+            - generic [ref=e286]: 
+            - generic [ref=e287]:
+              - text: "Son Başvuru:"
+              - strong [ref=e288]: 20 Nis 2026
+      - generic [ref=e289]:
+        - generic [ref=e290]:
+          - generic [ref=e292]: 
+          - generic [ref=e293]: Kayıt Açık
+        - generic [ref=e294]:
+          - heading "Ege Gıda ve İçecek Fuarı" [level=3] [ref=e295]
+          - generic [ref=e296]:
+            - generic [ref=e297]:
+              - generic [ref=e298]: 
+              - text: 04 Haz 2026 – 09 Haz 2026
+            - generic [ref=e299]:
+              - generic [ref=e300]: 
+              - text: Fuar İzmir Kongre ve Fuar Merkezi, Gaziemir/İzmir
+          - paragraph [ref=e301]: Ege Bölgesi'nin gıda üreticilerini bir araya getiren sektörel fuar. Organik ürünler, geleneksel tatlar ve yenilikçi …
+          - generic [ref=e302]:
+            - generic [ref=e303]: 
+            - generic [ref=e304]:
+              - text: "Son Başvuru:"
+              - strong [ref=e305]: 15 May 2026
+      - generic [ref=e306]:
+        - generic [ref=e307]:
+          - generic [ref=e309]: 
+          - generic [ref=e310]: Kayıt Açık
+        - generic [ref=e311]:
+          - heading "İzmir Tekstil ve Moda Fuarı" [level=3] [ref=e312]
+          - generic [ref=e313]:
+            - generic [ref=e314]:
+              - generic [ref=e315]: 
+              - text: 04 Tem 2026 – 08 Tem 2026
+            - generic [ref=e316]:
+              - generic [ref=e317]: 
+              - text: İzmir Uluslararası Fuar Merkezi, Gaziemir/İzmir
+          - paragraph [ref=e318]: Tekstil sektörünün önde gelen firmalarının katıldığı uluslararası tekstil ve moda fuarı. Kumaş, iplik, hazır giyim …
+          - generic [ref=e319]:
+            - generic [ref=e320]: 
+            - generic [ref=e321]:
+              - text: "Son Başvuru:"
+              - strong [ref=e322]: 04 Haz 2026
+    - link "Tüm Fuarları Gör" [ref=e324] [cursor=pointer]:
+      - /url: /calendar/
+  - generic [ref=e326]:
+    - generic [ref=e327]:
+      - heading "Hazır mısınız?" [level=2] [ref=e328]
+      - paragraph [ref=e329]: Küresel pazarlarda yerinizi almak için bugün başvurun.
+    - generic [ref=e330]:
+      - link "Hemen Kayıt Ol" [ref=e331] [cursor=pointer]:
+        - /url: /signup/
+      - link "Bilgi Al" [ref=e332] [cursor=pointer]:
+        - /url: /contact/
+  - contentinfo [ref=e333]:
+    - generic [ref=e334]:
+      - generic [ref=e335]:
+        - generic [ref=e336]:
+          - img "Made in İzmir" [ref=e337]
+          - paragraph [ref=e338]: "Made in İzmir: Küresel Ticaret Merkeziniz."
+          - link " WhatsApp ile Ulaşın" [ref=e339] [cursor=pointer]:
+            - /url: https://wa.me/905335567888
+            - generic [ref=e340]: 
+            - generic [ref=e341]: WhatsApp ile Ulaşın
+        - generic [ref=e342]:
+          - heading "Sayfalar" [level=4] [ref=e343]
+          - list [ref=e344]:
+            - listitem [ref=e345]:
+              - link "Üreticiler İçin" [ref=e346] [cursor=pointer]:
+                - /url: /producers/
+            - listitem [ref=e347]:
+              - link "Alıcılar İçin" [ref=e348] [cursor=pointer]:
+                - /url: /buyers/
+            - listitem [ref=e349]:
+              - link "Fuar Takvimi" [ref=e350] [cursor=pointer]:
+                - /url: /calendar/
+            - listitem [ref=e351]:
+              - link "Hakkımızda" [ref=e352] [cursor=pointer]:
+                - /url: /about/
+            - listitem [ref=e353]:
+              - link "İletişim" [ref=e354] [cursor=pointer]:
+                - /url: /contact/
+        - generic [ref=e355]:
+          - heading "Hesap" [level=4] [ref=e356]
+          - list [ref=e357]:
+            - listitem [ref=e358]:
+              - link "Giriş" [ref=e359] [cursor=pointer]:
+                - /url: /login/
+            - listitem [ref=e360]:
+              - link "Kayıt Ol" [ref=e361] [cursor=pointer]:
+                - /url: /signup/
+      - paragraph [ref=e363]: © Made in İzmir. Tüm Hakları Saklıdır.

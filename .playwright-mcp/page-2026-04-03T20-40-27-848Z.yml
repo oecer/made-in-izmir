@@ -1,0 +1,317 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - navigation "Ana navigasyon" [ref=e3]:
+      - link "Made in İzmir" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img "Made in İzmir" [ref=e6]
+      - menu [ref=e7]:
+        - listitem [ref=e8]:
+          - link "Home" [ref=e366] [cursor=pointer]:
+            - /url: /
+        - listitem [ref=e10]:
+          - link "Why Izmir?" [ref=e367] [cursor=pointer]:
+            - /url: /why-izmir/
+        - listitem [ref=e12]:
+          - link "For Producers" [ref=e368] [cursor=pointer]:
+            - /url: /producers/
+        - listitem [ref=e14]:
+          - link "For Buyers" [ref=e369] [cursor=pointer]:
+            - /url: /buyers/
+        - listitem [ref=e16]:
+          - link "Expo Calendar" [ref=e370] [cursor=pointer]:
+            - /url: /calendar/
+        - listitem [ref=e18]:
+          - link "About Us" [ref=e371] [cursor=pointer]:
+            - /url: /about/
+        - listitem [ref=e20]:
+          - link "Contact" [ref=e372] [cursor=pointer]:
+            - /url: /contact/
+        - listitem [ref=e22]:
+          - link "Abonelik" [ref=e23] [cursor=pointer]:
+            - /url: /subscription/
+            - generic [ref=e24]: 
+            - generic [ref=e25]: Abonelik
+        - listitem [ref=e26]:
+          - link "Login" [ref=e373] [cursor=pointer]:
+            - /url: /login/
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - button "Türkçe" [ref=e30] [cursor=pointer]: TR
+          - button "English" [active] [ref=e31] [cursor=pointer]: EN
+        - button "Menüyü aç/kapat" [ref=e32] [cursor=pointer]:
+          - generic [ref=e33]: 
+  - generic [ref=e34]:
+    - generic [ref=e35]:
+      - generic [ref=e36]: 🌍 Your Global Trade Partner
+      - heading "Connecting Izmir’s Finest Producers with the World" [level=1] [ref=e374]
+      - paragraph [ref=e38]: We go to trade shows so you don't have to.
+      - generic [ref=e39]:
+        - link "Explore Our Services" [ref=e375] [cursor=pointer]:
+          - /url: "#platform"
+        - link "Contact Us" [ref=e376] [cursor=pointer]:
+          - /url: /contact/
+    - generic [ref=e43] [cursor=pointer]: 
+  - generic [ref=e45]:
+    - generic [ref=e46]:
+      - generic [ref=e47]: 500+
+      - generic [ref=e48]: Kayıtlı Ürün
+    - generic [ref=e50]:
+      - generic [ref=e51]: 200+
+      - generic [ref=e52]: Registered Producers
+    - generic [ref=e54]:
+      - generic [ref=e55]: 50+
+      - generic [ref=e56]: International Expos
+    - generic [ref=e58]:
+      - generic [ref=e59]: 30+
+      - generic [ref=e60]: Target Countries
+  - generic [ref=e62]:
+    - generic [ref=e63]:
+      - heading "How It Works" [level=2] [ref=e377]
+      - paragraph [ref=e66]: Made in Izmir is an integrated B2B trade platform - connecting Turkey's quality producers with buyers worldwide under one digital roof.
+    - generic [ref=e67]:
+      - generic [ref=e68]:
+        - generic [ref=e69]: "01"
+        - generic [ref=e70]:
+          - heading "Producers Join" [level=3] [ref=e378]
+          - paragraph [ref=e72]: Turkish producers sign up and add their products, story, and contact information to their own digital profile.
+      - generic [ref=e73]:
+        - generic [ref=e74]: "02"
+        - generic [ref=e75]:
+          - heading "Buyers Discover" [level=3] [ref=e379]
+          - paragraph [ref=e77]: Global buyers register, search for suppliers by sector and product, and contact producers directly.
+      - generic [ref=e78]:
+        - generic [ref=e79]: "03"
+        - generic [ref=e80]:
+          - heading "Made in Izmir Supports" [level=3] [ref=e380]
+          - paragraph [ref=e82]: We support the success of both parties with expo representation, logistics consulting, and market research services.
+  - generic [ref=e84]:
+    - generic [ref=e86]:
+      - generic [ref=e91]: Buyer Panel
+      - generic [ref=e92]:
+        - generic [ref=e93]:
+          - generic [ref=e94]: 
+          - generic [ref=e95]: Search product or sector…
+        - generic [ref=e96]:
+          - generic [ref=e102]: ✓ Verified
+          - generic [ref=e108]: ✓ Verified
+          - generic [ref=e114]: ✓ Verified
+    - generic [ref=e115]:
+      - generic [ref=e116]: For Buyers
+      - heading "Find the Right Producer in Seconds" [level=2] [ref=e381]
+      - paragraph [ref=e118]: With the Made in Izmir buyer panel, you can easily access Turkey's finest producers filtered by sector, product type, and capacity.
+      - list [ref=e119]:
+        - listitem [ref=e120]:
+          - generic [ref=e121]: 
+          - generic [ref=e122]: Filter by sector and product type
+        - listitem [ref=e123]:
+          - generic [ref=e124]: 
+          - generic [ref=e125]: View producer profiles and product catalogs
+        - listitem [ref=e126]:
+          - generic [ref=e127]: 
+          - generic [ref=e128]: Approved and trusted supplier network
+        - listitem [ref=e129]:
+          - generic [ref=e130]: 
+          - generic [ref=e131]: Submit inquiries and request samples
+      - link "Explore Buyer Panel" [ref=e382] [cursor=pointer]:
+        - /url: /buyers/
+  - generic [ref=e134]:
+    - generic [ref=e135]:
+      - generic [ref=e136]: For Producers
+      - heading "List Your Products to the World" [level=2] [ref=e383]
+      - paragraph [ref=e138]: With the Made in İzmir producer panel, upload your products, update prices and stock, and manage global buyer inquiries - all from one dashboard.
+      - list [ref=e139]:
+        - listitem [ref=e140]:
+          - generic [ref=e141]: 
+          - generic [ref=e142]: Create and manage product catalog
+        - listitem [ref=e143]:
+          - generic [ref=e144]: 
+          - generic [ref=e145]: View buyer requests and offers
+        - listitem [ref=e146]:
+          - generic [ref=e147]: 
+          - generic [ref=e148]: Track expo calendar and representation service
+        - listitem [ref=e149]:
+          - generic [ref=e150]: 
+          - generic [ref=e151]: Statistics and view reports
+      - link "Explore Producer Panel" [ref=e384] [cursor=pointer]:
+        - /url: /producers/
+    - generic [ref=e154]:
+      - generic [ref=e159]: Producer Panel
+      - generic [ref=e160]:
+        - generic [ref=e161]:
+          - generic [ref=e162]:
+            - generic [ref=e163]: "24"
+            - generic [ref=e164]: Products
+          - generic [ref=e165]:
+            - generic [ref=e166]: "138"
+            - generic [ref=e167]: Views
+          - generic [ref=e168]:
+            - generic [ref=e169]: "7"
+            - generic [ref=e170]: Requests
+        - generic [ref=e171]:
+          - generic [ref=e177]: Active
+          - generic [ref=e183]: Active
+  - generic [ref=e185]:
+    - generic [ref=e186]:
+      - heading "Your Own E-Commerce Page - Free" [level=2] [ref=e385]
+      - paragraph [ref=e189]: Every producer who joins Made in Izmir gets a professional digital storefront with their own unique URL. No website required.
+    - generic [ref=e190]:
+      - generic [ref=e191]:
+        - generic [ref=e197]:
+          - generic [ref=e198]: 
+          - generic [ref=e199]: madeinizmir.com/firma-adiniz
+        - generic [ref=e206]: ✓ Verified Producer
+      - generic [ref=e217]:
+        - generic [ref=e218]:
+          - generic [ref=e220]: 
+          - generic [ref=e221]:
+            - heading "Personal URL" [level=4] [ref=e386]
+            - paragraph [ref=e223]: madeinizmir.com/your-company - your professional profile is instantly ready. Add it to your business card, email signature, and social media.
+        - generic [ref=e224]:
+          - generic [ref=e226]: 
+          - generic [ref=e227]:
+            - heading "Product Catalog" [level=4] [ref=e387]
+            - paragraph [ref=e229]: "Showcase your products with photos, descriptions, and pricing. Dual-language support: publish in both Turkish and English."
+        - generic [ref=e230]:
+          - generic [ref=e232]: 
+          - generic [ref=e233]:
+            - heading "Global Visibility" [level=4] [ref=e388]
+            - paragraph [ref=e235]: Your profile is visible to all global buyers visiting Made in Izmir. Zero extra marketing cost.
+        - generic [ref=e236]:
+          - generic [ref=e238]: 
+          - generic [ref=e239]:
+            - heading "Easy Setup" [level=4] [ref=e389]
+            - paragraph [ref=e241]: Sign up, fill in your profile - and your digital storefront is ready. No coding, technical setup, or monthly fees required.
+  - generic [ref=e243]:
+    - generic [ref=e244]:
+      - heading "The Expo Proxy Service" [level=2] [ref=e390]
+      - paragraph [ref=e247]: We attend trade shows around the world on your behalf, showcasing your products and meeting directly with potential clients.
+    - generic [ref=e248]:
+      - generic [ref=e249]:
+        - generic [ref=e251]: 
+        - heading "Representation" [level=3] [ref=e391]
+        - paragraph [ref=e253]: Our professional team represents your brand in the global arena. Includes booth setup, client meetings, and reporting.
+        - link "Learn More →" [ref=e392] [cursor=pointer]:
+          - /url: /producers/
+      - generic [ref=e255]:
+        - generic [ref=e257]: 
+        - heading "Sourcing" [level=3] [ref=e393]
+        - paragraph [ref=e259]: We source directly from Izmir's finest producers, with quality control and logistics consulting included.
+        - link "Learn More →" [ref=e394] [cursor=pointer]:
+          - /url: /buyers/
+      - generic [ref=e261]:
+        - generic [ref=e263]: 
+        - heading "Global Network" [level=3] [ref=e395]
+        - paragraph [ref=e265]: Seize opportunities with our ever-growing expo calendar. We cover over 50 international trade shows.
+        - link "Learn More →" [ref=e396] [cursor=pointer]:
+          - /url: /calendar/
+  - generic [ref=e268]:
+    - generic [ref=e269]:
+      - heading "Upcoming Expos" [level=2] [ref=e397]
+      - paragraph [ref=e272]: International trade shows we are attending. Apply to have your products represented.
+    - generic [ref=e273]:
+      - generic [ref=e274]:
+        - generic [ref=e275]:
+          - generic [ref=e277]: 
+          - generic [ref=e278]: Kayıt Açık
+        - generic [ref=e279]:
+          - heading "İzmir Enternasyonal Fuarı" [level=3] [ref=e280]
+          - generic [ref=e281]:
+            - generic [ref=e282]:
+              - generic [ref=e283]: 
+              - text: 05 May 2026 – 15 May 2026
+            - generic [ref=e284]:
+              - generic [ref=e285]: 
+              - text: İzmir Fuar Alanı, Kültürpark, Konak/İzmir
+          - paragraph [ref=e286]: Türkiye'nin en köklü fuar organizasyonu olan İzmir Enternasyonal Fuarı, yerli ve yabancı üreticileri alıcılarla buluşturmaktadır. …
+          - generic [ref=e287]:
+            - generic [ref=e288]: 
+            - generic [ref=e289]:
+              - text: "Son Başvuru:"
+              - strong [ref=e290]: 20 Nis 2026
+      - generic [ref=e291]:
+        - generic [ref=e292]:
+          - generic [ref=e294]: 
+          - generic [ref=e295]: Kayıt Açık
+        - generic [ref=e296]:
+          - heading "Ege Gıda ve İçecek Fuarı" [level=3] [ref=e297]
+          - generic [ref=e298]:
+            - generic [ref=e299]:
+              - generic [ref=e300]: 
+              - text: 04 Haz 2026 – 09 Haz 2026
+            - generic [ref=e301]:
+              - generic [ref=e302]: 
+              - text: Fuar İzmir Kongre ve Fuar Merkezi, Gaziemir/İzmir
+          - paragraph [ref=e303]: Ege Bölgesi'nin gıda üreticilerini bir araya getiren sektörel fuar. Organik ürünler, geleneksel tatlar ve yenilikçi …
+          - generic [ref=e304]:
+            - generic [ref=e305]: 
+            - generic [ref=e306]:
+              - text: "Son Başvuru:"
+              - strong [ref=e307]: 15 May 2026
+      - generic [ref=e308]:
+        - generic [ref=e309]:
+          - generic [ref=e311]: 
+          - generic [ref=e312]: Kayıt Açık
+        - generic [ref=e313]:
+          - heading "İzmir Tekstil ve Moda Fuarı" [level=3] [ref=e314]
+          - generic [ref=e315]:
+            - generic [ref=e316]:
+              - generic [ref=e317]: 
+              - text: 04 Tem 2026 – 08 Tem 2026
+            - generic [ref=e318]:
+              - generic [ref=e319]: 
+              - text: İzmir Uluslararası Fuar Merkezi, Gaziemir/İzmir
+          - paragraph [ref=e320]: Tekstil sektörünün önde gelen firmalarının katıldığı uluslararası tekstil ve moda fuarı. Kumaş, iplik, hazır giyim …
+          - generic [ref=e321]:
+            - generic [ref=e322]: 
+            - generic [ref=e323]:
+              - text: "Son Başvuru:"
+              - strong [ref=e324]: 04 Haz 2026
+    - link "View All Expos" [ref=e398] [cursor=pointer]:
+      - /url: /calendar/
+  - generic [ref=e328]:
+    - generic [ref=e329]:
+      - heading "Ready to grow?" [level=2] [ref=e399]
+      - paragraph [ref=e331]: Register today to secure your spot in global markets.
+    - generic [ref=e332]:
+      - link "Sign Up Now" [ref=e400] [cursor=pointer]:
+        - /url: /signup/
+      - link "Learn More" [ref=e401] [cursor=pointer]:
+        - /url: /contact/
+  - contentinfo [ref=e335]:
+    - generic [ref=e336]:
+      - generic [ref=e337]:
+        - generic [ref=e338]:
+          - img "Made in İzmir" [ref=e339]
+          - paragraph [ref=e340]: "Made in Izmir: Your Global Trade Hub."
+          - link " Contact on WhatsApp" [ref=e402] [cursor=pointer]:
+            - /url: https://wa.me/905335567888
+            - generic [ref=e342]: 
+            - generic [ref=e343]: Contact on WhatsApp
+        - generic [ref=e344]:
+          - heading "Pages" [level=4] [ref=e403]
+          - list [ref=e346]:
+            - listitem [ref=e347]:
+              - link "For Producers" [ref=e404] [cursor=pointer]:
+                - /url: /producers/
+            - listitem [ref=e349]:
+              - link "For Buyers" [ref=e405] [cursor=pointer]:
+                - /url: /buyers/
+            - listitem [ref=e351]:
+              - link "Expo Calendar" [ref=e406] [cursor=pointer]:
+                - /url: /calendar/
+            - listitem [ref=e353]:
+              - link "About Us" [ref=e407] [cursor=pointer]:
+                - /url: /about/
+            - listitem [ref=e355]:
+              - link "Contact" [ref=e408] [cursor=pointer]:
+                - /url: /contact/
+        - generic [ref=e357]:
+          - heading "Account" [level=4] [ref=e409]
+          - list [ref=e359]:
+            - listitem [ref=e360]:
+              - link "Login" [ref=e410] [cursor=pointer]:
+                - /url: /login/
+            - listitem [ref=e362]:
+              - link "Sign Up" [ref=e411] [cursor=pointer]:
+                - /url: /signup/
+      - paragraph [ref=e365]: © Made in Izmir. All Rights Reserved.

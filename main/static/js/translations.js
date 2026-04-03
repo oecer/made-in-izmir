@@ -1990,26 +1990,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Update aria-expanded for mobile menu
+    // Mobile drawer
     const mobileMenu = document.getElementById('mobile-menu');
     const navLinks = document.querySelector('.nav-links');
+    const navOverlay = document.getElementById('nav-overlay');
+
+    function openDrawer() {
+        navLinks.classList.add('active');
+        if (navOverlay) navOverlay.classList.add('active');
+        mobileMenu.setAttribute('aria-expanded', 'true');
+        mobileMenu.querySelector('i').className = 'fas fa-xmark';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+        navLinks.classList.remove('active');
+        if (navOverlay) navOverlay.classList.remove('active');
+        mobileMenu.setAttribute('aria-expanded', 'false');
+        mobileMenu.querySelector('i').className = 'fas fa-bars';
+        document.body.style.overflow = '';
+    }
 
     if (mobileMenu && navLinks) {
         mobileMenu.addEventListener('click', () => {
-            const isOpen = navLinks.classList.toggle('active');
-            mobileMenu.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-            mobileMenu.querySelector('i').classList.toggle('fa-bars');
-            mobileMenu.querySelector('i').classList.toggle('fa-xmark');
+            navLinks.classList.contains('active') ? closeDrawer() : openDrawer();
         });
 
-        // Close menu when clicking a link
+        if (navOverlay) navOverlay.addEventListener('click', closeDrawer);
+
+        // Close on link click
         navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                mobileMenu.setAttribute('aria-expanded', 'false');
-                mobileMenu.querySelector('i').classList.add('fa-bars');
-                mobileMenu.querySelector('i').classList.remove('fa-xmark');
-            });
+            link.addEventListener('click', closeDrawer);
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeDrawer();
         });
     }
 
