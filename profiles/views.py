@@ -45,10 +45,10 @@ def company_profile_view(request, company_username):
 
     gallery_photos = tenant.gallery_photos.all()
 
-    # Base showroom products for this tenant
-    base_products = Product.objects.filter(tenant=tenant, is_active=True, in_showroom=True)
+    # Base products for this tenant
+    base_products = Product.objects.filter(tenant=tenant, is_active=True)
 
-    # Collect available sectors and tags from this tenant's showroom products
+    # Collect available sectors and tags from this tenant's products
     from catalog.models import Sector, ProductTag
     available_sectors = Sector.objects.filter(products__in=base_products).distinct().order_by('name_tr')
     available_tags = ProductTag.objects.filter(products__in=base_products).distinct().order_by('name_tr')
