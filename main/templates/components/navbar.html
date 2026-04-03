@@ -1,8 +1,11 @@
+{% load static %}
 <!-- Header / Navigation -->
 <header id="header">
     <nav class="navbar-fullwidth" role="navigation" aria-label="Ana navigasyon">
             <div class="logo">
-                <a href="{% url 'main:index' %}" style="text-decoration: none; color: inherit;">Made in İzmir</a>
+                <a href="{% url 'main:index' %}" style="text-decoration: none; color: inherit;">
+                    <img src="{% static 'images/navbar_logo.png' %}" alt="Made in İzmir" style="height: 40px; width: auto;">
+                </a>
             </div>
 
             <ul class="nav-links" id="nav-links">

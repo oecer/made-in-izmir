@@ -1,10 +1,11 @@
+{% load static %}
 <!-- Footer -->
 <footer>
     <div class="container footer-content">
         <div class="footer-grid">
             <!-- Brand Column -->
             <div class="footer-brand">
-                <h3 class="logo footer-logo">Made in İzmir</h3>
+                <img src="{% static 'images/footer_logo.png' %}" alt="Made in İzmir" class="footer-logo" style="height: 100px; width: auto; max-width: 100%; object-fit: contain; align-self: flex-start; margin-top: -5px; margin-bottom: 0.5rem; display: block;">
                 <p class="footer-tagline" data-i18n="footer.desc">Made in İzmir: Küresel Ticaret Merkeziniz.</p>
                 <a href="https://wa.me/905335567888" class="footer-whatsapp" target="_blank" rel="noopener noreferrer">
                     <i class="fab fa-whatsapp"></i>
