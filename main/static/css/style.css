@@ -217,7 +217,7 @@ nav {
 }
 
 header.scrolled .logo {
-    color: var(--primary-color);
+    color: var(--text-light);
 }
 
 .nav-links {
@@ -251,7 +251,7 @@ header.scrolled .logo {
 }
 
 header.scrolled .nav-links li a {
-    color: var(--primary-color);
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .btn-dashboard-nav,
@@ -303,7 +303,7 @@ header.scrolled .btn-logout-nav:hover {
 }
 
 header.scrolled .lang-switch {
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .lang-btn {
@@ -325,12 +325,12 @@ header.scrolled .lang-switch {
 }
 
 header.scrolled .lang-btn {
-    color: var(--primary-color);
+    color: rgba(255, 255, 255, 0.8);
 }
 
 header.scrolled .lang-btn.active {
-    background-color: var(--primary-color);
-    color: var(--text-light);
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
 }
 
 /* Hero Section */
@@ -1400,13 +1400,13 @@ header.scrolled .btn-subscription-nav:hover {
 }
 
 header.scrolled .nav-user-btn {
-    background: rgba(15,23,42,0.07);
-    border-color: rgba(15,23,42,0.15);
-    color: var(--primary-color);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: var(--text-light);
 }
 
 header.scrolled .nav-user-btn:hover {
-    background: rgba(15,23,42,0.12);
+    background: rgba(255, 255, 255, 0.15);
 }
 
 @keyframes dropdownFadeIn {
@@ -1416,28 +1416,73 @@ header.scrolled .nav-user-btn:hover {
 
 /* Mobile: flatten dropdown */
 @media (max-width: 768px) {
+    .nav-user-dropdown {
+        display: flex;
+        flex-direction: column;
+    }
+
     .nav-user-btn {
         background: transparent;
         border: none;
-        padding: 0;
-        color: rgba(255,255,255,0.9);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: 0;
+        padding: 0.85rem 1.5rem;
+        color: rgba(255, 255, 255, 0.78);
+        width: 100%;
+        justify-content: flex-start;
+        font-size: 0.95rem;
     }
-    .nav-user-avatar { width: 32px; height: 32px; font-size: 0.75rem; }
+
+    .nav-user-btn:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.04);
+    }
+
+    .nav-user-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+    }
+
     .nav-user-menu {
         position: static;
+        display: none;
+        flex-direction: column;
         box-shadow: none;
         border: none;
-        background: transparent;
+        background: rgba(0, 0, 0, 0.2);
         padding: 0;
         animation: none;
+        width: 100%;
     }
-    .nav-user-menu.open { display: block; }
+
+    .nav-user-menu.open {
+        display: flex;
+    }
+
+    .nav-user-menu li {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        margin: 0;
+    }
+
     .nav-user-menu li a {
-        color: rgba(255,255,255,0.85);
-        padding: 6px 0 6px 12px;
+        color: rgba(255, 255, 255, 0.7);
+        padding: 0.75rem 1.5rem 0.75rem 2.5rem;
+        font-size: 0.9rem;
+        border-bottom: none;
     }
-    .nav-user-menu li a:hover { background: rgba(255,255,255,0.08); }
-    .nav-user-menu li a i { color: #cca43b; }
+
+    .nav-user-menu li a:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+        padding-left: 3rem;
+    }
+
+    .nav-user-menu li a i {
+        color: #cca43b;
+        width: 16px;
+    }
 }
 
 /* nav-right: wraps lang-switch + hamburger cleanly */
@@ -1571,8 +1616,9 @@ header.scrolled .nav-user-btn:hover {
 
     /* ── Subscription pill ── */
     .nav-links li:has(.btn-subscription-nav) {
-        padding: 0.75rem 1.25rem 0.25rem;
+        padding: 0.75rem 1.25rem;
         border-bottom: none;
+        overflow: visible;
     }
 
     .nav-links .btn-subscription-nav {
@@ -1580,12 +1626,16 @@ header.scrolled .nav-user-btn:hover {
         justify-content: center;
         padding: 0.7rem 1.25rem !important;
         border-radius: 10px !important;
-        border-color: rgba(204, 164, 59, 0.4) !important;
+        border: 1px solid rgba(204, 164, 59, 0.4) !important;
         background: rgba(204, 164, 59, 0.08) !important;
         color: var(--accent-color) !important;
         font-weight: 600 !important;
         font-size: 0.9rem !important;
-        border-bottom: none !important;
+        box-shadow: none !important;
+    }
+
+    .nav-links .btn-subscription-nav::after {
+        display: none !important;
     }
 
     .nav-links .btn-subscription-nav:hover {
@@ -1597,8 +1647,9 @@ header.scrolled .nav-user-btn:hover {
     /* ── Login / Dashboard CTA ── */
     .nav-links li:has(.btn-login-nav),
     .nav-links li:has(.btn-dashboard-nav) {
-        padding: 0.25rem 1.25rem 0.75rem;
+        padding: 0 1.25rem 0.75rem;
         border-bottom: none;
+        overflow: visible;
     }
 
     .nav-links .btn-login-nav,
@@ -1609,9 +1660,15 @@ header.scrolled .nav-user-btn:hover {
         border-radius: 10px !important;
         font-weight: 600 !important;
         font-size: 0.9rem !important;
-        border-bottom: none !important;
+        border: none !important;
+        box-shadow: none !important;
         background: var(--accent-color) !important;
         color: var(--primary-color) !important;
+    }
+
+    .nav-links .btn-login-nav::after,
+    .nav-links .btn-dashboard-nav::after {
+        display: none !important;
     }
 
     .nav-links .btn-login-nav:hover,
