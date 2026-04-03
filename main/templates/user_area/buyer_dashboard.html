@@ -65,9 +65,13 @@
 
 <!-- Products Browse -->
 <div class="products-section dashboard-card">
-    <!-- Section Header + Filter Toolbar -->
+    <!-- Section Header -->
     <div class="section-title-area animate-fade-up">
         <h2 data-i18n="dashboard.available_products">Mevcut Ürünler</h2>
+    </div>
+
+    <!-- Filter Toolbar Row -->
+    <div class="filter-toolbar-row animate-fade-up">
         <div class="filter-toolbar">
             <!-- All filters live inside ONE form so everything is submitted together -->
             <form id="filter-form" method="GET" class="filter-form-inline">
@@ -77,7 +81,7 @@
                 {% endif %}
 
                 <!-- Sector Multiselect -->
-                <div class="filter-group ms-dropdown" id="sector-ms">
+                <div class="filter-group ms-dropdown {% if current_filters.sector %}has-selection{% endif %}" id="sector-ms">
                     <div class="filter-icon"><i class="fas fa-industry"></i></div>
                     <div class="ms-toggle">
                         <span data-i18n="dashboard.filter_sector">Sektör</span>
@@ -94,7 +98,7 @@
                 </div>
 
                 <!-- Tag Multiselect -->
-                <div class="filter-group ms-dropdown" id="tag-ms">
+                <div class="filter-group ms-dropdown {% if current_filters.tag %}has-selection{% endif %}" id="tag-ms">
                     <div class="filter-icon"><i class="fas fa-tags"></i></div>
                     <div class="ms-toggle">
                         <span data-i18n="dashboard.filter_tag">Etiket</span>
@@ -111,7 +115,7 @@
                 </div>
 
                 <!-- Producer Multiselect -->
-                <div class="filter-group ms-dropdown" id="producer-ms">
+                <div class="filter-group ms-dropdown {% if current_filters.producer %}has-selection{% endif %}" id="producer-ms">
                     <div class="filter-icon"><i class="fas fa-user-tie"></i></div>
                     <div class="ms-toggle">
                         <span data-i18n="dashboard.filter_producer">Üretici</span>
