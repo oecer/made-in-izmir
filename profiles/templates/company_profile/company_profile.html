@@ -97,7 +97,7 @@
             </div>
 
             <div class="cp-hero-cta">
-                {% if products or available_sectors or available_tags %}
+                {% if page_obj or available_sectors or available_tags %}
                 <a href="#section-products" class="cp-hero-btn cp-hero-btn--primary">
                     <i class="fas fa-box-open"></i>
                     <span data-i18n="company.products">Ürünler</span>
@@ -126,7 +126,7 @@
 <!-- ═══════════════════════════════════════════════════════════
      PRODUCTS
      ═══════════════════════════════════════════════════════════ -->
-{% if products or available_sectors or available_tags %}
+{% if page_obj or available_sectors or available_tags %}
 <section id="section-products" class="cp-section cp-section-alt">
     <div class="cp-container">
         <div class="cp-section-header">
@@ -186,9 +186,9 @@
 
             <!-- ── Product Grid ── -->
             <div class="cp-products-main">
-                {% if products %}
+                {% if page_obj %}
                 <div class="cp-products-grid">
-                    {% for product in products %}
+                    {% for product in page_obj %}
                     <a href="{% url 'catalog:product_detail' product.id %}" class="cp-product-card">
                         <div class="cp-product-image">
                             {% if product.photo1 %}
@@ -218,6 +218,73 @@
                     </a>
                     {% endfor %}
                 </div>
+
+                <!-- ── Pagination ── -->
+                {% if paginator.num_pages > 1 %}
+                <nav class="cp-pagination" aria-label="Ürün sayfaları">
+                    <ul class="cp-pagination-list">
+
+                        <!-- Previous -->
+                        {% if page_obj.has_previous %}
+                        <li class="cp-pagination-item">
+                            <a class="cp-pagination-link cp-pagination-prev"
+                               href="?page={{ page_obj.previous_page_number }}{% for s in selected_sector_ids %}&sector={{ s }}{% endfor %}{% for t in selected_tag_ids %}&tag={{ t }}{% endfor %}"
+                               aria-label="Önceki sayfa">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="cp-pagination-item cp-pagination-item--disabled">
+                            <span class="cp-pagination-link cp-pagination-prev" aria-disabled="true">
+                                <i class="fas fa-chevron-left"></i>
+                            </span>
+                        </li>
+                        {% endif %}
+
+                        <!-- Page numbers -->
+                        {% for num in paginator.page_range %}
+                            {% if page_obj.number == num %}
+                            <li class="cp-pagination-item cp-pagination-item--active">
+                                <span class="cp-pagination-link" aria-current="page">{{ num }}</span>
+                            </li>
+                            {% elif num == 1 or num == paginator.num_pages or num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
+                            <li class="cp-pagination-item">
+                                <a class="cp-pagination-link"
+                                   href="?page={{ num }}{% for s in selected_sector_ids %}&sector={{ s }}{% endfor %}{% for t in selected_tag_ids %}&tag={{ t }}{% endfor %}">
+                                    {{ num }}
+                                </a>
+                            </li>
+                            {% elif num == page_obj.number|add:"-3" or num == page_obj.number|add:"3" %}
+                            <li class="cp-pagination-item cp-pagination-item--ellipsis">
+                                <span class="cp-pagination-link">…</span>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        <!-- Next -->
+                        {% if page_obj.has_next %}
+                        <li class="cp-pagination-item">
+                            <a class="cp-pagination-link cp-pagination-next"
+                               href="?page={{ page_obj.next_page_number }}{% for s in selected_sector_ids %}&sector={{ s }}{% endfor %}{% for t in selected_tag_ids %}&tag={{ t }}{% endfor %}"
+                               aria-label="Sonraki sayfa">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="cp-pagination-item cp-pagination-item--disabled">
+                            <span class="cp-pagination-link cp-pagination-next" aria-disabled="true">
+                                <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </li>
+                        {% endif %}
+
+                    </ul>
+                    <p class="cp-pagination-info">
+                        {{ page_obj.start_index }}–{{ page_obj.end_index }} / {{ paginator.count }} ürün
+                    </p>
+                </nav>
+                {% endif %}
+
                 {% else %}
                 <div class="cp-empty">
                     <i class="fas fa-box-open"></i>

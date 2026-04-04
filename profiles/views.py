@@ -45,10 +45,10 @@ def company_profile_view(request, company_username):
 
     gallery_photos = tenant.gallery_photos.all()
 
-    # Base showroom products for this tenant
-    base_products = Product.objects.filter(tenant=tenant, is_active=True, in_showroom=True)
+    # Base products for this tenant
+    base_products = Product.objects.filter(tenant=tenant, is_active=True)
 
-    # Collect available sectors and tags from this tenant's showroom products
+    # Collect available sectors and tags from this tenant's products
     from catalog.models import Sector, ProductTag
     available_sectors = Sector.objects.filter(products__in=base_products).distinct().order_by('name_tr')
     available_tags = ProductTag.objects.filter(products__in=base_products).distinct().order_by('name_tr')
@@ -73,6 +73,15 @@ def company_profile_view(request, company_username):
 
     products = products.distinct().order_by('-created_at')
 
+    from django.core.paginator import Paginator
+    paginator = Paginator(products, 12)
+    page_number = request.GET.get('page', 1)
+    try:
+        page_number = int(page_number)
+    except (ValueError, TypeError):
+        page_number = 1
+    page_obj = paginator.get_page(page_number)
+
     is_preview_for_producer = visitor_is_producer and not tenant.show_company_profile
 
     is_madeinizmir_user = False
@@ -86,7 +95,9 @@ def company_profile_view(request, company_username):
     context = {
         'tenant': tenant,
         'gallery_photos': gallery_photos,
-        'products': products,
+        'products': page_obj,
+        'page_obj': page_obj,
+        'paginator': paginator,
         'is_tenant_admin': is_tenant_admin,
         'has_pending_logo': has_pending_logo,
         'pending_photo_count': pending_photo_count,

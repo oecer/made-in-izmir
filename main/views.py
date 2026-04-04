@@ -76,8 +76,31 @@ def why_izmir(request):
 
 
 def producers(request):
-    """Producers page view"""
-    return render(request, 'producers.html')
+    """Producers page view — passes active subscription plans and live campaigns."""
+    from subscriptions.models import SubscriptionPlan, PlanCampaign
+    from django.utils import timezone as tz
+
+    plans = list(SubscriptionPlan.objects.filter(is_active=True).order_by('display_order', 'monthly_price'))
+    today = tz.now().date()
+    active_campaigns = PlanCampaign.objects.filter(
+        is_active=True,
+        valid_from__lte=today,
+        valid_until__gte=today,
+    ).select_related('plan')
+
+    # Build a dict: plan_id -> campaign for easy lookup in template
+    campaign_by_plan = {c.plan_id: c for c in active_campaigns}
+
+    # Only the most expensive plan gets the "featured" treatment
+    paid_plans = [p for p in plans if p.monthly_price]
+    featured_plan_id = max(paid_plans, key=lambda p: p.monthly_price).id if paid_plans else None
+
+    return render(request, 'producers.html', {
+        'plans': plans,
+        'campaign_by_plan': campaign_by_plan,
+        'featured_plan_id': featured_plan_id,
+        'today': today,
+    })
 
 
 def buyers(request):

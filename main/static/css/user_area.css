@@ -402,11 +402,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 16px;
     flex-wrap: wrap;
     gap: 20px;
     border-bottom: 1px solid #f1f5f9;
-    padding-bottom: 25px;
+    padding-bottom: 16px;
     position: relative;
     z-index: 20;
 }
@@ -693,6 +693,14 @@
    FILTER TOOLBAR (Multi-Select Dropdowns)
    ============================================ */
 
+.filter-toolbar-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 20;
+}
+
 .filter-toolbar {
     background: #f8fafc;
     padding: 6px;
@@ -700,12 +708,14 @@
     border: 1px solid #e2e8f0;
     position: relative;
     z-index: 30;
+    width: 100%;
 }
 
 .filter-form-inline {
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-wrap: wrap;
 }
 
 .filter-group {
@@ -1130,12 +1140,9 @@ textarea.form-control {
    ============================================ */
 
 @media (max-width: 992px) {
-    .filter-form-inline {
-        flex-wrap: wrap;
-    }
-
-    .filter-group {
-        flex: 1;
+    .filter-group.ms-dropdown {
+        flex: 1 1 auto;
+        min-width: 160px;
     }
 }
 
@@ -1392,22 +1399,23 @@ textarea.form-control {
 }
 
 /* ============================================
-   MOBILE - FILTER TOOLBAR OVERFLOW FIX
+   MOBILE - FILTER TOOLBAR RESPONSIVE
    ============================================ */
 
-@media (max-width: 576px) {
-    .filter-toolbar {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
+@media (max-width: 768px) {
     .filter-form-inline {
-        flex-wrap: nowrap;
-        min-width: max-content;
+        gap: 8px;
     }
 
     .filter-group.ms-dropdown {
-        min-width: 140px;
+        min-width: 0;
+        flex: 1 1 calc(50% - 8px);
+    }
+}
+
+@media (max-width: 480px) {
+    .filter-group.ms-dropdown {
+        flex: 1 1 100%;
     }
 }
 
@@ -1682,10 +1690,6 @@ textarea.form-control {
     .btn-add-inline {
         width: 100%;
         justify-content: center;
-    }
-
-    .filter-toolbar {
-        width: 100%;
     }
 
     .products-count-badge {

@@ -196,6 +196,52 @@ def buyer_dashboard_view(request):
         return redirect('main:index')
 
 
+def all_products_view(request):
+    """Public showcase of all active products - visible to everyone, no login required.
+    Product names and producer names are blurred; shows image, sector, tags and city."""
+    from django.db.models import Q, Count
+
+    tag_filters = [int(t) for t in request.GET.getlist('tag') if t.isdigit()]
+    sector_filters = [int(s) for s in request.GET.getlist('sector') if s.isdigit()]
+
+    products_qs = Product.objects.filter(is_active=True).select_related('sector', 'tenant').prefetch_related('tags')
+
+    if sector_filters:
+        products_qs = products_qs.filter(sector_id__in=sector_filters)
+
+    if tag_filters:
+        products_qs = products_qs.filter(tags__id__in=tag_filters).distinct()
+
+    products_qs = products_qs.order_by('-created_at')
+
+    all_active = Product.objects.filter(is_active=True)
+
+    total_products = all_active.count()
+    total_producers = all_active.values('tenant_id').distinct().count()
+    total_sectors = all_active.values('sector_id').exclude(sector_id__isnull=True).distinct().count()
+
+    available_sector_ids = all_active.values_list('sector_id', flat=True).distinct()
+    available_sectors = Sector.objects.filter(id__in=available_sector_ids)
+
+    available_tag_ids = all_active.values_list('tags', flat=True).distinct()
+    available_tags = ProductTag.objects.filter(id__in=available_tag_ids)
+
+    context = {
+        'products': products_qs,
+        'total_products': total_products,
+        'total_producers': total_producers,
+        'total_sectors': total_sectors,
+        'available_sectors': available_sectors,
+        'available_tags': available_tags,
+        'current_filters': {
+            'sector': [str(s) for s in sector_filters],
+            'tag': [str(t) for t in tag_filters],
+        },
+        'is_filtered': bool(sector_filters or tag_filters),
+    }
+    return render(request, 'all_products.html', context)
+
+
 @login_required
 def add_product_view(request):
     """Add new product view (producers only) - creates product request for admin approval"""

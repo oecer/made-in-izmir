@@ -5,6 +5,7 @@ const translations = {
             producers: "Üreticiler İçin",
             buyers: "Alıcılar İçin",
             neden_izmir: "Neden İzmir?",
+            all_products: "Tüm Ürünler",
             calendar: "Fuar Takvimi",
             about: "Hakkımızda",
             contact: "İletişim",
@@ -921,6 +922,28 @@ const translations = {
             or_divider: "veya",
             logo_change_photo: "Fotoğraf Değiştir",
         },
+        all_products: {
+            badge: "Ürün Kataloğu",
+            title: "Made in İzmir Ürünleri",
+            subtitle: "İzmir'in önde gelen üreticilerinin onaylı ürünlerini keşfedin. Üretici isimlerine ve ürün detaylarına erişmek için platforma kayıt olun.",
+            stat_products: "Kayıtlı Ürün",
+            stat_producers: "Aktif Üretici",
+            stat_sectors: "Sektör",
+            filter_sector: "Sektör",
+            filter_tag: "Etiket",
+            clear_filters: "Temizle",
+            results_shown: "ürün gösteriliyor",
+            card_cta: "Detayları Görmek İçin Kayıt Ol",
+            card_cta_view: "Ürünü İncele",
+            no_results: "Sonuç Bulunamadı",
+            no_results_desc: "Seçili filtrelerle eşleşen ürün yok. Filtreleri temizleyip tekrar deneyin.",
+            no_products: "Henüz Ürün Bulunmuyor",
+            no_products_desc: "Üreticiler ürün ekledikçe burada görünecektir.",
+            cta_title: "Tüm Detaylara Erişin",
+            cta_desc: "Üretici isimleri, ürün detayları ve iletişim bilgilerine erişmek için platforma ücretsiz kayıt olun.",
+            cta_signup: "Ücretsiz Kayıt Ol",
+            cta_login: "Giriş Yap",
+        },
     },
     en: {
         nav: {
@@ -928,6 +951,7 @@ const translations = {
             producers: "For Producers",
             buyers: "For Buyers",
             neden_izmir: "Why Izmir?",
+            all_products: "All Products",
             calendar: "Expo Calendar",
             about: "About Us",
             contact: "Contact",
@@ -1871,6 +1895,28 @@ const translations = {
             product_slots: "Active Products",
             blurred_upgrade_hint: "Upgrade to view",
         },
+        all_products: {
+            badge: "Product Catalogue",
+            title: "Made in İzmir Products",
+            subtitle: "Discover verified products from Izmir's leading producers. Register to access producer names and full product details.",
+            stat_products: "Listed Products",
+            stat_producers: "Active Producers",
+            stat_sectors: "Sectors",
+            filter_sector: "Sector",
+            filter_tag: "Tag",
+            clear_filters: "Clear",
+            results_shown: "products shown",
+            card_cta: "Sign Up to See Details",
+            card_cta_view: "View Product",
+            no_results: "No Results Found",
+            no_results_desc: "No products match your selected filters. Try clearing or changing the filters.",
+            no_products: "No Products Yet",
+            no_products_desc: "Products will appear here as producers add them.",
+            cta_title: "Access Full Details",
+            cta_desc: "Register for free to see producer names, product details, and contact information.",
+            cta_signup: "Sign Up Free",
+            cta_login: "Log In",
+        },
     }
 };
 
@@ -1990,26 +2036,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Update aria-expanded for mobile menu
+    // Mobile drawer
     const mobileMenu = document.getElementById('mobile-menu');
     const navLinks = document.querySelector('.nav-links');
+    const navOverlay = document.getElementById('nav-overlay');
+
+    function openDrawer() {
+        navLinks.classList.add('active');
+        if (navOverlay) navOverlay.classList.add('active');
+        mobileMenu.setAttribute('aria-expanded', 'true');
+        mobileMenu.querySelector('i').className = 'fas fa-xmark';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+        navLinks.classList.remove('active');
+        if (navOverlay) navOverlay.classList.remove('active');
+        mobileMenu.setAttribute('aria-expanded', 'false');
+        mobileMenu.querySelector('i').className = 'fas fa-bars';
+        document.body.style.overflow = '';
+    }
 
     if (mobileMenu && navLinks) {
         mobileMenu.addEventListener('click', () => {
-            const isOpen = navLinks.classList.toggle('active');
-            mobileMenu.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-            mobileMenu.querySelector('i').classList.toggle('fa-bars');
-            mobileMenu.querySelector('i').classList.toggle('fa-xmark');
+            navLinks.classList.contains('active') ? closeDrawer() : openDrawer();
         });
 
-        // Close menu when clicking a link
+        if (navOverlay) navOverlay.addEventListener('click', closeDrawer);
+
+        // Close on link click
         navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                mobileMenu.setAttribute('aria-expanded', 'false');
-                mobileMenu.querySelector('i').classList.add('fa-bars');
-                mobileMenu.querySelector('i').classList.remove('fa-xmark');
-            });
+            link.addEventListener('click', closeDrawer);
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeDrawer();
         });
     }
 

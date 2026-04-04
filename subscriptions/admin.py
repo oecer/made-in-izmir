@@ -1,10 +1,19 @@
 from django.contrib import admin
 from django.utils.html import format_html, mark_safe
-from .models import SubscriptionPlan, TenantSubscription
+from django.utils import timezone
+from .models import SubscriptionPlan, TenantSubscription, PlanCampaign
+
+
+class CampaignInline(admin.TabularInline):
+    model = PlanCampaign
+    extra = 0
+    fields = ('title_tr', 'valid_from', 'valid_until', 'trial_months', 'is_active')
+    show_change_link = True
 
 
 @admin.register(SubscriptionPlan)
 class SubscriptionPlanAdmin(admin.ModelAdmin):
+    inlines = [CampaignInline]
     list_display = (
         'name_tr', 'monthly_price', 'show_company_profile',
         'display_company_name', 'display_city', 'has_business_card',
@@ -90,3 +99,39 @@ class TenantSubscriptionAdmin(admin.ModelAdmin):
             return mark_safe('<span style="color:green;font-weight:bold;">✓ Aktif</span>')
         return mark_safe('<span style="color:red;">✗ Pasif</span>')
     is_active_badge.short_description = 'Aktif mi?'
+
+
+@admin.register(PlanCampaign)
+class PlanCampaignAdmin(admin.ModelAdmin):
+    list_display = (
+        'title_tr', 'plan', 'valid_from', 'valid_until',
+        'trial_months', 'is_active', 'status_badge',
+    )
+    list_filter = ('is_active', 'plan')
+    search_fields = ('title_tr', 'title_en', 'plan__name_tr')
+    list_editable = ('is_active',)
+    date_hierarchy = 'valid_until'
+
+    fieldsets = (
+        ('Kampanya Bilgisi', {
+            'fields': ('plan', 'is_active')
+        }),
+        ('Başlık & Açıklama', {
+            'fields': ('title_tr', 'title_en', 'description_tr', 'description_en')
+        }),
+        ('Kampanya Süresi', {
+            'fields': ('valid_from', 'valid_until', 'trial_months'),
+            'description': 'Belirtilen tarih aralığında kayıt olan firmalara geçerlidir.'
+        }),
+    )
+
+    def status_badge(self, obj):
+        today = timezone.now().date()
+        if not obj.is_active:
+            return mark_safe('<span style="color:gray;">Pasif</span>')
+        if today < obj.valid_from:
+            return mark_safe('<span style="color:blue;">Yakında</span>')
+        if today > obj.valid_until:
+            return mark_safe('<span style="color:red;">Süresi Doldu</span>')
+        return mark_safe('<span style="color:green;font-weight:bold;">✓ Geçerli</span>')
+    status_badge.short_description = 'Durum'
