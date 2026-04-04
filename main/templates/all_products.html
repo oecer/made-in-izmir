@@ -1,0 +1,386 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tüm Ürünler - Made in İzmir{% endblock %}
+
+{% block extra_css %}
+<meta name="description" content="Made in İzmir platformundaki tüm ürünleri keşfedin. {{ total_products }}+ ürün, {{ total_producers }}+ üretici, {{ total_sectors }}+ sektör.">
+<link rel="stylesheet" href="{% static 'css/all_products.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- ═══ HERO BANNER ═══ -->
+<section class="ap-hero">
+    <div class="ap-hero-bg" aria-hidden="true"></div>
+    <div class="container ap-hero-inner">
+        <div class="ap-hero-badge" data-i18n="all_products.badge">
+            <i class="fas fa-boxes"></i>
+            <span>Ürün Kataloğu</span>
+        </div>
+        <h1 class="ap-hero-title" data-i18n="all_products.title">
+            Made in İzmir Ürünleri
+        </h1>
+        <p class="ap-hero-subtitle" data-i18n="all_products.subtitle">
+            İzmir'in önde gelen üreticilerinin onaylı ürünlerini keşfedin. Üretici isimlerine ve ürün detaylarına erişmek için platforma kayıt olun.
+        </p>
+
+        <!-- Platform Stats -->
+        <div class="ap-hero-stats">
+            <div class="ap-hero-stat">
+                <span class="ap-hero-stat-num" id="counter-products" data-target="{{ total_products }}">0</span>
+                <span class="ap-hero-stat-label" data-i18n="all_products.stat_products">Kayıtlı Ürün</span>
+            </div>
+            <div class="ap-hero-stat-divider" aria-hidden="true"></div>
+            <div class="ap-hero-stat">
+                <span class="ap-hero-stat-num" id="counter-producers" data-target="{{ total_producers }}">0</span>
+                <span class="ap-hero-stat-label" data-i18n="all_products.stat_producers">Aktif Üretici</span>
+            </div>
+            <div class="ap-hero-stat-divider" aria-hidden="true"></div>
+            <div class="ap-hero-stat">
+                <span class="ap-hero-stat-num" id="counter-sectors" data-target="{{ total_sectors }}">0</span>
+                <span class="ap-hero-stat-label" data-i18n="all_products.stat_sectors">Sektör</span>
+            </div>
+        </div>
+    </div>
+    <div class="ap-hero-scroll" aria-hidden="true">
+        <i class="fas fa-chevron-down"></i>
+    </div>
+</section>
+
+<!-- ═══ FILTER & GRID ═══ -->
+<section class="ap-catalog-section">
+    <div class="container">
+
+        <!-- Sticky Filter Bar -->
+        <div class="ap-filter-bar" id="ap-filter-bar">
+            <form method="GET" id="ap-filter-form" class="ap-filter-form">
+
+                <!-- Sector Dropdown -->
+                <div class="ap-filter-group ap-ms-dropdown {% if current_filters.sector %}ap-has-selection{% endif %}" id="ap-sector-ms">
+                    <button type="button" class="ap-filter-toggle" aria-expanded="false" aria-haspopup="listbox">
+                        <i class="fas fa-industry"></i>
+                        <span data-i18n="all_products.filter_sector">Sektör</span>
+                        {% if current_filters.sector %}
+                        <span class="ap-filter-count">{{ current_filters.sector|length }}</span>
+                        {% endif %}
+                        <i class="fas fa-chevron-down ap-caret"></i>
+                    </button>
+                    <div class="ap-ms-menu" role="listbox" aria-multiselectable="true">
+                        {% for sector in available_sectors %}
+                        <label class="ap-ms-option" role="option">
+                            <input type="checkbox" name="sector" value="{{ sector.id }}"
+                                {% if sector.id|stringformat:"i" in current_filters.sector %}checked{% endif %}>
+                            <span class="ap-ms-check"><i class="fas fa-check"></i></span>
+                            <span class="sector-name" data-tr="{{ sector.name_tr }}" data-en="{{ sector.name_en }}">{{ sector.name_tr }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Tag Dropdown -->
+                <div class="ap-filter-group ap-ms-dropdown {% if current_filters.tag %}ap-has-selection{% endif %}" id="ap-tag-ms">
+                    <button type="button" class="ap-filter-toggle" aria-expanded="false" aria-haspopup="listbox">
+                        <i class="fas fa-tags"></i>
+                        <span data-i18n="all_products.filter_tag">Etiket</span>
+                        {% if current_filters.tag %}
+                        <span class="ap-filter-count">{{ current_filters.tag|length }}</span>
+                        {% endif %}
+                        <i class="fas fa-chevron-down ap-caret"></i>
+                    </button>
+                    <div class="ap-ms-menu" role="listbox" aria-multiselectable="true">
+                        {% for tag in available_tags %}
+                        <label class="ap-ms-option" role="option">
+                            <input type="checkbox" name="tag" value="{{ tag.id }}"
+                                {% if tag.id|stringformat:"i" in current_filters.tag %}checked{% endif %}>
+                            <span class="ap-ms-check"><i class="fas fa-check"></i></span>
+                            <span class="tag-name" data-tr="{{ tag.name_tr }}" data-en="{{ tag.name_en }}">{{ tag.name_tr }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {% if is_filtered %}
+                <a href="{% url 'catalog:all_products' %}" class="ap-filter-reset" title="Filtreleri Temizle">
+                    <i class="fas fa-times-circle"></i>
+                    <span data-i18n="all_products.clear_filters">Temizle</span>
+                </a>
+                {% endif %}
+
+            </form>
+
+            <!-- Result Count -->
+            <div class="ap-result-meta">
+                <span class="ap-result-count">
+                    <strong>{{ products|length }}</strong>
+                    <span data-i18n="all_products.results_shown">ürün gösteriliyor</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Active Filter Chips -->
+        {% if is_filtered %}
+        <div class="ap-active-chips">
+            {% for sid in current_filters.sector %}
+                {% for s in available_sectors %}
+                    {% if s.id|stringformat:"i" == sid %}
+                    <span class="ap-chip">
+                        <i class="fas fa-industry"></i>
+                        {{ s.name_tr }}
+                    </span>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+            {% for tid in current_filters.tag %}
+                {% for t in available_tags %}
+                    {% if t.id|stringformat:"i" == tid %}
+                    <span class="ap-chip">
+                        <i class="fas fa-tag"></i>
+                        {{ t.name_tr }}
+                    </span>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Products Grid -->
+        {% if products %}
+        <div class="ap-grid" id="ap-grid">
+            {% for product in products %}
+            <div class="ap-card" data-animate>
+                <!-- Product Image -->
+                <div class="ap-card-image">
+                    {% if product.photo1 %}
+                    <img src="{{ product.photo1.url }}"
+                         alt="Ürün görseli"
+                         loading="lazy"
+                         class="ap-card-img">
+                    {% else %}
+                    <div class="ap-card-no-image">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    {% endif %}
+
+                    <!-- Sector Badge on Image -->
+                    {% if product.sector %}
+                    <div class="ap-card-sector-badge">
+                        <i class="fas fa-industry"></i>
+                        <span class="sector-name" data-tr="{{ product.sector.name_tr }}" data-en="{{ product.sector.name_en }}">{{ product.sector.name_tr }}</span>
+                    </div>
+                    {% endif %}
+
+                    <!-- Lock Overlay -->
+                    <div class="ap-card-lock-overlay" aria-hidden="true">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="ap-card-body">
+
+                    <!-- Blurred Product Name -->
+                    <div class="ap-card-title-wrap">
+                        <h3 class="ap-card-title ap-blurred" aria-label="Ürün adı gizli - kayıt olun">
+                            {{ product.title_tr|default:product.title_en }}
+                        </h3>
+                        <span class="ap-blur-hint">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                    </div>
+
+                    <!-- Blurred Producer Name -->
+                    <div class="ap-card-producer-wrap">
+                        <i class="fas fa-building ap-producer-icon"></i>
+                        <span class="ap-card-producer ap-blurred" aria-label="Üretici adı gizli - kayıt olun">
+                            {% if product.tenant %}{{ product.tenant.company_name }}{% else %}Üretici Firma{% endif %}
+                        </span>
+                        <span class="ap-blur-hint">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                    </div>
+
+                    <!-- City — Visible -->
+                    {% if product.tenant and product.tenant.city %}
+                    <div class="ap-card-city">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{{ product.tenant.city }}</span>
+                    </div>
+                    {% endif %}
+
+                    <!-- Tags — Visible -->
+                    {% if product.tags.all %}
+                    <div class="ap-card-tags">
+                        {% for tag in product.tags.all %}
+                        <span class="ap-tag tag-name" data-tr="{{ tag.name_tr }}" data-en="{{ tag.name_en }}">{{ tag.name_tr }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                </div>
+
+                <!-- Card Footer CTA -->
+                <div class="ap-card-footer">
+                    <a href="{% url 'accounts:signup' %}" class="ap-card-cta">
+                        <i class="fas fa-unlock-alt"></i>
+                        <span data-i18n="all_products.card_cta">Detayları Görmek İçin Kayıt Ol</span>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <!-- Empty State -->
+        <div class="ap-empty-state">
+            {% if is_filtered %}
+            <div class="ap-empty-icon"><i class="fas fa-filter"></i></div>
+            <h3 data-i18n="all_products.no_results">Sonuç Bulunamadı</h3>
+            <p data-i18n="all_products.no_results_desc">Seçili filtrelerle eşleşen ürün yok. Filtreleri temizleyip tekrar deneyin.</p>
+            <a href="{% url 'catalog:all_products' %}" class="btn btn-primary mt-3">
+                <i class="fas fa-times"></i> Filtreleri Temizle
+            </a>
+            {% else %}
+            <div class="ap-empty-icon"><i class="fas fa-box-open"></i></div>
+            <h3 data-i18n="all_products.no_products">Henüz Ürün Bulunmuyor</h3>
+            <p data-i18n="all_products.no_products_desc">Üreticiler ürün ekledikçe burada görünecektir.</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+
+<!-- ═══ JOIN CTA ═══ -->
+<section class="ap-join-cta">
+    <div class="container ap-join-cta-inner">
+        <div class="ap-join-icon" aria-hidden="true">
+            <i class="fas fa-unlock-alt"></i>
+        </div>
+        <div class="ap-join-text">
+            <h2 data-i18n="all_products.cta_title">Tüm Detaylara Erişin</h2>
+            <p data-i18n="all_products.cta_desc">Üretici isimleri, ürün detayları ve iletişim bilgilerine erişmek için platforma ücretsiz kayıt olun.</p>
+        </div>
+        <div class="ap-join-actions">
+            <a href="{% url 'accounts:signup' %}" class="btn btn-secondary" data-i18n="all_products.cta_signup">
+                <i class="fas fa-user-plus"></i> Ücretsiz Kayıt Ol
+            </a>
+            <a href="{% url 'accounts:login' %}" class="btn ap-btn-outline-dark" data-i18n="all_products.cta_login">
+                <i class="fas fa-sign-in-alt"></i> Giriş Yap
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    'use strict';
+
+    /* ── Animated counter ── */
+    function animateCounter(el) {
+        var target = parseInt(el.dataset.target, 10);
+        if (!target) return;
+        var duration = 1400;
+        var start = performance.now();
+        function step(now) {
+            var progress = Math.min((now - start) / duration, 1);
+            var ease = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.floor(ease * target);
+            if (progress < 1) requestAnimationFrame(step);
+            else el.textContent = target;
+        }
+        requestAnimationFrame(step);
+    }
+
+    var countersStarted = false;
+    var counterEls = document.querySelectorAll('[id^="counter-"]');
+    var heroStats = document.querySelector('.ap-hero-stats');
+    if (heroStats) {
+        var io = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting && !countersStarted) {
+                    countersStarted = true;
+                    counterEls.forEach(animateCounter);
+                    io.disconnect();
+                }
+            });
+        }, { threshold: 0.4 });
+        io.observe(heroStats);
+    }
+
+    /* ── Scroll-triggered card animations ── */
+    var cardObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry, i) {
+            if (entry.isIntersecting) {
+                setTimeout(function() {
+                    entry.target.classList.add('ap-visible');
+                }, (i % 4) * 80);
+                cardObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.ap-card[data-animate]').forEach(function(el) {
+        cardObserver.observe(el);
+    });
+
+    /* ── Sticky filter bar shadow on scroll ── */
+    var filterBar = document.getElementById('ap-filter-bar');
+    window.addEventListener('scroll', function() {
+        if (!filterBar) return;
+        if (window.scrollY > 400) {
+            filterBar.classList.add('ap-filter-bar--sticky');
+        } else {
+            filterBar.classList.remove('ap-filter-bar--sticky');
+        }
+    }, { passive: true });
+
+    /* ── Multi-select dropdowns ── */
+    document.querySelectorAll('.ap-ms-dropdown').forEach(function(dropdown) {
+        var toggle = dropdown.querySelector('.ap-filter-toggle');
+        var menu = dropdown.querySelector('.ap-ms-menu');
+        if (!toggle || !menu) return;
+
+        toggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var isOpen = dropdown.classList.contains('ap-open');
+            // Close all dropdowns first
+            document.querySelectorAll('.ap-ms-dropdown').forEach(function(d) {
+                d.classList.remove('ap-open');
+                d.querySelector('.ap-filter-toggle').setAttribute('aria-expanded', 'false');
+            });
+            if (!isOpen) {
+                dropdown.classList.add('ap-open');
+                toggle.setAttribute('aria-expanded', 'true');
+            }
+        });
+
+        // Auto-submit on checkbox change
+        dropdown.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
+            cb.addEventListener('change', function() {
+                document.getElementById('ap-filter-form').submit();
+            });
+        });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function() {
+        document.querySelectorAll('.ap-ms-dropdown').forEach(function(d) {
+            d.classList.remove('ap-open');
+            d.querySelector('.ap-filter-toggle').setAttribute('aria-expanded', 'false');
+        });
+    });
+
+    /* ── Hero scroll indicator ── */
+    var scrollHint = document.querySelector('.ap-hero-scroll');
+    if (scrollHint) {
+        scrollHint.addEventListener('click', function() {
+            document.querySelector('.ap-catalog-section').scrollIntoView({ behavior: 'smooth' });
+        });
+    }
+})();
+</script>
+{% endblock %}
