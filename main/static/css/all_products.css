@@ -408,7 +408,11 @@
 .ap-card.ap-visible {
     opacity: 1;
     transform: translateY(0);
-    pointer-events: none; /* Still not clickable */
+    pointer-events: none;
+}
+
+.ap-card--unlocked.ap-visible {
+    pointer-events: auto;
 }
 
 /* Card IMAGE */
@@ -632,6 +636,31 @@
     color: var(--accent-color);
 }
 
+
+/* Unlocked card — authenticated users */
+.ap-card--unlocked {
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.ap-card--unlocked:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.ap-card-cta--unlocked {
+    background: var(--accent-color);
+    color: var(--primary-color);
+}
+
+.ap-card-cta--unlocked:hover {
+    background: var(--accent-hover);
+    color: var(--primary-color);
+}
+
+.ap-card-cta--unlocked i {
+    color: var(--primary-color);
+}
 
 /* ── Empty State ── */
 .ap-empty-state {

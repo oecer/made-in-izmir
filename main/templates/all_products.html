@@ -148,12 +148,17 @@
         {% if products %}
         <div class="ap-grid" id="ap-grid">
             {% for product in products %}
+            {% if user.is_authenticated %}
+            <div class="ap-card ap-card--unlocked" data-animate>
+            {% else %}
             <div class="ap-card" data-animate>
+            {% endif %}
+
                 <!-- Product Image -->
                 <div class="ap-card-image">
                     {% if product.photo1 %}
                     <img src="{{ product.photo1.url }}"
-                         alt="Ürün görseli"
+                         alt="{{ product.title_tr|default:product.title_en }}"
                          loading="lazy"
                          class="ap-card-img">
                     {% else %}
@@ -170,37 +175,51 @@
                     </div>
                     {% endif %}
 
-                    <!-- Lock Overlay -->
+                    <!-- Lock Overlay — only for anonymous -->
+                    {% if not user.is_authenticated %}
                     <div class="ap-card-lock-overlay" aria-hidden="true">
                         <i class="fas fa-lock"></i>
                     </div>
+                    {% endif %}
                 </div>
 
                 <!-- Card Body -->
                 <div class="ap-card-body">
 
-                    <!-- Blurred Product Name -->
+                    <!-- Product Name -->
                     <div class="ap-card-title-wrap">
+                        {% if user.is_authenticated %}
+                        <h3 class="ap-card-title">
+                            {{ product.title_tr|default:product.title_en }}
+                        </h3>
+                        {% else %}
                         <h3 class="ap-card-title ap-blurred" aria-label="Ürün adı gizli - kayıt olun">
                             {{ product.title_tr|default:product.title_en }}
                         </h3>
                         <span class="ap-blur-hint">
                             <i class="fas fa-lock"></i>
                         </span>
+                        {% endif %}
                     </div>
 
-                    <!-- Blurred Producer Name -->
+                    <!-- Producer Name -->
                     <div class="ap-card-producer-wrap">
                         <i class="fas fa-building ap-producer-icon"></i>
+                        {% if user.is_authenticated %}
+                        <span class="ap-card-producer">
+                            {% if product.tenant %}{{ product.tenant.company_name }}{% else %}Üretici Firma{% endif %}
+                        </span>
+                        {% else %}
                         <span class="ap-card-producer ap-blurred" aria-label="Üretici adı gizli - kayıt olun">
                             {% if product.tenant %}{{ product.tenant.company_name }}{% else %}Üretici Firma{% endif %}
                         </span>
                         <span class="ap-blur-hint">
                             <i class="fas fa-lock"></i>
                         </span>
+                        {% endif %}
                     </div>
 
-                    <!-- City — Visible -->
+                    <!-- City — Always Visible -->
                     {% if product.tenant and product.tenant.city %}
                     <div class="ap-card-city">
                         <i class="fas fa-map-marker-alt"></i>
@@ -208,7 +227,7 @@
                     </div>
                     {% endif %}
 
-                    <!-- Tags — Visible -->
+                    <!-- Tags — Always Visible -->
                     {% if product.tags.all %}
                     <div class="ap-card-tags">
                         {% for tag in product.tags.all %}
@@ -221,10 +240,17 @@
 
                 <!-- Card Footer CTA -->
                 <div class="ap-card-footer">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'catalog:product_detail' product.id %}" class="ap-card-cta ap-card-cta--unlocked">
+                        <i class="fas fa-eye"></i>
+                        <span data-i18n="all_products.card_cta_view">Ürünü İncele</span>
+                    </a>
+                    {% else %}
                     <a href="{% url 'accounts:signup' %}" class="ap-card-cta">
                         <i class="fas fa-unlock-alt"></i>
                         <span data-i18n="all_products.card_cta">Detayları Görmek İçin Kayıt Ol</span>
                     </a>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
@@ -251,7 +277,8 @@
     </div>
 </section>
 
-<!-- ═══ JOIN CTA ═══ -->
+<!-- ═══ JOIN CTA — only for anonymous visitors ═══ -->
+{% if not user.is_authenticated %}
 <section class="ap-join-cta">
     <div class="container ap-join-cta-inner">
         <div class="ap-join-icon" aria-hidden="true">
@@ -271,6 +298,7 @@
         </div>
     </div>
 </section>
+{% endif %}
 
 {% endblock %}
 
