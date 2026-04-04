@@ -53,11 +53,10 @@
             <li><a href="{% url 'main:why_izmir' %}" data-i18n="nav.neden_izmir">Neden İzmir?</a></li>
             <li><a href="{% url 'main:producers' %}" data-i18n="nav.producers">Üreticiler İçin</a></li>
             <li><a href="{% url 'main:buyers' %}" data-i18n="nav.buyers">Alıcılar İçin</a></li>
-            <li><a href="{% url 'catalog:all_products' %}" data-i18n="nav.all_products">Tüm Ürünler</a></li>
             <li><a href="{% url 'expos:calendar' %}" data-i18n="nav.calendar">Fuar Takvimi</a></li>
             <li><a href="{% url 'main:about' %}" data-i18n="nav.about">Hakkımızda</a></li>
             <li><a href="{% url 'main:contact' %}" data-i18n="nav.contact">İletişim</a></li>
-            <li><a href="{% url 'subscriptions:pricing' %}" data-i18n="nav.subscription" class="btn-subscription-nav"><i class="fas fa-crown" aria-hidden="true"></i> <span data-i18n="nav.subscription">Abonelik</span></a></li>
+            <li><a href="{% url 'catalog:all_products' %}" data-i18n="nav.all_products" class="btn-subscription-nav"><i class="fas fa-boxes" aria-hidden="true"></i> <span data-i18n="nav.all_products">Tüm Ürünler</span></a></li>
             <li><a href="{% url 'accounts:dashboard' %}" data-i18n="nav.dashboard" class="btn-dashboard-nav">Panel</a></li>
             {% endif %}
             {% else %}
@@ -66,11 +65,10 @@
             <li><a href="{% url 'main:why_izmir' %}" data-i18n="nav.neden_izmir">Neden İzmir?</a></li>
             <li><a href="{% url 'main:producers' %}" data-i18n="nav.producers">Üreticiler İçin</a></li>
             <li><a href="{% url 'main:buyers' %}" data-i18n="nav.buyers">Alıcılar İçin</a></li>
-            <li><a href="{% url 'catalog:all_products' %}" data-i18n="nav.all_products">Tüm Ürünler</a></li>
             <li><a href="{% url 'expos:calendar' %}" data-i18n="nav.calendar">Fuar Takvimi</a></li>
             <li><a href="{% url 'main:about' %}" data-i18n="nav.about">Hakkımızda</a></li>
             <li><a href="{% url 'main:contact' %}" data-i18n="nav.contact">İletişim</a></li>
-            <li><a href="{% url 'subscriptions:pricing' %}" data-i18n="nav.subscription" class="btn-subscription-nav"><i class="fas fa-crown" aria-hidden="true"></i> <span data-i18n="nav.subscription">Abonelik</span></a></li>
+            <li><a href="{% url 'catalog:all_products' %}" data-i18n="nav.all_products" class="btn-subscription-nav"><i class="fas fa-boxes" aria-hidden="true"></i> <span data-i18n="nav.all_products">Tüm Ürünler</span></a></li>
             <li><a href="{% url 'accounts:login' %}" data-i18n="nav.login" class="btn-login-nav">Giriş</a></li>
             {% endif %}
         </ul>
