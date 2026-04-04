@@ -1069,6 +1069,16 @@
     text-decoration: none;
     font-weight: 600;
 }
+.pricing-note-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border-bottom: 1.5px solid var(--accent-color);
+    padding-bottom: 1px;
+}
+.pricing-note-link:hover {
+    opacity: 0.8;
+}
 @media (max-width: 768px) {
     .producers-pricing-grid { grid-template-columns: 1fr; }
     .plan-card.featured { transform: none; }
@@ -1348,9 +1358,9 @@
         {% if plans %}
         <div class="producers-pricing-grid">
             {% for plan in plans %}
-            <div class="plan-card {% if plan.monthly_price > 0 %}featured{% endif %}" data-animate>
+            <div class="plan-card {% if plan.id == featured_plan_id %}featured{% endif %}" data-animate>
 
-                {% if plan.monthly_price > 0 %}
+                {% if plan.id == featured_plan_id %}
                 <span class="plan-badge badge-featured"><i class="fas fa-star" style="margin-right:4px;"></i> Önerilen</span>
                 {% endif %}
 
@@ -1450,13 +1460,13 @@
                 </div>
 
                 <div class="plan-footer">
-                    {% if plan.monthly_price %}
-                        <a href="{% url 'accounts:signup' %}" class="btn-plan btn-plan-featured">
+                    {% if plan.id == featured_plan_id %}
+                        <a href="{% url 'subscriptions:pricing' %}#sub-contact" class="btn-plan btn-plan-featured">
                             <i class="fas fa-star"></i> Bu Planı Seç
                         </a>
                     {% else %}
-                        <a href="{% url 'accounts:signup' %}" class="btn-plan btn-plan-default">
-                            Ücretsiz Başla <i class="fas fa-arrow-right"></i>
+                        <a href="{% url 'subscriptions:pricing' %}#sub-contact" class="btn-plan btn-plan-default">
+                            {% if plan.monthly_price %}Bu Planı Seç{% else %}Ücretsiz Başla{% endif %} <i class="fas fa-arrow-right"></i>
                         </a>
                     {% endif %}
                 </div>
@@ -1487,7 +1497,7 @@
                     </ul>
                 </div>
                 <div class="plan-footer">
-                    <a href="{% url 'accounts:signup' %}" class="btn-plan btn-plan-default">Ücretsiz Başla <i class="fas fa-arrow-right"></i></a>
+                    <a href="{% url 'subscriptions:pricing' %}#sub-contact" class="btn-plan btn-plan-default">Ücretsiz Başla <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
             <!-- Premium -->
@@ -1526,14 +1536,17 @@
                     </ul>
                 </div>
                 <div class="plan-footer">
-                    <a href="{% url 'accounts:signup' %}" class="btn-plan btn-plan-featured"><i class="fas fa-star"></i> Bu Planı Seç</a>
+                    <a href="{% url 'subscriptions:pricing' %}#sub-contact" class="btn-plan btn-plan-featured"><i class="fas fa-star"></i> Bu Planı Seç</a>
                 </div>
             </div>
         </div>
         {% endif %}
 
         <p class="pricing-note">
-            Standart plan her zaman ücretsizdir. Premium plan için <a href="{% url 'main:contact' %}">bizimle iletişime geçin</a> veya kayıt olun.
+            Tüm planları karşılaştırmak veya abonelik başlatmak için
+            <a href="{% url 'subscriptions:pricing' %}" class="pricing-note-link">
+                <i class="fas fa-crown" style="margin-right:4px;"></i>Abonelik Sayfasına Git
+            </a>
         </p>
     </div>
 </section>
