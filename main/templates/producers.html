@@ -809,6 +809,235 @@
     margin: 0;
 }
 
+/* ═══ PRICING SECTION ═══ */
+.pricing-section {
+    background: var(--bg-body);
+}
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    align-items: stretch;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.pricing-card {
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    border: 1.5px solid rgba(15,23,42,0.08);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: var(--transition);
+    position: relative;
+}
+.pricing-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+.pricing-card.featured {
+    border-color: var(--accent-color);
+    box-shadow: 0 8px 40px rgba(204,164,59,0.2);
+}
+.pricing-card.featured:hover {
+    box-shadow: 0 16px 60px rgba(204,164,59,0.3);
+}
+.pricing-badge {
+    position: absolute;
+    top: -1px;
+    right: 24px;
+    background: linear-gradient(135deg, var(--accent-color), #a87d20);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.85rem;
+    border-radius: 0 0 8px 8px;
+}
+.pricing-card-header {
+    padding: 2rem 2rem 1.5rem;
+    border-bottom: 1px solid rgba(15,23,42,0.07);
+}
+.pricing-plan-name {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 0.5rem;
+}
+.pricing-plan-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+.pricing-amount {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+}
+.pricing-amount .price-num {
+    font-size: 2.75rem;
+    font-weight: 900;
+    color: var(--primary-color);
+    font-family: 'Inter', sans-serif;
+    line-height: 1;
+}
+.pricing-amount .price-currency {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+.pricing-amount .price-period {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+.pricing-amount.free-price .price-num {
+    color: #22c55e;
+}
+.pricing-campaign-banner {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, rgba(204,164,59,0.10) 0%, rgba(204,164,59,0.05) 100%);
+    border: 1px solid rgba(204,164,59,0.3);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+}
+.pricing-campaign-banner .campaign-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+.pricing-campaign-banner .campaign-text {
+    font-size: 0.82rem;
+    color: var(--primary-color);
+    line-height: 1.5;
+}
+.pricing-campaign-banner .campaign-text strong {
+    display: block;
+    font-weight: 700;
+    color: #a87d20;
+    margin-bottom: 0.1rem;
+}
+.pricing-campaign-banner .campaign-deadline {
+    display: inline-block;
+    margin-top: 0.3rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #a87d20;
+    background: rgba(204,164,59,0.12);
+    border-radius: 20px;
+    padding: 0.15rem 0.6rem;
+}
+.pricing-features {
+    padding: 1.5rem 2rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.pricing-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    line-height: 1.4;
+}
+.pricing-feature .feat-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+.pricing-feature .feat-icon.yes {
+    background: rgba(34,197,94,0.12);
+    color: #16a34a;
+}
+.pricing-feature .feat-icon.no {
+    background: rgba(15,23,42,0.06);
+    color: #94a3b8;
+}
+.pricing-feature .feat-label {
+    color: var(--text-main);
+}
+.pricing-feature.disabled .feat-label {
+    color: var(--text-muted);
+}
+.pricing-products-badge {
+    display: inline-block;
+    background: rgba(59,130,246,0.1);
+    color: #2563eb;
+    border-radius: 20px;
+    padding: 0.15rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-left: 0.25rem;
+}
+.pricing-card-footer {
+    padding: 1.5rem 2rem 2rem;
+    border-top: 1px solid rgba(15,23,42,0.07);
+}
+.btn-pricing-cta {
+    display: block;
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: var(--transition);
+    letter-spacing: 0.01em;
+}
+.btn-pricing-cta.primary {
+    background: linear-gradient(135deg, var(--accent-color) 0%, #a87d20 100%);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(204,164,59,0.3);
+}
+.btn-pricing-cta.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(204,164,59,0.45);
+    color: #fff;
+}
+.btn-pricing-cta.secondary {
+    background: transparent;
+    color: var(--primary-color);
+    border: 1.5px solid rgba(15,23,42,0.2);
+}
+.btn-pricing-cta.secondary:hover {
+    border-color: var(--primary-color);
+    background: rgba(15,23,42,0.04);
+    color: var(--primary-color);
+}
+.pricing-note {
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 2rem;
+    line-height: 1.6;
+}
+.pricing-note a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+@media (max-width: 680px) {
+    .pricing-grid { grid-template-columns: 1fr; max-width: 420px; }
+    .pricing-amount .price-num { font-size: 2.2rem; }
+}
+
 /* ── Scroll-animate states ── */
 [data-animate] {
     opacity: 0;
@@ -1066,6 +1295,228 @@
                 </div>
             </div>
         </div>
+    </div>
+</section>
+
+<!-- ═══ PRICING ═══ -->
+<section class="section pricing-section" id="fiyatlandirma">
+    <div class="container">
+        <div class="section-title" data-animate>
+            <div class="feature-eyebrow" style="color:var(--accent-color);margin-bottom:0.75rem;">Abonelik Planları</div>
+            <h2>Firmanıza Uygun Planı Seçin</h2>
+            <div class="section-title-bar"></div>
+            <p class="section-subtitle">Standart plan her zaman ücretsizdir. Premium ile tüm özelliklere erişin.</p>
+        </div>
+
+        {% if plans %}
+        <div class="pricing-grid">
+            {% for plan in plans %}
+            <div class="pricing-card {% if plan.monthly_price > 0 %}featured{% endif %}" data-animate>
+
+                {% if plan.monthly_price > 0 %}
+                <div class="pricing-badge">Önerilen</div>
+                {% endif %}
+
+                <div class="pricing-card-header">
+                    <div class="pricing-plan-name">{{ plan.name_tr }}</div>
+                    <div class="pricing-plan-desc">{{ plan.description_tr|default:"" }}</div>
+
+                    {% if plan.monthly_price == 0 %}
+                    <div class="pricing-amount free-price">
+                        <span class="price-num">Ücretsiz</span>
+                    </div>
+                    {% else %}
+                    <div class="pricing-amount">
+                        <span class="price-num">{{ plan.monthly_price|floatformat:0 }}</span>
+                        <span class="price-currency">TRY</span>
+                        <span class="price-period">/ ay</span>
+                    </div>
+                    {% endif %}
+
+                    {# Show active campaign banner if one exists for this plan #}
+                    {% for camp in plan.campaigns.all %}
+                        {% if camp.is_currently_valid %}
+                        <div class="pricing-campaign-banner">
+                            <span class="campaign-icon">🎁</span>
+                            <div class="campaign-text">
+                                <strong>{{ camp.title_tr }}</strong>
+                                {{ camp.description_tr }}
+                                {% if camp.trial_months > 0 %}
+                                <span class="campaign-deadline">
+                                    {{ camp.trial_months }} ay ücretsiz · Son: {{ camp.valid_until|date:"d.m.Y" }}
+                                </span>
+                                {% else %}
+                                <span class="campaign-deadline">Son: {{ camp.valid_until|date:"d.m.Y" }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="pricing-features">
+                    <div class="pricing-feature {% if not plan.show_company_profile %}disabled{% endif %}">
+                        <span class="feat-icon {% if plan.show_company_profile %}yes{% else %}no{% endif %}">
+                            <i class="fas {% if plan.show_company_profile %}fa-check{% else %}fa-times{% endif %}"></i>
+                        </span>
+                        <span class="feat-label">Firma Profil Sayfası</span>
+                    </div>
+                    <div class="pricing-feature {% if not plan.company_username_editable %}disabled{% endif %}">
+                        <span class="feat-icon {% if plan.company_username_editable %}yes{% else %}no{% endif %}">
+                            <i class="fas {% if plan.company_username_editable %}fa-check{% else %}fa-times{% endif %}"></i>
+                        </span>
+                        <span class="feat-label">Özel Firma URL'si</span>
+                    </div>
+                    <div class="pricing-feature {% if not plan.has_business_card %}disabled{% endif %}">
+                        <span class="feat-icon {% if plan.has_business_card %}yes{% else %}no{% endif %}">
+                            <i class="fas {% if plan.has_business_card %}fa-check{% else %}fa-times{% endif %}"></i>
+                        </span>
+                        <span class="feat-label">Dijital Kartvizit</span>
+                    </div>
+                    <div class="pricing-feature {% if not plan.display_company_name %}disabled{% endif %}">
+                        <span class="feat-icon {% if plan.display_company_name %}yes{% else %}no{% endif %}">
+                            <i class="fas {% if plan.display_company_name %}fa-check{% else %}fa-times{% endif %}"></i>
+                        </span>
+                        <span class="feat-label">Alıcılara Firma Adı Görünür</span>
+                    </div>
+                    <div class="pricing-feature {% if not plan.display_phone %}disabled{% endif %}">
+                        <span class="feat-icon {% if plan.display_phone %}yes{% else %}no{% endif %}">
+                            <i class="fas {% if plan.display_phone %}fa-check{% else %}fa-times{% endif %}"></i>
+                        </span>
+                        <span class="feat-label">Telefon & E-posta Görünürlüğü</span>
+                    </div>
+                    <div class="pricing-feature {% if not plan.display_website %}disabled{% endif %}">
+                        <span class="feat-icon {% if plan.display_website %}yes{% else %}no{% endif %}">
+                            <i class="fas {% if plan.display_website %}fa-check{% else %}fa-times{% endif %}"></i>
+                        </span>
+                        <span class="feat-label">Web Sitesi Bağlantısı</span>
+                    </div>
+                    <div class="pricing-feature">
+                        <span class="feat-icon yes">
+                            <i class="fas fa-check"></i>
+                        </span>
+                        <span class="feat-label">
+                            Aktif Ürün
+                            {% if plan.max_active_products %}
+                            <span class="pricing-products-badge">Maks. {{ plan.max_active_products }}</span>
+                            {% else %}
+                            <span class="pricing-products-badge" style="background:rgba(34,197,94,0.1);color:#16a34a;">Sınırsız</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="pricing-card-footer">
+                    <a href="{% url 'accounts:signup' %}" class="btn-pricing-cta {% if plan.monthly_price > 0 %}primary{% else %}secondary{% endif %}">
+                        {% if plan.monthly_price == 0 %}
+                            Ücretsiz Başla →
+                        {% else %}
+                            Hemen Başvur →
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        {# Fallback static cards if no plans in DB yet #}
+        <div class="pricing-grid">
+            <!-- Standard Plan -->
+            <div class="pricing-card" data-animate>
+                <div class="pricing-card-header">
+                    <div class="pricing-plan-name">Standart</div>
+                    <div class="pricing-plan-desc">Platforma katılan her üretici için temel dijital varlık. Her zaman ücretsiz.</div>
+                    <div class="pricing-amount free-price">
+                        <span class="price-num">Ücretsiz</span>
+                    </div>
+                </div>
+                <div class="pricing-features">
+                    <div class="pricing-feature">
+                        <span class="feat-icon yes"><i class="fas fa-check"></i></span>
+                        <span class="feat-label">Firma Profil Sayfası</span>
+                    </div>
+                    <div class="pricing-feature">
+                        <span class="feat-icon yes"><i class="fas fa-check"></i></span>
+                        <span class="feat-label">Aktif Ürün <span class="pricing-products-badge">Maks. 10</span></span>
+                    </div>
+                    <div class="pricing-feature disabled">
+                        <span class="feat-icon no"><i class="fas fa-times"></i></span>
+                        <span class="feat-label">Özel Firma URL'si</span>
+                    </div>
+                    <div class="pricing-feature disabled">
+                        <span class="feat-icon no"><i class="fas fa-times"></i></span>
+                        <span class="feat-label">Dijital Kartvizit</span>
+                    </div>
+                    <div class="pricing-feature disabled">
+                        <span class="feat-icon no"><i class="fas fa-times"></i></span>
+                        <span class="feat-label">Telefon & E-posta Görünürlüğü</span>
+                    </div>
+                </div>
+                <div class="pricing-card-footer">
+                    <a href="{% url 'accounts:signup' %}" class="btn-pricing-cta secondary">Ücretsiz Başla →</a>
+                </div>
+            </div>
+            <!-- Premium Plan -->
+            <div class="pricing-card featured" data-animate>
+                <div class="pricing-badge">Önerilen</div>
+                <div class="pricing-card-header">
+                    <div class="pricing-plan-name">Premium</div>
+                    <div class="pricing-plan-desc">Tüm özelliklere tam erişim. Alıcılara maksimum görünürlük.</div>
+                    <div class="pricing-amount">
+                        <span class="price-num">990</span>
+                        <span class="price-currency">TRY</span>
+                        <span class="price-period">/ ay</span>
+                    </div>
+                    <div class="pricing-campaign-banner">
+                        <span class="campaign-icon">🎁</span>
+                        <div class="campaign-text">
+                            <strong>Kuruluş Dönemi Kampanyası</strong>
+                            1 Eylül 2026'ya kadar kayıt olan firmalara 6 ay ücretsiz Premium.
+                            <span class="campaign-deadline">6 ay ücretsiz · Son: 01.09.2026</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pricing-features">
+                    <div class="pricing-feature">
+                        <span class="feat-icon yes"><i class="fas fa-check"></i></span>
+                        <span class="feat-label">Firma Profil Sayfası</span>
+                    </div>
+                    <div class="pricing-feature">
+                        <span class="feat-icon yes"><i class="fas fa-check"></i></span>
+                        <span class="feat-label">Özel Firma URL'si</span>
+                    </div>
+                    <div class="pricing-feature">
+                        <span class="feat-icon yes"><i class="fas fa-check"></i></span>
+                        <span class="feat-label">Dijital Kartvizit</span>
+                    </div>
+                    <div class="pricing-feature">
+                        <span class="feat-icon yes"><i class="fas fa-check"></i></span>
+                        <span class="feat-label">Alıcılara Firma Adı Görünür</span>
+                    </div>
+                    <div class="pricing-feature">
+                        <span class="feat-icon yes"><i class="fas fa-check"></i></span>
+                        <span class="feat-label">Telefon & E-posta Görünürlüğü</span>
+                    </div>
+                    <div class="pricing-feature">
+                        <span class="feat-icon yes"><i class="fas fa-check"></i></span>
+                        <span class="feat-label">Web Sitesi Bağlantısı</span>
+                    </div>
+                    <div class="pricing-feature">
+                        <span class="feat-icon yes"><i class="fas fa-check"></i></span>
+                        <span class="feat-label">Aktif Ürün <span class="pricing-products-badge" style="background:rgba(34,197,94,0.1);color:#16a34a;">Sınırsız</span></span>
+                    </div>
+                </div>
+                <div class="pricing-card-footer">
+                    <a href="{% url 'accounts:signup' %}" class="btn-pricing-cta primary">Hemen Başvur →</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <p class="pricing-note">
+            Standart plan her zaman ücretsizdir. Premium plan için <a href="{% url 'main:contact' %}">bizimle iletişime geçin</a> veya kayıt olun.
+        </p>
     </div>
 </section>
 

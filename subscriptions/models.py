@@ -177,3 +177,49 @@ class TenantSubscription(models.Model):
             if self.tenant.show_company_profile != should_show:
                 self.tenant.show_company_profile = should_show
                 self.tenant.save(update_fields=['show_company_profile'])
+
+
+class PlanCampaign(models.Model):
+    """
+    A time-limited promotional campaign attached to a SubscriptionPlan.
+    Used to display special offers on the producers page and for admin management.
+    """
+    plan = models.ForeignKey(
+        SubscriptionPlan,
+        on_delete=models.CASCADE,
+        related_name='campaigns',
+        verbose_name="Plan"
+    )
+    title_tr = models.CharField(max_length=200, verbose_name="Kampanya Başlığı (TR)")
+    title_en = models.CharField(max_length=200, verbose_name="Kampanya Başlığı (EN)")
+    description_tr = models.TextField(verbose_name="Açıklama (TR)")
+    description_en = models.TextField(verbose_name="Açıklama (EN)")
+
+    # Campaign window
+    valid_from = models.DateField(verbose_name="Kampanya Başlangıcı")
+    valid_until = models.DateField(verbose_name="Kampanya Bitiş Tarihi")
+
+    # Trial duration granted when a company signs up during campaign
+    trial_months = models.PositiveSmallIntegerField(
+        default=0,
+        verbose_name="Ücretsiz Deneme Süresi (Ay)",
+        help_text="Kampanya kapsamında verilen ücretsiz deneme süresi (ay). 0 ise deneme yok."
+    )
+
+    is_active = models.BooleanField(default=True, verbose_name="Aktif")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Plan Kampanyası"
+        verbose_name_plural = "Plan Kampanyaları"
+        ordering = ['-valid_until']
+        db_table = 'subscriptions_plancampaign'
+
+    def __str__(self):
+        return f"{self.plan.name_tr} — {self.title_tr} ({self.valid_until})"
+
+    def is_currently_valid(self):
+        today = timezone.now().date()
+        return self.is_active and self.valid_from <= today <= self.valid_until
