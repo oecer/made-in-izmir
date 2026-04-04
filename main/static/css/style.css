@@ -217,7 +217,7 @@ nav {
 }
 
 header.scrolled .logo {
-    color: var(--text-light);
+    color: var(--primary-color);
 }
 
 .nav-links {
@@ -251,7 +251,7 @@ header.scrolled .logo {
 }
 
 header.scrolled .nav-links li a {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--primary-color);
 }
 
 .btn-dashboard-nav,
@@ -303,7 +303,7 @@ header.scrolled .btn-logout-nav:hover {
 }
 
 header.scrolled .lang-switch {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.05);
 }
 
 .lang-btn {
@@ -325,12 +325,12 @@ header.scrolled .lang-switch {
 }
 
 header.scrolled .lang-btn {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--primary-color);
 }
 
 header.scrolled .lang-btn.active {
-    background-color: rgba(255, 255, 255, 0.15);
-    color: #fff;
+    background-color: var(--primary-color);
+    color: var(--text-light);
 }
 
 /* Hero Section */
@@ -1400,13 +1400,13 @@ header.scrolled .btn-subscription-nav:hover {
 }
 
 header.scrolled .nav-user-btn {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.18);
-    color: var(--text-light);
+    background: rgba(15, 23, 42, 0.07);
+    border-color: rgba(15, 23, 42, 0.15);
+    color: var(--primary-color);
 }
 
 header.scrolled .nav-user-btn:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(15, 23, 42, 0.12);
 }
 
 @keyframes dropdownFadeIn {
@@ -1510,6 +1510,38 @@ header.scrolled .nav-user-btn:hover {
         backdrop-filter: blur(12px);
         height: 64px;
         box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ── Mobile: re-invert scrolled colours (dark header, not white) ── */
+    header.scrolled .logo {
+        color: var(--text-light);
+    }
+
+    header.scrolled .nav-links li a {
+        color: rgba(255, 255, 255, 0.78);
+    }
+
+    header.scrolled .lang-switch {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    header.scrolled .lang-btn {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    header.scrolled .lang-btn.active {
+        background-color: rgba(255, 255, 255, 0.15);
+        color: #fff;
+    }
+
+    header.scrolled .nav-user-btn {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.18);
+        color: var(--text-light);
+    }
+
+    header.scrolled .nav-user-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
     }
 
     /* ── Hamburger button ── */
