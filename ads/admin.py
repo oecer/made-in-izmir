@@ -79,11 +79,11 @@ class AdAdmin(admin.ModelAdmin):
                 'object-fit:contain;border-radius:4px;border:1px solid #eee;">',
                 obj.image.url,
             )
-        return format_html('<span style="color:#aaa;font-style:italic;">CSS placeholder</span>')
+        return '<span style="color:#aaa;font-style:italic;">CSS placeholder</span>'
     image_preview.short_description = 'Önizleme'
 
     def currently_active_display(self, obj):
         if obj.is_currently_active:
-            return format_html('<span style="color:#16a34a;font-weight:600;">✓ Yayında</span>')
-        return format_html('<span style="color:#dc2626;">✗ Yayında değil</span>')
+            return format_html('<span style="color:{};font-weight:600;">✓ Yayında</span>', '#16a34a')
+        return format_html('<span style="color:{};">✗ Yayında değil</span>', '#dc2626')
     currently_active_display.short_description = 'Durum'
