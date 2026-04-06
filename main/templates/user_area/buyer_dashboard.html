@@ -18,6 +18,7 @@
 </a>
 {% endblock %}
 
+{% load ad_tags %}
 {% block dashboard_content %}
 <!-- Stats Cards -->
 <div class="stats-grid">
@@ -62,6 +63,8 @@
         <i class="fas fa-calendar-alt"></i> <span data-i18n="dashboard.expo_calendar">Fuar Takvimi</span>
     </a>
 </div>
+
+{% render_ad 'buyer_dashboard_horizontal' %}
 
 <!-- Products Browse -->
 <div class="products-section dashboard-card">
@@ -251,6 +254,7 @@
                 </div>
             </div>
         </div>
+        {% render_grid_ad 'buyer_dashboard_grid_card' forloop.counter0 %}
         {% endfor %}
     </div>
 

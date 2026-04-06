@@ -1,0 +1,250 @@
+/* ═══════════════════════════════════════════════════════════
+   ads.css  —  Made in İzmir Ad Slots
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Horizontal Banner Slot ─────────────────────────────── */
+.ad-banner-slot {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem auto;
+    max-width: 970px;
+    padding: 0 1rem;
+    box-sizing: border-box;
+}
+
+.ad-banner-link {
+    display: block;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    text-decoration: none;
+    transition: opacity 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ad-banner-link:hover {
+    opacity: 0.92;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.ad-banner-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* ─── CSS Placeholder (no image uploaded) ─────────────────── */
+.ad-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 60px;
+    border: 2px dashed #c8b97a;
+    border-radius: 8px;
+    background: #fffdf0;
+    box-sizing: border-box;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.ad-placeholder:hover {
+    background: #fff9e0;
+    border-color: #b09040;
+}
+
+.ad-placeholder-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 20px;
+    text-align: center;
+    pointer-events: none;
+}
+
+.ad-placeholder-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #b09040;
+    background: #fef3c7;
+    border: 1px solid #c8b97a;
+    border-radius: 3px;
+    padding: 1px 7px;
+    margin-bottom: 4px;
+}
+
+.ad-placeholder-text {
+    font-size: 0.82rem;
+    color: #8a7340;
+    font-weight: 500;
+}
+
+.ad-placeholder-size {
+    font-size: 0.75rem;
+    color: #a08030;
+    font-weight: 600;
+    font-family: monospace;
+}
+
+/* Banner-specific placeholder height — set via inline style */
+.ad-placeholder--banner {
+    width: 100%;
+}
+
+/* ─── Grid Ad Card ────────────────────────────────────────── */
+.ad-grid-card {
+    position: relative;
+    border-radius: 10px;
+    border: 1.5px dashed #c8b97a;
+    background: #fffdf0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+}
+
+.ad-grid-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(200, 165, 0, 0.15);
+    border-color: #b09040;
+}
+
+/* Gold ribbon badge */
+.ad-grid-ribbon {
+    position: absolute;
+    top: 14px;
+    right: -22px;
+    background: #c8a800;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 30px;
+    transform: rotate(35deg);
+    z-index: 2;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    pointer-events: none;
+}
+
+.ad-grid-link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Image area — matches product card image proportions */
+.ad-grid-image {
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #fffdf0;
+}
+
+.ad-grid-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Grid placeholder fills the image area */
+.ad-placeholder--grid {
+    min-height: 200px;
+    height: 100%;
+    border: none;
+    border-radius: 0;
+    background: #fffdf0;
+}
+
+.ad-placeholder--grid .ad-placeholder-inner {
+    padding: 20px;
+}
+
+/* Card body */
+.ad-grid-body {
+    padding: 0.85rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    flex-grow: 1;
+    background: #fffdf0;
+}
+
+.ad-grid-title {
+    margin: 0;
+    font-size: 0.82rem;
+    color: #7a6020;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* "Ziyaret Et" CTA button */
+.ad-grid-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    align-self: flex-start;
+    background: #c8a800;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.38rem 0.9rem;
+    border-radius: 5px;
+    transition: background 0.2s ease;
+    text-decoration: none;
+}
+
+.ad-grid-card:hover .ad-grid-cta {
+    background: #a88800;
+}
+
+/* ─── Context-specific grid sizing ─────────────────────────── */
+
+/* all_products page: ap-grid uses auto-fill minmax(280px,...) */
+.ap-grid .ad-grid-card {
+    /* inherits grid cell size automatically */
+}
+
+.ap-grid .ad-grid-image,
+.ap-grid .ad-placeholder--grid {
+    height: 200px;
+}
+
+/* buyer dashboard: products-grid */
+.products-grid .ad-grid-card {
+    /* inherits grid cell size automatically */
+}
+
+.products-grid .ad-grid-image,
+.products-grid .ad-placeholder--grid {
+    height: 180px;
+}
+
+/* ─── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .ad-banner-slot {
+        margin: 1rem auto;
+        padding: 0 0.75rem;
+    }
+
+    .ad-placeholder--banner {
+        height: 60px !important;
+    }
+
+    .ad-placeholder-text {
+        font-size: 0.75rem;
+    }
+
+    .ad-placeholder-size {
+        display: none;
+    }
+}

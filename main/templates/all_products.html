@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static ad_tags %}
 
 {% block title %}Tüm Ürünler - Made in İzmir{% endblock %}
 
@@ -47,6 +47,8 @@
         <i class="fas fa-chevron-down"></i>
     </div>
 </section>
+
+{% render_ad 'products_top_horizontal' %}
 
 <!-- ═══ FILTER & GRID ═══ -->
 <section class="ap-catalog-section">
@@ -253,6 +255,7 @@
                     {% endif %}
                 </div>
             </div>
+            {% render_grid_ad 'products_grid_card' forloop.counter0 %}
             {% endfor %}
         </div>
 

@@ -33,6 +33,7 @@
 {% endif %}
 {% endblock %}
 
+{% load ad_tags %}
 {% block dashboard_content %}
 {% comment %} <div class="back-button-container">
     {% if is_owner %}
@@ -45,6 +46,8 @@
     </a>
     {% endif %}
 </div> {% endcomment %}
+
+{% render_ad 'product_detail_top' %}
 
 <div class="product-detail-content dashboard-card">
     <!-- Product Images -->
@@ -383,6 +386,8 @@
     </div>
     {% endif %}
 </div>
+
+{% render_ad 'product_detail_bottom' %}
 
 <script>
     function changeMainImage(url) {

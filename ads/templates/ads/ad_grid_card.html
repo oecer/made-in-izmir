@@ -1,0 +1,37 @@
+{% if show %}
+<div class="ad-grid-card">
+    <div class="ad-grid-ribbon">Reklam</div>
+    <a href="{{ ad.link_url }}"
+       {% if ad.link_url != '#' %}target="_blank" rel="noopener sponsored"{% endif %}
+       class="ad-grid-link">
+
+        <div class="ad-grid-image">
+            {% if ad.image %}
+            <img src="{{ ad.image.url }}"
+                 alt="{{ ad.title|default:'Reklam' }}"
+                 loading="lazy">
+            {% else %}
+            <div class="ad-placeholder ad-placeholder--grid">
+                <div class="ad-placeholder-inner">
+                    <span class="ad-placeholder-label">Reklam</span>
+                    <span class="ad-placeholder-text">Buraya reklam verebilirsiniz.</span>
+                    {% if slot %}
+                    <span class="ad-placeholder-size">{{ slot.width_px }} × {{ slot.height_px }} px</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="ad-grid-body">
+            {% if ad.title %}
+            <p class="ad-grid-title">{{ ad.title }}</p>
+            {% endif %}
+            <span class="ad-grid-cta">
+                <i class="fas fa-external-link-alt"></i> Ziyaret Et
+            </span>
+        </div>
+
+    </a>
+</div>
+{% endif %}

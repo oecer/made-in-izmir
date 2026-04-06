@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'expos',
     'main',
     'subscriptions',
+    'ads',
 ]
 
 MIDDLEWARE = [
@@ -74,6 +75,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'subscriptions.context_processors.subscription_features',
+                'ads.context_processors.ad_context',
             ],
         },
     },
