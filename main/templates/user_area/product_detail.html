@@ -180,6 +180,8 @@
         {% endif %}
     </div>
 
+    <div style="grid-column: 1 / -1;">{% render_ad 'product_detail_bottom' %}</div>
+
     {% if not is_owner %}
     <!-- ── Get in Touch Section ── -->
     <div class="pd-contact-section">
@@ -386,8 +388,6 @@
     </div>
     {% endif %}
 </div>
-
-{% render_ad 'product_detail_bottom' %}
 
 <script>
     function changeMainImage(url) {
