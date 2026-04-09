@@ -249,28 +249,178 @@
     }
 }
 
-/* ─── Ad Rotation (crossfade) ─────────────────────────────── */
+/* ─── Ad Rotation ─────────────────────────────────────────── */
+
+/* ── Shared container ── */
 [data-ad-rotator="banner"],
 [data-ad-rotator="grid"] {
     position: relative;
     overflow: hidden;
+    /* GPU compositing layer for buttery rendering */
+    transform: translateZ(0);
+    will-change: contents;
+    border-radius: inherit;
 }
 
-.ad-banner-slide,
+/* ══════════════════════════════════════════════════
+   BANNER  — cinematic slide + zoom + fade
+   ══════════════════════════════════════════════════ */
+
+.ad-banner-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    /* Nothing animates until JS adds a state class */
+}
+
+/* Slide sitting in the deck — ready to enter from the right */
+.ad-banner-slide:not(.ad-slide--active):not(.ad-slide--exit):not(.ad-slide--enter) {
+    transform: translateX(40px) scale(0.98);
+}
+
+/* ── ENTER: incoming slide ── */
+.ad-banner-slide.ad-slide--enter {
+    animation: banner-enter 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ── EXIT: outgoing slide ── */
+.ad-banner-slide.ad-slide--exit {
+    animation: banner-exit 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    pointer-events: none;
+}
+
+/* Active (fully visible, no animation running) */
+.ad-banner-slide.ad-slide--active {
+    position: relative; /* gives container its height */
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    z-index: 2;
+}
+
+@keyframes banner-enter {
+    from {
+        opacity: 0;
+        transform: translateX(48px) scale(0.97);
+        filter: blur(3px);
+    }
+    60% {
+        filter: blur(0px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: blur(0px);
+    }
+}
+
+@keyframes banner-exit {
+    from {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: blur(0px);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-48px) scale(0.97);
+        filter: blur(3px);
+    }
+}
+
+/* ══════════════════════════════════════════════════
+   GRID CARD  — zoom-up fade
+   ══════════════════════════════════════════════════ */
+
 .ad-grid-slide {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
+    height: 100%;
     opacity: 0;
-    transition: opacity 0.6s ease;
     pointer-events: none;
 }
 
-/* Active slide: relatively positioned → gives container its natural height */
-.ad-banner-slide.ad-slide--active,
+.ad-grid-slide:not(.ad-slide--active):not(.ad-slide--exit):not(.ad-slide--enter) {
+    transform: scale(0.94) translateY(10px);
+}
+
+.ad-grid-slide.ad-slide--enter {
+    animation: grid-enter 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.ad-grid-slide.ad-slide--exit {
+    animation: grid-exit 0.5s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+    pointer-events: none;
+}
+
 .ad-grid-slide.ad-slide--active {
     position: relative;
     opacity: 1;
+    transform: none;
     pointer-events: auto;
+    z-index: 2;
+}
+
+@keyframes grid-enter {
+    from {
+        opacity: 0;
+        transform: scale(0.88) translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes grid-exit {
+    from {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: scale(1.06) translateY(-10px);
+    }
+}
+
+/* ── Progress bar — thin gold line at the bottom of each banner ── */
+.ad-banner-slot[data-ad-rotator] {
+    padding-bottom: 3px; /* space for the bar */
+}
+
+.ad-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, #c8a800, #f0d060);
+    border-radius: 0 2px 2px 0;
+    z-index: 10;
+    pointer-events: none;
+    transition: none;
+}
+
+.ad-progress-bar.ad-progress--running {
+    transition: width var(--ad-duration, 5000ms) linear;
+    width: 100%;
+}
+
+/* ── Respect prefers-reduced-motion ── */
+@media (prefers-reduced-motion: reduce) {
+    .ad-banner-slide.ad-slide--enter,
+    .ad-banner-slide.ad-slide--exit,
+    .ad-grid-slide.ad-slide--enter,
+    .ad-grid-slide.ad-slide--exit {
+        animation-duration: 0.15s;
+    }
+    .ad-banner-slide,
+    .ad-grid-slide {
+        filter: none !important;
+    }
 }
