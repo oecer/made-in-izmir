@@ -248,3 +248,29 @@
         display: none;
     }
 }
+
+/* ─── Ad Rotation (crossfade) ─────────────────────────────── */
+[data-ad-rotator="banner"],
+[data-ad-rotator="grid"] {
+    position: relative;
+    overflow: hidden;
+}
+
+.ad-banner-slide,
+.ad-grid-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+}
+
+/* Active slide: relatively positioned → gives container its natural height */
+.ad-banner-slide.ad-slide--active,
+.ad-grid-slide.ad-slide--active {
+    position: relative;
+    opacity: 1;
+    pointer-events: auto;
+}

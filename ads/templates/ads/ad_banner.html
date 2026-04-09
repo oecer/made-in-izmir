@@ -1,25 +1,35 @@
-{% if ad %}
-<div class="ad-banner-slot" aria-label="Reklam alanı">
-    <a href="{{ ad.link_url }}"
-       {% if ad.link_url != '#' %}target="_blank" rel="noopener sponsored"{% endif %}
-       class="ad-banner-link">
-        {% if ad.image %}
-        <img src="{{ ad.image.url }}"
-             alt="{{ ad.title|default:'Reklam' }}"
-             loading="lazy"
-             class="ad-banner-img">
-        {% else %}
-        <div class="ad-placeholder ad-placeholder--banner"
-             {% if slot %}style="height:{{ slot.height_px }}px;"{% endif %}>
-            <div class="ad-placeholder-inner">
-                <span class="ad-placeholder-label">Reklam</span>
-                <span class="ad-placeholder-text">Buraya reklam verebilirsiniz.</span>
-                {% if slot %}
-                <span class="ad-placeholder-size">{{ slot.width_px }} × {{ slot.height_px }} px</span>
-                {% endif %}
+{% if ads %}
+<div class="ad-banner-slot"
+     aria-label="Reklam alanı"
+     {% if ads|length > 1 %}data-ad-rotator="banner" data-ad-initial="0"{% endif %}>
+
+    {% for ad in ads %}
+    <div class="ad-banner-slide{% if forloop.first %} ad-slide--active{% endif %}"
+         data-duration="{{ ad.display_duration_seconds }}"
+         aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}">
+        <a href="{{ ad.link_url }}"
+           {% if ad.link_url != '#' %}target="_blank" rel="noopener sponsored"{% endif %}
+           class="ad-banner-link">
+            {% if ad.image %}
+            <img src="{{ ad.image.url }}"
+                 alt="{{ ad.title|default:'Reklam' }}"
+                 loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                 class="ad-banner-img">
+            {% else %}
+            <div class="ad-placeholder ad-placeholder--banner"
+                 {% if slot %}style="height:{{ slot.height_px }}px;"{% endif %}>
+                <div class="ad-placeholder-inner">
+                    <span class="ad-placeholder-label">Reklam</span>
+                    <span class="ad-placeholder-text">Buraya reklam verebilirsiniz.</span>
+                    {% if slot %}
+                    <span class="ad-placeholder-size">{{ slot.width_px }} × {{ slot.height_px }} px</span>
+                    {% endif %}
+                </div>
             </div>
-        </div>
-        {% endif %}
-    </a>
+            {% endif %}
+        </a>
+    </div>
+    {% endfor %}
+
 </div>
 {% endif %}

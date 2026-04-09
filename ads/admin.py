@@ -61,9 +61,10 @@ class AdAdmin(admin.ModelAdmin):
             'fields': ('start_date', 'end_date'),
         }),
         ('Yayın Ayarları', {
-            'fields': ('order', 'is_active'),
+            'fields': ('order', 'is_active', 'display_duration_seconds'),
             'description': '<strong>Sıralama</strong>: Küçük değer önce gösterilir. '
-                           'Aynı slotta birden fazla reklam varsa en düşük sıralı gösterilir.',
+                           '<strong>Gösterim Süresi</strong>: Aynı slotta birden fazla reklam varsa '
+                           'bu reklam kaç saniye gösterileceğini belirler.',
         }),
         ('Sistem Bilgileri', {
             'fields': ('created_at', 'updated_at'),

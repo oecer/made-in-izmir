@@ -97,6 +97,11 @@ class Ad(models.Model):
         verbose_name='Sıralama',
         help_text='Küçük değer önce gösterilir',
     )
+    display_duration_seconds = models.PositiveIntegerField(
+        default=5,
+        verbose_name='Gösterim Süresi (sn)',
+        help_text='Bu reklamın rotasyonda kaç saniye gösterileceği.',
+    )
     is_active = models.BooleanField(default=True, verbose_name='Aktif')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

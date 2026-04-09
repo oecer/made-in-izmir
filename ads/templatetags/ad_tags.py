@@ -10,11 +10,8 @@ def render_ad(context, slot_slug):
     ads = ads_by_slot.get(slot_slug, [])
     slot = ad_slots.get(slot_slug)
 
-    # For horizontal banners only show the highest-priority (lowest order) ad
-    top_ad = ads[0] if ads else None
-
     return {
-        'ad': top_ad,
+        'ads': ads,
         'slot': slot,
     }
 
@@ -35,10 +32,11 @@ def render_grid_ad(context, slot_slug, product_index):
     if (product_index + 1) % grid_interval != 0:
         return {'show': False}
 
-    # Cycle through available ads
+    # Cycle through available ads (preserves server-side cycling for initial render)
     cycle_index = ((product_index + 1) // grid_interval - 1) % len(ads)
     return {
         'show': True,
-        'ad': ads[cycle_index],
+        'initial_idx': cycle_index,
+        'ads': ads,
         'slot': slot,
     }
