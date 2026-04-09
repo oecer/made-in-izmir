@@ -388,28 +388,6 @@
     }
 }
 
-/* ── Progress bar — thin gold line at the bottom of each banner ── */
-.ad-banner-slot[data-ad-rotator] {
-    padding-bottom: 3px; /* space for the bar */
-}
-
-.ad-progress-bar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 3px;
-    width: 0%;
-    background: linear-gradient(90deg, #c8a800, #f0d060);
-    border-radius: 0 2px 2px 0;
-    z-index: 10;
-    pointer-events: none;
-    transition: none;
-}
-
-.ad-progress-bar.ad-progress--running {
-    transition: width var(--ad-duration, 5000ms) linear;
-    width: 100%;
-}
 
 /* ── Respect prefers-reduced-motion ── */
 @media (prefers-reduced-motion: reduce) {

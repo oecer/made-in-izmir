@@ -17,16 +17,8 @@
     this.timeoutId  = null;
     this.animating  = false;
     this.paused     = false;
-    this.bar        = null;
 
     if (this.slides.length < 2) return;
-
-    // Progress bar — banner only
-    if (this.isBanner) {
-      this.bar = document.createElement('div');
-      this.bar.className = 'ad-progress-bar';
-      container.appendChild(this.bar);
-    }
 
     this._bindVisibility();
     this._scheduleNext();
@@ -39,29 +31,7 @@
     var self  = this;
     var ms    = (parseInt(this.slides[this.currentIdx].dataset.duration, 10) || 5) * 1000;
 
-    if (this.bar) this._startProgress(ms);
-
     this.timeoutId = setTimeout(function () { self._advance(); }, ms);
-  };
-
-  // ─── Progress bar ──────────────────────────────────────────────
-
-  AdRotator.prototype._startProgress = function (ms) {
-    var bar = this.bar;
-    bar.classList.remove('ad-progress--running');
-    bar.style.removeProperty('width');
-    bar.style.setProperty('--ad-duration', ms + 'ms');
-    void bar.offsetWidth; // reflow
-    bar.classList.add('ad-progress--running');
-  };
-
-  AdRotator.prototype._stopProgress = function () {
-    if (!this.bar) return;
-    var bar = this.bar;
-    var w   = getComputedStyle(bar).width;
-    var cw  = getComputedStyle(this.container).width;
-    bar.classList.remove('ad-progress--running');
-    bar.style.width = cw ? (parseFloat(w) / parseFloat(cw) * 100).toFixed(2) + '%' : '0%';
   };
 
   // ─── Transition ────────────────────────────────────────────────
@@ -79,8 +49,6 @@
     var exitMs   = isBanner ? BANNER_ANIM_MS : GRID_EXIT_MS;
     var totalMs  = Math.max(enterMs, exitMs);
     var self     = this;
-
-    if (this.bar) this._stopProgress();
 
     // Lock container height so it doesn't collapse during the animation overlap
     var containerH = this.container.offsetHeight;
@@ -119,7 +87,6 @@
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) {
         clearTimeout(self.timeoutId);
-        self._stopProgress();
         self.paused = true;
       } else {
         self.paused = false;
